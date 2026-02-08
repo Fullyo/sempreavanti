@@ -9,12 +9,32 @@ const categories = [
     title: "Surfing",
     eyebrow: "Catch a Wave",
     items: [
+      { name: "Surf Lesson — Sayulita", desc: "Learn to ride in Sayulita's friendly waves. Boards and instruction included.", price: "$1,200 MXN / person", note: "Minimum 2 people" },
+      { name: "Surf Experience — La Lancha", desc: "World-class left point break near Punta de Mita. Transportation, boards, 1.5-hour lesson, and 30 minutes of free surf included.", price: "$2,000 MXN / person" },
       { name: "Captain Pablo's", desc: "Right point break — consistent, fun, great for intermediate surfers. Beachfront restaurant after." },
       { name: "Don Pedro's", desc: "Left break right in front of the iconic restaurant. Watch the surfers while you eat." },
       { name: "Burros", desc: "Powerful beach break north of Sayulita. For experienced surfers." },
-      { name: "La Lancha", desc: "World-class left point break. Long rides, stunning setting. Advanced." },
       { name: "Punta Mita", desc: "Several breaks around the point — varied conditions for all levels." },
       { name: "Lessons with Chillo", desc: "The best beginner instructor in Sayulita. Patient, fun, and your kids will love him." },
+    ],
+  },
+  {
+    title: "Food & Culinary",
+    eyebrow: "Taste Mexico",
+    items: [
+      { name: "Sayulita Taco Tour", desc: "Pickup, transportation, 3–4 taco spots, local history, and a finish at an agave field with blue corn tacos and quesadillas. Food included up to $400 MXN — extras paid by guest.", price: "$1,200 MXN / person", note: "Tue–Sun, minimum 4 people" },
+      { name: "Private Cooking Class", desc: "In-house Mexican cooking class with a local chef. Learn traditional recipes and enjoy what you make.", price: "$1,200 MXN / person" },
+    ],
+  },
+  {
+    title: "Boats & Fishing",
+    eyebrow: "On the Water",
+    items: [
+      { name: "Private Boat Tour", desc: "Whale watching, snorkeling equipment, light trolling, water, sodas, and beer included. 3 hours, up to 7 guests.", price: "$9,500 MXN", note: "4-hour extension: $11,500 MXN" },
+      { name: "Fishing Charter", desc: "4-hour charter with water, sodas, beer, and all fishing equipment. Up to 4 people.", price: "$10,000 MXN" },
+      { name: "Spearfishing — Inshore", desc: "4–5 hour inshore spearfishing trip. Equipment and beverages included. Up to 3–4 people.", price: "$12,000 MXN" },
+      { name: "Spearfishing — Deep Water", desc: "Full-day deep water trip (7 AM – 4 PM). Equipment, beverages, and sashimi preparation included. Up to 3 people.", price: "$21,000 MXN" },
+      { name: "Catch & Cook", desc: "Bring your catch back and Ricardo will prepare it for dinner. The freshest meal you'll ever have." },
     ],
   },
   {
@@ -50,15 +70,6 @@ const categories = [
     ],
   },
   {
-    title: "Fishing",
-    eyebrow: "Reel In",
-    items: [
-      { name: "Marla's Sport Fishing", desc: "La Cruz marina. Deep-sea for marlin, tuna, mahi-mahi. Full and half-day charters." },
-      { name: "Pato — Sayulita", desc: "Local panga fishing right from Sayulita beach. Authentic, affordable, unforgettable." },
-      { name: "Catch & Cook", desc: "Bring your catch back and Ricardo will prepare it for dinner. The freshest meal you'll ever have." },
-    ],
-  },
-  {
     title: "Land & Adventure",
     eyebrow: "Explore",
     items: [
@@ -66,7 +77,7 @@ const categories = [
       { name: "ATV & RZR Tours", desc: "Navigate mountain trails and coastal paths on guided off-road adventures." },
       { name: "Horseback Riding", desc: "Trail rides through the jungle and along the beach at sunset." },
       { name: "Jungle & Monkey Mountain Hikes", desc: "Guided hikes through tropical jungle with wildlife encounters." },
-      { name: "Polaris UTV Rentals", desc: "Two UTVs available at the house — the best way to get to Sayulita and Punta de Mita." },
+      { name: "Polaris UTV Rentals", desc: "Available at the property. The best way to get to Sayulita and Punta de Mita. 2-seater, 4-seater, and 6-seater options.", price: "From $1,600 MXN / day" },
     ],
   },
   {
@@ -76,7 +87,6 @@ const categories = [
       { name: "La Cruz Sunday Market", desc: "The region's best — fresh seafood, artisan crafts, live music, and authentic Mexican culture." },
       { name: "Sayulita Friday Market", desc: "Organic produce, local treats, and artisan goods in the heart of Sayulita." },
       { name: "Puerto Vallarta Malecón", desc: "Iconic seaside boardwalk with art, dining, and nightlife." },
-      { name: "Cooking Classes", desc: "Learn traditional Mexican cuisine with local chefs." },
       { name: "Tequila & Mezcal Tastings", desc: "Curated tastings of Mexico's finest spirits at La Selecta in Sayulita." },
     ],
   },
@@ -121,6 +131,12 @@ export default function Experiences() {
                   <PhotoPlaceholder label={item.name} aspectRatio="video" className="mb-4" />
                   <h3 className="font-serif text-xl mb-2 group-hover:text-accent transition-colors">{item.name}</h3>
                   <p className="text-sm font-sans text-muted-foreground leading-relaxed">{item.desc}</p>
+                  {item.price && (
+                    <p className="text-sm font-sans font-medium text-accent mt-3">{item.price}</p>
+                  )}
+                  {item.note && (
+                    <p className="text-xs font-sans text-muted-foreground mt-1">{item.note}</p>
+                  )}
                 </motion.div>
               ))}
             </div>
