@@ -1,0 +1,104 @@
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { GuestyListing } from "@/hooks/useGuestyListings";
+import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
+
+const flowItems = [
+  {
+    title: "Wellness",
+    subtitle: "Morning Flow",
+    description: "Yoga, breathwork, and beachside meditation to start the day.",
+    path: "/wellness",
+  },
+  {
+    title: "Private Dining",
+    subtitle: "Chef-Crafted",
+    description: "Fire-lit dinners, sunset margaritas, and wood-fired pizza nights.",
+    path: "/chef",
+  },
+  {
+    title: "Adventures",
+    subtitle: "Ocean & Land",
+    description: "Surf, sail, fish, and explore the Riviera Nayarit coast.",
+    path: "/experiences",
+  },
+  {
+    title: "Celebrations",
+    subtitle: "Your Venue",
+    description: "Weddings, retreats, and gatherings on your private beach.",
+    path: "/events",
+  },
+];
+
+interface FlowOfDaySectionProps {
+  listings?: GuestyListing[];
+}
+
+export default function FlowOfDaySection({ listings }: FlowOfDaySectionProps) {
+  // Pull photos from different listings for variety
+  const allPictures = listings?.flatMap((l) => l.pictures || []) || [];
+
+  return (
+    <section className="py-20 md:py-32">
+      <div className="container">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="text-center max-w-3xl mx-auto mb-12 md:mb-16"
+        >
+          <span className="text-xs font-sans uppercase tracking-[0.3em] mb-3 block text-accent">
+            Your Stay
+          </span>
+          <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl font-light leading-tight text-foreground">
+            Every Moment, Curated
+          </h2>
+          <p className="mt-4 text-base md:text-lg font-sans font-light leading-relaxed text-muted-foreground">
+            From sunrise yoga to fire-lit dinners, every hour flows with intention. You don't plan — you simply arrive.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+          {flowItems.map((item, i) => {
+            const photo = allPictures[i + 4]?.original;
+            return (
+              <motion.div
+                key={item.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+              >
+                <Link to={item.path} className="block group relative overflow-hidden h-[420px]">
+                  {photo ? (
+                    <img
+                      src={photo}
+                      alt={item.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <PhotoPlaceholder label={item.title} className="absolute inset-0 !aspect-auto" />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6 text-primary-foreground">
+                    <span className="text-xs font-sans uppercase tracking-[0.3em] opacity-70 block mb-2">
+                      {item.subtitle}
+                    </span>
+                    <h3 className="font-serif text-2xl md:text-3xl mb-2 group-hover:text-accent transition-colors">
+                      {item.title}
+                    </h3>
+                    <p className="text-sm font-sans opacity-80 leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+                </Link>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
