@@ -50,7 +50,7 @@ export default function Transportation() {
               <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-3">
                 Luxury Suburban vehicles with professional drivers. Arranged through your concierge prior to arrival. We'll track your flight and be there when you land — no waiting, no hassle. Seats up to 7 people.
               </p>
-              <p className="text-sm font-sans font-medium text-accent">$5,000 MXN round trip</p>
+              <p className="text-sm font-sans font-medium text-accent">~$250 USD round trip</p>
             </motion.div>
 
             <motion.div
@@ -69,9 +69,9 @@ export default function Transportation() {
                 Wind in your hair, ocean on your left, jungle on your right — it's part of the Sempre Avanti experience.
               </p>
               <div className="space-y-1 mb-3">
-                <p className="text-sm font-sans font-medium text-accent">2-Seater — $1,600 MXN / day</p>
-                <p className="text-sm font-sans font-medium text-accent">4-Seater — $1,900 MXN / day</p>
-                <p className="text-sm font-sans font-medium text-accent">6-Seater — $2,200 MXN / day</p>
+                <p className="text-sm font-sans font-medium text-accent">2-Seater — ~$80 USD / day</p>
+                <p className="text-sm font-sans font-medium text-accent">4-Seater — ~$95 USD / day</p>
+                <p className="text-sm font-sans font-medium text-accent">6-Seater — ~$110 USD / day</p>
               </div>
               <p className="text-xs font-sans text-muted-foreground">Range: Punta de Mita (south) to San Pancho (north)</p>
             </motion.div>
@@ -126,6 +126,12 @@ export default function Transportation() {
           </Link>
         </div>
       </section>
+
+      <div className="container max-w-4xl py-8">
+        <p className="text-xs font-sans text-muted-foreground text-center italic">
+          Prices shown in USD are approximate. Final pricing is in Mexican Pesos at the current exchange rate.
+        </p>
+      </div>
     </Layout>
   );
 }

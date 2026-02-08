@@ -1,6 +1,7 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
+import VillaCarousel from "@/components/VillaCarousel";
 import { useGuestyListings } from "@/hooks/useGuestyListings";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
@@ -139,13 +140,9 @@ export default function Villas() {
                   </motion.div>
                 </div>
 
-                {/* 3-column gallery */}
+                {/* Photo carousel */}
                 {villa!.pictures && villa!.pictures.length > 1 && (
-                  <div className="mt-12 grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {villa!.pictures.slice(1, 13).map((pic, i) => (
-                      <img key={i} src={pic.original} alt={`${villa!.title || villa!.nickname} ${i + 1}`} className="w-full h-56 md:h-72 object-cover" loading="lazy" />
-                    ))}
-                  </div>
+                  <VillaCarousel pictures={villa!.pictures} villaName={villa!.title || villa!.nickname} />
                 )}
               </div>
             </section>

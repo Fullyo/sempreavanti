@@ -7,7 +7,6 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-// In-memory cache as first layer (survives warm invocations)
 let memCache: { listings: unknown; expiresAt: number } | null = null;
 
 function getSupabaseAdmin() {
@@ -23,7 +22,6 @@ async function getFromCache(supabase: ReturnType<typeof createClient>, key: stri
     .select("value, expires_at")
     .eq("key", key)
     .maybeSingle();
-
   if (error) {
     console.error(`Cache read error for ${key}:`, error.message);
     return null;
@@ -35,16 +33,8 @@ async function setCache(supabase: ReturnType<typeof createClient>, key: string, 
   const expiresAt = new Date(Date.now() + ttlSeconds * 1000).toISOString();
   const { error } = await supabase
     .from("guesty_cache")
-    .upsert({
-      key,
-      value,
-      expires_at: expiresAt,
-      updated_at: new Date().toISOString(),
-    }, { onConflict: "key" });
-
-  if (error) {
-    console.error(`Cache write error for ${key}:`, error.message);
-  }
+    .upsert({ key, value, expires_at: expiresAt, updated_at: new Date().toISOString() }, { onConflict: "key" });
+  if (error) console.error(`Cache write error for ${key}:`, error.message);
 }
 
 async function fetchWithRetry(url: string, options: RequestInit, retries = 3): Promise<Response> {
@@ -52,7 +42,7 @@ async function fetchWithRetry(url: string, options: RequestInit, retries = 3): P
     const response = await fetch(url, options);
     if (response.status === 429 && attempt < retries - 1) {
       const delay = Math.pow(2, attempt + 1) * 1000;
-      console.log(`Rate limited (429). Retrying in ${delay}ms (attempt ${attempt + 1}/${retries})...`);
+      console.log(`Rate limited. Retry in ${delay}ms (${attempt + 1}/${retries})`);
       await new Promise((r) => setTimeout(r, delay));
       continue;
     }
@@ -62,7 +52,6 @@ async function fetchWithRetry(url: string, options: RequestInit, retries = 3): P
 }
 
 async function getAccessToken(supabase: ReturnType<typeof createClient>): Promise<string> {
-  // Check DB cache first
   const cached = await getFromCache(supabase, "access_token");
   if (cached && new Date(cached.expires_at) > new Date()) {
     console.log("Using DB-cached access token");
@@ -71,13 +60,9 @@ async function getAccessToken(supabase: ReturnType<typeof createClient>): Promis
 
   const clientId = Deno.env.get("GUESTY_CLIENT_ID");
   const clientSecret = Deno.env.get("GUESTY_CLIENT_SECRET");
-
-  if (!clientId || !clientSecret) {
-    throw new Error("Guesty API credentials not configured");
-  }
+  if (!clientId || !clientSecret) throw new Error("Guesty API credentials not configured");
 
   console.log("Fetching new Guesty access token...");
-
   const response = await fetchWithRetry("https://booking.guesty.com/oauth2/token", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -92,7 +77,6 @@ async function getAccessToken(supabase: ReturnType<typeof createClient>): Promis
   if (!response.ok) {
     const errorBody = await response.text();
     console.error("Token request failed:", response.status, errorBody);
-    // If rate-limited and we have stale token, use it
     if (response.status === 429 && cached) {
       console.log("Rate limited on token refresh, using stale DB token");
       return (cached.value as { token: string }).token;
@@ -101,13 +85,33 @@ async function getAccessToken(supabase: ReturnType<typeof createClient>): Promis
   }
 
   const data = await response.json();
-  const ttl = Math.min(data.expires_in - 300, 23 * 3600); // ~23h with buffer
-
-  // Persist to DB
+  const ttl = Math.min(data.expires_in - 300, 23 * 3600);
   await setCache(supabase, "access_token", { token: data.access_token }, ttl);
   console.log("Access token cached to DB");
-
   return data.access_token;
+}
+
+async function fetchViaBookingEngine(): Promise<unknown | null> {
+  try {
+    console.log("Trying Booking Engine public API...");
+    const response = await fetch(
+      "https://booking.guesty.com/api/listings?listingId=697bcfcf3f5e990014fbc4dd",
+      { headers: { Accept: "application/json" } }
+    );
+    if (!response.ok) {
+      console.log("Booking Engine API returned:", response.status);
+      return null;
+    }
+    const data = await response.json();
+    console.log(`Booking Engine returned ${data?.results?.length || data?.length || 0} listings`);
+    // Normalize to { results: [...] } format
+    if (Array.isArray(data)) return { results: data };
+    if (data?.results) return data;
+    return { results: [data] };
+  } catch (err) {
+    console.error("Booking Engine API error:", err);
+    return null;
+  }
 }
 
 serve(async (req) => {
@@ -118,7 +122,7 @@ serve(async (req) => {
   try {
     const supabase = getSupabaseAdmin();
 
-    // Layer 1: In-memory cache (fastest, survives warm invocations)
+    // Layer 1: In-memory cache
     if (memCache && Date.now() < memCache.expiresAt) {
       console.log("Returning in-memory cached listings");
       return new Response(JSON.stringify(memCache.listings), {
@@ -139,57 +143,48 @@ serve(async (req) => {
       });
     }
 
-    // Layer 3: Fetch fresh from Guesty
-    let token: string;
+    // Layer 3: Try Open API
+    let listingsData: unknown | null = null;
+
     try {
-      token = await getAccessToken(supabase);
-    } catch (tokenErr) {
-      console.error("Token acquisition failed:", tokenErr);
-      // Return stale DB data if available
-      if (dbListings) {
-        console.log("Returning stale DB listings after token failure");
-        return new Response(JSON.stringify(dbListings), {
-          headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "public, max-age=300" },
-        });
+      const token = await getAccessToken(supabase);
+      const listingsResponse = await fetchWithRetry(
+        "https://booking-api.guesty.com/v1/listings?limit=25",
+        { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } }
+      );
+      if (listingsResponse.ok) {
+        listingsData = await listingsResponse.json();
+        console.log(`Fetched ${(listingsData as any)?.results?.length || 0} fresh listings from Open API`);
+      } else {
+        console.error("Open API listings fetch failed:", listingsResponse.status);
       }
-      throw tokenErr;
+    } catch (err) {
+      console.error("Open API failed:", err);
     }
 
-    const listingsResponse = await fetchWithRetry(
-      "https://booking-api.guesty.com/v1/listings?limit=25",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      }
-    );
-
-    if (!listingsResponse.ok) {
-      const errorBody = await listingsResponse.text();
-      console.error("Listings fetch failed:", listingsResponse.status, errorBody);
-      // Return stale DB data if available
-      if (dbListings) {
-        console.log("Returning stale DB listings after API failure");
-        return new Response(JSON.stringify(dbListings), {
-          headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "public, max-age=300" },
-        });
-      }
-      throw new Error(`Failed to fetch listings: ${listingsResponse.status}`);
+    // Layer 4: Booking Engine fallback
+    if (!listingsData) {
+      listingsData = await fetchViaBookingEngine();
     }
 
-    const listingsData = await listingsResponse.json();
-    console.log(`Fetched ${listingsData.results?.length || 0} fresh listings from Guesty`);
+    // If we got fresh data, cache it
+    if (listingsData) {
+      await setCache(supabase, "listings_data", listingsData, 2 * 3600);
+      memCache = { listings: listingsData, expiresAt: Date.now() + 30 * 60 * 1000 };
+      return new Response(JSON.stringify(listingsData), {
+        headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "public, max-age=1800" },
+      });
+    }
 
-    // Persist to DB (2h TTL)
-    await setCache(supabase, "listings_data", listingsData, 2 * 3600);
+    // Layer 5: Return stale DB data
+    if (dbListings) {
+      console.log("Returning stale DB listings as last resort");
+      return new Response(JSON.stringify(dbListings), {
+        headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "public, max-age=300" },
+      });
+    }
 
-    // Update in-memory cache
-    memCache = { listings: listingsData, expiresAt: Date.now() + 30 * 60 * 1000 };
-
-    return new Response(JSON.stringify(listingsData), {
-      headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "public, max-age=1800" },
-    });
+    throw new Error("No listing data available from any source");
   } catch (error) {
     console.error("Error in guesty-listings function:", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
