@@ -1,1 +1,4 @@
 project_id = "hrtyncnxnbdteccigzav"
+
+[functions.guesty-listings]
+verify_jwt = false
