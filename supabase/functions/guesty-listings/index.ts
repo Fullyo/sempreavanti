@@ -55,9 +55,11 @@ async function getAccessToken(): Promise<string> {
   }
 
   const data = await response.json();
+  // Cache token for nearly 24h (Guesty allows only 3 renewals per 24h)
+  const tokenTTL = Math.min(data.expires_in - 300, 23 * 3600); // 300s buffer
   cachedToken = {
     token: data.access_token,
-    expiresAt: Date.now() + (data.expires_in - 60) * 1000,
+    expiresAt: Date.now() + tokenTTL * 1000,
   };
 
   console.log("Successfully obtained Guesty access token");
@@ -70,14 +72,14 @@ serve(async (req) => {
   }
 
   try {
-    // Return cached listings if fresh (5 min cache)
+    // Return cached listings if fresh (30 min cache)
     if (cachedListings && Date.now() < cachedListings.expiresAt) {
       console.log("Returning cached listings");
       return new Response(JSON.stringify(cachedListings.data), {
         headers: {
           ...corsHeaders,
           "Content-Type": "application/json",
-          "Cache-Control": "public, max-age=300",
+          "Cache-Control": "public, max-age=1800",
         },
       });
     }
@@ -103,17 +105,17 @@ serve(async (req) => {
     const listingsData = await listingsResponse.json();
     console.log(`Fetched ${listingsData.results?.length || 0} listings`);
 
-    // Cache for 5 minutes
+    // Cache for 30 minutes
     cachedListings = {
       data: listingsData,
-      expiresAt: Date.now() + 5 * 60 * 1000,
+      expiresAt: Date.now() + 30 * 60 * 1000,
     };
 
     return new Response(JSON.stringify(listingsData), {
       headers: {
         ...corsHeaders,
         "Content-Type": "application/json",
-        "Cache-Control": "public, max-age=300",
+          "Cache-Control": "public, max-age=1800",
       },
     });
   } catch (error) {
