@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 const navLinks = [
   { label: "The Villas", path: "/villas" },
@@ -39,6 +40,15 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
+          <Button asChild size="sm" className="ml-2">
+            <a
+              href="https://casasempreavanti.guestybookings.com/en/properties?minOccupancy=1"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Check Availability
+            </a>
+          </Button>
         </nav>
 
         {/* Mobile toggle */}
@@ -73,6 +83,15 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
+              <Button asChild size="sm" className="mt-2 w-full">
+                <a
+                  href="https://casasempreavanti.guestybookings.com/en/properties?minOccupancy=1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Check Availability
+                </a>
+              </Button>
             </div>
           </motion.nav>
         )}
