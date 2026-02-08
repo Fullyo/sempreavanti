@@ -47,9 +47,10 @@ export default function Transportation() {
             >
               <PhotoPlaceholder label="Private Suburban Transfer" aspectRatio="video" className="mb-6" />
               <h3 className="font-serif text-2xl mb-3">Private Airport Transfers</h3>
-              <p className="text-sm font-sans text-muted-foreground leading-relaxed">
-                Luxury Suburban vehicles with professional drivers. Arranged through your concierge prior to arrival. We'll track your flight and be there when you land — no waiting, no hassle.
+              <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-3">
+                Luxury Suburban vehicles with professional drivers. Arranged through your concierge prior to arrival. We'll track your flight and be there when you land — no waiting, no hassle. Seats up to 7 people.
               </p>
+              <p className="text-sm font-sans font-medium text-accent">$5,000 MXN round trip</p>
             </motion.div>
 
             <motion.div
@@ -62,11 +63,17 @@ export default function Transportation() {
               <PhotoPlaceholder label="Polaris UTV" aspectRatio="video" className="mb-6" />
               <h3 className="font-serif text-2xl mb-3">Polaris UTV Rentals</h3>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-4">
-                Two Polaris UTVs are available at the property for guest use. They're the best way to get around — zip to Sayulita in 10 minutes, Punta de Mita in 15. The 4×4 carritos remove any sense of isolation and make exploring the coast effortless and fun.
+                Polaris UTVs are available at the property for guest use. They're the best way to get around — zip to Sayulita in 10 minutes, Punta de Mita in 15. The 4×4 carritos remove any sense of isolation and make exploring the coast effortless and fun.
               </p>
-              <p className="text-sm font-sans text-muted-foreground leading-relaxed">
+              <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-4">
                 Wind in your hair, ocean on your left, jungle on your right — it's part of the Sempre Avanti experience.
               </p>
+              <div className="space-y-1 mb-3">
+                <p className="text-sm font-sans font-medium text-accent">2-Seater — $1,600 MXN / day</p>
+                <p className="text-sm font-sans font-medium text-accent">4-Seater — $1,900 MXN / day</p>
+                <p className="text-sm font-sans font-medium text-accent">6-Seater — $2,200 MXN / day</p>
+              </div>
+              <p className="text-xs font-sans text-muted-foreground">Range: Punta de Mita (south) to San Pancho (north)</p>
             </motion.div>
           </div>
         </div>

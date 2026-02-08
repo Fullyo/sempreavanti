@@ -12,7 +12,7 @@ const yogaProviders = [
 ];
 
 const massageProviders = [
-  { name: "Nirvanna Spa", services: "Shiatsu, Swedish, Aromatherapy, Deep Tissue", note: "In-villa or beachside" },
+  { name: "Nirvanna Spa", services: "Shiatsu, Swedish, Aromatherapy, Deep Tissue", note: "In-villa or beachside", price: "$1,500 MXN / person" },
   { name: "Bendita Waxing Studio & Spa", services: "Relaxation massage, facials, beauty treatments", note: "Full-service spa visits" },
   { name: "Buddha Gallery Boutique Spa", services: "Holistic bodywork, energy healing", note: "Artisan spa experience" },
 ];
@@ -45,9 +45,10 @@ export default function Wellness() {
           <SectionHeading eyebrow="8:30 – 9:30 AM" title="Daily Yoga & Movement" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <p className="text-base font-sans text-muted-foreground leading-relaxed mb-6">
+              <p className="text-base font-sans text-muted-foreground leading-relaxed mb-4">
                 Start each morning with a guided session on the beach or poolside. Your instructor tailors the practice to the group — yoga, stretching, breathwork, or light movement. Every day is different, every session is yours.
               </p>
+              <p className="text-sm font-sans font-medium text-accent mb-6">Private Yoga — $2,500 MXN · 1 hr 15 min</p>
               <h4 className="font-serif text-xl mb-4">Our Instructors</h4>
               <div className="space-y-4">
                 {yogaProviders.map((p) => (
@@ -75,9 +76,13 @@ export default function Wellness() {
               <p className="text-base font-sans text-muted-foreground leading-relaxed mb-4">
                 <strong className="font-medium text-foreground">Shea</strong> — a certified personal trainer and Pilates instructor — offers personalized mat classes, outdoor workouts, and nutritional advice. Sessions are held poolside, on the beach, or in the garden.
               </p>
-              <p className="text-sm font-sans text-muted-foreground leading-relaxed">
+              <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-4">
                 Whether you want to maintain your routine, try something new, or design a group fitness experience, Shea adapts to your goals.
               </p>
+              <div className="space-y-2 mt-4">
+                <p className="text-sm font-sans font-medium text-accent">Pilates — $1,000 MXN / person <span className="text-muted-foreground font-normal">(min 2 people)</span></p>
+                <p className="text-sm font-sans font-medium text-accent">Personal Training — $2,000 MXN / person <span className="text-muted-foreground font-normal">(weights included)</span></p>
+              </div>
             </div>
           </div>
         </div>
@@ -101,6 +106,7 @@ export default function Wellness() {
                 <h3 className="font-serif text-xl mb-2">{p.name}</h3>
                 <p className="text-xs font-sans text-accent mb-2">{p.services}</p>
                 <p className="text-sm font-sans text-muted-foreground">{p.note}</p>
+                {p.price && <p className="text-sm font-sans font-medium text-accent mt-2">{p.price}</p>}
               </motion.div>
             ))}
           </div>
@@ -117,9 +123,10 @@ export default function Wellness() {
               <p className="text-base font-sans font-light leading-relaxed opacity-85 mb-4">
                 Immersive sound healing sessions using crystal bowls and traditional instruments. Held on the beach at sunset or under the stars — a transformative group experience that resonates long after the last note fades.
               </p>
-              <p className="text-base font-sans font-light leading-relaxed opacity-85">
+              <p className="text-base font-sans font-light leading-relaxed opacity-85 mb-4">
                 Perfect for retreat groups, wedding parties, or anyone seeking a deeper connection to the rhythms of the coast.
               </p>
+              <p className="text-sm font-sans font-medium opacity-90">$2,500 MXN for up to 5 people · +$500 MXN per additional person</p>
             </div>
             <PhotoPlaceholder label="Sound Healing" className="!aspect-auto h-[400px]" />
           </div>
