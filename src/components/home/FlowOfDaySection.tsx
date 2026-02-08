@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { GuestyListing } from "@/hooks/useGuestyListings";
-import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 
 const flowItems = [
   {
@@ -28,6 +27,18 @@ const flowItems = [
     description: "Weddings, retreats, and gatherings on your private beach.",
     path: "/events",
   },
+  {
+    title: "Transportation",
+    subtitle: "UTV & Transfers",
+    description: "Polaris UTVs and private Suburban transfers from the airport.",
+    path: "/transportation",
+  },
+  {
+    title: "Location",
+    subtitle: "Riviera Nayarit",
+    description: "Minutes from Sayulita, Punta de Mita, and the best of the coast.",
+    path: "/location",
+  },
 ];
 
 interface FlowOfDaySectionProps {
@@ -35,11 +46,10 @@ interface FlowOfDaySectionProps {
 }
 
 export default function FlowOfDaySection({ listings }: FlowOfDaySectionProps) {
-  // Pull photos from different listings for variety
   const allPictures = listings?.flatMap((l) => l.pictures || []) || [];
 
   return (
-    <section className="py-20 md:py-32">
+    <section className="py-20 md:py-32" aria-label="Experiences and services">
       <div className="container">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -59,18 +69,18 @@ export default function FlowOfDaySection({ listings }: FlowOfDaySectionProps) {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
           {flowItems.map((item, i) => {
-            const photo = allPictures[i + 4]?.original;
+            const photo = allPictures[i + 2]?.original;
             return (
               <motion.div
                 key={item.title}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
+                transition={{ duration: 0.6, delay: i * 0.08 }}
               >
-                <Link to={item.path} className="block group relative overflow-hidden h-[420px]">
+                <Link to={item.path} className="block group relative overflow-hidden h-[380px]">
                   {photo ? (
                     <img
                       src={photo}
@@ -79,7 +89,7 @@ export default function FlowOfDaySection({ listings }: FlowOfDaySectionProps) {
                       loading="lazy"
                     />
                   ) : (
-                    <PhotoPlaceholder label={item.title} className="absolute inset-0 !aspect-auto" />
+                    <div className="absolute inset-0 bg-primary" />
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-6 text-primary-foreground">

@@ -5,10 +5,15 @@ import { useGuestyListings } from "@/hooks/useGuestyListings";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
 import HeroSection from "@/components/home/HeroSection";
+import ServicesGrid from "@/components/home/ServicesGrid";
 import FlowOfDaySection from "@/components/home/FlowOfDaySection";
-import PhotoMosaicSection from "@/components/home/PhotoMosaicSection";
+import LocationPreview from "@/components/home/LocationPreview";
+import CulinaryPreview from "@/components/home/CulinaryPreview";
 import HospitalitySection from "@/components/home/HospitalitySection";
+import GuestReviews from "@/components/home/GuestReviews";
 import QuoteSection from "@/components/home/QuoteSection";
+
+const BOOKING_URL = "https://casasempreavanti.guestybookings.com/en/properties/697bcfcf3f5e990014fbc4dd?minOccupancy=1";
 
 export default function Index() {
   const { data: listings, isLoading } = useGuestyListings();
@@ -17,9 +22,31 @@ export default function Index() {
     <Layout>
       <HeroSection listings={listings} />
 
-      {/* Estate Introduction */}
-      <section className="py-20 md:py-32">
+      {/* Estate Introduction with Stats */}
+      <section className="py-20 md:py-32" aria-label="Estate introduction">
         <div className="container">
+          {/* Stats row */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="flex flex-wrap justify-center gap-8 md:gap-16 mb-12"
+          >
+            {[
+              { value: "5", label: "Bedrooms" },
+              { value: "5", label: "Bathrooms" },
+              { value: "10", label: "Guests" },
+              { value: "Private", label: "Beach" },
+              { value: "Full", label: "Staff" },
+            ].map((stat) => (
+              <div key={stat.label} className="text-center">
+                <span className="font-serif text-3xl md:text-4xl block text-foreground">{stat.value}</span>
+                <span className="text-xs font-sans uppercase tracking-widest text-muted-foreground">{stat.label}</span>
+              </div>
+            ))}
+          </motion.div>
+
           <SectionHeading
             eyebrow="The Estate"
             title="More Than a Stay — A Destination"
@@ -76,21 +103,27 @@ export default function Index() {
         </div>
       </section>
 
+      <ServicesGrid />
+
       <FlowOfDaySection listings={listings} />
 
-      <PhotoMosaicSection listings={listings} />
+      <LocationPreview listings={listings} />
+
+      <CulinaryPreview listings={listings} />
 
       <HospitalitySection listings={listings} />
+
+      <GuestReviews />
 
       <QuoteSection />
 
       {/* CTA */}
-      <section className="relative py-20 md:py-32 overflow-hidden">
-        {listings?.[2]?.pictures?.[0] ? (
+      <section className="relative py-20 md:py-32 overflow-hidden" aria-label="Call to action">
+        {listings?.[2]?.pictures?.[1] ? (
           <>
             <img
-              src={listings[2].pictures[0].original}
-              alt="Sempre Avanti estate"
+              src={listings[2].pictures[1].original}
+              alt="Sempre Avanti beachfront estate at sunset"
               className="absolute inset-0 w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-black/50" />
@@ -105,12 +138,22 @@ export default function Index() {
             description="Sempre Avanti is more than a place to stay. It's a complete experience — designed so every guest type is supported, every stay feels intentional."
             light
           />
-          <Link
-            to="/contact"
-            className="inline-block px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors"
-          >
-            Inquire Now
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+            <Link
+              to="/contact"
+              className="inline-block px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors"
+            >
+              Inquire Now
+            </Link>
+            <a
+              href={BOOKING_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors"
+            >
+              Check Availability
+            </a>
+          </div>
         </div>
       </section>
     </Layout>
