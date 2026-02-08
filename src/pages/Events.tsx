@@ -1,39 +1,24 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
+import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 const eventTypes = [
-  {
-    title: "Beach Ceremonies",
-    description: "Exchange vows on your own private beach with the Pacific as your backdrop. Intimate or grand — the setting adapts to your vision.",
-  },
-  {
-    title: "Fire Pit Evenings",
-    description: "Gather around the fire pit as the stars come out. Post-ceremony celebrations, rehearsal dinners, or simply unforgettable evenings with your group.",
-  },
-  {
-    title: "Long-Table Beachfront Dinners",
-    description: "Chef-prepared multi-course dinners served at a beautifully set long table on the beach. Fire-lit, ocean-side, unforgettable.",
-  },
-  {
-    title: "Retreats & Workshops",
-    description: "The estate is perfectly suited for wellness retreats, creative workshops, corporate offsites, and transformational gatherings.",
-  },
-  {
-    title: "Bachelorette & Birthday Celebrations",
-    description: "Dedicated bartender, custom menus, adventure days, and beachside lounging — we create celebrations that feel effortless.",
-  },
-  {
-    title: "Family Gatherings",
-    description: "Five bedrooms, flexible sleeping configurations, and a full team to take care of everything. Multi-generational groups feel right at home.",
-  },
+  { title: "Beach Ceremonies", description: "Exchange vows on your own private beach with the Pacific as your backdrop. Intimate or grand — the setting adapts to your vision." },
+  { title: "Fire Pit Evenings", description: "Gather around the fire pit as the stars come out. Post-ceremony celebrations, rehearsal dinners, or simply unforgettable evenings with your group." },
+  { title: "Long-Table Beachfront Dinners", description: "Chef-prepared multi-course dinners served at a beautifully set long table on the beach. Fire-lit, ocean-side, unforgettable." },
+  { title: "Retreats & Workshops", description: "The estate is perfectly suited for wellness retreats, creative workshops, corporate offsites, and transformational gatherings." },
+  { title: "Bachelorette & Birthday", description: "Dedicated bartender, custom menus, adventure days, and beachside lounging — we create celebrations that feel effortless." },
+  { title: "Family Gatherings", description: "Five bedrooms, flexible sleeping configurations, and a full team to take care of everything. Multi-generational groups feel right at home." },
 ];
 
 export default function Events() {
   return (
     <Layout>
-      <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center bg-primary">
+      <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-primary" />
+        <PhotoPlaceholder label="Celebrations" className="absolute inset-0 !aspect-auto opacity-30" />
         <div className="relative z-10 text-center text-primary-foreground px-4">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Celebrate</p>
           <h1 className="font-serif text-5xl md:text-7xl font-light">Weddings & Events</h1>
@@ -62,12 +47,21 @@ export default function Events() {
                 transition={{ duration: 0.5, delay: i * 0.08 }}
                 className="bg-card p-8"
               >
-                <div className="h-48 bg-muted mb-6 flex items-center justify-center">
-                  <span className="text-xs font-sans text-muted-foreground">Event photo placeholder</span>
-                </div>
+                <PhotoPlaceholder label={event.title} aspectRatio="video" className="mb-6" />
                 <h3 className="font-serif text-2xl mb-3">{event.title}</h3>
                 <p className="text-sm font-sans text-muted-foreground leading-relaxed">{event.description}</p>
               </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Venue spaces gallery */}
+      <section className="py-4">
+        <div className="container max-w-6xl">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {["Beach Ceremony", "Fire Pit", "Long Table", "Pool Party"].map((label) => (
+              <PhotoPlaceholder key={label} label={label} />
             ))}
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
+import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -44,7 +45,9 @@ export default function Contact() {
 
   return (
     <Layout>
-      <section className="relative h-[50vh] min-h-[350px] flex items-center justify-center bg-primary">
+      <section className="relative h-[50vh] min-h-[350px] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-primary" />
+        <PhotoPlaceholder label="Casa Sempre Avanti" className="absolute inset-0 !aspect-auto opacity-30" />
         <div className="relative z-10 text-center text-primary-foreground px-4">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">We'd Love to Hear from You</p>
           <h1 className="font-serif text-5xl md:text-7xl font-light">Get in Touch</h1>
@@ -62,93 +65,47 @@ export default function Contact() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-2 block">First Name</label>
-                <Input
-                  value={form.firstName}
-                  onChange={(e) => setForm({ ...form, firstName: e.target.value })}
-                  required
-                  className="bg-card border-border"
-                />
+                <Input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} required className="bg-card border-border" />
               </div>
               <div>
                 <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-2 block">Last Name</label>
-                <Input
-                  value={form.lastName}
-                  onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-                  required
-                  className="bg-card border-border"
-                />
+                <Input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} required className="bg-card border-border" />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-2 block">Email</label>
-                <Input
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  required
-                  className="bg-card border-border"
-                />
+                <Input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required className="bg-card border-border" />
               </div>
               <div>
                 <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-2 block">Phone</label>
-                <Input
-                  type="tel"
-                  value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  className="bg-card border-border"
-                />
+                <Input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className="bg-card border-border" />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-2 block">Preferred Dates</label>
-                <Input
-                  value={form.dates}
-                  onChange={(e) => setForm({ ...form, dates: e.target.value })}
-                  placeholder="e.g., March 15-22, 2026"
-                  className="bg-card border-border"
-                />
+                <Input value={form.dates} onChange={(e) => setForm({ ...form, dates: e.target.value })} placeholder="e.g., March 15-22, 2026" className="bg-card border-border" />
               </div>
               <div>
                 <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-2 block">Group Size</label>
-                <Input
-                  value={form.groupSize}
-                  onChange={(e) => setForm({ ...form, groupSize: e.target.value })}
-                  placeholder="e.g., 8 adults, 2 children"
-                  className="bg-card border-border"
-                />
+                <Input value={form.groupSize} onChange={(e) => setForm({ ...form, groupSize: e.target.value })} placeholder="e.g., 8 adults, 2 children" className="bg-card border-border" />
               </div>
             </div>
 
             <div>
               <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-2 block">Occasion</label>
-              <Input
-                value={form.occasion}
-                onChange={(e) => setForm({ ...form, occasion: e.target.value })}
-                placeholder="e.g., Wedding, Family Reunion, Retreat, Vacation"
-                className="bg-card border-border"
-              />
+              <Input value={form.occasion} onChange={(e) => setForm({ ...form, occasion: e.target.value })} placeholder="e.g., Wedding, Family Reunion, Retreat, Vacation" className="bg-card border-border" />
             </div>
 
             <div>
               <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-2 block">Message</label>
-              <Textarea
-                value={form.message}
-                onChange={(e) => setForm({ ...form, message: e.target.value })}
-                rows={5}
-                placeholder="Tell us about your dream stay..."
-                className="bg-card border-border"
-              />
+              <Textarea value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} rows={5} placeholder="Tell us about your dream stay..." className="bg-card border-border" />
             </div>
 
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full py-6 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90"
-            >
+            <Button type="submit" disabled={loading} className="w-full py-6 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90">
               {loading ? "Sending..." : "Send Inquiry"}
             </Button>
           </form>

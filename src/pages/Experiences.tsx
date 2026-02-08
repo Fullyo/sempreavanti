@@ -1,61 +1,83 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
+import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 const categories = [
   {
-    title: "Land & Adventure",
-    eyebrow: "Explore",
+    title: "Surfing",
+    eyebrow: "Catch a Wave",
     items: [
-      { name: "Zipline & Canopy Tours", desc: "Soar above the jungle canopy on world-class ziplines through the Sierra Madre." },
-      { name: "ATV Tours", desc: "Navigate mountain trails and coastal paths on guided ATV adventures." },
-      { name: "RZR Tours", desc: "Off-road through rugged terrain in powerful side-by-side vehicles." },
-      { name: "Horseback Riding", desc: "Trail rides through the jungle and along the beach at sunset." },
-      { name: "Jungle & Monkey Mountain Hikes", desc: "Guided hikes through tropical jungle with wildlife encounters." },
-      { name: "Polaris UTV Rentals", desc: "Two UTVs available at the house — the best way to get to Sayulita and Punta de Mita." },
+      { name: "Captain Pablo's", desc: "Right point break — consistent, fun, great for intermediate surfers. Beachfront restaurant after." },
+      { name: "Don Pedro's", desc: "Left break right in front of the iconic restaurant. Watch the surfers while you eat." },
+      { name: "Burros", desc: "Powerful beach break north of Sayulita. For experienced surfers." },
+      { name: "La Lancha", desc: "World-class left point break. Long rides, stunning setting. Advanced." },
+      { name: "Punta Mita", desc: "Several breaks around the point — varied conditions for all levels." },
+      { name: "Lessons with Chillo", desc: "The best beginner instructor in Sayulita. Patient, fun, and your kids will love him." },
+    ],
+  },
+  {
+    title: "Golf",
+    eyebrow: "Tee Off",
+    items: [
+      { name: "Litibú Golf Course", desc: "15 minutes away. 18-hole Greg Norman design with ocean views. Our top recommendation." },
+      { name: "Four Seasons Punta Mita", desc: "Two world-class Jack Nicklaus courses — Pacífico and Bahía. Bucket-list golf." },
+      { name: "El Flamingo", desc: "9-hole course near Bucerías. Casual, fun, great for a quick round." },
+      { name: "El Tigre", desc: "18-hole course in Nuevo Vallarta. Von Hagge design with water features." },
     ],
   },
   {
     title: "Ocean & Water",
     eyebrow: "Dive In",
     items: [
-      { name: "Surf Lessons", desc: "Learn to surf at some of Mexico's best breaks with experienced local instructors." },
-      { name: "Surf Spots Guide", desc: "Sayulita, La Lancha, Punta de Mita, Burros, and El Anclote — we know every break." },
+      { name: "Snorkeling — Playa de los Muertos", desc: "10 minutes from the house. Calm, clear water perfect for snorkeling with kids." },
+      { name: "Marietas Islands", desc: "Protected national park. Snorkeling, hidden beach, whale watching in season." },
+      { name: "Scuba Diving — Sebastian", desc: "PADI certified instructor. Beginner to advanced certifications available." },
+      { name: "Kite Surfing", desc: "Available in Punta Mita when conditions are right. Equipment and instruction provided." },
       { name: "Paddleboard Tours", desc: "Glide along the coast on stand-up paddleboard excursions." },
-      { name: "Snorkeling & Boat Trips", desc: "Explore the Marietas Islands and hidden beaches." },
-      { name: "Sport Fishing", desc: "Deep-sea fishing for marlin, tuna, mahi-mahi, and more." },
-      { name: "Whale Watching", desc: "Seasonal humpback whale encounters from December through March." },
+      { name: "Whale Watching", desc: "Seasonal humpback encounters from December through March." },
     ],
   },
   {
     title: "Sailing",
     eyebrow: "Set Sail",
     items: [
-      { name: "Fat Cat", desc: "A spacious catamaran for larger groups — perfect for sunset sails and celebrations." },
-      { name: "Ally Cat", desc: "An intimate sailing experience along the Riviera Nayarit coast." },
-      { name: "Ally Cat Too", desc: "Private charter with snorkeling stops and onboard refreshments." },
-      { name: "Ally Cat 3", desc: "The newest addition — luxury sailing with all the amenities." },
+      { name: "Fat Cat", desc: "Spacious catamaran for larger groups — sunset sails and celebrations up to 30 guests." },
+      { name: "Ally Cat", desc: "Intimate sailing for up to 12 guests. Snorkeling stops, open bar, fresh ceviche on board." },
+      { name: "Ally Cat Too", desc: "Private charter for up to 16. Paddleboards, snorkel gear, and onboard refreshments included." },
+      { name: "Ally Cat 3", desc: "The newest and largest — luxury sailing with all amenities for bigger groups." },
+    ],
+  },
+  {
+    title: "Fishing",
+    eyebrow: "Reel In",
+    items: [
+      { name: "Marla's Sport Fishing", desc: "La Cruz marina. Deep-sea for marlin, tuna, mahi-mahi. Full and half-day charters." },
+      { name: "Pato — Sayulita", desc: "Local panga fishing right from Sayulita beach. Authentic, affordable, unforgettable." },
+      { name: "Catch & Cook", desc: "Bring your catch back and Ricardo will prepare it for dinner. The freshest meal you'll ever have." },
+    ],
+  },
+  {
+    title: "Land & Adventure",
+    eyebrow: "Explore",
+    items: [
+      { name: "Zipline & Canopy Tours", desc: "Soar above the jungle canopy on world-class ziplines through the Sierra Madre." },
+      { name: "ATV & RZR Tours", desc: "Navigate mountain trails and coastal paths on guided off-road adventures." },
+      { name: "Horseback Riding", desc: "Trail rides through the jungle and along the beach at sunset." },
+      { name: "Jungle & Monkey Mountain Hikes", desc: "Guided hikes through tropical jungle with wildlife encounters." },
+      { name: "Polaris UTV Rentals", desc: "Two UTVs available at the house — the best way to get to Sayulita and Punta de Mita." },
     ],
   },
   {
     title: "Cultural & Local",
     eyebrow: "Discover",
     items: [
-      { name: "La Cruz Sunday Market", desc: "The region's best market — fresh seafood, artisan crafts, live music, and authentic Mexican culture." },
-      { name: "Puerto Vallarta Malecón", desc: "The iconic seaside boardwalk with art, dining, and nightlife." },
-      { name: "Sayulita Friday Farmers Market", desc: "Organic produce, local treats, and artisan goods in the heart of Sayulita." },
+      { name: "La Cruz Sunday Market", desc: "The region's best — fresh seafood, artisan crafts, live music, and authentic Mexican culture." },
+      { name: "Sayulita Friday Market", desc: "Organic produce, local treats, and artisan goods in the heart of Sayulita." },
+      { name: "Puerto Vallarta Malecón", desc: "Iconic seaside boardwalk with art, dining, and nightlife." },
       { name: "Cooking Classes", desc: "Learn traditional Mexican cuisine with local chefs." },
-      { name: "Tequila & Mezcal Tastings", desc: "Curated tastings of Mexico's finest spirits." },
-    ],
-  },
-  {
-    title: "Combo Adventures",
-    eyebrow: "Best of Both",
-    items: [
-      { name: "ATV + Zipline", desc: "Combine the thrill of off-road riding with canopy flying." },
-      { name: "ATV + Horseback", desc: "A full day of land adventure — ATV trails and horseback riding." },
-      { name: "Custom Group Packages", desc: "We design bespoke adventure days for your group. Just tell Eno what you're dreaming of." },
+      { name: "Tequila & Mezcal Tastings", desc: "Curated tastings of Mexico's finest spirits at La Selecta in Sayulita." },
     ],
   },
 ];
@@ -63,7 +85,9 @@ const categories = [
 export default function Experiences() {
   return (
     <Layout>
-      <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center bg-primary">
+      <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-primary" />
+        <PhotoPlaceholder label="Adventures" className="absolute inset-0 !aspect-auto opacity-30" />
         <div className="relative z-10 text-center text-primary-foreground px-4">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Riviera Nayarit</p>
           <h1 className="font-serif text-5xl md:text-7xl font-light">Experiences & Adventures</h1>
@@ -94,9 +118,7 @@ export default function Experiences() {
                   transition={{ duration: 0.5, delay: i * 0.05 }}
                   className="group bg-background border border-border p-6 hover:border-accent transition-colors"
                 >
-                  <div className="h-40 bg-muted mb-4 flex items-center justify-center">
-                    <span className="text-xs font-sans text-muted-foreground">Photo placeholder</span>
-                  </div>
+                  <PhotoPlaceholder label={item.name} aspectRatio="video" className="mb-4" />
                   <h3 className="font-serif text-xl mb-2 group-hover:text-accent transition-colors">{item.name}</h3>
                   <p className="text-sm font-sans text-muted-foreground leading-relaxed">{item.desc}</p>
                 </motion.div>
