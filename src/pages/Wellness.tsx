@@ -12,7 +12,7 @@ const yogaProviders = [
 ];
 
 const massageProviders = [
-  { name: "Nirvanna Spa", services: "Shiatsu, Swedish, Aromatherapy, Deep Tissue", note: "In-villa or beachside", price: "$1,500 MXN / person" },
+  { name: "Nirvanna Spa", services: "Shiatsu, Swedish, Aromatherapy, Deep Tissue", note: "In-villa or beachside", price: "~$75 USD / person" },
   { name: "Bendita Waxing Studio & Spa", services: "Relaxation massage, facials, beauty treatments", note: "Full-service spa visits" },
   { name: "Buddha Gallery Boutique Spa", services: "Holistic bodywork, energy healing", note: "Artisan spa experience" },
 ];
@@ -48,7 +48,7 @@ export default function Wellness() {
               <p className="text-base font-sans text-muted-foreground leading-relaxed mb-4">
                 Start each morning with a guided session on the beach or poolside. Your instructor tailors the practice to the group — yoga, stretching, breathwork, or light movement. Every day is different, every session is yours.
               </p>
-              <p className="text-sm font-sans font-medium text-accent mb-6">Private Yoga — $2,500 MXN · 1 hr 15 min</p>
+              <p className="text-sm font-sans font-medium text-accent mb-6">Private Yoga — ~$125 USD · 1 hr 15 min</p>
               <h4 className="font-serif text-xl mb-4">Our Instructors</h4>
               <div className="space-y-4">
                 {yogaProviders.map((p) => (
@@ -80,8 +80,8 @@ export default function Wellness() {
                 Whether you want to maintain your routine, try something new, or design a group fitness experience, Shea adapts to your goals.
               </p>
               <div className="space-y-2 mt-4">
-                <p className="text-sm font-sans font-medium text-accent">Pilates — $1,000 MXN / person <span className="text-muted-foreground font-normal">(min 2 people)</span></p>
-                <p className="text-sm font-sans font-medium text-accent">Personal Training — $2,000 MXN / person <span className="text-muted-foreground font-normal">(weights included)</span></p>
+                <p className="text-sm font-sans font-medium text-accent">Pilates — ~$50 USD / person <span className="text-muted-foreground font-normal">(min 2 people)</span></p>
+                <p className="text-sm font-sans font-medium text-accent">Personal Training — ~$100 USD / person <span className="text-muted-foreground font-normal">(weights included)</span></p>
               </div>
             </div>
           </div>
@@ -126,7 +126,7 @@ export default function Wellness() {
               <p className="text-base font-sans font-light leading-relaxed opacity-85 mb-4">
                 Perfect for retreat groups, wedding parties, or anyone seeking a deeper connection to the rhythms of the coast.
               </p>
-              <p className="text-sm font-sans font-medium opacity-90">$2,500 MXN for up to 5 people · +$500 MXN per additional person</p>
+              <p className="text-sm font-sans font-medium opacity-90">~$125 USD for up to 5 people · +~$25 USD per additional person</p>
             </div>
             <PhotoPlaceholder label="Sound Healing" className="!aspect-auto h-[400px]" />
           </div>
@@ -157,6 +157,12 @@ export default function Wellness() {
           </Link>
         </div>
       </section>
+
+      <div className="container max-w-4xl py-8">
+        <p className="text-xs font-sans text-muted-foreground text-center italic">
+          Prices shown in USD are approximate. Final pricing is in Mexican Pesos at the current exchange rate.
+        </p>
+      </div>
     </Layout>
   );
 }

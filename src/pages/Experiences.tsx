@@ -9,8 +9,8 @@ const categories = [
     title: "Surfing",
     eyebrow: "Catch a Wave",
     items: [
-      { name: "Surf Lesson — Sayulita", desc: "Learn to ride in Sayulita's friendly waves. Boards and instruction included.", price: "$1,200 MXN / person", note: "Minimum 2 people" },
-      { name: "Surf Experience — La Lancha", desc: "World-class left point break near Punta de Mita. Transportation, boards, 1.5-hour lesson, and 30 minutes of free surf included.", price: "$2,000 MXN / person" },
+      { name: "Surf Lesson — Sayulita", desc: "Learn to ride in Sayulita's friendly waves. Boards and instruction included.", price: "~$60 USD / person", note: "Minimum 2 people" },
+      { name: "Surf Experience — La Lancha", desc: "World-class left point break near Punta de Mita. Transportation, boards, 1.5-hour lesson, and 30 minutes of free surf included.", price: "~$100 USD / person" },
       { name: "Captain Pablo's", desc: "Right point break — consistent, fun, great for intermediate surfers. Beachfront restaurant after." },
       { name: "Don Pedro's", desc: "Left break right in front of the iconic restaurant. Watch the surfers while you eat." },
       { name: "Burros", desc: "Powerful beach break north of Sayulita. For experienced surfers." },
@@ -22,18 +22,18 @@ const categories = [
     title: "Food & Culinary",
     eyebrow: "Taste Mexico",
     items: [
-      { name: "Sayulita Taco Tour", desc: "Pickup, transportation, 3–4 taco spots, local history, and a finish at an agave field with blue corn tacos and quesadillas. Food included up to $400 MXN — extras paid by guest.", price: "$1,200 MXN / person", note: "Tue–Sun, minimum 4 people" },
-      { name: "Private Cooking Class", desc: "In-house Mexican cooking class with a local chef. Learn traditional recipes and enjoy what you make.", price: "$1,200 MXN / person" },
+      { name: "Sayulita Taco Tour", desc: "Pickup, transportation, 3–4 taco spots, local history, and a finish at an agave field with blue corn tacos and quesadillas. Food included up to ~$20 USD — extras paid by guest.", price: "~$60 USD / person", note: "Tue–Sun, minimum 4 people" },
+      { name: "Private Cooking Class", desc: "In-house Mexican cooking class with a local chef. Learn traditional recipes and enjoy what you make.", price: "~$60 USD / person" },
     ],
   },
   {
     title: "Boats & Fishing",
     eyebrow: "On the Water",
     items: [
-      { name: "Private Boat Tour", desc: "Whale watching, snorkeling equipment, light trolling, water, sodas, and beer included. 3 hours, up to 7 guests.", price: "$9,500 MXN", note: "4-hour extension: $11,500 MXN" },
-      { name: "Fishing Charter", desc: "4-hour charter with water, sodas, beer, and all fishing equipment. Up to 4 people.", price: "$10,000 MXN" },
-      { name: "Spearfishing — Inshore", desc: "4–5 hour inshore spearfishing trip. Equipment and beverages included. Up to 3–4 people.", price: "$12,000 MXN" },
-      { name: "Spearfishing — Deep Water", desc: "Full-day deep water trip (7 AM – 4 PM). Equipment, beverages, and sashimi preparation included. Up to 3 people.", price: "$21,000 MXN" },
+      { name: "Private Boat Tour", desc: "Whale watching, snorkeling equipment, light trolling, water, sodas, and beer included. 3 hours, up to 7 guests.", price: "~$475 USD", note: "4-hour extension: ~$575 USD" },
+      { name: "Fishing Charter", desc: "4-hour charter with water, sodas, beer, and all fishing equipment. Up to 4 people.", price: "~$500 USD" },
+      { name: "Spearfishing — Inshore", desc: "4–5 hour inshore spearfishing trip. Equipment and beverages included. Up to 3–4 people.", price: "~$600 USD" },
+      { name: "Spearfishing — Deep Water", desc: "Full-day deep water trip (7 AM – 4 PM). Equipment, beverages, and sashimi preparation included. Up to 3 people.", price: "~$1,050 USD" },
       { name: "Catch & Cook", desc: "Bring your catch back and Ricardo will prepare it for dinner. The freshest meal you'll ever have." },
     ],
   },
@@ -77,7 +77,7 @@ const categories = [
       { name: "ATV & RZR Tours", desc: "Navigate mountain trails and coastal paths on guided off-road adventures." },
       { name: "Horseback Riding", desc: "Trail rides through the jungle and along the beach at sunset." },
       { name: "Jungle & Monkey Mountain Hikes", desc: "Guided hikes through tropical jungle with wildlife encounters." },
-      { name: "Polaris UTV Rentals", desc: "Available at the property. The best way to get to Sayulita and Punta de Mita. 2-seater, 4-seater, and 6-seater options.", price: "From $1,600 MXN / day" },
+      { name: "Polaris UTV Rentals", desc: "Available at the property. The best way to get to Sayulita and Punta de Mita. 2-seater, 4-seater, and 6-seater options.", price: "From ~$80 USD / day" },
     ],
   },
   {
@@ -160,6 +160,12 @@ export default function Experiences() {
           </Link>
         </div>
       </section>
+
+      <div className="container max-w-4xl py-8">
+        <p className="text-xs font-sans text-muted-foreground text-center italic">
+          Prices shown in USD are approximate. Final pricing is in Mexican Pesos at the current exchange rate.
+        </p>
+      </div>
     </Layout>
   );
 }

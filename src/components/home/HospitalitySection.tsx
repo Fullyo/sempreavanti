@@ -36,7 +36,7 @@ export default function HospitalitySection({ listings }: HospitalitySectionProps
               {[
                 { label: "Private Chefs", value: "2" },
                 { label: "Dedicated Staff", value: "4+" },
-                { label: "On-Site Daily", value: "Yes" },
+                { label: "Years of Service", value: "8+" },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
                   <span className="font-serif text-3xl block">{stat.value}</span>
