@@ -1,114 +1,140 @@
 
+# Full Content Overhaul: Casa Sempre Avanti Website
 
-# Casa Sempre Avanti — Luxury Beachfront Destination Website
+## Problems Identified
 
-## Vision
-A high-end, immersive website that positions Sempre Avanti not as a vacation rental, but as a **complete private beachfront destination** — where wellness, dining, adventure, and celebration flow seamlessly. The design will be elegant and editorial, inspired by the warmth of the property photos, with earth tones, ocean blues, and gold accents.
-
-## Backend Setup (Lovable Cloud + Supabase)
-
-### Guesty API Integration
-- Store the Guesty client ID and secret as Supabase secrets
-- Create an edge function that authenticates via OAuth2, fetches the 3 listings (Casa Sempre Avanti, Casa Pietro, Casa Luisa), and returns photos, descriptions, amenities, and availability
-- All property photos and descriptions will be pulled live from Guesty
-
-### Stripe Integration
-- Enable Stripe for the hidden pricing/checkout page
-- Guests can add activities to a cart and pay directly
+1. **Homepage is bare**: Only has a hero, a small estate intro, emoji-based highlights, a thin photo strip, and a CTA -- far too minimal for a luxury property website.
+2. **Emoji icons are inappropriate**: Using emojis like a yoga emoji, fork/knife, wave, and party popper looks cheap and childish for a high-end estate. These need to be replaced with elegant, minimal line icons from Lucide or removed entirely in favor of photo-driven cards.
+3. **All pages lack photo placeholders**: Most pages show plain colored backgrounds (`bg-primary`, `bg-muted`) instead of proper image placeholder areas with aspect ratios and elegant "coming soon" treatments.
+4. **Content is thin across all pages**: Many pages are missing significant content from the owner's documents (full menus, detailed restaurant recommendations, surf spots, shopping, golf, spa details, etc.).
+5. **Guesty API rate-limited**: The edge function is hitting 429 errors because each page load triggers a new request, and there's no retry/backoff logic. Need to add retry logic and better error handling.
+6. **No photo galleries pulled from Guesty**: The listings hook fetches data but pages don't use photos extensively -- only the hero and villa sections try to use them.
 
 ---
 
-## Pages & Features
+## Plan
 
-### 1. Homepage
-- Full-screen hero with a stunning property photo and the tagline capturing the "complete destination" positioning
-- Brief introduction to the estate concept: two beachfront villas, five bedrooms, fully hosted
-- Visual section highlights: Wellness · Dining · Adventures · Celebrations
-- "Inquire" call-to-action throughout
-- Subtle scroll animations for an editorial luxury feel
+### 1. Fix Guesty Edge Function (Rate Limiting)
 
-### 2. The Villas
-- Overview of Sempre Avanti as a whole estate (the pitch: book as one destination)
-- Individual sections for **Casa Pietro** and **Casa Luisa** — photos and descriptions pulled from Guesty
-- Sleeping configuration details (luxury king suites, flexible configurations for groups)
-- Amenities: private beach, pool, outdoor living spaces, fire pit, beachfront dining
-- Photo galleries with placeholders for any missing images
+- Add exponential backoff retry logic (3 retries with increasing delay) to the token request
+- Add a longer cache for the token (avoid re-requesting)
+- Add response caching headers so the browser/CDN can cache the listing data
+- This will fix the 429 errors and ensure photos actually load
 
-### 3. Private Chef
-- Ricardo & Crethell's story and approach
-- The full menu: breakfast, appetizers, lunch/dinner, desserts — presented beautifully
-- Special features: Pizza Night, catch-of-the-day preparations
-- Sunset Margarita Ritual as a highlighted experience
-- Dedicated bartender services
-- "Inquire for pricing" — no prices shown
+### 2. Homepage -- Complete Rebuild
 
-### 4. Wellness
-- Daily morning wellness practice (8:30–9:30am): yoga, stretching, breathwork, light movement
-- Personal trainer availability
-- Massage services (in-house)
-- Sound bath sessions
-- The wellness spaces: beachfront, pool area, dedicated practice areas
-- All pricing via inquiry only
+Replace the current bare homepage with a rich, editorial luxury experience:
 
-### 5. Experiences & Adventures
-- **Land & Adventure**: Zipline/canopy tours, ATV tours, RZR tours, horseback riding, jungle/Monkey Mountain hikes, Polaris UTV rentals (2 available at the house — best way to get to Sayulita & Punta de Mita)
-- **Ocean & Water**: Surf lessons & surf spots guide, paddleboard tours, snorkeling/boat trips, sport fishing, whale watching (seasonal)
-- **Sailing**: Ally Cat fleet options (Fat Cat, Ally Cat, Ally Cat Too, Ally Cat 3) for private charters and shared sails
-- **Cultural & Local**: La Cruz Sunday Market, Puerto Vallarta Malecón, Sayulita Friday Farmers Market, cooking classes, tequila/mezcal tastings
-- **Combos**: ATV + Zipline, ATV + Horseback, custom group packages
-- Powered by Rancho Mi Chula Tours partnership
-- Visual grid layout inspired by the Casa Tara reference page
+- **Hero**: Full-bleed Guesty photo with parallax-style overlay, animated text entrance (keep current approach but ensure it loads a photo)
+- **Estate Introduction**: Keep but add two villa photo cards from Guesty (already partially done)
+- **"Flow of the Day" section**: Replace emoji highlights with an elegant photo-driven grid. Four tall cards with overlay text, each linking to the relevant page. Use Guesty property photos as backgrounds. No emojis -- use elegant serif text over images
+- **Photo mosaic/gallery**: Pull 8-12 photos from all 3 Guesty listings into a masonry-style grid showcasing the property
+- **Hospitality section**: New section about the "hosted, not rented" philosophy with staff mentions
+- **Experiences ribbon**: Horizontal scroll of experience categories with photo placeholders and overlay text
+- **Testimonial/quote section**: Large serif quote about the Sempre Avanti philosophy
+- **CTA section**: Keep and enhance with a background photo
 
-### 6. Weddings & Events
-- The estate as a celebration venue: ceremonies on the beach, fire pit evening gatherings, long-table beachfront dinners
-- Capacity and configuration options
-- Coordination by Eno and team
-- After-hours catering and bartender services
-- Photo placeholders for event setups
-- Inquiry-driven — no pricing displayed
+### 3. The Villas Page -- Enhance
 
-### 7. Location
-- Interactive or embedded map showing Sempre Avanti's position relative to Sayulita, Punta de Mita, San Pancho, La Cruz, Puerto Vallarta
-- Neighborhood guides: Sayulita town, dining recommendations (Don Pedro's, Café Sayulita, etc.), shopping highlights
-- San Pancho, El Anclote, Punta de Mita nearby attractions
-- The "Patzcuaro is very safe" positioning
+- Use all available Guesty photos in larger gallery grids
+- Add a dedicated section about the estate as a whole (private beach, pool, fire pit, beachfront dining area)
+- Add the "emotional center" content: morning wellness, ceremonies, welcome cocktails
+- Add the fire pit and beachfront dining descriptions
+- Better photo gallery with lightbox-style layout (larger images, 3-column grid)
 
-### 8. Concierge & Staff
-- **Eno** — head concierge, grew up in Sayulita, knows everything and everyone, organizes all experiences
-- **Ricardo & Crethell** — private chefs
-- **Angy** — daily housekeeping
-- **Paco** — caretaker, grounds, pool, beach setup
-- The hosting philosophy: "You're not checking in — you're being hosted"
-- Daily housekeeping, arrival coordination, ongoing support, direct access throughout the stay
+### 4. Private Chef Page -- Full Menu from Documents
 
-### 9. Transportation
-- Private luxury Suburban transfers from Puerto Vallarta airport (PVR)
-- 2 Polaris UTVs available at the property for guest use
-- How the 4×4 carritos remove isolation and connect to Sayulita
-- Inquiry to arrange
+- Add the complete real menu from the owner's document:
+  - **Breakfast**: Chilaquiles, Ranchero eggs, Waffles, Pancakes, Breakfast burritos, Blueberry pancakes, French toast, Eggs Benedict, Enchiladas suizas, Scrambled eggs, Avocado toast, Grilled cheese, Croque madam
+  - **Appetizers**: Guac and Chips, Catch of the Day (sashimi/ceviche/aguachile), Cactus Salad, Corn and Beet Root Salad, Shrimp Sashimi, Tortilla Soup, Sopes, Shrimp Diabla, Tuna Tartar, Sweet Potato Sashimi
+  - **Lunch/Dinner**: Pozole, Pastor Catch of the Day, Mexican Style Grill Steak, Mole Poblano, Zarandeado, Pipian Duo, Pork Belly, Barbacoa, Enchiladas, Tetela de Birria, Hibiscus Mole, Chile Relleno
+  - **Desserts**: Caramel Flan, Rice Pudding, Capirotada, Churros, Corn Bread, Volcan, Fried Banana, Bunuelos, Jericalla
+- Add Pizza Night with real details (5-hour oven heating, custom toppings)
+- Add proper photo placeholders for food imagery (tall aspect-ratio cards)
+- Sunset Margarita section with pricing context (pitcher pricing from doc)
+- Bartender availability details
 
-### 10. Get in Touch (Contact/Inquiry)
-- Beautiful inquiry form
-- Submissions sent directly into Guesty as new leads via the Guesty inquiry API
-- Fields: dates, group size, occasion, message
-- No pricing shown — all handled through conversation
+### 5. Wellness Page -- Add Full Details
 
-### 11. Hidden Pricing & Checkout Page (not in navigation)
-- Accessible via a direct link (shared with guests pre-booking or during their stay)
-- Full activity pricing list with both price tiers shown:
-  - Yoga, Sound bath, Massages, Laundry, Polaris rentals, Cooking classes
-  - Early check-in/late checkout, after-hours dining, happy hour, extra guests
-- Add-to-cart functionality
-- Stripe checkout for payment
-- Clean, simple shopping experience
+- Add real provider names and details from documents:
+  - Yoga: Narayani, Paraiso Yoga, Vanessa (Ashtanga/Hatha), Hotelito de los Suenos
+  - Pilates and Personal Training: Shea -- personalized mat classes, outdoor workouts, nutritional advice
+  - Massage providers: Nirvanna Spa (Shiatsu/Swedish/aromatherapy), Bendita Waxing Studio and Spa, Buddha Gallery Boutique Spa
+- Add photo placeholders for each wellness offering (large, atmospheric images)
+- Sound bath section with more atmosphere
+
+### 6. Experiences Page -- Complete with All Activities
+
+Add missing activities from the documents:
+- **Golf**: Litibu (15 min, 18 holes), Four Seasons Punta Mita (2 courses), El Flamingo, El Tigre
+- **Surfing spots detail**: Captain Pablo's (right break), Don Pedro's (left break), Burros, Punta Mita, La Lancha -- with Chillo for beginners
+- **Snorkeling/Diving**: Playa de los Muertos (10 min, calm), Marietas Islands, Sebastian for diving certification
+- **Kite surfing**: Available in Punta Mita
+- **Fishing detail**: Marla's Sport Fishing (La Cruz), Pato (Sayulita), panga fishing, catch-and-cook option
+- Replace the generic "Photo placeholder" boxes with styled image placeholder cards
+- Add Ally Cat sailing details properly (boat sizes, what's included)
+
+### 7. Location Page -- Massive Content Addition
+
+Add all the restaurant and shopping recommendations from the documents:
+- **Sayulita restaurants**: Don Pedro's, Cafe Sayulita, Xochi, Purillo, Naty's Kitchen, Los Corazones, Esperanza, Choco Banana, Paninos, El Break, Captain Pablo, El Costeno, Falafel and Friends, La Terrazola, Tacos Ivan, Aaleya's, Sayulita Public House, Escondido Wine Bar, Hotel Hafa Wine Bar
+- **San Pancho**: Cafe del Mar, Mar Plata, La Perla, La Ola Rica
+- **El Anclote/Punta Mita**: Si Senor, Si Sushi, Blue Shrimp, Tuna Blanca, Casa Teresa, Rosa Mexicana, La Serenata BBQ, El Coral, Tino's, El Dorado, NAEF Cuisine
+- **Four Seasons/St. Regis**: Aramara, Bahia, Ketsi, Carolina, Sea Breeze, Las Marietta's
+- **Shopping in Sayulita**: Pachamama, Artefacto, Galleria Hamaca, Gypsy Galleria, Espuma do Mar, Revolution del Sueno, Ula, Debbie Cuevas, La Selecta (tequila tastings), Terrenal (organic store)
+- **Markets**: Sayulita Friday market, La Cruz Sunday market (expanded details)
+- **Nightlife**: Monday salsa at Don Pedro's, Thursday Cumbia, Bar Don Pato
+- Organize into collapsible sections by area for clean navigation
+- Add Chacala as a day trip option
+
+### 8. Concierge Page -- Enhance Staff Profiles
+
+- Add language details (Ricardo speaks English; Crethell, Angy, Paco do not but Google Translate works)
+- Add more detail about Paco's role (beach chairs, umbrellas, bonfire setup)
+- Larger photo placeholder areas with elegant framing
+
+### 9. Transportation Page -- Add Details
+
+- Add drive times: PVR airport ~45 min, Sayulita ~10 min by UTV, Punta Mita ~15 min
+- Add more context about the UTV experience
+- Photo placeholders with proper aspect ratios
+
+### 10. Contact Page -- Polish
+
+- Add a background photo placeholder to the hero
+- Slightly enhance form styling
+
+### 11. Replace All Emoji Icons with Elegant Design
+
+Throughout the site, replace any emoji usage with:
+- Lucide React icons styled with thin strokes and the accent color, OR
+- Pure typographic treatments (elegant serif text with decorative dividers)
+- For the homepage highlights: switch from emoji cards to full-bleed photo cards with text overlays
+
+### 12. Consistent Photo Placeholder Treatment
+
+Create a reusable `PhotoPlaceholder` component that renders:
+- A warm sand/muted background
+- A subtle camera or image icon (Lucide)
+- Elegant "Photo Coming Soon" text in the brand font
+- Proper aspect ratio containers
 
 ---
 
-## Design Direction
-- **Color palette**: Derived from the property photos — warm sand tones, deep ocean blues, terracotta accents, and cream/white backgrounds
-- **Typography**: Elegant serif headings (editorial feel), clean sans-serif body text
-- **Photography-first**: Large, immersive images with generous whitespace
-- **Navigation**: Sticky top nav with all main pages, smooth transitions
-- **Mobile-first**: Fully responsive, beautiful on phones (guests will browse on mobile)
-- **Tone**: Warm, elevated, inviting — never corporate or "rental-like"
+## Technical Details
 
+### Files to Create
+- `src/components/ui/PhotoPlaceholder.tsx` -- Reusable placeholder component
+
+### Files to Modify
+- `supabase/functions/guesty-listings/index.ts` -- Add retry logic for 429 errors
+- `src/pages/Index.tsx` -- Complete rebuild with rich sections
+- `src/pages/Villas.tsx` -- Enhanced galleries and estate content
+- `src/pages/Chef.tsx` -- Full real menu from documents
+- `src/pages/Wellness.tsx` -- Real provider details and expanded content
+- `src/pages/Experiences.tsx` -- All missing activities (golf, detailed surf, fishing, diving)
+- `src/pages/Events.tsx` -- Photo placeholders and enhanced content
+- `src/pages/Location.tsx` -- Complete restaurant/shopping/nightlife guide
+- `src/pages/Concierge.tsx` -- Enhanced staff details
+- `src/pages/Transportation.tsx` -- Drive times and enhanced layout
+- `src/pages/Contact.tsx` -- Hero photo placeholder
