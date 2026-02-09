@@ -1,0 +1,1 @@
+DROP POLICY "Allow public read access to cache" ON public.guesty_cache;
