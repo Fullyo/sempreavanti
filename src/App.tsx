@@ -14,6 +14,7 @@ import Location from "./pages/Location";
 import Concierge from "./pages/Concierge";
 import Transportation from "./pages/Transportation";
 import Contact from "./pages/Contact";
+import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ const App = () => (
           <Route path="/concierge" element={<Concierge />} />
           <Route path="/transportation" element={<Transportation />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/pricing" element={<Pricing />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
