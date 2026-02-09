@@ -7,10 +7,10 @@ import { Check } from "lucide-react";
 
 const staff = [
   {
-    name: "Eno",
+    name: "Your Concierge",
     role: "Head Concierge",
     language: "English & Spanish",
-    description: "Born and raised in Sayulita, Eno knows everything and everyone. He personally greets every guest upon arrival and sees them off at departure, while maintaining your privacy during the stay. Adventures, dining, wellness, transportation — Eno arranges it all.",
+    description: "Your dedicated concierge is born and raised in the region, knows everything and everyone. They personally greet every guest upon arrival and see them off at departure, while maintaining your privacy during the stay. Adventures, dining, wellness, transportation — they arrange it all.",
   },
   {
     name: "Ricardo",

@@ -2,42 +2,53 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { GuestyListing } from "@/hooks/useGuestyListings";
 
+import foodImg from "@/assets/food3.jpeg";
+import weddingImg from "@/assets/wedding2.png";
+import atvImg from "@/assets/atv.jpeg";
+
 const flowItems = [
   {
     title: "Wellness",
     subtitle: "Morning Flow",
     description: "Yoga, breathwork, and beachside meditation to start the day.",
     path: "/wellness",
+    staticImage: undefined as string | undefined,
+    apiPhotoCaption: "Pool with ocean view",
   },
   {
     title: "Private Dining",
     subtitle: "Chef-Crafted",
     description: "Fire-lit dinners, sunset margaritas, and wood-fired pizza nights.",
     path: "/chef",
+    staticImage: foodImg,
   },
   {
     title: "Adventures",
     subtitle: "Ocean & Land",
     description: "Surf, sail, fish, and explore the Riviera Nayarit coast.",
     path: "/experiences",
+    staticImage: atvImg,
   },
   {
     title: "Celebrations",
     subtitle: "Your Venue",
     description: "Weddings, retreats, and gatherings on your private beach.",
     path: "/events",
+    staticImage: weddingImg,
   },
   {
     title: "Transportation",
     subtitle: "UTV & Transfers",
     description: "Polaris UTVs and private Suburban transfers from the airport.",
     path: "/transportation",
+    staticImage: undefined as string | undefined,
   },
   {
     title: "Location",
     subtitle: "Riviera Nayarit",
     description: "5 min to Sayulita, 20–25 min to Punta de Mita — the best of the coast.",
     path: "/location",
+    staticImage: undefined as string | undefined,
   },
 ];
 
@@ -81,7 +92,7 @@ export default function FlowOfDaySection({ listings }: FlowOfDaySectionProps) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {flowItems.map((item, i) => {
-            const photo = allPictures[i + 2]?.original;
+            const photo = item.staticImage || allPictures[i + 2]?.original;
             return (
               <motion.div
                 key={item.title}

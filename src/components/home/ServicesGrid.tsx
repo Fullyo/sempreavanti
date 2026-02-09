@@ -14,7 +14,7 @@ import {
 const services = [
   { icon: UtensilsCrossed, title: "Private Chef", desc: "Every meal crafted by your dedicated chefs", path: "/chef" },
   { icon: Sparkles, title: "Daily Housekeeping", desc: "Fresh linens, impeccable spaces, every day", path: "/concierge" },
-  { icon: Users, title: "Personal Concierge", desc: "Eno arranges everything — just ask", path: "/concierge" },
+  { icon: Users, title: "Personal Concierge", desc: "Your dedicated concierge arranges everything", path: "/concierge" },
   { icon: Waves, title: "Beach & Pool", desc: "Private beach and infinity pool, steps away", path: "/villas" },
   { icon: Flame, title: "Fire Pit", desc: "Beachside bonfires under the stars", path: "/villas" },
   { icon: Heart, title: "Wellness", desc: "Yoga, massage, sound healing on the beach", path: "/wellness" },

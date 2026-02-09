@@ -26,7 +26,7 @@ export default function HospitalitySection({ listings }: HospitalitySectionProps
               Hosted, Not Rented
             </h2>
             <p className="text-base font-sans font-light leading-relaxed opacity-85 mb-6">
-              At Sempre Avanti, you're not checking into a rental — you're arriving at a fully hosted private estate. From the moment your concierge Eno greets you to the final farewell, every detail is personally attended to.
+              At Sempre Avanti, you're not checking into a rental — you're arriving at a fully hosted private estate. From the moment your concierge greets you to the final farewell, every detail is personally attended to.
             </p>
             <p className="text-base font-sans font-light leading-relaxed opacity-85 mb-6">
               Your team — private chefs Ricardo and Crethell, housekeeper Angy, and caretaker Paco — work seamlessly behind the scenes so you can simply be present.

@@ -3,7 +3,7 @@ import { Star } from "lucide-react";
 
 const reviews = [
   {
-    quote: "From the moment Eno greeted us to the last sunset margarita, everything was flawless. The chefs, the beach, the privacy — it's the best vacation our family has ever taken.",
+    quote: "From the moment our concierge greeted us to the last sunset margarita, everything was flawless. The chefs, the beach, the privacy — it's the best vacation our family has ever taken.",
     name: "The Martinez Family",
     occasion: "Family Vacation, February 2026",
     rating: 5,

@@ -7,8 +7,16 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ listings }: HeroSectionProps) {
-  // Use the aerial villa shot (index 2, captioned "Casa Pietro") as hero
-  const heroImage = listings?.[0]?.pictures?.[2]?.original || listings?.[0]?.pictures?.[0]?.original;
+  // Find the aerial villa shot captioned "Casa Pietro" across all listings
+  const heroImage = (() => {
+    if (!listings) return undefined;
+    for (const listing of listings) {
+      const match = listing.pictures?.find((p) => p.caption === "Casa Pietro");
+      if (match) return match.original;
+    }
+    // Fallback to first listing's third photo, then first photo
+    return listings[0]?.pictures?.[2]?.original || listings[0]?.pictures?.[0]?.original;
+  })();
 
   return (
     <section className="relative h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden">
