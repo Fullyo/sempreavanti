@@ -51,16 +51,16 @@ export default function LocationPreview({ listings }: LocationPreviewProps) {
             transition={{ duration: 0.7 }}
           >
             <span className="text-xs font-sans uppercase tracking-[0.3em] text-jungle mb-3 block">
-              Riviera Nayarit
+              Patzcuarito, Riviera Nayarit
             </span>
             <h2 className="font-serif text-3xl md:text-5xl font-light leading-tight mb-6 text-foreground">
-              Between Sayulita & San Pancho
+              Between Sayulita & Punta de Mita
             </h2>
             <p className="text-base font-sans text-muted-foreground leading-relaxed mb-4">
-              Sempre Avanti sits on a private stretch of Pacific coastline, minutes from the vibrant surf town of Sayulita and the artistic village of San Pancho. Connected by Polaris UTVs, you're just 5 minutes from Sayulita and 8 minutes from San Pancho — world-class dining, shopping, and nightlife at your doorstep.
+              Nestled in the private community of Patzcuarito, Sempre Avanti sits on a secluded stretch of Pacific coastline just minutes from Sayulita. Connected by Polaris UTVs, you're just 5 minutes from Sayulita's surf, dining, and nightlife — with Punta de Mita and the Four Seasons 25 minutes south.
             </p>
             <p className="text-base font-sans text-muted-foreground leading-relaxed mb-8">
-              Punta de Mita, the Four Seasons, and the St. Regis are 20–25 minutes south. The famous La Cruz Sunday Market is 25–30 minutes away. Private yet perfectly connected.
+              The La Cruz Sunday Market is a 30-minute drive. San Pancho is 15 minutes north through Sayulita. A private beachfront retreat with the entire Riviera Nayarit at your fingertips.
             </p>
             <Link
               to="/location"

@@ -1,9 +1,16 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
-import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
+import atvImg from "@/assets/atv.jpeg";
+import fishingImg from "@/assets/fishing.jpg";
+import horsebackImg from "@/assets/horseback.jpg";
+import marietasImg from "@/assets/marietas-islands.jpeg";
+import whaleImg from "@/assets/whale.jpeg";
+import ziplineImg from "@/assets/zipline.jpg";
+
+// Category data — activities only (no food/culinary)
 const categories = [
   {
     title: "Surfing",
@@ -15,21 +22,12 @@ const categories = [
       { name: "Don Pedro's", desc: "Left break right in front of the iconic restaurant. Watch the surfers while you eat." },
       { name: "Burros", desc: "Powerful beach break north of Sayulita. For experienced surfers." },
       { name: "Punta Mita", desc: "Several breaks around the point — varied conditions for all levels." },
-      { name: "Lessons with Chillo", desc: "The best beginner instructor in Sayulita. Patient, fun, and your kids will love him." },
-    ],
-  },
-  {
-    title: "Food & Culinary",
-    eyebrow: "Taste Mexico",
-    items: [
-      { name: "Sayulita Taco Tour", desc: "Pickup, transportation, 3–4 taco spots, local history, and a finish at an agave field with blue corn tacos and quesadillas." },
-      { name: "Private Cooking Class", desc: "In-house Mexican cooking class with a local chef. Learn traditional recipes and enjoy what you make." },
-      { name: "Mezcal & Tequila Tasting", desc: "Curated tastings of premium agave spirits at La Selecta in Sayulita with expert-guided pairings." },
     ],
   },
   {
     title: "Boats & Fishing",
     eyebrow: "On the Water",
+    image: fishingImg,
     items: [
       { name: "Private Boat Tour", desc: "Whale watching, snorkeling equipment, light trolling, water, sodas, and beer included. 3 hours, up to 7 guests." },
       { name: "Fishing Charter", desc: "4-hour charter with water, sodas, beer, and all fishing equipment. Up to 4 people." },
@@ -51,6 +49,7 @@ const categories = [
   {
     title: "Ocean & Water",
     eyebrow: "Dive In",
+    image: marietasImg,
     items: [
       { name: "Snorkeling — Playa de los Muertos", desc: "10 minutes from the house. Calm, clear water perfect for snorkeling with kids." },
       { name: "Marietas Islands", desc: "Protected national park. Snorkeling, hidden beach, whale watching in season." },
@@ -73,6 +72,7 @@ const categories = [
   {
     title: "Land & Adventure",
     eyebrow: "Explore",
+    image: ziplineImg,
     items: [
       { name: "Zipline & Canopy Tours", desc: "Soar above the jungle canopy on world-class ziplines through the Sierra Madre." },
       { name: "ATV & RZR Tours", desc: "Navigate mountain trails and coastal paths on guided off-road adventures." },
@@ -96,63 +96,156 @@ const categories = [
   },
 ];
 
+interface CategoryData {
+  title: string;
+  eyebrow: string;
+  image?: string;
+  items: Array<{ name: string; desc: string }>;
+}
+
+function CategorySection({ cat, index }: { cat: CategoryData; index: number }) {
+  const isAlt = index % 2 === 1;
+
+  return (
+    <section className={`py-14 md:py-20 ${isAlt ? "bg-card" : ""}`}>
+      <div className="container max-w-6xl">
+        <div className="flex items-baseline gap-4 mb-8">
+          <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent">{cat.eyebrow}</span>
+          <div className="h-px flex-1 bg-border" />
+        </div>
+
+        {cat.image ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-0">
+            <div className="rounded-xl overflow-hidden">
+              <img
+                src={cat.image}
+                alt={cat.title}
+                className="w-full h-[300px] object-cover"
+                loading="lazy"
+              />
+            </div>
+            <div>
+              <h2 className="font-serif text-3xl mb-6">{cat.title}</h2>
+              <div className="space-y-3">
+                {cat.items.map((item) => (
+                  <div key={item.name} className="border-b border-border pb-3 last:border-0">
+                    <h3 className="font-serif text-lg">{item.name}</h3>
+                    <p className="text-sm font-sans text-muted-foreground">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+            <h2 className="font-serif text-3xl mb-6">{cat.title}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+              {cat.items.map((item) => (
+                <div key={item.name} className="border-b border-border pb-3">
+                  <h3 className="font-serif text-lg">{item.name}</h3>
+                  <p className="text-sm font-sans text-muted-foreground">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </section>
+  );
+}
+
 export default function Experiences() {
   return (
     <Layout>
+      {/* Hero — full-bleed with ATV photo */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-primary" />
-        <PhotoPlaceholder label="Adventures" className="absolute inset-0 !aspect-auto opacity-30" />
+        <img src={atvImg} alt="ATV adventure overlooking the Riviera Nayarit coast" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
         <div className="relative z-10 text-center text-primary-foreground px-4">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Riviera Nayarit</p>
           <h1 className="font-serif text-5xl md:text-7xl font-light">Experiences & Adventures</h1>
         </div>
       </section>
 
-      <section className="py-20 md:py-28">
+      {/* Intro */}
+      <section className="py-16 md:py-24">
         <div className="container max-w-4xl">
           <SectionHeading
             eyebrow="Powered by Michula Tours"
             title="Every Adventure, Arranged for You"
-            description="From jungle ziplines to Pacific sailing, every experience is coordinated by your concierge Eno and our trusted tour partner, Michula Tours. Just say the word — the adventure comes to you."
+            description="From jungle ziplines to Pacific sailing, every experience is coordinated by your dedicated concierge and our trusted tour partner, Michula Tours. Just say the word — the adventure comes to you."
           />
         </div>
       </section>
 
-      {categories.map((cat, catIdx) => (
-        <section key={cat.title} className={`py-16 md:py-24 ${catIdx % 2 === 1 ? "bg-card" : ""}`}>
-          <div className="container max-w-6xl">
-            <SectionHeading eyebrow={cat.eyebrow} title={cat.title} />
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {cat.items.map((item, i) => (
-                <motion.div
-                  key={item.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.05 }}
-                  className="group bg-background border border-border p-6 hover:border-accent transition-colors rounded-xl"
-                >
-                  <PhotoPlaceholder label={item.name} aspectRatio="video" className="mb-4 rounded-xl overflow-hidden" />
-                  <h3 className="font-serif text-xl mb-2 group-hover:text-accent transition-colors">{item.name}</h3>
-                  <p className="text-sm font-sans text-muted-foreground leading-relaxed">{item.desc}</p>
-                </motion.div>
-              ))}
-            </div>
+      {/* Chillo — Dedicated Surf Instructor Section */}
+      <section className="py-16 md:py-24 bg-primary text-primary-foreground">
+        <div className="container max-w-5xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <span className="text-xs font-sans uppercase tracking-[0.3em] text-primary-foreground/70 mb-3 block">
+                The Best in Sayulita
+              </span>
+              <h2 className="font-serif text-3xl md:text-5xl font-light mb-6">Lessons with Chillo</h2>
+              <p className="text-base font-sans text-primary-foreground/80 leading-relaxed mb-4">
+                Chillo is the best beginner surf instructor in Sayulita — patient, fun, and incredible with kids and first-timers. He'll have your family standing on boards by day one.
+              </p>
+              <p className="text-base font-sans text-primary-foreground/80 leading-relaxed">
+                Whether it's your kids' first wave or a refresher for the adults, Chillo makes surfing feel effortless. We can arrange lessons for your group any morning during your stay.
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="rounded-xl overflow-hidden"
+            >
+              <img
+                src={whaleImg}
+                alt="Pacific ocean near Sayulita"
+                className="w-full h-[350px] object-cover rounded-xl"
+                loading="lazy"
+              />
+            </motion.div>
           </div>
-        </section>
+        </div>
+      </section>
+
+      {/* Activity Categories */}
+      {categories.map((cat, catIdx) => (
+        <CategorySection key={cat.title} cat={cat} index={catIdx} />
       ))}
 
-      <section className="py-20 bg-primary text-primary-foreground text-center">
+      {/* Horseback highlight */}
+      <section className="relative py-20 overflow-hidden">
+        <img src={horsebackImg} alt="Horseback riding at sunset on the beach" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="relative z-10 container max-w-3xl text-center text-primary-foreground">
+          <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Sunset Rides</p>
+          <h2 className="font-serif text-4xl md:text-5xl font-light mb-4">Beach Horseback Riding</h2>
+          <p className="text-base font-sans text-primary-foreground/80 leading-relaxed max-w-xl mx-auto">
+            Trail rides through the jungle and along the beach at golden hour. One of the most unforgettable experiences on the Riviera Nayarit.
+          </p>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 bg-card text-center">
         <div className="container">
           <SectionHeading
             eyebrow="Your Concierge"
-            title="Eno Arranges Everything"
-            description="Born and raised in Sayulita, Eno knows every trail, every wave, every hidden gem. Tell him what you're dreaming of — he'll make it happen. All pricing provided upon inquiry."
-            light
+            title="Everything Arranged for You"
+            description="Your dedicated concierge knows every trail, every wave, every hidden gem. Tell them what you're dreaming of — they'll make it happen. All pricing provided upon inquiry."
           />
           <Link
             to="/contact"
-            className="inline-block mt-4 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full"
+            className="inline-block mt-4 px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full"
           >
             Plan Your Adventures
           </Link>

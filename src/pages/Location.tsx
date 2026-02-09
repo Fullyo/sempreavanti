@@ -1,18 +1,19 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
-import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import { motion } from "framer-motion";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, MapPin, Clock } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useGuestyListings } from "@/hooks/useGuestyListings";
 
 const nearbyPlaces = [
   { name: "Sayulita", distance: "5 min by UTV", description: "A vibrant surf town with boutiques, restaurants, and a lively beach scene." },
-  { name: "San Pancho", distance: "8 min by UTV", description: "A quieter, artistic village with a cultural center and beautiful beach." },
-  { name: "Punta de Mita", distance: "20–25 min", description: "An upscale beach community with world-class dining and surf breaks." },
-  { name: "La Cruz de Huanacaxtle", distance: "25–30 min", description: "Home to the famous Sunday Market — fresh seafood, artisan crafts, live music." },
-  { name: "Puerto Vallarta", distance: "45 min", description: "The Malecón boardwalk, art galleries, fine dining, and vibrant nightlife." },
-  { name: "Chacala", distance: "45 min", description: "A hidden gem — serene beach town with no crowds. Perfect for a peaceful day trip." },
+  { name: "San Pancho", distance: "15 min via Sayulita", description: "A quieter, artistic village with a cultural center and beautiful beach." },
+  { name: "Punta de Mita", distance: "25 min by car", description: "An upscale beach community with world-class dining, surf breaks, and the Four Seasons & St. Regis resorts." },
+  { name: "La Cruz de Huanacaxtle", distance: "30 min by car", description: "Home to the famous Sunday Market — fresh seafood, artisan crafts, live music." },
+  { name: "Puerto Vallarta", distance: "45 min by car", description: "The Malecón boardwalk, art galleries, fine dining, and vibrant nightlife." },
+  { name: "Chacala", distance: "45 min by car", description: "A hidden gem — serene beach town with no crowds. Perfect for a peaceful day trip." },
 ];
 
 const diningByArea = [
@@ -114,64 +115,88 @@ function CollapsibleSection({ title, children }: { title: string; children: Reac
 }
 
 export default function Location() {
+  const { data: listings } = useGuestyListings();
+  const heroPhoto = listings?.[2]?.pictures?.[0]?.original;
+
   return (
     <Layout>
+      {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-primary" />
-        <PhotoPlaceholder label="Riviera Nayarit" className="absolute inset-0 !aspect-auto opacity-30" />
+        {heroPhoto ? (
+          <img src={heroPhoto} alt="Riviera Nayarit coastline" className="absolute inset-0 w-full h-full object-cover" />
+        ) : (
+          <div className="absolute inset-0 bg-primary" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
         <div className="relative z-10 text-center text-primary-foreground px-4">
-          <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Riviera Nayarit</p>
-          <h1 className="font-serif text-5xl md:text-7xl font-light">Location</h1>
+          <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Patzcuarito, Riviera Nayarit</p>
+          <h1 className="font-serif text-5xl md:text-7xl font-light">Secluded, Yet Connected</h1>
         </div>
       </section>
 
+      {/* Narrative Section */}
       <section className="py-20 md:py-28">
         <div className="container max-w-4xl">
           <SectionHeading
-            eyebrow="Just Outside Sayulita"
+            eyebrow="Patzcuarito"
             title="The Best of Both Worlds"
-            description="Sempre Avanti sits on a private stretch of beach between Sayulita and San Pancho on Mexico's Riviera Nayarit coast. Private and secluded, yet minutes from everything — connected by the 4×4 Polaris UTVs available at the house."
           />
+          <div className="max-w-3xl mx-auto space-y-5 text-base font-sans text-muted-foreground leading-relaxed">
+            <p>
+              Sempre Avanti sits in Patzcuarito — a private, gated beachfront community along the coast road between Sayulita and Punta de Mita. It's a world apart: a secluded stretch of Pacific coastline with no crowds, no noise, and no neighbors in sight.
+            </p>
+            <p>
+              Yet everything the Riviera Nayarit has to offer is minutes away. Jump in a Polaris UTV and you're in Sayulita in 5 minutes — its surf breaks, tacos, boutiques, and nightlife all at your doorstep. Punta de Mita, with the Four Seasons and St. Regis, is a 25-minute drive south. The famous La Cruz Sunday Market is 30 minutes away.
+            </p>
+            <p>
+              This is what makes the location extraordinary: you wake up on a private beach with nothing but jungle and ocean around you, and by lunch you're eating fresh ceviche at Don Pedro's or teeing off at a Jack Nicklaus course. It's the feeling of being completely away — while never being far from anything.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Google Map */}
+      {/* Map — satellite, zoomed out */}
       <section className="pb-16">
-        <div className="container max-w-5xl">
-          <div className="w-full aspect-video rounded-2xl overflow-hidden">
+        <div className="container max-w-4xl">
+          <div className="w-full aspect-[16/9] rounded-2xl overflow-hidden">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2896!2d-105.4640904!3d20.847732!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x84211561ab8a6c1b%3A0xe20445bb3abc738a!2sCasa%20Sempre%20Avanti!5e0!3m2!1sen!2smx!4v1700000000000!5m2!1sen!2smx"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28500!2d-105.48!3d20.82!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x84211561ab8a6c1b%3A0xe20445bb3abc738a!2sCasa%20Sempre%20Avanti!5e1!3m2!1sen!2smx!4v1700000000000!5m2!1sen!2smx"
               width="100%"
               height="100%"
               style={{ border: 0 }}
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Casa Sempre Avanti location"
+              title="Casa Sempre Avanti — between Sayulita and Punta de Mita"
               className="w-full h-full"
             />
           </div>
+          <p className="text-xs text-muted-foreground text-center mt-3 font-sans">
+            Patzcuarito sits on the coast road between Sayulita and Punta de Mita
+          </p>
         </div>
       </section>
 
-      {/* Nearby Places */}
+      {/* Travel Times */}
       <section className="py-16 md:py-24 bg-card">
         <div className="container max-w-5xl">
-          <SectionHeading eyebrow="Nearby" title="Explore the Region" />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <SectionHeading eyebrow="Your Doorstep" title="Minutes from Everything" />
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
             {nearbyPlaces.map((place, i) => (
               <motion.div
                 key={place.name}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.05 }}
-                className="bg-background p-6 border border-border rounded-xl"
+                transition={{ duration: 0.4, delay: i * 0.05 }}
+                className="bg-background p-5 border border-border rounded-xl text-center"
               >
-                <PhotoPlaceholder label={place.name} aspectRatio="video" className="mb-4" />
-                <h3 className="font-serif text-xl mb-1">{place.name}</h3>
-                <span className="text-xs font-sans text-accent uppercase tracking-widest block mb-2">{place.distance}</span>
-                <p className="text-sm font-sans text-muted-foreground leading-relaxed">{place.description}</p>
+                <h3 className="font-serif text-lg mb-1">{place.name}</h3>
+                <div className="flex items-center justify-center gap-1.5 mb-2">
+                  <Clock className="w-3.5 h-3.5 text-accent" />
+                  <span className="text-xs font-sans text-accent uppercase tracking-widest">{place.distance}</span>
+                </div>
+                <p className="text-xs font-sans text-muted-foreground leading-relaxed">{place.description}</p>
               </motion.div>
             ))}
           </div>
@@ -220,14 +245,12 @@ export default function Location() {
           <SectionHeading eyebrow="Don't Miss" title="Local Markets" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-card p-8 rounded-xl">
-              <PhotoPlaceholder label="La Cruz Sunday Market" aspectRatio="video" className="mb-4 rounded-xl overflow-hidden" />
               <h3 className="font-serif text-2xl mb-2">La Cruz Sunday Market</h3>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed">
-                The region's premier market. Fresh seafood, artisan crafts, live music, handmade jewelry, and the best tamales you've ever had. Arrive early for the best selection. 25–30 minutes from the house.
+                The region's premier market. Fresh seafood, artisan crafts, live music, handmade jewelry, and the best tamales you've ever had. Arrive early for the best selection. 30 minutes from the house.
               </p>
             </div>
             <div className="bg-card p-8 rounded-xl">
-              <PhotoPlaceholder label="Sayulita Friday Market" aspectRatio="video" className="mb-4 rounded-xl overflow-hidden" />
               <h3 className="font-serif text-2xl mb-2">Sayulita Friday Market</h3>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed">
                 Organic produce, local treats, artisan goods, and live music in the heart of Sayulita's plaza. A more intimate, locals-focused market. 5 minutes by UTV.
@@ -258,7 +281,7 @@ export default function Location() {
           <SectionHeading
             eyebrow="Safety & Community"
             title="A Place That Feels Like Home"
-            description="The Riviera Nayarit is one of Mexico's safest regions. Sayulita is a tight-knit community where families, artists, and travelers coexist beautifully. Our team is local — they know the land, the people, and the rhythms of this coast."
+            description="The Riviera Nayarit is one of Mexico's safest regions. Patzcuarito is a private, gated community with 24/7 security. Sayulita is a tight-knit town where families, artists, and travelers coexist beautifully. Our team is local — they know the land, the people, and the rhythms of this coast."
             light
           />
         </div>
