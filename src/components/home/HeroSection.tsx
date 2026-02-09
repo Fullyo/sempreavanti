@@ -7,15 +7,13 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ listings }: HeroSectionProps) {
-  // Find the aerial villa shot captioned "Casa Pietro" across all listings
+  // Use the first photo from the Full Estate listing ("Sempre Avanti" nickname)
   const heroImage = (() => {
     if (!listings) return undefined;
-    for (const listing of listings) {
-      const match = listing.pictures?.find((p) => p.caption === "Casa Pietro");
-      if (match) return match.original;
-    }
-    // Fallback to first listing's third photo, then first photo
-    return listings[0]?.pictures?.[2]?.original || listings[0]?.pictures?.[0]?.original;
+    const estate = listings.find((l) => l.nickname === "Sempre Avanti" || l.title?.includes("Estate"));
+    if (estate?.pictures?.[0]?.original) return estate.pictures[0].original;
+    // Fallback to first listing's first photo
+    return listings[0]?.pictures?.[0]?.original;
   })();
 
   return (
