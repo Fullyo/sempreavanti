@@ -1,142 +1,120 @@
 
-# Complete Fix: Photos, Navbar, Homepage Rebuild
 
-## Problem Summary
+# Complete Visual Redesign: Vibrant Ocean & Jungle Aesthetic
 
-There are three critical issues:
+## The Problem
 
-1. **Photos are completely broken** -- the Guesty API is rate-limited (429), the Booking Engine API returns 401, the DB cache is empty, and the fallback listings have `pictures: []`. Result: every photo on the entire site is a solid dark blue block.
+The current design is flat, lifeless, and generic. It uses:
+- A muted grey-beige palette that feels corporate, not tropical
+- All rectangular photo frames with no visual interest
+- Monotone sections that blend together
+- No sense of the vibrant, bohemian-luxury character of Casa Sempre Avanti
 
-2. **The navbar is not truly transparent** -- while the scroll logic exists, `Layout.tsx` adds `pt-16 md:pt-20` padding, pushing the hero content below the navbar instead of letting it render behind/under it. The hero never sits behind the transparent nav.
-
-3. **The homepage is weak** -- it doesn't represent all services, has no guest reviews, poor SEO structure, and doesn't follow the pattern of the reference site (Casa Tara).
-
----
-
-## Part 1: Fix Photos Immediately
-
-Since both Guesty APIs are rate-limited and the DB cache is empty, we need to populate the cache with real photo URLs right now.
-
-**Approach:** Create an edge function `seed-guesty-cache` that scrapes the Guesty Booking Engine *website* (not API) to extract photo URLs from the rendered page. However, since that page is client-rendered and hard to scrape, the more reliable approach is:
-
-**Use a DB migration to seed `guesty_cache` with the actual Guesty CDN photo URLs.** These URLs follow the pattern `https://assets.guesty.com/image/...` and are publicly accessible CDN links that don't expire. We can extract them by:
-
-1. Adding a temporary "cache seeder" edge function that authenticates with the Guesty Booking Engine API (using the same credentials but via `booking_engine:api` scope) and stores the response
-2. OR (more immediately) updating the **fallback data** in `useGuestyListings.ts` to include real Guesty CDN photo URLs
-
-Since the token rate limit is blocking us entirely and we can't obtain any fresh data, the practical solution is:
-
-**Option A (Recommended):** Update the edge function to also try the Guesty **Open API** listings endpoint (`open-api.guesty.com/v1/listings`) which uses a DIFFERENT token endpoint (`open-api.guesty.com/oauth2/token`) and may have separate rate limits from the Booking Engine API.
-
-**Option B (Immediate fallback):** The user likely has photos of the property. We can:
-- Upload property photos to Lovable Cloud storage
-- Reference them in the fallback data
-- These will always work regardless of API status
-
-**Option C (Best of both worlds):** Fix the edge function to try BOTH API endpoints (Open API + Booking Engine), AND populate the fallback listings with uploaded photos as the ultimate safety net.
-
-I recommend **Option C** with these changes:
-
-### Edge Function Changes (`supabase/functions/guesty-listings/index.ts`)
-- Add Layer 3.5: Try the **Open API** token endpoint (`https://open-api.guesty.com/oauth2/token`) with `grant_type=client_credentials` -- this is a completely separate endpoint from the Booking Engine token endpoint and likely has its own rate limit
-- The Booking Engine API currently tries `booking.guesty.com/oauth2/token` for auth AND `booking.guesty.com/api/listings` for data -- these share the same token
-- Add the Open API as an alternative: `open-api.guesty.com/oauth2/token` for auth + `open-api.guesty.com/v1/listings` for data
-
-### Fallback Photo Solution
-- Ask the user to upload 10-15 property photos
-- Store them in Lovable Cloud storage
-- Update fallback listings in `useGuestyListings.ts` to reference these storage URLs
-- This ensures photos ALWAYS display even when both APIs are fully locked out
+The property photos show a completely different story: vivid ocean blues, lush jungle greens, rich golden-yellow accent walls, turquoise and teal cushions, warm wood, thatched palapa roofs, and colorful bohemian textiles. The website needs to capture this energy.
 
 ---
 
-## Part 2: Fix Transparent Navbar
+## New Color Palette
 
-The navbar code already has transparent-to-solid scroll logic, but `Layout.tsx` pushes content down with `pt-16 md:pt-20`, so the hero image never sits behind the navbar.
+Inspired directly by the property photos:
 
-### Changes:
-
-**`Layout.tsx`** -- Remove the top padding from `<main>`:
-- Change `<main className="flex-1 pt-16 md:pt-20">` to `<main className="flex-1">`
-
-**Every page except Index** -- Add individual top padding since their heroes need space below a solid nav:
-- Each page's hero section already has `h-[60vh]` or similar, but non-homepage pages that don't have a full-bleed hero will need `pt-16 md:pt-20` added to their first section
-
-**`HeroSection.tsx`** (homepage) -- Already has `h-[90vh]` which will naturally sit behind the transparent nav. No changes needed.
-
-**Other page heroes** (`Villas.tsx`, `Chef.tsx`, `Concierge.tsx`, `Contact.tsx`, `Wellness.tsx`, `Experiences.tsx`, `Events.tsx`, `Location.tsx`, `Transportation.tsx`) -- These all have dark hero sections with `h-[60vh]` or `h-[50vh]`. They already render full-bleed, so removing the Layout padding will let them sit behind the navbar too, which is correct for a luxury site.
+| Role | Current | New | Reasoning |
+|------|---------|-----|-----------|
+| Background | Pale grey-beige `36 33% 97%` | Warm cream-white `40 50% 98%` | Brighter, cleaner canvas |
+| Primary | Dark navy `205 45% 22%` | Deep ocean blue `200 60% 28%` | Richer, more saturated ocean |
+| Accent | Dull terracotta `24 60% 45%` | Vibrant golden-yellow `42 85% 55%` | Matches the yellow walls in photos |
+| NEW: Jungle | n/a | Tropical green `160 45% 35%` | The lush vegetation everywhere |
+| NEW: Turquoise | n/a | Ocean turquoise `185 55% 48%` | The cushions, the sea, the pool |
+| Terracotta | `24 60% 45%` | Richer terracotta `16 70% 50%` | Warmer, more alive |
+| Sand | `36 33% 97%` | Warm sand `38 45% 92%` | More golden warmth |
+| Card bg | Grey `36 30% 95%` | Light sand with warmth `38 40% 95%` | Subtle tropical warmth |
 
 ---
 
-## Part 3: Complete Homepage Rebuild
+## Layout & Shape Language
 
-Based on the reference site (Casa Tara) and the pages that exist, the homepage should include these sections in order:
+Inspired by Casa Tara's organic feel and the property's architecture (palapa roofs, curved concrete, organic materials):
 
-### Section 1: Full-Screen Hero (existing, keep)
-- Full viewport height with property photo
-- Transparent navbar overlaid
-- Title, subtitle, two CTAs
+### Photo Shapes (NOT all rectangles)
+- Hero section photos with subtle rounded corners (rounded-2xl or rounded-3xl)
+- Alternating photo layouts: some with rounded-tl-[80px] rounded-br-[80px] for an organic arch feel
+- Photo mosaic sections with mixed rounded corners creating visual rhythm
+- Overlapping photo compositions where one image slightly overlaps another
 
-### Section 2: Estate Introduction (existing, improve)
-- Stats row: 5 Bedrooms, 5 Bathrooms, Sleeps 10, Private Beach, Full Staff
-- Two villa photo cards linking to /villas
-- More descriptive copy
+### Section Dividers
+- Replace flat section backgrounds with subtle wave or curve SVG dividers between sections
+- Use diagonal clip-path on some full-width photo sections for dynamic angles
 
-### Section 3: Services & Amenities Grid (NEW)
-- Icon grid showing all included services:
-  - Private Chef
-  - Daily Housekeeping
-  - Personal Concierge
-  - Beach & Pool
-  - Fire Pit
-  - Wellness
-  - UTV Transportation
-  - WiFi & AC
-- Links to relevant pages
+### Cards & Containers
+- Services grid cards get subtle rounded corners (rounded-xl) with a thin border in turquoise or gold
+- Review cards with larger rounded corners and a left accent border in gold
+- Experience cards with rounded-2xl photo frames
 
-### Section 4: Experience Cards (existing "Flow of Day", expand)
-- Keep the 4-card layout but expand to cover ALL service pages:
-  - Wellness (/wellness)
-  - Private Dining (/chef)
-  - Adventures & Experiences (/experiences)
-  - Weddings & Events (/events)
-  - Transportation (/transportation)
-  - Location (/location)
+---
 
-### Section 5: Location Preview (NEW)
-- Alternating image + text layout (like the reference)
-- Aerial or beach photo
-- Brief location description
-- "Explore the Area" CTA linking to /location
+## Specific Component Changes
 
-### Section 6: Culinary Preview (NEW)
-- Photo + text highlighting the private chef experience
-- Sample dishes mentioned
-- CTA to /chef
+### 1. `src/index.css` - Complete color variable overhaul
+- Update all CSS custom properties to the new vibrant palette
+- Add new variables: `--jungle`, `--turquoise`, `--golden`
+- Update card, muted, and secondary colors for warmth
 
-### Section 7: The Hospitality Philosophy (existing, keep)
-- "Hosted, Not Rented" section with staff stats
+### 2. `tailwind.config.ts` - Add new colors
+- Add `jungle`, `turquoise`, `golden` to the color map
+- These become usable as `bg-jungle`, `text-turquoise`, `border-golden` etc.
 
-### Section 8: Guest Reviews (NEW -- critical for direct booking SEO)
-- 3-4 featured testimonial cards with:
-  - Star rating (5 stars)
-  - Quote text
-  - Guest name and stay type (e.g., "Family Vacation, March 2025")
-- Hardcoded initially (reviews from Guesty or Airbnb can be added later)
+### 3. `src/components/home/HeroSection.tsx` - More dynamic
+- Keep the full-bleed hero but add a subtle organic shape overlay (SVG wave at the bottom edge instead of a hard line)
+- Make the gradient warmer (from-black/30 to golden/black blend)
 
-### Section 9: Quote/Philosophy (existing, keep)
+### 4. `src/pages/Index.tsx` - Estate section photo treatment
+- Give the carousel photos rounded-2xl corners
+- Add a subtle golden border or shadow
+- Make the stats section use the golden accent color for numbers
 
-### Section 10: Final CTA (existing, keep)
-- Full-width photo background
-- "Your Private Beachfront Awaits"
-- Inquire + Check Availability buttons
+### 5. `src/components/home/ServicesGrid.tsx` - Visual upgrade
+- Icons use turquoise color instead of terracotta
+- Cards get rounded-xl with a subtle warm border
+- Hover state uses a golden glow/shadow
+- Background changes from flat grey to a subtle warm gradient
 
-### SEO Improvements
-- Proper semantic HTML: `<article>`, `<section>` with `aria-label`
-- Meta description via `<Helmet>` or document title
-- Heading hierarchy (single H1, proper H2/H3 structure)
-- Alt text on all images
-- Schema.org structured data for vacation rental (JSON-LD in index.html)
+### 6. `src/components/home/FlowOfDaySection.tsx` - Organic photo shapes
+- Photos get alternating rounded corners (e.g., first card rounded-tl-[60px], second card rounded-br-[60px])
+- Creates a flowing, organic feel like Casa Tara's photo layout
+- Text overlay on gradient uses warmer tones
+
+### 7. `src/components/home/LocationPreview.tsx` - Visual punch
+- Photo gets rounded-2xl treatment with a slight rotation or offset shadow
+- Background section gets a subtle tropical green accent
+
+### 8. `src/components/home/CulinaryPreview.tsx` - Warm & inviting
+- Photo shape with organic rounded corners
+- Background uses warm sand tones
+- Accent list items use golden bullet points
+
+### 9. `src/components/home/GuestReviews.tsx` - Elevated cards
+- Cards get rounded-xl with left border in golden accent
+- Stars use the new golden color
+- Quote text in a warmer serif style
+- Background section with subtle turquoise/ocean tint
+
+### 10. `src/components/home/HospitalitySection.tsx` - Rich ocean depth
+- Background changes from flat navy to a richer ocean gradient
+- Photo gets organic rounded corners
+- Stats use golden text for numbers
+
+### 11. `src/components/home/QuoteSection.tsx` - Botanical feel
+- Add a subtle leaf/palm SVG pattern in the background (very low opacity)
+- Quote mark in golden color
+- Background with warm cream gradient
+
+### 12. `src/components/layout/Navbar.tsx` - Refined
+- When solid on scroll, use the warm cream background instead of grey
+- Active link color uses turquoise instead of terracotta
+
+### 13. CTA section in Index.tsx
+- Buttons use the vibrant golden-yellow accent
+- Warmer overlay on the background photo
 
 ---
 
@@ -144,28 +122,28 @@ Based on the reference site (Casa Tara) and the pages that exist, the homepage s
 
 | File | Changes |
 |------|---------|
-| `src/components/layout/Layout.tsx` | Remove `pt-16 md:pt-20` from main |
-| `src/pages/Index.tsx` | Complete rebuild with all new sections |
-| `src/components/home/HeroSection.tsx` | Minor: ensure proper heading hierarchy |
-| `src/components/home/FlowOfDaySection.tsx` | Expand to cover more pages (6 cards) |
-| `src/components/home/HospitalitySection.tsx` | Keep, minor refinements |
-| `src/components/home/QuoteSection.tsx` | Keep as-is |
-| `src/components/home/PhotoMosaicSection.tsx` | May remove or reposition |
-| NEW: `src/components/home/ServicesGrid.tsx` | Included services icon grid |
-| NEW: `src/components/home/LocationPreview.tsx` | Location teaser with photo + text |
-| NEW: `src/components/home/CulinaryPreview.tsx` | Chef experience teaser |
-| NEW: `src/components/home/GuestReviews.tsx` | Featured testimonials |
-| `supabase/functions/guesty-listings/index.ts` | Add Open API as alternate endpoint |
-| `src/hooks/useGuestyListings.ts` | Add real photo URLs to fallback data |
-| `index.html` | Add meta description, JSON-LD schema |
-| All page files | Adjust hero sections for transparent nav overlap |
+| `src/index.css` | Complete color palette overhaul with vibrant ocean/jungle/golden tones |
+| `tailwind.config.ts` | Add jungle, turquoise, golden color definitions |
+| `src/pages/Index.tsx` | Rounded photo shapes, warm stat colors, organic section transitions |
+| `src/components/home/HeroSection.tsx` | Warmer gradient, SVG wave bottom edge |
+| `src/components/home/ServicesGrid.tsx` | Turquoise icons, rounded cards, warm hover states |
+| `src/components/home/FlowOfDaySection.tsx` | Alternating organic rounded corners on photos |
+| `src/components/home/LocationPreview.tsx` | Rounded photo, warm accents |
+| `src/components/home/CulinaryPreview.tsx` | Organic shapes, golden accents |
+| `src/components/home/GuestReviews.tsx` | Elevated cards with golden left border, warmer bg |
+| `src/components/home/HospitalitySection.tsx` | Richer ocean gradient bg, golden stats |
+| `src/components/home/QuoteSection.tsx` | Golden quote mark, subtle botanical bg pattern |
+| `src/components/layout/Navbar.tsx` | Warm cream solid state, turquoise active links |
 
 ---
 
-## Questions I Need Answered Before Implementation
+## Design Philosophy
 
-Before building, I need to clarify:
+The redesign captures three core elements from the actual property:
 
-1. **Photos**: Do you have property photos you can upload directly? This would solve the photo problem immediately while we work on the API fix. The Guesty API rate limit won't reset for up to 24 hours.
+1. **Ocean** -- Deep blues, turquoise pool water, Pacific horizon (primary + turquoise)
+2. **Jungle** -- Lush palm greens, tropical vegetation, garden paths (jungle green accents)
+3. **Bohemian Warmth** -- Golden walls, rich wood, colorful cushions, woven textures (golden accent, warm sand backgrounds)
 
-2. **Guest Reviews**: Do you have 3-4 guest testimonials/reviews you'd like featured? I can use placeholder text initially, but real reviews convert much better.
+Every section should feel alive, warm, and distinctly tropical-luxury -- not corporate or generic. The organic rounded shapes echo the palapa roofs and curved architecture of the villas themselves.
+
