@@ -92,7 +92,7 @@ export default function Chef() {
             description="More than private chefs — Ricardo and Crethell are the heart of the Sempre Avanti dining experience. With deep roots in Mexican coastal cuisine and a passion for fresh, local ingredients, every meal becomes a celebration."
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-            <PhotoPlaceholder label="Chef Ricardo" aspectRatio="portrait" />
+            <PhotoPlaceholder label="Chef Ricardo" aspectRatio="portrait" className="rounded-tl-[40px] rounded-br-[40px] overflow-hidden" />
             <div className="flex flex-col justify-center">
               <p className="text-base font-sans text-muted-foreground leading-relaxed mb-4">
                 From the first morning's fresh juice to the final fire-lit dessert, Ricardo and Crethell craft each meal around your group's preferences. They source daily from local fishermen and markets, bringing the flavors of Riviera Nayarit directly to your table.
@@ -155,7 +155,7 @@ export default function Chef() {
       <section className="py-20 md:py-28">
         <div className="container max-w-5xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <PhotoPlaceholder label="Pizza Night" aspectRatio="square" />
+            <PhotoPlaceholder label="Pizza Night" aspectRatio="square" className="rounded-tr-[40px] rounded-bl-[40px] overflow-hidden" />
             <div>
               <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-3 block">Guest Favorite</span>
               <h2 className="font-serif text-4xl md:text-5xl font-light mb-6">Pizza Night</h2>
@@ -199,7 +199,7 @@ export default function Chef() {
           <p className="text-sm font-sans text-muted-foreground mb-8">All pricing provided upon inquiry. Menus are fully customizable to your group's preferences.</p>
           <Link
             to="/contact"
-            className="inline-block px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors"
+            className="inline-block px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full"
           >
             Get in Touch
           </Link>

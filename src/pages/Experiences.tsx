@@ -24,6 +24,7 @@ const categories = [
     items: [
       { name: "Sayulita Taco Tour", desc: "Pickup, transportation, 3–4 taco spots, local history, and a finish at an agave field with blue corn tacos and quesadillas." },
       { name: "Private Cooking Class", desc: "In-house Mexican cooking class with a local chef. Learn traditional recipes and enjoy what you make." },
+      { name: "Mezcal & Tequila Tasting", desc: "Curated tastings of premium agave spirits at La Selecta in Sayulita with expert-guided pairings." },
     ],
   },
   {
@@ -78,6 +79,7 @@ const categories = [
       { name: "Horseback Riding", desc: "Trail rides through the jungle and along the beach at sunset." },
       { name: "Jungle & Monkey Mountain Hikes", desc: "Guided hikes through tropical jungle with wildlife encounters." },
       { name: "Polaris UTV Rentals", desc: "Available at the property. The best way to get to Sayulita and Punta de Mita. 2-seater, 4-seater, and 6-seater options." },
+      { name: "Bird Watching Tours", desc: "Guided early-morning tours through the jungle canopy spotting tropical species with expert naturalists." },
     ],
   },
   {
@@ -88,6 +90,8 @@ const categories = [
       { name: "Sayulita Friday Market", desc: "Organic produce, local treats, and artisan goods in the heart of Sayulita." },
       { name: "Puerto Vallarta Malecón", desc: "Iconic seaside boardwalk with art, dining, and nightlife." },
       { name: "Tequila & Mezcal Tastings", desc: "Curated tastings of Mexico's finest spirits at La Selecta in Sayulita." },
+      { name: "San Pancho Cultural Center", desc: "Community arts center with rotating exhibitions, workshops, and live performances." },
+      { name: "Huichol Art Gallery", desc: "Traditional indigenous beadwork and yarn paintings — a window into ancient Wixárika culture." },
     ],
   },
 ];
@@ -126,9 +130,9 @@ export default function Experiences() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.05 }}
-                  className="group bg-background border border-border p-6 hover:border-accent transition-colors"
+                  className="group bg-background border border-border p-6 hover:border-accent transition-colors rounded-xl"
                 >
-                  <PhotoPlaceholder label={item.name} aspectRatio="video" className="mb-4" />
+                  <PhotoPlaceholder label={item.name} aspectRatio="video" className="mb-4 rounded-xl overflow-hidden" />
                   <h3 className="font-serif text-xl mb-2 group-hover:text-accent transition-colors">{item.name}</h3>
                   <p className="text-sm font-sans text-muted-foreground leading-relaxed">{item.desc}</p>
                 </motion.div>
@@ -148,7 +152,7 @@ export default function Experiences() {
           />
           <Link
             to="/contact"
-            className="inline-block mt-4 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors"
+            className="inline-block mt-4 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full"
           >
             Plan Your Adventures
           </Link>

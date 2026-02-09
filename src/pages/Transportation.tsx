@@ -7,10 +7,10 @@ import { Clock, MapPin } from "lucide-react";
 
 const driveTimes = [
   { destination: "Puerto Vallarta Airport (PVR)", time: "~45 min", note: "Private Suburban transfer" },
-  { destination: "Sayulita town center", time: "~10 min", note: "By UTV — the fun way" },
-  { destination: "Punta de Mita", time: "~15 min", note: "By UTV or car" },
-  { destination: "San Pancho", time: "~15 min", note: "By UTV" },
-  { destination: "La Cruz de Huanacaxtle", time: "~20 min", note: "Sunday Market" },
+  { destination: "Sayulita town center", time: "~5 min", note: "By UTV — the fun way" },
+  { destination: "San Pancho", time: "~8 min", note: "By UTV" },
+  { destination: "Punta de Mita", time: "~20–25 min", note: "By UTV or car" },
+  { destination: "La Cruz de Huanacaxtle", time: "~25–30 min", note: "Sunday Market" },
 ];
 
 export default function Transportation() {
@@ -43,7 +43,7 @@ export default function Transportation() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-              className="bg-card p-8"
+              className="bg-card p-8 rounded-xl"
             >
               <PhotoPlaceholder label="Private Suburban Transfer" aspectRatio="video" className="mb-6" />
               <h3 className="font-serif text-2xl mb-3">Private Airport Transfers</h3>
@@ -58,12 +58,12 @@ export default function Transportation() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-              className="bg-card p-8"
+              className="bg-card p-8 rounded-xl"
             >
-              <PhotoPlaceholder label="Polaris UTV" aspectRatio="video" className="mb-6" />
+              <PhotoPlaceholder label="Polaris UTV" aspectRatio="video" className="mb-6 rounded-xl overflow-hidden" />
               <h3 className="font-serif text-2xl mb-3">Polaris UTV Rentals</h3>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-4">
-                Polaris UTVs are available at the property for guest use. They're the best way to get around — zip to Sayulita in 10 minutes, Punta de Mita in 15. The 4×4 carritos remove any sense of isolation and make exploring the coast effortless and fun.
+                Polaris UTVs are available at the property for guest use. They're the best way to get around — zip to Sayulita in 5 minutes, Punta de Mita in 20–25. The 4×4 carritos remove any sense of isolation and make exploring the coast effortless and fun.
               </p>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-4">
                 Wind in your hair, ocean on your left, jungle on your right — it's part of the Sempre Avanti experience. Available in 2-seater, 4-seater, and 6-seater options.
@@ -115,7 +115,7 @@ export default function Transportation() {
           />
           <Link
             to="/contact"
-            className="inline-block mt-6 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors"
+            className="inline-block mt-6 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full"
           >
             Arrange Transportation
           </Link>

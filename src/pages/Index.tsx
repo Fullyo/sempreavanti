@@ -38,7 +38,7 @@ function EstateCarousel({ pictures }: { pictures: Array<{ original: string; thum
 
   return (
     <div className="relative">
-      <div className="overflow-hidden rounded-tl-[60px] rounded-br-[60px]" ref={emblaRef}>
+      <div className="overflow-hidden rounded-tr-[60px] rounded-bl-[60px]" ref={emblaRef}>
         <div className="flex">
           {pictures.slice(0, 8).map((pic, i) => (
             <div key={i} className="flex-[0_0_100%] min-w-0">
@@ -81,58 +81,58 @@ export default function Index() {
     <Layout>
       <HeroSection listings={listings} />
 
-      {/* Estate Introduction */}
+      {/* Estate Introduction — Casa Tara style two-column */}
       <section className="py-20 md:py-32" aria-label="Estate introduction">
-        <div className="container">
-          <SectionHeading
-            eyebrow="The Estate"
-            title="More Than a Stay — A Destination"
-            description="Casa Sempre Avanti is a self-contained private resort on the Riviera Nayarit coast. Two adjacent beachfront villas — Casa Pietro and Casa Luisa — create a seamless estate with private beach, pool, and every detail attended to by your dedicated team."
-          />
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12 max-w-6xl mx-auto items-center">
-            {/* Left: Stats & description */}
+        <div className="container max-w-6xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* Left: Text + Stats */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
             >
-              <div className="grid grid-cols-3 gap-6 mb-8">
-                {[
-                  { value: "5", label: "Bedrooms" },
-                  { value: "5", label: "Bathrooms" },
-                  { value: "10", label: "Guests" },
-                ].map((stat) => (
-                  <div key={stat.label} className="text-center">
-                    <span className="font-serif text-4xl md:text-5xl block text-golden">{stat.value}</span>
-                    <span className="text-xs font-sans uppercase tracking-widest text-muted-foreground mt-1 block">{stat.label}</span>
-                  </div>
-                ))}
+              <span className="text-xs font-sans uppercase tracking-[0.3em] text-golden mb-3 block">
+                The Estate
+              </span>
+              <h2 className="font-serif text-3xl md:text-5xl font-light leading-tight mb-4 text-foreground">
+                More Than a Stay — A Destination
+              </h2>
+              {/* Decorative divider */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="h-px w-12 bg-golden" />
+                <div className="w-2 h-2 rounded-full bg-golden" />
+                <div className="h-px w-12 bg-golden" />
               </div>
+              <p className="text-base font-sans text-muted-foreground leading-relaxed mb-4">
+                Casa Sempre Avanti is a self-contained private resort on the Riviera Nayarit coast. Two adjacent beachfront villas — Casa Pietro and Casa Luisa — create a seamless estate with private beach, pool, and every detail attended to by your dedicated team.
+              </p>
+              <p className="text-base font-sans text-muted-foreground leading-relaxed mb-8">
+                Two adjacent beachfront villas with private pool, fire pit, beachfront dining, and a dedicated team of chefs, concierge, and housekeeping. Everything you need, nothing you don't.
+              </p>
+              {/* 2x2 Stats Grid */}
               <div className="grid grid-cols-2 gap-6 mb-8">
                 {[
+                  { value: "5", label: "Bedrooms" },
+                  { value: "10", label: "Guests" },
+                  { value: "5", label: "Bathrooms" },
                   { value: "Private", label: "Beach" },
-                  { value: "Full", label: "Staff" },
                 ].map((stat) => (
-                  <div key={stat.label} className="text-center">
+                  <div key={stat.label} className="text-center border border-border rounded-xl p-4">
                     <span className="font-serif text-3xl md:text-4xl block text-golden">{stat.value}</span>
                     <span className="text-xs font-sans uppercase tracking-widest text-muted-foreground mt-1 block">{stat.label}</span>
                   </div>
                 ))}
               </div>
-              <p className="text-base font-sans text-muted-foreground leading-relaxed mb-6">
-                Two adjacent beachfront villas with private pool, fire pit, beachfront dining, and a dedicated team of chefs, concierge, and housekeeping. Everything you need, nothing you don't.
-              </p>
               <Link
                 to="/villas"
-                className="inline-block px-8 py-3 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full"
+                className="inline-block px-8 py-3 border border-foreground/30 text-foreground font-sans text-sm uppercase tracking-widest hover:bg-foreground/5 transition-colors rounded-full"
               >
                 Explore the Villas
               </Link>
             </motion.div>
 
-            {/* Right: Scrolling photo carousel */}
+            {/* Right: Full carousel with thumbnails */}
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -140,11 +140,25 @@ export default function Index() {
               transition={{ duration: 0.7 }}
             >
               {isLoading ? (
-                <Skeleton className="h-[400px] md:h-[500px] rounded-tl-[60px] rounded-br-[60px]" />
+                <Skeleton className="h-[500px] lg:h-[600px] rounded-tr-[60px] rounded-bl-[60px]" />
               ) : allEstatePhotos.length > 0 ? (
-                <EstateCarousel pictures={allEstatePhotos} />
+                <>
+                  <EstateCarousel pictures={allEstatePhotos} />
+                  {/* Thumbnail strip */}
+                  <div className="flex gap-2 mt-3 overflow-x-auto pb-2">
+                    {allEstatePhotos.slice(0, 8).map((pic, i) => (
+                      <img
+                        key={i}
+                        src={pic.thumbnail || pic.original}
+                        alt={`Preview ${i + 1}`}
+                        className="w-16 h-12 object-cover rounded-lg opacity-70 hover:opacity-100 transition-opacity flex-shrink-0"
+                        loading="lazy"
+                      />
+                    ))}
+                  </div>
+                </>
               ) : (
-                <div className="h-[400px] md:h-[500px] bg-muted flex items-center justify-center rounded-tl-[60px] rounded-br-[60px]">
+                <div className="h-[500px] lg:h-[600px] bg-muted flex items-center justify-center rounded-tr-[60px] rounded-bl-[60px]">
                   <span className="text-muted-foreground font-sans text-sm">Photos coming soon</span>
                 </div>
               )}

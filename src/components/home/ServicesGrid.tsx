@@ -33,7 +33,7 @@ export default function ServicesGrid() {
           transition={{ duration: 0.7 }}
           className="text-center max-w-3xl mx-auto mb-12"
         >
-          <span className="text-xs font-sans uppercase tracking-[0.3em] mb-3 block text-turquoise">
+          <span className="text-xs font-sans uppercase tracking-[0.3em] mb-3 block text-golden">
             All Included
           </span>
           <h2 className="font-serif text-3xl md:text-5xl font-light leading-tight text-foreground">
@@ -58,7 +58,7 @@ export default function ServicesGrid() {
                 className="block text-center p-6 rounded-xl border border-transparent hover:border-golden/30 hover:shadow-[0_8px_30px_-12px_hsl(42_85%_55%/0.3)] transition-all duration-300 group"
               >
                 <service.icon
-                  className="w-8 h-8 mx-auto mb-4 text-turquoise group-hover:scale-110 transition-transform"
+                  className="w-8 h-8 mx-auto mb-4 text-golden group-hover:scale-110 transition-transform"
                   strokeWidth={1.2}
                 />
                 <h3 className="font-serif text-lg mb-1 group-hover:text-golden transition-colors">
