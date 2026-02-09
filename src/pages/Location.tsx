@@ -7,10 +7,10 @@ import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
 const nearbyPlaces = [
-  { name: "Sayulita", distance: "10 min by UTV", description: "A vibrant surf town with boutiques, restaurants, and a lively beach scene." },
-  { name: "Punta de Mita", distance: "15 min", description: "An upscale beach community with world-class dining and surf breaks." },
-  { name: "San Pancho", distance: "15 min", description: "A quieter, artistic village with a cultural center and beautiful beach." },
-  { name: "La Cruz de Huanacaxtle", distance: "20 min", description: "Home to the famous Sunday Market — fresh seafood, artisan crafts, live music." },
+  { name: "Sayulita", distance: "5 min by UTV", description: "A vibrant surf town with boutiques, restaurants, and a lively beach scene." },
+  { name: "San Pancho", distance: "8 min by UTV", description: "A quieter, artistic village with a cultural center and beautiful beach." },
+  { name: "Punta de Mita", distance: "20–25 min", description: "An upscale beach community with world-class dining and surf breaks." },
+  { name: "La Cruz de Huanacaxtle", distance: "25–30 min", description: "Home to the famous Sunday Market — fresh seafood, artisan crafts, live music." },
   { name: "Puerto Vallarta", distance: "45 min", description: "The Malecón boardwalk, art galleries, fine dining, and vibrant nightlife." },
   { name: "Chacala", distance: "45 min", description: "A hidden gem — serene beach town with no crowds. Perfect for a peaceful day trip." },
 ];
@@ -138,7 +138,7 @@ export default function Location() {
       {/* Google Map */}
       <section className="pb-16">
         <div className="container max-w-5xl">
-          <div className="w-full aspect-video">
+          <div className="w-full aspect-video rounded-2xl overflow-hidden">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2896!2d-105.4640904!3d20.847732!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x84211561ab8a6c1b%3A0xe20445bb3abc738a!2sCasa%20Sempre%20Avanti!5e0!3m2!1sen!2smx!4v1700000000000!5m2!1sen!2smx"
               width="100%"
@@ -166,7 +166,7 @@ export default function Location() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.05 }}
-                className="bg-background p-6 border border-border"
+                className="bg-background p-6 border border-border rounded-xl"
               >
                 <PhotoPlaceholder label={place.name} aspectRatio="video" className="mb-4" />
                 <h3 className="font-serif text-xl mb-1">{place.name}</h3>
@@ -219,18 +219,18 @@ export default function Location() {
         <div className="container max-w-5xl">
           <SectionHeading eyebrow="Don't Miss" title="Local Markets" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-card p-8">
-              <PhotoPlaceholder label="La Cruz Sunday Market" aspectRatio="video" className="mb-4" />
+            <div className="bg-card p-8 rounded-xl">
+              <PhotoPlaceholder label="La Cruz Sunday Market" aspectRatio="video" className="mb-4 rounded-xl overflow-hidden" />
               <h3 className="font-serif text-2xl mb-2">La Cruz Sunday Market</h3>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed">
-                The region's premier market. Fresh seafood, artisan crafts, live music, handmade jewelry, and the best tamales you've ever had. Arrive early for the best selection. 20 minutes from the house.
+                The region's premier market. Fresh seafood, artisan crafts, live music, handmade jewelry, and the best tamales you've ever had. Arrive early for the best selection. 25–30 minutes from the house.
               </p>
             </div>
-            <div className="bg-card p-8">
-              <PhotoPlaceholder label="Sayulita Friday Market" aspectRatio="video" className="mb-4" />
+            <div className="bg-card p-8 rounded-xl">
+              <PhotoPlaceholder label="Sayulita Friday Market" aspectRatio="video" className="mb-4 rounded-xl overflow-hidden" />
               <h3 className="font-serif text-2xl mb-2">Sayulita Friday Market</h3>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed">
-                Organic produce, local treats, artisan goods, and live music in the heart of Sayulita's plaza. A more intimate, locals-focused market. 10 minutes by UTV.
+                Organic produce, local treats, artisan goods, and live music in the heart of Sayulita's plaza. A more intimate, locals-focused market. 5 minutes by UTV.
               </p>
             </div>
           </div>

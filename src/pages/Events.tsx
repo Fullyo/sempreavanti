@@ -45,9 +45,9 @@ export default function Events() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="bg-card p-8"
+                className="bg-card p-8 rounded-xl"
               >
-                <PhotoPlaceholder label={event.title} aspectRatio="video" className="mb-6" />
+                <PhotoPlaceholder label={event.title} aspectRatio="video" className="mb-6 rounded-xl overflow-hidden" />
                 <h3 className="font-serif text-2xl mb-3">{event.title}</h3>
                 <p className="text-sm font-sans text-muted-foreground leading-relaxed">{event.description}</p>
               </motion.div>
@@ -77,7 +77,7 @@ export default function Events() {
           />
           <Link
             to="/contact"
-            className="inline-block mt-6 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors"
+            className="inline-block mt-6 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full"
           >
             Plan Your Event
           </Link>

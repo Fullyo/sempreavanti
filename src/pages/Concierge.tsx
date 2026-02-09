@@ -86,7 +86,7 @@ export default function Concierge() {
                 <PhotoPlaceholder
                   label={person.name}
                   aspectRatio="portrait"
-                  className={i % 2 === 1 ? "md:order-2" : ""}
+                  className={`rounded-tl-[40px] rounded-br-[40px] overflow-hidden ${i % 2 === 1 ? "md:order-2" : ""}`}
                 />
                 <div className={i % 2 === 1 ? "md:order-1" : ""}>
                   <span className="text-xs font-sans uppercase tracking-widest text-accent mb-1 block">{person.role}</span>
@@ -114,7 +114,7 @@ export default function Concierge() {
           </div>
           <Link
             to="/contact"
-            className="inline-block mt-12 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors"
+            className="inline-block mt-12 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full"
           >
             Get in Touch
           </Link>

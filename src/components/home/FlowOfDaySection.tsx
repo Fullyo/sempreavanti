@@ -36,7 +36,7 @@ const flowItems = [
   {
     title: "Location",
     subtitle: "Riviera Nayarit",
-    description: "Minutes from Sayulita, Punta de Mita, and the best of the coast.",
+    description: "5 min to Sayulita, 20–25 min to Punta de Mita — the best of the coast.",
     path: "/location",
   },
 ];

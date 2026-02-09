@@ -61,7 +61,7 @@ export default function Contact() {
             description="Tell us about your dream stay. We'll personally respond to arrange every detail — from dates and dining to adventures and celebrations."
           />
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6 bg-card p-8 rounded-2xl border border-border">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-2 block">First Name</label>
@@ -105,7 +105,7 @@ export default function Contact() {
               <Textarea value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} rows={5} placeholder="Tell us about your dream stay..." className="bg-card border-border" />
             </div>
 
-            <Button type="submit" disabled={loading} className="w-full py-6 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90">
+            <Button type="submit" disabled={loading} className="w-full py-6 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 rounded-full">
               {loading ? "Sending..." : "Send Inquiry"}
             </Button>
           </form>

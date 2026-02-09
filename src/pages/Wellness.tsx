@@ -59,7 +59,7 @@ export default function Wellness() {
                 ))}
               </div>
             </div>
-            <PhotoPlaceholder label="Morning Yoga" aspectRatio="portrait" />
+            <PhotoPlaceholder label="Morning Yoga" aspectRatio="portrait" className="rounded-tl-[40px] rounded-br-[40px] overflow-hidden" />
           </div>
         </div>
       </section>
@@ -68,7 +68,7 @@ export default function Wellness() {
       <section className="py-16 md:py-24 bg-card">
         <div className="container max-w-5xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <PhotoPlaceholder label="Personal Training" aspectRatio="square" />
+            <PhotoPlaceholder label="Personal Training" aspectRatio="square" className="rounded-tr-[40px] rounded-bl-[40px] overflow-hidden" />
             <div>
               <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-3 block">Fitness</span>
               <h2 className="font-serif text-4xl font-light mb-6">Pilates & Personal Training</h2>
@@ -95,9 +95,9 @@ export default function Wellness() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="bg-card p-6"
+                className="bg-card p-6 rounded-xl"
               >
-                <PhotoPlaceholder label={p.name} aspectRatio="video" className="mb-4" />
+                <PhotoPlaceholder label={p.name} aspectRatio="video" className="mb-4 rounded-xl overflow-hidden" />
                 <h3 className="font-serif text-xl mb-2">{p.name}</h3>
                 <p className="text-xs font-sans text-accent mb-2">{p.services}</p>
                 <p className="text-sm font-sans text-muted-foreground">{p.note}</p>
@@ -144,7 +144,7 @@ export default function Wellness() {
           <p className="text-sm font-sans text-muted-foreground mb-8">Pricing and scheduling arranged through your concierge.</p>
           <Link
             to="/contact"
-            className="inline-block px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors"
+            className="inline-block px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full"
           >
             Inquire Now
           </Link>

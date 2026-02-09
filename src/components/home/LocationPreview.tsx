@@ -57,10 +57,10 @@ export default function LocationPreview({ listings }: LocationPreviewProps) {
               Between Sayulita & San Pancho
             </h2>
             <p className="text-base font-sans text-muted-foreground leading-relaxed mb-4">
-              Sempre Avanti sits on a private stretch of Pacific coastline, minutes from the vibrant surf town of Sayulita and the artistic village of San Pancho. Connected by Polaris UTVs, you're never more than 10 minutes from world-class dining, shopping, and nightlife.
+              Sempre Avanti sits on a private stretch of Pacific coastline, minutes from the vibrant surf town of Sayulita and the artistic village of San Pancho. Connected by Polaris UTVs, you're just 5 minutes from Sayulita and 8 minutes from San Pancho — world-class dining, shopping, and nightlife at your doorstep.
             </p>
             <p className="text-base font-sans text-muted-foreground leading-relaxed mb-8">
-              Punta de Mita, the Four Seasons, and the St. Regis are a short drive south. The famous La Cruz Sunday Market is 20 minutes away. Private yet perfectly connected.
+              Punta de Mita, the Four Seasons, and the St. Regis are 20–25 minutes south. The famous La Cruz Sunday Market is 25–30 minutes away. Private yet perfectly connected.
             </p>
             <Link
               to="/location"

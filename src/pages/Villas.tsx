@@ -75,7 +75,7 @@ export default function Villas() {
           {/* Estate photo gallery */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-12">
             {listings?.[0]?.pictures?.slice(8, 14).map((pic, i) => (
-              <img key={i} src={pic.original} alt={`Estate ${i}`} className="w-full h-56 md:h-72 object-cover" loading="lazy" />
+              <img key={i} src={pic.original} alt={`Estate ${i}`} className="w-full h-56 md:h-72 object-cover rounded-xl" loading="lazy" />
             )) || Array.from({ length: 6 }).map((_, i) => (
               <PhotoPlaceholder key={i} label="Estate" />
             ))}
@@ -103,7 +103,7 @@ export default function Villas() {
                     className={idx % 2 === 1 ? "lg:order-2" : ""}
                   >
                     {villa!.pictures?.[0] ? (
-                      <img src={villa!.pictures[0].original} alt={villa!.title || villa!.nickname} className="w-full h-[500px] object-cover" />
+                      <img src={villa!.pictures[0].original} alt={villa!.title || villa!.nickname} className="w-full h-[500px] object-cover rounded-tl-[40px] rounded-br-[40px]" />
                     ) : (
                       <PhotoPlaceholder label={villa!.title || villa!.nickname} className="h-[500px] !aspect-auto" />
                     )}
@@ -172,7 +172,7 @@ export default function Villas() {
           />
           <Link
             to="/contact"
-            className="inline-block mt-6 px-8 py-3 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors"
+            className="inline-block mt-6 px-8 py-3 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full"
           >
             Inquire About Availability
           </Link>
