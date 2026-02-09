@@ -1,28 +1,18 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { GuestyListing } from "@/hooks/useGuestyListings";
+import heroVilla from "@/assets/hero-villa.png";
 
 interface HeroSectionProps {
-  listings?: GuestyListing[];
+  listings?: unknown[];
 }
 
 export default function HeroSection({ listings }: HeroSectionProps) {
-  // Find the specific aerial villa photo from the Full Estate listing
-  const HERO_PHOTO_ID = "2833d32f-6cd7-42-HKYrT";
-  const heroImage = (() => {
-    if (!listings) return undefined;
-    for (const listing of listings) {
-      const match = listing.pictures?.find((p) => p.original?.includes(HERO_PHOTO_ID));
-      if (match) return match.original;
-    }
-    return listings[0]?.pictures?.[0]?.original;
-  })();
 
   return (
     <section className="relative h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden">
-      {heroImage ? (
+      {heroVilla ? (
         <img
-          src={heroImage}
+          src={heroVilla}
           alt="Casa Sempre Avanti beachfront"
           className="absolute inset-0 w-full h-full object-cover"
         />
