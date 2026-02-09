@@ -37,7 +37,7 @@ async function setCache(supabase: ReturnType<typeof createClient>, key: string, 
   if (error) console.error(`Cache write error for ${key}:`, error.message);
 }
 
-async function fetchWithRetry(url: string, options: RequestInit, retries = 3): Promise<Response> {
+async function fetchWithRetry(url: string, options: RequestInit, retries = 2): Promise<Response> {
   for (let attempt = 0; attempt < retries; attempt++) {
     const response = await fetch(url, options);
     if (response.status === 429 && attempt < retries - 1) {
@@ -91,25 +91,68 @@ async function getAccessToken(supabase: ReturnType<typeof createClient>): Promis
   return data.access_token;
 }
 
-async function fetchViaBookingEngine(): Promise<unknown | null> {
+// Try multiple Booking Engine API endpoint variations
+async function fetchListingsFromBookingEngine(token: string): Promise<unknown | null> {
+  const endpoints = [
+    // Try without filter first to get all listings
+    "https://booking.guesty.com/api/listings",
+    // Try with listing ID filter
+    "https://booking.guesty.com/api/listings?listingId=697bcfcf3f5e990014fbc4dd",
+  ];
+
+  for (const url of endpoints) {
+    try {
+      console.log(`Trying BE-API: ${url}`);
+      const response = await fetch(url, {
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorBody = await response.text().catch(() => "no body");
+        console.log(`BE-API ${url} returned ${response.status}: ${errorBody.substring(0, 300)}`);
+        continue;
+      }
+
+      const data = await response.json();
+      const count = data?.results?.length || (Array.isArray(data) ? data.length : 1);
+      console.log(`BE-API success! Got ${count} listings from ${url}`);
+
+      if (Array.isArray(data)) return { results: data };
+      if (data?.results) return data;
+      return { results: [data] };
+    } catch (err) {
+      console.error(`BE-API error for ${url}:`, err);
+    }
+  }
+
+  return null;
+}
+
+// Try Open API (needs different OAuth scope — may not work with booking_engine:api credentials)
+async function fetchListingsFromOpenApi(token: string): Promise<unknown | null> {
   try {
-    console.log("Trying Booking Engine public API...");
-    const response = await fetch(
-      "https://booking.guesty.com/api/listings?listingId=697bcfcf3f5e990014fbc4dd",
-      { headers: { Accept: "application/json" } }
-    );
+    console.log("Trying Open API (open-api.guesty.com)...");
+    const response = await fetch("https://open-api.guesty.com/v1/listings?limit=25", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    });
+
     if (!response.ok) {
-      console.log("Booking Engine API returned:", response.status);
+      const errorBody = await response.text().catch(() => "no body");
+      console.log(`Open API returned ${response.status}: ${errorBody.substring(0, 300)}`);
       return null;
     }
+
     const data = await response.json();
-    console.log(`Booking Engine returned ${data?.results?.length || data?.length || 0} listings`);
-    // Normalize to { results: [...] } format
-    if (Array.isArray(data)) return { results: data };
-    if (data?.results) return data;
-    return { results: [data] };
+    console.log(`Open API returned ${(data as any)?.results?.length || 0} listings`);
+    return data;
   } catch (err) {
-    console.error("Booking Engine API error:", err);
+    console.error("Open API error:", err);
     return null;
   }
 }
@@ -143,31 +186,19 @@ serve(async (req) => {
       });
     }
 
-    // Layer 3: Try Open API
+    // Get token
+    const token = await getAccessToken(supabase);
     let listingsData: unknown | null = null;
 
-    try {
-      const token = await getAccessToken(supabase);
-      const listingsResponse = await fetchWithRetry(
-        "https://booking-api.guesty.com/v1/listings?limit=25",
-        { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } }
-      );
-      if (listingsResponse.ok) {
-        listingsData = await listingsResponse.json();
-        console.log(`Fetched ${(listingsData as any)?.results?.length || 0} fresh listings from Open API`);
-      } else {
-        console.error("Open API listings fetch failed:", listingsResponse.status);
-      }
-    } catch (err) {
-      console.error("Open API failed:", err);
-    }
+    // Layer 3: Booking Engine API (primary — token scope matches)
+    listingsData = await fetchListingsFromBookingEngine(token);
 
-    // Layer 4: Booking Engine fallback
+    // Layer 4: Open API fallback (may fail if credentials are BE-only)
     if (!listingsData) {
-      listingsData = await fetchViaBookingEngine();
+      listingsData = await fetchListingsFromOpenApi(token);
     }
 
-    // If we got fresh data, cache it
+    // Cache and return fresh data
     if (listingsData) {
       await setCache(supabase, "listings_data", listingsData, 2 * 3600);
       memCache = { listings: listingsData, expiresAt: Date.now() + 30 * 60 * 1000 };
@@ -176,7 +207,7 @@ serve(async (req) => {
       });
     }
 
-    // Layer 5: Return stale DB data
+    // Layer 5: Stale DB cache
     if (dbListings) {
       console.log("Returning stale DB listings as last resort");
       return new Response(JSON.stringify(dbListings), {
