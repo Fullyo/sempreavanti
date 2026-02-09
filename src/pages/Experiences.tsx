@@ -1,7 +1,7 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import ExperienceGallery from "@/components/experiences/ExperienceGallery";
 
 import atvImg from "@/assets/atv.jpeg";
 import fishingImg from "@/assets/fishing.jpg";
@@ -10,16 +10,19 @@ import marietasImg from "@/assets/marietas-islands.jpeg";
 import whaleImg from "@/assets/whale.jpeg";
 import ziplineImg from "@/assets/zipline.jpg";
 
-// Category data — activities only (no food/culinary)
 const categories = [
   {
     title: "Surfing",
     eyebrow: "Catch a Wave",
+    gallery: [
+      { src: marietasImg, alt: "Ocean waves near Sayulita" },
+    ],
+    intro: "Chillo is the best beginner surf instructor in Sayulita — patient, fun, and incredible with kids and first-timers. He'll have your family standing on boards by day one. We can arrange lessons for your group any morning during your stay.",
     items: [
-      { name: "Surf Lesson — Sayulita", desc: "Learn to ride in Sayulita's friendly waves. Boards and instruction included." },
-      { name: "Surf Experience — La Lancha", desc: "World-class left point break near Punta de Mita. Transportation, boards, 1.5-hour lesson, and 30 minutes of free surf included." },
-      { name: "Captain Pablo's", desc: "Right point break — consistent, fun, great for intermediate surfers. Beachfront restaurant after." },
-      { name: "Don Pedro's", desc: "Left break right in front of the iconic restaurant. Watch the surfers while you eat." },
+      { name: "Lessons with Chillo", desc: "Sayulita's top instructor for beginners and families. Patient, fun, and incredible with kids." },
+      { name: "Surf Experience — La Lancha", desc: "World-class left point break near Punta de Mita. Transportation, boards, 1.5-hour lesson, and 30 min free surf." },
+      { name: "Captain Pablo's", desc: "Right point break — consistent, fun, great for intermediate surfers." },
+      { name: "Don Pedro's", desc: "Left break right in front of the iconic restaurant." },
       { name: "Burros", desc: "Powerful beach break north of Sayulita. For experienced surfers." },
       { name: "Punta Mita", desc: "Several breaks around the point — varied conditions for all levels." },
     ],
@@ -27,137 +30,92 @@ const categories = [
   {
     title: "Boats & Fishing",
     eyebrow: "On the Water",
-    image: fishingImg,
+    gallery: [
+      { src: fishingImg, alt: "Deep sea fishing on the Pacific" },
+      { src: whaleImg, alt: "Whale watching off Banderas Bay" },
+    ],
     items: [
-      { name: "Private Boat Tour", desc: "Whale watching, snorkeling equipment, light trolling, water, sodas, and beer included. 3 hours, up to 7 guests." },
-      { name: "Fishing Charter", desc: "4-hour charter with water, sodas, beer, and all fishing equipment. Up to 4 people." },
-      { name: "Spearfishing — Inshore", desc: "4–5 hour inshore spearfishing trip. Equipment and beverages included. Up to 3–4 people." },
-      { name: "Spearfishing — Deep Water", desc: "Full-day deep water trip (7 AM – 4 PM). Equipment, beverages, and sashimi preparation included. Up to 3 people." },
-      { name: "Catch & Cook", desc: "Bring your catch back and Ricardo will prepare it for dinner. The freshest meal you'll ever have." },
+      { name: "Private Boat Tour", desc: "Whale watching, snorkeling, light trolling, beverages included. 3 hours, up to 7 guests." },
+      { name: "Fishing Charter", desc: "4-hour charter with all equipment and beverages. Up to 4 people." },
+      { name: "Spearfishing — Inshore", desc: "4–5 hour inshore trip. Equipment and beverages included. Up to 3–4 people." },
+      { name: "Spearfishing — Deep Water", desc: "Full-day trip (7 AM – 4 PM). Equipment, beverages, and sashimi prep. Up to 3 people." },
+      { name: "Catch & Cook", desc: "Bring your catch back and Ricardo will prepare it for dinner." },
     ],
   },
   {
     title: "Golf",
     eyebrow: "Tee Off",
+    gallery: [],
     items: [
-      { name: "Litibú Golf Course", desc: "15 minutes away. 18-hole Greg Norman design with ocean views. Our top recommendation." },
-      { name: "Four Seasons Punta Mita", desc: "Two world-class Jack Nicklaus courses — Pacífico and Bahía. Bucket-list golf." },
-      { name: "El Flamingo", desc: "9-hole course near Bucerías. Casual, fun, great for a quick round." },
-      { name: "El Tigre", desc: "18-hole course in Nuevo Vallarta. Von Hagge design with water features." },
+      { name: "Litibú Golf Course", desc: "15 minutes away. 18-hole Greg Norman design with ocean views." },
+      { name: "Four Seasons Punta Mita", desc: "Two Jack Nicklaus courses — Pacífico and Bahía. Bucket-list golf." },
+      { name: "El Flamingo", desc: "9-hole course near Bucerías. Casual and fun." },
+      { name: "El Tigre", desc: "18-hole Von Hagge design in Nuevo Vallarta." },
     ],
   },
   {
     title: "Ocean & Water",
     eyebrow: "Dive In",
-    image: marietasImg,
+    gallery: [
+      { src: marietasImg, alt: "Marietas Islands" },
+      { src: whaleImg, alt: "Whale watching in Banderas Bay" },
+    ],
     items: [
-      { name: "Snorkeling — Playa de los Muertos", desc: "10 minutes from the house. Calm, clear water perfect for snorkeling with kids." },
+      { name: "Snorkeling — Playa de los Muertos", desc: "10 min from the house. Calm, clear water perfect for kids." },
       { name: "Marietas Islands", desc: "Protected national park. Snorkeling, hidden beach, whale watching in season." },
-      { name: "Scuba Diving — Sebastian", desc: "PADI certified instructor. Beginner to advanced certifications available." },
-      { name: "Kite Surfing", desc: "Available in Punta Mita when conditions are right. Equipment and instruction provided." },
-      { name: "Paddleboard Tours", desc: "Glide along the coast on stand-up paddleboard excursions." },
+      { name: "Scuba Diving", desc: "PADI certified instructor. Beginner to advanced certifications." },
+      { name: "Kite Surfing", desc: "Available in Punta Mita. Equipment and instruction provided." },
+      { name: "Paddleboard Tours", desc: "Stand-up paddleboard excursions along the coast." },
       { name: "Whale Watching", desc: "Seasonal humpback encounters from December through March." },
     ],
   },
   {
     title: "Sailing",
     eyebrow: "Set Sail",
+    gallery: [],
     items: [
-      { name: "Fat Cat", desc: "Spacious catamaran for larger groups — sunset sails and celebrations up to 30 guests." },
-      { name: "Ally Cat", desc: "Intimate sailing for up to 12 guests. Snorkeling stops, open bar, fresh ceviche on board." },
-      { name: "Ally Cat Too", desc: "Private charter for up to 16. Paddleboards, snorkel gear, and onboard refreshments included." },
-      { name: "Ally Cat 3", desc: "The newest and largest — luxury sailing with all amenities for bigger groups." },
+      { name: "Fat Cat", desc: "Spacious catamaran — sunset sails and celebrations up to 30 guests." },
+      { name: "Ally Cat", desc: "Intimate sailing for up to 12. Snorkeling, open bar, fresh ceviche." },
+      { name: "Ally Cat Too", desc: "Private charter for up to 16 with paddleboards and snorkel gear." },
+      { name: "Ally Cat 3", desc: "The newest and largest — luxury sailing with all amenities." },
     ],
   },
   {
     title: "Land & Adventure",
     eyebrow: "Explore",
-    image: ziplineImg,
+    gallery: [
+      { src: ziplineImg, alt: "Zipline over the jungle canopy" },
+      { src: atvImg, alt: "ATV ride through the mountains" },
+      { src: horsebackImg, alt: "Horseback riding on the beach" },
+    ],
     items: [
-      { name: "Zipline & Canopy Tours", desc: "Soar above the jungle canopy on world-class ziplines through the Sierra Madre." },
-      { name: "ATV & RZR Tours", desc: "Navigate mountain trails and coastal paths on guided off-road adventures." },
+      { name: "Zipline & Canopy Tours", desc: "Soar above the jungle canopy on world-class ziplines." },
+      { name: "ATV & RZR Tours", desc: "Guided off-road adventures through mountains and coast." },
       { name: "Horseback Riding", desc: "Trail rides through the jungle and along the beach at sunset." },
-      { name: "Jungle & Monkey Mountain Hikes", desc: "Guided hikes through tropical jungle with wildlife encounters." },
-      { name: "Polaris UTV Rentals", desc: "Available at the property. The best way to get to Sayulita and Punta de Mita. 2-seater, 4-seater, and 6-seater options." },
-      { name: "Bird Watching Tours", desc: "Guided early-morning tours through the jungle canopy spotting tropical species with expert naturalists." },
+      { name: "Jungle & Monkey Mountain Hikes", desc: "Guided hikes with wildlife encounters." },
+      { name: "Polaris UTV Rentals", desc: "Available at the property. 2, 4, and 6-seater options." },
+      { name: "Bird Watching Tours", desc: "Early-morning guided tours spotting tropical species." },
     ],
   },
   {
     title: "Cultural & Local",
     eyebrow: "Discover",
+    gallery: [],
     items: [
-      { name: "La Cruz Sunday Market", desc: "The region's premier market. Fresh seafood, artisan crafts, live music, and authentic Mexican culture." },
-      { name: "Sayulita Friday Market", desc: "Organic produce, local treats, and artisan goods in the heart of Sayulita." },
+      { name: "La Cruz Sunday Market", desc: "The region's premier market. Fresh seafood, crafts, live music." },
+      { name: "Sayulita Friday Market", desc: "Organic produce, local treats, and artisan goods." },
       { name: "Puerto Vallarta Malecón", desc: "Iconic seaside boardwalk with art, dining, and nightlife." },
-      { name: "Tequila & Mezcal Tastings", desc: "Curated tastings of Mexico's finest spirits at La Selecta in Sayulita." },
-      { name: "San Pancho Cultural Center", desc: "Community arts center with rotating exhibitions, workshops, and live performances." },
-      { name: "Huichol Art Gallery", desc: "Traditional indigenous beadwork and yarn paintings — a window into ancient Wixárika culture." },
+      { name: "Tequila & Mezcal Tastings", desc: "Curated tastings at La Selecta in Sayulita." },
+      { name: "San Pancho Cultural Center", desc: "Rotating exhibitions, workshops, and live performances." },
+      { name: "Huichol Art Gallery", desc: "Traditional indigenous beadwork and yarn paintings." },
     ],
   },
 ];
 
-interface CategoryData {
-  title: string;
-  eyebrow: string;
-  image?: string;
-  items: Array<{ name: string; desc: string }>;
-}
-
-function CategorySection({ cat, index }: { cat: CategoryData; index: number }) {
-  const isAlt = index % 2 === 1;
-
-  return (
-    <section className={`py-14 md:py-20 ${isAlt ? "bg-card" : ""}`}>
-      <div className="container max-w-6xl">
-        <div className="flex items-baseline gap-4 mb-8">
-          <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent">{cat.eyebrow}</span>
-          <div className="h-px flex-1 bg-border" />
-        </div>
-
-        {cat.image ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-0">
-            <div className="rounded-xl overflow-hidden">
-              <img
-                src={cat.image}
-                alt={cat.title}
-                className="w-full h-[300px] object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div>
-              <h2 className="font-serif text-3xl mb-6">{cat.title}</h2>
-              <div className="space-y-3">
-                {cat.items.map((item) => (
-                  <div key={item.name} className="border-b border-border pb-3 last:border-0">
-                    <h3 className="font-serif text-lg">{item.name}</h3>
-                    <p className="text-sm font-sans text-muted-foreground">{item.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        ) : (
-          <>
-            <h2 className="font-serif text-3xl mb-6">{cat.title}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
-              {cat.items.map((item) => (
-                <div key={item.name} className="border-b border-border pb-3">
-                  <h3 className="font-serif text-lg">{item.name}</h3>
-                  <p className="text-sm font-sans text-muted-foreground">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-    </section>
-  );
-}
-
 export default function Experiences() {
   return (
     <Layout>
-      {/* Hero — full-bleed with ATV photo */}
+      {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <img src={atvImg} alt="ATV adventure overlooking the Riviera Nayarit coast" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
@@ -178,62 +136,41 @@ export default function Experiences() {
         </div>
       </section>
 
-      {/* Chillo — Dedicated Surf Instructor Section */}
-      <section className="py-16 md:py-24 bg-primary text-primary-foreground">
-        <div className="container max-w-5xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <span className="text-xs font-sans uppercase tracking-[0.3em] text-primary-foreground/70 mb-3 block">
-                The Best in Sayulita
-              </span>
-              <h2 className="font-serif text-3xl md:text-5xl font-light mb-6">Lessons with Chillo</h2>
-              <p className="text-base font-sans text-primary-foreground/80 leading-relaxed mb-4">
-                Chillo is the best beginner surf instructor in Sayulita — patient, fun, and incredible with kids and first-timers. He'll have your family standing on boards by day one.
-              </p>
-              <p className="text-base font-sans text-primary-foreground/80 leading-relaxed">
-                Whether it's your kids' first wave or a refresher for the adults, Chillo makes surfing feel effortless. We can arrange lessons for your group any morning during your stay.
-              </p>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="rounded-xl overflow-hidden"
-            >
-              <img
-                src={whaleImg}
-                alt="Pacific ocean near Sayulita"
-                className="w-full h-[350px] object-cover rounded-xl"
-                loading="lazy"
-              />
-            </motion.div>
-          </div>
-        </div>
-      </section>
+      {/* Activity Sections */}
+      {categories.map((cat, catIdx) => {
+        const isAlt = catIdx % 2 === 1;
+        return (
+          <section key={cat.title} className={`py-14 md:py-20 ${isAlt ? "bg-card" : ""}`}>
+            <div className="container max-w-6xl">
+              <div className="flex items-baseline gap-4 mb-6">
+                <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent">{cat.eyebrow}</span>
+                <div className="h-px flex-1 bg-border" />
+              </div>
 
-      {/* Activity Categories */}
-      {categories.map((cat, catIdx) => (
-        <CategorySection key={cat.title} cat={cat} index={catIdx} />
-      ))}
+              <h2 className="font-serif text-3xl mb-2">{cat.title}</h2>
 
-      {/* Horseback highlight */}
-      <section className="relative py-20 overflow-hidden">
-        <img src={horsebackImg} alt="Horseback riding at sunset on the beach" className="absolute inset-0 w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 container max-w-3xl text-center text-primary-foreground">
-          <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Sunset Rides</p>
-          <h2 className="font-serif text-4xl md:text-5xl font-light mb-4">Beach Horseback Riding</h2>
-          <p className="text-base font-sans text-primary-foreground/80 leading-relaxed max-w-xl mx-auto">
-            Trail rides through the jungle and along the beach at golden hour. One of the most unforgettable experiences on the Riviera Nayarit.
-          </p>
-        </div>
-      </section>
+              {cat.intro && (
+                <p className="text-base font-sans text-muted-foreground leading-relaxed max-w-3xl mb-6">
+                  {cat.intro}
+                </p>
+              )}
+
+              {cat.gallery && cat.gallery.length > 0 && (
+                <ExperienceGallery images={cat.gallery} />
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4 mt-6">
+                {cat.items.map((item) => (
+                  <div key={item.name} className="border-b border-border pb-3">
+                    <h3 className="font-serif text-lg">{item.name}</h3>
+                    <p className="text-sm font-sans text-muted-foreground">{item.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })}
 
       {/* CTA */}
       <section className="py-20 bg-card text-center">
