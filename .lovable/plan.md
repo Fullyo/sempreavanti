@@ -1,43 +1,33 @@
 
 
-# Fix: Clear Stale Error and Ensure Photos Load
+# Restructured Navigation Menu
 
-## Root Cause Analysis
+## New Menu Order
 
-The Guesty API is **fully functional right now**. A direct call returns HTTP 200 with 3 listings and dozens of real property photos (pool, bedrooms, ocean views, balconies, etc.). Your API credentials are valid -- no new key is needed.
+The navigation will be reorganized to lead with the property, then logistics, then activities:
 
-The error you see ("No listing data available from any source") is from a **stale cached response** from before the fix was deployed. The timeline:
+1. **The Estate** (dropdown): The Villas, Private Chef, Wellness
+2. **Plan Your Stay** (dropdown): Concierge, Transportation, Pricing
+3. **Experiences** (direct link)
+4. **Weddings & Events** (direct link)
+5. **Location** (direct link)
+6. **Get in Touch** (direct link)
+7. **Check Availability** (CTA button)
 
-- **01:42** -- Old code ran, failed (DNS error on wrong domain + missing auth token)
-- **01:44** -- New code deployed, **successfully fetched 3 listings with photos**, cached them to DB
-- **01:44+** -- All subsequent calls return cached data successfully
+This puts the villas front and center, followed by planning logistics, then the experiential and informational pages.
 
-The preview is still showing the old error because React Query cached the failed response.
+## Technical Details
 
-## What Needs to Happen
+### File: `src/components/layout/Navbar.tsx`
 
-There is no code bug to fix. The edge function, the hook, and the components are all correctly wired. However, to be safe and ensure a clean state, I will:
+- Rebuild the desktop nav with two hover-triggered dropdown groups ("The Estate" and "Plan Your Stay") and four direct links
+- Dropdowns use onMouseEnter/onMouseLeave with a solid white background, shadow, rounded corners, and high z-index
+- Text styling matches existing uppercase, tracking-widest convention
+- Transparent/scrolled states preserved: triggers are white when unscrolled, dark when scrolled; dropdown panels always white with dark text
+- Active state: dropdown trigger highlights if current route matches any child link
+- Mobile menu shows all items flat with small category headers for grouping
+- "Get in Touch" links to `/contact` (existing route)
+- "Pricing" moves under "Plan Your Stay" since it relates to trip planning
 
-### 1. Force a fresh fetch on page load
-
-**File:** `src/hooks/useGuestyListings.ts`
-
-- Reduce `staleTime` from 10 minutes to 2 minutes so stale errors don't persist as long
-- Add `refetchOnMount: "always"` to ensure every page navigation triggers a fresh check
-- This guarantees the working API response replaces any cached error
-
-### 2. Add error recovery logging
-
-**File:** `src/hooks/useGuestyListings.ts`
-
-- Add a `console.log` when real API data is successfully received, showing how many listings and photos were loaded
-- This helps confirm visually in the console that photos are being returned
-
-## Files to Change
-
-| File | Changes |
-|------|---------|
-| `src/hooks/useGuestyListings.ts` | Reduce staleTime, add refetchOnMount: "always" for error recovery |
-
-This is a minimal change -- the real fix (the edge function) is already deployed and working.
+No other files are changed -- all routes and pages stay the same.
 
