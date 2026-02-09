@@ -97,6 +97,8 @@ export function useGuestyListings() {
         if (error) throw error;
         const results = data?.results as GuestyListing[];
         if (results && results.length > 0) {
+          const totalPhotos = results.reduce((sum, l) => sum + (l.pictures?.length || 0), 0);
+          console.log(`✅ Guesty API: ${results.length} listings, ${totalPhotos} photos loaded`);
           return results;
         }
         console.log("Guesty API returned empty results, using fallback data");
@@ -106,7 +108,8 @@ export function useGuestyListings() {
         return fallbackListings;
       }
     },
-    staleTime: 1000 * 60 * 10,
+    staleTime: 1000 * 60 * 2,
+    refetchOnMount: "always",
     retry: 1,
   });
 }
