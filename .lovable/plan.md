@@ -1,115 +1,48 @@
 
-# Comprehensive Site-Wide Fix: Layout, Icons, Distances, Card Balance, and Organic Shapes
 
-## Issues Identified
+# Fix: Navbar Readability, Guesty API, and Remove Unsplash Photos
 
-1. **Wavy SVG divider on hero** -- unprofessional, remove it
-2. **Estate section layout is wrong** -- centered title + stats left + carousel right is disjointed. Needs to match the Casa Tara reference: eyebrow + title + description + stats on the LEFT, scrolling carousel on the RIGHT, all in one clean two-column row
-3. **Teal/turquoise icons in ServicesGrid are hard to read** -- switch to golden/accent or a darker ocean color
-4. **Organic photo shapes not applied to inner pages** -- all inner pages still use square/rectangular photos and cards
-5. **Experiences page card imbalance** -- "Taste of Mexico" has 2 cards, "On the Water" has 5, "Golf" has 4, "Tee Off" has 4. Grids of 2, 4, 5 items look unbalanced in a 3-column layout
-6. **Location distances are WRONG throughout the entire site** -- San Pancho is listed as 15 min (it's ~8 min), Punta de Mita as 15 min (it's ~25 min), etc.
-7. **Inner pages don't use the new organic shape language** -- all still have sharp rectangular cards and photos
+## Issue 1: Navbar Impossible to Read on Scroll
 
----
+The screenshot shows the scrolled navbar has `bg-cream/95` (very light, semi-transparent) with `text-muted-foreground` links -- low contrast, hard to read.
 
-## 1. Remove Wavy Hero Divider
+**Fix in `src/components/layout/Navbar.tsx`:**
+- Change scrolled background from `bg-cream/95` to `bg-white/98 backdrop-blur-lg shadow-sm` for a solid, crisp white bar
+- Change scrolled link color from `text-muted-foreground` to `text-foreground` (dark) for strong contrast
+- Add a subtle `shadow-sm` to visually separate the navbar from content
 
-**File:** `src/components/home/HeroSection.tsx`
+## Issue 2: Guesty API Returning 500 -- All Layers Failing
 
-Remove the SVG wave div at lines 71-75. Clean bottom edge.
+The logs reveal exactly what is broken:
 
----
+1. **Layer 3 (Open API):** `booking-api.guesty.com` gets a DNS resolution error -- this domain is unreachable from edge functions
+2. **Layer 4 (Booking Engine):** `booking.guesty.com/api/listings` returns **401** because it requires the OAuth token but the code calls it without one
+3. **Layer 2 (DB cache):** No cached data exists, so nothing to fall back to
 
-## 2. Rebuild Estate Section (Casa Tara Style)
+The Guesty Booking Engine API docs confirm:
+- Correct endpoint: `https://booking-api.guesty.com/v1/search` (not `/v1/listings`)
+- Auth: `Authorization: Bearer {token}` is required on all calls
+- The public `booking.guesty.com/api/listings` endpoint also needs auth
 
-**File:** `src/pages/Index.tsx`
+**Fix in `supabase/functions/guesty-listings/index.ts`:**
 
-Replace the current estate section (centered SectionHeading + grid) with a proper two-column layout:
+- **Layer 3:** Change the Open API URL from `booking-api.guesty.com` to `open-api.guesty.com` (the correct Open API domain). Also try the Booking Engine search endpoint `booking-api.guesty.com/v1/search`
+- **Layer 4 (Booking Engine fallback):** Pass the OAuth access token to the Booking Engine call instead of calling it unauthenticated
+- Add better logging to identify which step fails and why
+- Reorder: try Booking Engine (with token) first since it's purpose-built for this use case, then Open API as fallback
 
-**Left column:**
-- Small eyebrow: "The Estate"
-- Large serif title: "More Than a Stay -- A Destination"
-- Decorative divider line with golden dot (like Casa Tara)
-- Two paragraphs of description
-- Stats in a 2x2 grid with golden icons: 5 Bedrooms, 10 Guests, 5 Bathrooms, Private Beach
-- "Explore the Villas" CTA button (rounded-full, outlined)
+## Issue 3: Remove ALL Unsplash Fallback Photos
 
-**Right column:**
-- Full-height Embla carousel with organic rounded corners (`rounded-tr-[60px] rounded-bl-[60px]`)
-- Navigation arrows overlaid
-- Thumbnail strip below the carousel showing 6-8 small preview images
+The user explicitly does not want Unsplash stock photos. They want only real photos from the Guesty API.
 
-No more centered heading above the grid. Everything flows in a single two-column row.
+**Fix in `src/hooks/useGuestyListings.ts`:**
+- Remove all three Unsplash photo arrays (`pietroPhotos`, `luisaPhotos`, `estatePhotos`)
+- Keep the fallback listing metadata (bedrooms, bathrooms, description, etc.) but set `pictures: []` on all fallback listings
+- When the API returns empty photos, do NOT substitute Unsplash -- leave `pictures` empty
+- Components consuming photos should handle empty arrays gracefully (show nothing rather than broken images)
 
----
-
-## 3. Fix ServicesGrid Icons
-
-**File:** `src/components/home/ServicesGrid.tsx`
-
-Change icon color from `text-turquoise` to `text-golden` (the golden yellow). Much better readability on the warm cream background, and matches the brand's signature golden wall accent.
-
----
-
-## 4. Fix ALL Location Distances Site-Wide
-
-Based on the actual coordinates (20.847732, -105.4615155):
-
-| Destination | WRONG (current) | CORRECT |
-|---|---|---|
-| Sayulita | 10 min | 5 min by UTV |
-| San Pancho | 15 min | 8 min by UTV |
-| Punta de Mita | 15 min | 20-25 min |
-| La Cruz de Huanacaxtle | 20 min | 25-30 min |
-| Puerto Vallarta Airport | 45 min | 45 min (correct) |
-
-**Files to update:**
-- `src/pages/Location.tsx` -- `nearbyPlaces` array
-- `src/pages/Transportation.tsx` -- `driveTimes` array  
-- `src/components/home/LocationPreview.tsx` -- description text mentioning "10 minutes"
-- `src/components/home/FlowOfDaySection.tsx` -- location card description
-
----
-
-## 5. Fix Card Balance on Experiences Page
-
-**File:** `src/pages/Experiences.tsx`
-
-For categories with 2, 4, or 5 items that look unbalanced in a 3-column grid:
-
-- **"Taste of Mexico" (2 items):** Add 1 more experience (e.g., "Mezcal & Tequila Tasting" or "Market-to-Table Tour") to make it 3
-- **"On the Water" (6 items):** Already balanced at 6 (2 rows of 3) -- good
-- **"Golf" (4 items):** Change to a 2-column layout for this section (2x2 grid), or add 2 more options
-- **"Land & Adventure" (5 items):** Add 1 more (e.g., "Jungle Night Walk" or "Bird Watching Tour") to make 6
-- **"Cultural & Local" (4 items):** Add 2 more items to make 6, or use 2-column layout
-
-Strategy: For sections with fewer than 3 items, use `lg:grid-cols-2` instead of `lg:grid-cols-3`. For sections with 4-5 items, either pad to 6 or use adaptive column count.
-
----
-
-## 6. Apply Organic Shapes to All Inner Pages
-
-Currently every inner page uses sharp rectangular cards (`bg-card p-8`, `bg-background border border-border p-6`). Apply the same organic shape language from the homepage:
-
-**Consistent changes across ALL inner pages:**
-
-- Hero photos: already full-bleed, fine
-- Section photos/placeholders: Add rounded corners (`rounded-2xl` or alternating `rounded-tl-[40px] rounded-br-[40px]`)
-- Cards: Add `rounded-xl` to all card containers
-- CTA buttons: Ensure all use `rounded-full` (some currently have no border-radius)
-- Photo grids: Use organic rounded corners on grid items
-
-**Files:**
-- `src/pages/Experiences.tsx` -- card styling
-- `src/pages/Wellness.tsx` -- card/photo styling
-- `src/pages/Chef.tsx` -- photo and card styling
-- `src/pages/Villas.tsx` -- feature cards, photo gallery
-- `src/pages/Events.tsx` -- event cards
-- `src/pages/Transportation.tsx` -- transport cards
-- `src/pages/Concierge.tsx` -- staff cards/photos
-- `src/pages/Contact.tsx` -- form container
-- `src/pages/Location.tsx` -- place cards, map container
+**Fix in components that display photos (`Index.tsx`, `PhotoMosaicSection.tsx`, `VillaCarousel.tsx`, etc.):**
+- Add null/empty checks: if `pictures.length === 0`, show nothing or a minimal text-only layout instead of broken image placeholders
 
 ---
 
@@ -117,17 +50,9 @@ Currently every inner page uses sharp rectangular cards (`bg-card p-8`, `bg-back
 
 | File | Changes |
 |------|---------|
-| `src/components/home/HeroSection.tsx` | Remove SVG wave divider |
-| `src/pages/Index.tsx` | Rebuild estate section: left text+stats, right carousel with thumbnails |
-| `src/components/home/ServicesGrid.tsx` | Change icon color from turquoise to golden |
-| `src/pages/Location.tsx` | Fix all distances, add rounded corners |
-| `src/pages/Transportation.tsx` | Fix drive times, add rounded corners |
-| `src/components/home/LocationPreview.tsx` | Fix distance in description text |
-| `src/components/home/FlowOfDaySection.tsx` | Fix location card distance |
-| `src/pages/Experiences.tsx` | Balance card counts, add rounded corners to all cards |
-| `src/pages/Wellness.tsx` | Add organic rounded corners to cards/photos |
-| `src/pages/Chef.tsx` | Add organic rounded corners to cards/photos |
-| `src/pages/Villas.tsx` | Add rounded corners to feature cards, gallery |
-| `src/pages/Events.tsx` | Add rounded corners to event cards |
-| `src/pages/Concierge.tsx` | Add rounded corners to staff photos |
-| `src/pages/Contact.tsx` | Add rounded corners to form, CTA button |
+| `src/components/layout/Navbar.tsx` | Solid white scrolled background, dark text for readability |
+| `supabase/functions/guesty-listings/index.ts` | Fix API URLs and pass auth token to Booking Engine fallback |
+| `src/hooks/useGuestyListings.ts` | Remove all Unsplash photo arrays, keep metadata-only fallbacks |
+| `src/pages/Index.tsx` | Handle empty photos gracefully in estate carousel |
+| `src/components/home/PhotoMosaicSection.tsx` | Handle empty photos gracefully |
+
