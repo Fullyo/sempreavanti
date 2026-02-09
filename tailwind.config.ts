@@ -61,7 +61,10 @@ export default {
         },
         terracotta: "hsl(var(--terracotta))",
         gold: "hsl(var(--gold))",
+        golden: "hsl(var(--golden))",
         cream: "hsl(var(--cream))",
+        jungle: "hsl(var(--jungle))",
+        turquoise: "hsl(var(--turquoise))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

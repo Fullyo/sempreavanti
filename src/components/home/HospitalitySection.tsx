@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import SectionHeading from "@/components/ui/SectionHeading";
 import { GuestyListing } from "@/hooks/useGuestyListings";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 
@@ -11,7 +10,7 @@ export default function HospitalitySection({ listings }: HospitalitySectionProps
   const staffPhoto = listings?.[1]?.pictures?.[2]?.original;
 
   return (
-    <section className="py-20 md:py-32 bg-primary text-primary-foreground">
+    <section className="py-20 md:py-32 bg-gradient-to-br from-primary via-ocean to-primary text-primary-foreground">
       <div className="container max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <motion.div
@@ -20,7 +19,7 @@ export default function HospitalitySection({ listings }: HospitalitySectionProps
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            <span className="text-xs font-sans uppercase tracking-[0.3em] opacity-70 mb-3 block">
+            <span className="text-xs font-sans uppercase tracking-[0.3em] text-turquoise mb-3 block">
               The Philosophy
             </span>
             <h2 className="font-serif text-3xl md:text-5xl font-light leading-tight mb-6">
@@ -39,7 +38,7 @@ export default function HospitalitySection({ listings }: HospitalitySectionProps
                 { label: "Years of Service", value: "8+" },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <span className="font-serif text-3xl block">{stat.value}</span>
+                  <span className="font-serif text-3xl block text-golden">{stat.value}</span>
                   <span className="text-xs font-sans uppercase tracking-widest opacity-60">{stat.label}</span>
                 </div>
               ))}
@@ -55,10 +54,10 @@ export default function HospitalitySection({ listings }: HospitalitySectionProps
               <img
                 src={staffPhoto}
                 alt="Sempre Avanti hospitality"
-                className="w-full h-[500px] object-cover"
+                className="w-full h-[500px] object-cover rounded-tl-[80px] rounded-br-[80px]"
               />
             ) : (
-              <PhotoPlaceholder label="Your Dedicated Team" className="h-[500px] !aspect-auto" />
+              <PhotoPlaceholder label="Your Dedicated Team" className="h-[500px] !aspect-auto rounded-tl-[80px] rounded-br-[80px]" />
             )}
           </motion.div>
         </div>

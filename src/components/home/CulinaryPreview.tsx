@@ -10,7 +10,7 @@ export default function CulinaryPreview({ listings }: CulinaryPreviewProps) {
   const photo = listings?.[2]?.pictures?.[2]?.original;
 
   return (
-    <section className="py-20 md:py-28 bg-card" aria-label="Culinary experience">
+    <section className="py-20 md:py-28" aria-label="Culinary experience">
       <div className="container max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <motion.div
@@ -21,14 +21,17 @@ export default function CulinaryPreview({ listings }: CulinaryPreviewProps) {
             className="lg:order-2"
           >
             {photo ? (
-              <img
-                src={photo}
-                alt="Private chef preparing a gourmet meal at Casa Sempre Avanti"
-                className="w-full h-[450px] object-cover"
-                loading="lazy"
-              />
+              <div className="relative">
+                <img
+                  src={photo}
+                  alt="Private chef preparing a gourmet meal at Casa Sempre Avanti"
+                  className="w-full h-[450px] object-cover rounded-tl-[80px] rounded-br-[80px]"
+                  loading="lazy"
+                />
+                <div className="absolute -top-3 -left-3 w-20 h-20 border-2 border-golden rounded-tl-[40px] opacity-40" />
+              </div>
             ) : (
-              <div className="w-full h-[450px] bg-muted" />
+              <div className="w-full h-[450px] bg-muted rounded-tl-[80px] rounded-br-[80px]" />
             )}
           </motion.div>
           <motion.div
@@ -38,7 +41,7 @@ export default function CulinaryPreview({ listings }: CulinaryPreviewProps) {
             transition={{ duration: 0.7 }}
             className="lg:order-1"
           >
-            <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-3 block">
+            <span className="text-xs font-sans uppercase tracking-[0.3em] text-golden mb-3 block">
               Culinary Experience
             </span>
             <h2 className="font-serif text-3xl md:text-5xl font-light leading-tight mb-6 text-foreground">
@@ -55,14 +58,14 @@ export default function CulinaryPreview({ listings }: CulinaryPreviewProps) {
                 "Sunset margarita ritual every evening",
               ].map((item) => (
                 <li key={item} className="text-sm font-sans text-muted-foreground flex items-start gap-2">
-                  <span className="text-accent mt-0.5">·</span>
+                  <span className="text-golden mt-0.5 text-lg leading-none">·</span>
                   {item}
                 </li>
               ))}
             </ul>
             <Link
               to="/chef"
-              className="inline-block px-8 py-3 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors"
+              className="inline-block px-8 py-3 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full"
             >
               View Full Menu
             </Link>

@@ -34,7 +34,7 @@ export default function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-background/95 backdrop-blur-md border-b border-border/50"
+          ? "bg-cream/95 backdrop-blur-md border-b border-border/50"
           : "bg-transparent border-b border-transparent"
       }`}
     >
@@ -54,9 +54,9 @@ export default function Navbar() {
             <Link
               key={link.path}
               to={link.path}
-              className={`text-xs font-sans font-medium uppercase tracking-widest transition-colors hover:text-accent ${
+              className={`text-xs font-sans font-medium uppercase tracking-widest transition-colors hover:text-turquoise ${
                 location.pathname === link.path
-                  ? "text-accent"
+                  ? "text-turquoise"
                   : scrolled
                   ? "text-muted-foreground"
                   : "text-white/80"
@@ -65,7 +65,7 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Button asChild size="sm" className="ml-2">
+          <Button asChild size="sm" className="ml-2 rounded-full bg-accent text-accent-foreground hover:bg-accent/90">
             <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer">
               Check Availability
             </a>
@@ -99,14 +99,14 @@ export default function Navbar() {
                   key={link.path}
                   to={link.path}
                   onClick={() => setMobileOpen(false)}
-                  className={`text-sm font-sans font-medium uppercase tracking-widest transition-colors hover:text-accent ${
-                    location.pathname === link.path ? "text-accent" : "text-primary-foreground/80"
+                  className={`text-sm font-sans font-medium uppercase tracking-widest transition-colors hover:text-turquoise ${
+                    location.pathname === link.path ? "text-turquoise" : "text-primary-foreground/80"
                   }`}
                 >
                   {link.label}
                 </Link>
               ))}
-              <Button asChild size="sm" variant="secondary" className="mt-2 w-full">
+              <Button asChild size="sm" variant="secondary" className="mt-2 w-full rounded-full">
                 <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer">
                   Check Availability
                 </a>

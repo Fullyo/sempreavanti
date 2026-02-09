@@ -20,7 +20,7 @@ export default function HeroSection({ listings }: HeroSectionProps) {
       ) : (
         <div className="absolute inset-0 bg-primary" />
       )}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
       <div className="relative z-10 text-center text-primary-foreground px-4 max-w-4xl">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -55,17 +55,23 @@ export default function HeroSection({ listings }: HeroSectionProps) {
         >
           <Link
             to="/contact"
-            className="inline-block px-8 py-3 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors"
+            className="inline-block px-8 py-3 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full"
           >
             Inquire
           </Link>
           <Link
             to="/villas"
-            className="inline-block px-8 py-3 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors"
+            className="inline-block px-8 py-3 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full"
           >
             Explore the Estate
           </Link>
         </motion.div>
+      </div>
+      {/* Wave divider */}
+      <div className="absolute bottom-0 left-0 right-0">
+        <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full block">
+          <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,80 L0,80 Z" fill="hsl(40 50% 98%)" />
+        </svg>
       </div>
     </section>
   );
