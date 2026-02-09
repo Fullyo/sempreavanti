@@ -7,7 +7,8 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ listings }: HeroSectionProps) {
-  const heroImage = listings?.[0]?.pictures?.[0]?.original;
+  // Use the aerial villa shot (index 2, captioned "Casa Pietro") as hero
+  const heroImage = listings?.[0]?.pictures?.[2]?.original || listings?.[0]?.pictures?.[0]?.original;
 
   return (
     <section className="relative h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden">
