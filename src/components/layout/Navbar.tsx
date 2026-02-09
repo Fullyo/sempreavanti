@@ -1,22 +1,122 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
 const BOOKING_URL = "https://casasempreavanti.guestybookings.com/en/properties/697bcfcf3f5e990014fbc4dd?minOccupancy=1";
 
-const navLinks = [
-  { label: "The Villas", path: "/villas" },
-  { label: "Private Chef", path: "/chef" },
-  { label: "Wellness", path: "/wellness" },
+interface DropdownGroup {
+  label: string;
+  children: { label: string; path: string }[];
+}
+
+interface DirectLink {
+  label: string;
+  path: string;
+}
+
+type NavItem = DropdownGroup | DirectLink;
+
+const isDropdown = (item: NavItem): item is DropdownGroup => "children" in item;
+
+const navItems: NavItem[] = [
+  {
+    label: "The Estate",
+    children: [
+      { label: "The Villas", path: "/villas" },
+      { label: "Private Chef", path: "/chef" },
+      { label: "Wellness", path: "/wellness" },
+    ],
+  },
+  {
+    label: "Plan Your Stay",
+    children: [
+      { label: "Concierge", path: "/concierge" },
+      { label: "Transportation", path: "/transportation" },
+      { label: "Pricing", path: "/pricing" },
+    ],
+  },
   { label: "Experiences", path: "/experiences" },
   { label: "Weddings & Events", path: "/events" },
   { label: "Location", path: "/location" },
-  { label: "Concierge", path: "/concierge" },
-  { label: "Transportation", path: "/transportation" },
   { label: "Get in Touch", path: "/contact" },
 ];
+
+function NavDropdown({
+  group,
+  scrolled,
+  pathname,
+}: {
+  group: DropdownGroup;
+  scrolled: boolean;
+  pathname: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const timeout = useRef<ReturnType<typeof setTimeout>>();
+
+  const isActive = group.children.some((c) => pathname === c.path);
+
+  const handleEnter = () => {
+    clearTimeout(timeout.current);
+    setOpen(true);
+  };
+  const handleLeave = () => {
+    timeout.current = setTimeout(() => setOpen(false), 150);
+  };
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+    >
+      <button
+        className={`flex items-center gap-1 text-xs font-sans font-medium uppercase tracking-widest transition-colors hover:text-turquoise ${
+          isActive
+            ? "text-turquoise"
+            : scrolled
+            ? "text-foreground"
+            : "text-white/80"
+        }`}
+      >
+        {group.label}
+        <ChevronDown
+          size={14}
+          className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 8 }}
+            transition={{ duration: 0.18 }}
+            className="absolute top-full left-1/2 -translate-x-1/2 pt-3 z-[100]"
+          >
+            <div className="bg-white rounded-lg shadow-lg border border-border/40 py-2 min-w-[180px]">
+              {group.children.map((child) => (
+                <Link
+                  key={child.path}
+                  to={child.path}
+                  className={`block px-5 py-2.5 text-xs font-sans font-medium uppercase tracking-widest transition-colors hover:bg-muted hover:text-turquoise ${
+                    pathname === child.path
+                      ? "text-turquoise"
+                      : "text-foreground"
+                  }`}
+                >
+                  {child.label}
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -50,22 +150,35 @@ export default function Navbar() {
 
         {/* Desktop nav */}
         <nav className="hidden lg:flex items-center gap-6">
-          {navLinks.map((link) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`text-xs font-sans font-medium uppercase tracking-widest transition-colors hover:text-turquoise ${
-                location.pathname === link.path
-                  ? "text-turquoise"
-                  : scrolled
-                  ? "text-foreground"
-                  : "text-white/80"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
-          <Button asChild size="sm" className="ml-2 rounded-full bg-accent text-accent-foreground hover:bg-accent/90">
+          {navItems.map((item) =>
+            isDropdown(item) ? (
+              <NavDropdown
+                key={item.label}
+                group={item}
+                scrolled={scrolled}
+                pathname={location.pathname}
+              />
+            ) : (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`text-xs font-sans font-medium uppercase tracking-widest transition-colors hover:text-turquoise ${
+                  location.pathname === item.path
+                    ? "text-turquoise"
+                    : scrolled
+                    ? "text-foreground"
+                    : "text-white/80"
+                }`}
+              >
+                {item.label}
+              </Link>
+            )
+          )}
+          <Button
+            asChild
+            size="sm"
+            className="ml-2 rounded-full bg-accent text-accent-foreground hover:bg-accent/90"
+          >
             <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer">
               Check Availability
             </a>
@@ -93,20 +206,49 @@ export default function Navbar() {
             exit={{ opacity: 0, height: 0 }}
             className="lg:hidden bg-primary border-b border-border overflow-hidden"
           >
-            <div className="container py-6 flex flex-col gap-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setMobileOpen(false)}
-                  className={`text-sm font-sans font-medium uppercase tracking-widest transition-colors hover:text-turquoise ${
-                    location.pathname === link.path ? "text-turquoise" : "text-primary-foreground/80"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-              <Button asChild size="sm" variant="secondary" className="mt-2 w-full rounded-full">
+            <div className="container py-6 flex flex-col gap-1">
+              {navItems.map((item) =>
+                isDropdown(item) ? (
+                  <div key={item.label} className="mb-2">
+                    <span className="text-[10px] font-sans font-semibold uppercase tracking-[0.2em] text-primary-foreground/50 mb-1 block px-1">
+                      {item.label}
+                    </span>
+                    {item.children.map((child) => (
+                      <Link
+                        key={child.path}
+                        to={child.path}
+                        onClick={() => setMobileOpen(false)}
+                        className={`block py-2 px-3 text-sm font-sans font-medium uppercase tracking-widest transition-colors hover:text-turquoise ${
+                          location.pathname === child.path
+                            ? "text-turquoise"
+                            : "text-primary-foreground/80"
+                        }`}
+                      >
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <Link
+                    key={item.path}
+                    to={item.path}
+                    onClick={() => setMobileOpen(false)}
+                    className={`block py-2 px-1 text-sm font-sans font-medium uppercase tracking-widest transition-colors hover:text-turquoise ${
+                      location.pathname === item.path
+                        ? "text-turquoise"
+                        : "text-primary-foreground/80"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                )
+              )}
+              <Button
+                asChild
+                size="sm"
+                variant="secondary"
+                className="mt-3 w-full rounded-full"
+              >
                 <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer">
                   Check Availability
                 </a>
