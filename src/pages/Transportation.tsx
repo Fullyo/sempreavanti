@@ -110,7 +110,7 @@ export default function Transportation() {
           <SectionHeading
             eyebrow="Arrange Your Transfer"
             title="We Handle Everything"
-            description="Airport pickups, drop-offs, and UTV availability are all coordinated by your concierge Eno before you arrive. Just send us your flight details."
+            description="Airport pickups, drop-offs, and UTV availability are all coordinated by your concierge before you arrive. Just send us your flight details."
             light
           />
           <Link

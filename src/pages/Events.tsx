@@ -71,8 +71,8 @@ export default function Events() {
         <div className="container max-w-4xl text-center">
           <SectionHeading
             eyebrow="Full Support"
-            title="Coordinated by Eno & Team"
-            description="From event planning to after-hours catering and dedicated bartender services, your concierge Eno and the full Sempre Avanti team bring your vision to life — so you can simply be present."
+            title="Coordinated by Your Team"
+            description="From event planning to after-hours catering and dedicated bartender services, your concierge and the full Sempre Avanti team bring your vision to life — so you can simply be present."
             light
           />
           <Link
