@@ -135,10 +135,22 @@ export default function Location() {
         </div>
       </section>
 
-      {/* Map placeholder */}
+      {/* Google Map */}
       <section className="pb-16">
         <div className="container max-w-5xl">
-          <PhotoPlaceholder label="Interactive Map — Sempre Avanti, Sayulita, Punta Mita, San Pancho" aspectRatio="video" />
+          <div className="w-full aspect-video">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2896!2d-105.4640904!3d20.847732!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x84211561ab8a6c1b%3A0xe20445bb3abc738a!2sCasa%20Sempre%20Avanti!5e0!3m2!1sen!2smx!4v1700000000000!5m2!1sen!2smx"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Casa Sempre Avanti location"
+              className="w-full h-full"
+            />
+          </div>
         </div>
       </section>
 

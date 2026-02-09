@@ -12,93 +12,144 @@ import CulinaryPreview from "@/components/home/CulinaryPreview";
 import HospitalitySection from "@/components/home/HospitalitySection";
 import GuestReviews from "@/components/home/GuestReviews";
 import QuoteSection from "@/components/home/QuoteSection";
+import useEmblaCarousel from "embla-carousel-react";
+import { useCallback, useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const BOOKING_URL = "https://casasempreavanti.guestybookings.com/en/properties/697bcfcf3f5e990014fbc4dd?minOccupancy=1";
 
+function EstateCarousel({ pictures }: { pictures: Array<{ original: string; thumbnail: string }> }) {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
+  const [canPrev, setCanPrev] = useState(false);
+  const [canNext, setCanNext] = useState(false);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setCanPrev(emblaApi.canScrollPrev());
+    setCanNext(emblaApi.canScrollNext());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    emblaApi.on("select", onSelect);
+    return () => { emblaApi.off("select", onSelect); };
+  }, [emblaApi, onSelect]);
+
+  return (
+    <div className="relative">
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex">
+          {pictures.slice(0, 8).map((pic, i) => (
+            <div key={i} className="flex-[0_0_100%] min-w-0">
+              <img
+                src={pic.original}
+                alt={`Estate view ${i + 1}`}
+                className="w-full h-[400px] md:h-[500px] object-cover"
+                loading="lazy"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+      <button
+        onClick={() => emblaApi?.scrollPrev()}
+        disabled={!canPrev}
+        className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-black/50 text-white hover:bg-black/70 transition-colors disabled:opacity-30"
+        aria-label="Previous photo"
+      >
+        <ChevronLeft className="w-5 h-5" />
+      </button>
+      <button
+        onClick={() => emblaApi?.scrollNext()}
+        disabled={!canNext}
+        className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center bg-black/50 text-white hover:bg-black/70 transition-colors disabled:opacity-30"
+        aria-label="Next photo"
+      >
+        <ChevronRight className="w-5 h-5" />
+      </button>
+    </div>
+  );
+}
+
 export default function Index() {
   const { data: listings, isLoading } = useGuestyListings();
+
+  // Combine all estate photos for the carousel
+  const allEstatePhotos = listings?.flatMap((l) => l.pictures || []) || [];
 
   return (
     <Layout>
       <HeroSection listings={listings} />
 
-      {/* Estate Introduction with Stats */}
+      {/* Estate Introduction — presented as a whole */}
       <section className="py-20 md:py-32" aria-label="Estate introduction">
         <div className="container">
-          {/* Stats row */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="flex flex-wrap justify-center gap-8 md:gap-16 mb-12"
-          >
-            {[
-              { value: "5", label: "Bedrooms" },
-              { value: "5", label: "Bathrooms" },
-              { value: "10", label: "Guests" },
-              { value: "Private", label: "Beach" },
-              { value: "Full", label: "Staff" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <span className="font-serif text-3xl md:text-4xl block text-foreground">{stat.value}</span>
-                <span className="text-xs font-sans uppercase tracking-widest text-muted-foreground">{stat.label}</span>
-              </div>
-            ))}
-          </motion.div>
-
           <SectionHeading
             eyebrow="The Estate"
             title="More Than a Stay — A Destination"
             description="Casa Sempre Avanti is a self-contained private resort on the Riviera Nayarit coast. Two adjacent beachfront villas — Casa Pietro and Casa Luisa — create a seamless estate with private beach, pool, and every detail attended to by your dedicated team."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 max-w-5xl mx-auto">
-            {isLoading ? (
-              <>
-                <Skeleton className="h-80 rounded-sm" />
-                <Skeleton className="h-80 rounded-sm" />
-              </>
-            ) : (
-              listings
-                ?.filter((l) => {
-                  const name = (l.title || l.nickname || "").toLowerCase();
-                  return name.includes("pietro") || name.includes("luisa");
-                })
-                .slice(0, 2)
-                .map((listing) => (
-                  <motion.div
-                    key={listing._id}
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.7 }}
-                    className="group relative overflow-hidden"
-                  >
-                    <Link to="/villas">
-                      {listing.pictures?.[0] ? (
-                        <img
-                          src={listing.pictures[0].original}
-                          alt={listing.title || listing.nickname}
-                          className="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="w-full h-80 bg-muted flex items-center justify-center">
-                          <span className="text-muted-foreground font-sans text-sm">Photo coming soon</span>
-                        </div>
-                      )}
-                      <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
-                        <h3 className="font-serif text-2xl text-primary-foreground">
-                          {listing.title || listing.nickname}
-                        </h3>
-                        <p className="text-primary-foreground/80 text-sm font-sans mt-1">
-                          {listing.bedrooms} bedrooms · {listing.bathrooms} bathrooms · Sleeps {listing.accommodates}
-                        </p>
-                      </div>
-                    </Link>
-                  </motion.div>
-                ))
-            )}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-12 max-w-6xl mx-auto items-center">
+            {/* Left: Stats & description */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+            >
+              <div className="grid grid-cols-3 gap-6 mb-8">
+                {[
+                  { value: "5", label: "Bedrooms" },
+                  { value: "5", label: "Bathrooms" },
+                  { value: "10", label: "Guests" },
+                ].map((stat) => (
+                  <div key={stat.label} className="text-center">
+                    <span className="font-serif text-4xl md:text-5xl block text-foreground">{stat.value}</span>
+                    <span className="text-xs font-sans uppercase tracking-widest text-muted-foreground mt-1 block">{stat.label}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="grid grid-cols-2 gap-6 mb-8">
+                {[
+                  { value: "Private", label: "Beach" },
+                  { value: "Full", label: "Staff" },
+                ].map((stat) => (
+                  <div key={stat.label} className="text-center">
+                    <span className="font-serif text-3xl md:text-4xl block text-foreground">{stat.value}</span>
+                    <span className="text-xs font-sans uppercase tracking-widest text-muted-foreground mt-1 block">{stat.label}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-base font-sans text-muted-foreground leading-relaxed mb-6">
+                Two adjacent beachfront villas with private pool, fire pit, beachfront dining, and a dedicated team of chefs, concierge, and housekeeping. Everything you need, nothing you don't.
+              </p>
+              <Link
+                to="/villas"
+                className="inline-block px-8 py-3 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors"
+              >
+                Explore the Villas
+              </Link>
+            </motion.div>
+
+            {/* Right: Scrolling photo carousel */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+            >
+              {isLoading ? (
+                <Skeleton className="h-[400px] md:h-[500px]" />
+              ) : allEstatePhotos.length > 0 ? (
+                <EstateCarousel pictures={allEstatePhotos} />
+              ) : (
+                <div className="h-[400px] md:h-[500px] bg-muted flex items-center justify-center">
+                  <span className="text-muted-foreground font-sans text-sm">Photos coming soon</span>
+                </div>
+              )}
+            </motion.div>
           </div>
         </div>
       </section>
