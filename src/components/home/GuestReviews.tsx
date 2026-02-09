@@ -30,7 +30,7 @@ const reviews = [
 
 export default function GuestReviews() {
   return (
-    <section className="py-20 md:py-28" aria-label="Guest reviews">
+    <section className="py-20 md:py-28 bg-gradient-to-b from-primary/5 via-turquoise/5 to-background" aria-label="Guest reviews">
       <div className="container max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -39,7 +39,7 @@ export default function GuestReviews() {
           transition={{ duration: 0.7 }}
           className="text-center max-w-3xl mx-auto mb-12"
         >
-          <span className="text-xs font-sans uppercase tracking-[0.3em] mb-3 block text-accent">
+          <span className="text-xs font-sans uppercase tracking-[0.3em] mb-3 block text-turquoise">
             Guest Stories
           </span>
           <h2 className="font-serif text-3xl md:text-5xl font-light leading-tight text-foreground">
@@ -55,13 +55,13 @@ export default function GuestReviews() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="bg-card p-8"
+              className="bg-card rounded-xl p-8 border-l-4 border-golden"
             >
               <div className="flex gap-1 mb-4">
                 {Array.from({ length: review.rating }).map((_, j) => (
                   <Star
                     key={j}
-                    className="w-4 h-4 fill-accent text-accent"
+                    className="w-4 h-4 fill-golden text-golden"
                     strokeWidth={0}
                   />
                 ))}

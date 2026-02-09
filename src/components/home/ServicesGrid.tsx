@@ -24,7 +24,7 @@ const services = [
 
 export default function ServicesGrid() {
   return (
-    <section className="py-20 md:py-28 bg-card" aria-label="Included services">
+    <section className="py-20 md:py-28 bg-gradient-to-b from-card to-background" aria-label="Included services">
       <div className="container max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -33,7 +33,7 @@ export default function ServicesGrid() {
           transition={{ duration: 0.7 }}
           className="text-center max-w-3xl mx-auto mb-12"
         >
-          <span className="text-xs font-sans uppercase tracking-[0.3em] mb-3 block text-accent">
+          <span className="text-xs font-sans uppercase tracking-[0.3em] mb-3 block text-turquoise">
             All Included
           </span>
           <h2 className="font-serif text-3xl md:text-5xl font-light leading-tight text-foreground">
@@ -55,13 +55,13 @@ export default function ServicesGrid() {
             >
               <Link
                 to={service.path}
-                className="block text-center p-6 hover:bg-background transition-colors group"
+                className="block text-center p-6 rounded-xl border border-transparent hover:border-golden/30 hover:shadow-[0_8px_30px_-12px_hsl(42_85%_55%/0.3)] transition-all duration-300 group"
               >
                 <service.icon
-                  className="w-8 h-8 mx-auto mb-4 text-accent group-hover:scale-110 transition-transform"
+                  className="w-8 h-8 mx-auto mb-4 text-turquoise group-hover:scale-110 transition-transform"
                   strokeWidth={1.2}
                 />
-                <h3 className="font-serif text-lg mb-1 group-hover:text-accent transition-colors">
+                <h3 className="font-serif text-lg mb-1 group-hover:text-golden transition-colors">
                   {service.title}
                 </h3>
                 <p className="text-xs font-sans text-muted-foreground leading-relaxed">

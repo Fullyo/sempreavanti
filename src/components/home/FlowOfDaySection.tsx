@@ -41,6 +41,16 @@ const flowItems = [
   },
 ];
 
+// Alternating organic corner styles
+const cornerStyles = [
+  "rounded-tl-[60px] rounded-br-[60px]",
+  "rounded-tr-[60px] rounded-bl-[60px]",
+  "rounded-tl-[40px] rounded-tr-[40px]",
+  "rounded-bl-[60px] rounded-tr-[60px]",
+  "rounded-tl-[60px] rounded-bl-[40px]",
+  "rounded-br-[60px] rounded-tl-[40px]",
+];
+
 interface FlowOfDaySectionProps {
   listings?: GuestyListing[];
 }
@@ -58,7 +68,7 @@ export default function FlowOfDaySection({ listings }: FlowOfDaySectionProps) {
           transition={{ duration: 0.7 }}
           className="text-center max-w-3xl mx-auto mb-12 md:mb-16"
         >
-          <span className="text-xs font-sans uppercase tracking-[0.3em] mb-3 block text-accent">
+          <span className="text-xs font-sans uppercase tracking-[0.3em] mb-3 block text-turquoise">
             Your Stay
           </span>
           <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl font-light leading-tight text-foreground">
@@ -69,7 +79,7 @@ export default function FlowOfDaySection({ listings }: FlowOfDaySectionProps) {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {flowItems.map((item, i) => {
             const photo = allPictures[i + 2]?.original;
             return (
@@ -80,7 +90,7 @@ export default function FlowOfDaySection({ listings }: FlowOfDaySectionProps) {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.08 }}
               >
-                <Link to={item.path} className="block group relative overflow-hidden h-[380px]">
+                <Link to={item.path} className={`block group relative overflow-hidden h-[380px] ${cornerStyles[i]}`}>
                   {photo ? (
                     <img
                       src={photo}
@@ -96,7 +106,7 @@ export default function FlowOfDaySection({ listings }: FlowOfDaySectionProps) {
                     <span className="text-xs font-sans uppercase tracking-[0.3em] opacity-70 block mb-2">
                       {item.subtitle}
                     </span>
-                    <h3 className="font-serif text-2xl md:text-3xl mb-2 group-hover:text-accent transition-colors">
+                    <h3 className="font-serif text-2xl md:text-3xl mb-2 group-hover:text-golden transition-colors">
                       {item.title}
                     </h3>
                     <p className="text-sm font-sans opacity-80 leading-relaxed">
