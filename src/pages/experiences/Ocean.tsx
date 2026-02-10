@@ -1,8 +1,11 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
+import PageNavArrows, { experiencePages, getPageNav } from "@/components/PageNavArrows";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+
+const { prev, next } = getPageNav(experiencePages, "/experiences/ocean");
 
 import marietasImg from "@/assets/marietas-islands.jpeg";
 import whaleImg from "@/assets/whale.jpeg";
@@ -23,9 +26,13 @@ export default function Ocean() {
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <img src={marietasImg} alt="Marietas Islands" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
-        <div className="relative z-10 text-center text-primary-foreground px-4">
+        <div className="relative z-10 text-center text-primary-foreground px-4 w-full max-w-6xl mx-auto">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Experiences</p>
-          <h1 className="font-serif text-5xl md:text-7xl font-light">Dive In</h1>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex-1"><PageNavArrows prev={prev} next={undefined} variant="hero" /></div>
+            <h1 className="font-serif text-5xl md:text-7xl font-light">Dive In</h1>
+            <div className="flex-1"><PageNavArrows prev={undefined} next={next} variant="hero" /></div>
+          </div>
         </div>
       </section>
 
@@ -121,6 +128,9 @@ export default function Ocean() {
           >
             Plan Your Ocean Day
           </Link>
+        </div>
+        <div className="container max-w-4xl mt-10">
+          <PageNavArrows prev={prev} next={next} variant="bottom" />
         </div>
       </section>
     </Layout>

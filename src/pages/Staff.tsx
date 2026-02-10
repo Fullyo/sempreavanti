@@ -1,8 +1,11 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
+import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArrows";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
+
+const { prev, next } = getPageNav(estatePages, "/staff");
 
 const staffMembers = [
   { name: "Your Concierge", role: "Head Concierge", language: "English & Spanish", description: "Your dedicated concierge is born and raised in the region, knows everything and everyone. They personally greet every guest upon arrival and see them off at departure, while maintaining your privacy during the stay. Adventures, dining, wellness, transportation — they arrange it all." },
@@ -30,9 +33,13 @@ export default function Staff() {
       <section className="relative h-[50vh] min-h-[350px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-primary" />
         <div className="absolute inset-0 bg-black/30" />
-        <div className="relative z-10 text-center text-primary-foreground px-4">
+        <div className="relative z-10 text-center text-primary-foreground px-4 w-full max-w-6xl mx-auto">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">The Estate</p>
-          <h1 className="font-serif text-5xl md:text-7xl font-light">Your Team</h1>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex-1"><PageNavArrows prev={prev} next={undefined} variant="hero" /></div>
+            <h1 className="font-serif text-5xl md:text-7xl font-light">Your Team</h1>
+            <div className="flex-1"><PageNavArrows prev={undefined} next={next} variant="hero" /></div>
+          </div>
         </div>
       </section>
 
@@ -84,6 +91,13 @@ export default function Staff() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Bottom Nav */}
+      <section className="py-12 bg-primary text-primary-foreground">
+        <div className="container max-w-4xl">
+          <PageNavArrows prev={prev} next={next} variant="bottom" />
         </div>
       </section>
     </Layout>

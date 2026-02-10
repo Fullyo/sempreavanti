@@ -1,8 +1,11 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
+import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArrows";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+
+const { prev, next } = getPageNav(estatePages, "/wellness");
 
 const yogaProviders = [
   { name: "Narayani", style: "Vinyasa & Restorative", note: "Beachfront sessions tailored to the group's energy" },
@@ -23,9 +26,13 @@ export default function Wellness() {
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-primary" />
         <PhotoPlaceholder label="Beachside Wellness" className="absolute inset-0 !aspect-auto opacity-30" />
-        <div className="relative z-10 text-center text-primary-foreground px-4">
-          <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Mind · Body · Spirit</p>
-          <h1 className="font-serif text-5xl md:text-7xl font-light">Wellness</h1>
+        <div className="relative z-10 text-center text-primary-foreground px-4 w-full max-w-6xl mx-auto">
+          <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">The Estate</p>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex-1"><PageNavArrows prev={prev} next={undefined} variant="hero" /></div>
+            <h1 className="font-serif text-5xl md:text-7xl font-light">Wellness</h1>
+            <div className="flex-1"><PageNavArrows prev={undefined} next={next} variant="hero" /></div>
+          </div>
         </div>
       </section>
 
@@ -148,6 +155,9 @@ export default function Wellness() {
           >
             Inquire Now
           </Link>
+          <div className="mt-10">
+            <PageNavArrows prev={prev} next={next} variant="bottom" />
+          </div>
         </div>
       </section>
     </Layout>
