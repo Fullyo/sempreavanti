@@ -13,6 +13,7 @@ import { Flame, Droplets, Waves, UtensilsCrossed } from "lucide-react";
 const { prev, next } = getPageNav(estatePages, "/villas");
 
 import villaHero from "@/assets/villa-hero.jpg";
+import estateSleeping from "@/assets/estate-sleeping.jpg";
 import estate1 from "@/assets/estate-1.jpeg";
 import estate2 from "@/assets/estate-2.jpeg";
 import estate3 from "@/assets/estate-3.jpeg";
@@ -34,6 +35,41 @@ const ESTATE_GALLERY = [
   estate1, estate2, estate3, estate4, estate5, estate6, estate7, estate8,
   estate9, estate10, estate11, estate12, estate13, estate14, estate15, estate16,
 ];
+
+const CURATED_DESCRIPTIONS: Record<string, string> = {
+  "Casa Pietro": "An intimate two-bedroom beachfront villa blending refined tropical design with ocean views from every room. Stone walls, palapa roofs, and open-air living spaces create a sense of seclusion just steps from the Pacific — ideal for couples or a small family seeking privacy and understated luxury.",
+  "Villa Luisa": "A spacious three-bedroom retreat anchored by a stunning infinity pool and sweeping ocean panoramas. Indoor-outdoor living flows effortlessly across sun-drenched terraces, a poolside lounge, and a wood-fired pizza kitchen — designed for families and friends who love to gather.",
+};
+
+/** Move a preferred photo to the front of the pictures array */
+function reorderPictures(
+  pictures: Array<{ original: string; thumbnail?: string; caption?: string }>,
+  villaName: string
+) {
+  if (!pictures || pictures.length === 0) return pictures;
+  const pics = [...pictures];
+
+  let preferredIdx = -1;
+  if (villaName === "Casa Pietro") {
+    // Find the exterior shot captioned "Casa Pietro"
+    preferredIdx = pics.findIndex((p) => p.caption === "Casa Pietro");
+  } else if (villaName === "Villa Luisa") {
+    // Find an aerial/exterior shot
+    preferredIdx = pics.findIndex(
+      (p) =>
+        p.caption?.toLowerCase().includes("aerial") ||
+        p.caption?.toLowerCase().includes("exterior") ||
+        p.original?.includes("DJI") ||
+        p.original?.includes("dji")
+    );
+  }
+
+  if (preferredIdx > 0) {
+    const [preferred] = pics.splice(preferredIdx, 1);
+    pics.unshift(preferred);
+  }
+  return pics;
+}
 
 const estateFeatures = [
   { icon: Waves, title: "250ft Private Beach", desc: "Your own stretch of Pacific coastline — swim, surf, or simply unwind on the sand." },
@@ -108,7 +144,7 @@ export default function Villas() {
                 >
                   {/* Carousel as main image */}
                   {villa!.pictures && villa!.pictures.length > 0 ? (
-                    <VillaCarousel pictures={villa!.pictures} villaName={displayName} />
+                    <VillaCarousel pictures={reorderPictures(villa!.pictures, displayName)} villaName={displayName} />
                   ) : (
                     <PhotoPlaceholder label={displayName} className="h-[360px] !aspect-auto rounded-tl-[40px] rounded-br-[40px]" />
                   )}
@@ -137,7 +173,7 @@ export default function Villas() {
                     </div>
 
                     <p className="text-sm font-sans text-muted-foreground leading-relaxed">
-                      {villa!.publicDescription?.summary || villa!.description || "Details coming soon."}
+                      {CURATED_DESCRIPTIONS[displayName] || villa!.publicDescription?.summary || villa!.description || "Details coming soon."}
                     </p>
                   </div>
                 </motion.div>
@@ -198,7 +234,7 @@ export default function Villas() {
 
       {/* Sleeping Config CTA */}
       <section className="relative py-20 md:py-28 text-primary-foreground overflow-hidden">
-        <img src={estate4} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={estateSleeping} alt="" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
         <div className="relative z-10 container max-w-4xl text-center">
           <SectionHeading
