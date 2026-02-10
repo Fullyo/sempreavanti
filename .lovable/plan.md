@@ -1,57 +1,118 @@
 
-# Fix Villas Page: Correct Data, Full-Size Carousel, Combined Amenities Section
 
-## The Problem
+# Site Restructure: Navigation, Experience Pages, and Venue Pages
 
-The right-side villa shows **Sempre Avanti** (the combined 5BR estate listing) instead of **Villa Luisa** because the code uses `.find()` searching for "luisa" in the title -- but the Sempre Avanti listing's title also contains "Villa Luisa", and it appears earlier in the API results, so it matches first.
+## Overview
 
-## Changes
+This is a significant restructuring that involves:
+- Reorganizing the navigation menu into 3 dropdown groups + 2 direct links
+- Moving Wellness under The Estate and creating 6 new dedicated experience pages
+- Splitting the current Events page into separate Weddings and Events pages under a new "Celebrations" menu
+- The current monolithic Experiences page becomes a hub linking to 6 individual pages
 
-### 1. Fix Villa Luisa data matching (src/pages/Villas.tsx)
+---
 
-Instead of searching by name substring (which matches the wrong listing), match by Guesty listing ID or by exact nickname:
-- Casa Pietro: nickname === "Casa Pietro" (ID: `697bcfb8c91d8d0015ca285a`)
-- Villa Luisa: nickname === "Villa Luisa" (ID: `697bcfe3a874360012e8aa31`)
+## New Navigation Structure
 
-This guarantees the correct listing data (3 BR / 3.5 Bath / 8 Guests) and the correct Villa Luisa description and photos are shown on the right side.
+```text
+The Estate (dropdown)          Experiences (dropdown)         Celebrations (dropdown)      Location    Get in Touch
+  - The Villas                   - Surfing                      - Weddings
+  - Private Chef                 - Boat Tours & Sailing         - Private Events
+  - Wellness                     - Tee Off
+  - Your Team                    - Dive In
+                                 - Land & Adventure
+                                 - Cultural & Local
+```
 
-### 2. Full-size carousel images (src/components/VillaCarousel.tsx)
+---
 
-Currently the carousel shows 3 partial images side-by-side (`flex-[0_0_33.333%]`). Change to show one full-width image at a time (`flex-[0_0_100%]`) so each photo fills the entire card width. Remove the `mt-12` top margin since it serves as the main visual for each villa card. Keep the navigation arrows.
+## New Pages to Create (8 total)
 
-### 3. Rename "The Grounds" section to a combined estate highlight
+### Experience Pages (6 new pages)
+Each page follows the same editorial template: Hero (placeholder photo) -> Intro -> Activity listings with details -> CTA. All content is pulled from the existing Experiences.tsx data, expanded with factual local knowledge.
 
-Replace the current "The Grounds / A Private Resort" section with a combined stats-forward section:
-- Title: something like "Five Bedrooms. Two Pools. One Private Beach."
-- Eyebrow: "The Complete Estate"
-- Show combined stats prominently: 5 Bedrooms, 5.5 Bathrooms, Sleeps 14, 250ft Private Beach
-- Keep 4 feature icons but update to more relevant ones:
-  - Private Beach (Waves icon)
-  - Two Infinity Pools (Droplets icon)  
-  - Beachfront Dining (UtensilsCrossed icon)
-  - Fire Pit & Lounge (Flame icon)
+1. **Surfing** (`/experiences/surfing`) -- Chillo spotlight, all surf breaks (La Lancha, Captain Pablo's, Don Pedro's, Burros, Punta Mita), lesson details
+2. **Boat Tours & Sailing** (`/experiences/boats`) -- Private boat tours, fishing charters, spearfishing, catch-and-cook, plus the full Ally Cat / Fat Cat sailing fleet
+3. **Tee Off** (`/experiences/golf`) -- Litibu, Four Seasons Pacifico & Bahia, El Flamingo, El Tigre with course details
+4. **Dive In** (`/experiences/ocean`) -- Snorkeling, Marietas Islands, scuba, kite surfing, paddleboard, whale watching
+5. **Land & Adventure** (`/experiences/land`) -- Zipline, ATV/RZR, horseback riding, jungle hikes, UTV rentals, bird watching
+6. **Cultural & Local** (`/experiences/cultural`) -- Markets (La Cruz, Sayulita), Malecon, tequila tastings, San Pancho Cultural Center, Huichol art
 
-### 4. Remove individual amenity tags
+### Venue Pages (2 new pages)
+Split from the current combined Events page:
 
-The small amenity squares below each villa's text are already removed in the current code, so no change needed there. The stats (bedrooms, bathrooms, guests) remain prominent.
+7. **Weddings** (`/weddings`) -- Beach ceremonies, long-table dinners, bartender services, coordination details, accommodation for wedding parties
+8. **Private Events** (`/events`) -- Retreats, corporate offsites, bachelorette/birthday, family gatherings, fire pit evenings
 
-### 5. Update fallback data (src/hooks/useGuestyListings.ts)
+---
 
-Update the fallback Villa Luisa description to match the actual Guesty API description (tropical elegance, 3 spacious bedrooms, poolside tiki bar and pizza oven, etc.) instead of the generic text currently there.
+## File Changes
+
+### Modified Files
+
+| File | Change |
+|------|--------|
+| `src/components/layout/Navbar.tsx` | Update `navItems` array: The Estate adds Wellness, Experiences gets 6 sub-links, new "Celebrations" dropdown with Weddings + Events |
+| `src/App.tsx` | Add 8 new routes, keep `/experiences` as redirect or hub |
+| `src/pages/Experiences.tsx` | Convert to a hub/overview page linking to 6 sub-pages, or redirect to first experience |
+
+### New Files (8 pages)
+
+| File | Content Source |
+|------|---------------|
+| `src/pages/experiences/Surfing.tsx` | Surfing category from Experiences.tsx + expanded Chillo section |
+| `src/pages/experiences/Boats.tsx` | Boats & Fishing + Sailing categories merged |
+| `src/pages/experiences/Golf.tsx` | Golf category with course details |
+| `src/pages/experiences/Ocean.tsx` | Ocean & Water category |
+| `src/pages/experiences/Land.tsx` | Land & Adventure category |
+| `src/pages/experiences/Cultural.tsx` | Cultural & Local category |
+| `src/pages/Weddings.tsx` | Wedding-specific content from Events.tsx expanded |
+| `src/pages/PrivateEvents.tsx` | Events/retreats content from Events.tsx expanded |
+
+---
+
+## Page Template (each experience page)
+
+Each of the 6 experience pages follows this structure:
+1. **Hero** -- Full-width placeholder photo with title overlay
+2. **Intro** -- Eyebrow + headline + 1-2 paragraph description
+3. **Featured highlight** (where applicable, e.g., Chillo for surfing, Marietas for ocean)
+4. **Activity listings** -- Two-column grid with name + description for each activity
+5. **Photo gallery placeholder** -- Grid of PhotoPlaceholder components for future photos
+6. **CTA** -- "Your concierge arranges everything" + link to /contact
+
+## Weddings Page Structure
+1. Hero with placeholder
+2. "Your Private Beachfront Venue" intro
+3. Ceremony options (beach ceremony, sunset backdrop, capacity)
+4. Reception & dining (long-table beachfront dinners, private chef menus)
+5. Bar & cocktails (dedicated bartender, sunset margarita ritual)
+6. Accommodation (5 bedrooms, flexible configs for wedding party)
+7. Coordination (concierge handles vendors, music, decor)
+8. Photo gallery placeholders
+9. CTA to inquire
+
+## Private Events Page Structure
+1. Hero with placeholder
+2. "Every Gathering, Elevated" intro
+3. Event types grid (retreats, corporate, bachelorette, birthday, family)
+4. Venue spaces (beach, fire pit, pool terrace, dining areas)
+5. Services (chef, bartender, concierge coordination)
+6. CTA to inquire
+
+---
 
 ## Technical Details
 
-**File: src/pages/Villas.tsx**
-- Change villa matching from `.includes("pietro")` / `.includes("luisa")` to matching by exact nickname or `_id`
-- Update VillaCarousel usage: remove `slice(1)` so all photos are included
-- Rename "The Grounds" section heading and update feature icons/descriptions
-- Hardcode display names as "Casa Pietro" and "Villa Luisa" (not relying on API nickname which could change)
+- All new pages use `Layout`, `SectionHeading`, `PhotoPlaceholder`, and `motion` from framer-motion -- matching existing patterns exactly
+- Placeholder images use the `PhotoPlaceholder` component; existing assets (atv.jpeg, fishing.jpg, etc.) are reused where they match the page topic
+- The navbar `navItems` array changes from 5 items to 5 items but with different groupings:
+  - "The Estate" dropdown: 4 children (Villas, Private Chef, Wellness, Your Team)
+  - "Experiences" dropdown: 6 children (the new sub-pages)
+  - "Celebrations" dropdown: 2 children (Weddings, Private Events)
+  - "Location" direct link
+  - "Get in Touch" direct link
+- All routes use React Router; nested experience routes use `/experiences/surfing`, `/experiences/boats`, etc.
+- The existing `/experiences` route will remain as a redirect to `/experiences/surfing` or an overview hub page
+- Content is 100% factual, sourced from the existing Experiences.tsx data and memory context (Michula Tours partnership, location details, staff info, pricing conventions)
 
-**File: src/components/VillaCarousel.tsx**  
-- Change slide width from `flex-[0_0_33.333%]` to `flex-[0_0_100%]`
-- Remove `mt-12` class from wrapper
-- Remove `pictures.slice(1)` -- show all photos including the first one
-- Adjust image height for full-width display
-
-**File: src/hooks/useGuestyListings.ts**
-- Update Villa Luisa fallback summary to match real Guesty data
