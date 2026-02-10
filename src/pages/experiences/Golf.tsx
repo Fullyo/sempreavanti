@@ -1,11 +1,16 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
-import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import PageNavArrows, { experiencePages, getPageNav } from "@/components/PageNavArrows";
 import { motion } from "framer-motion";
 import InquiryDialog from "@/components/InquiryDialog";
 
-import estate8 from "@/assets/estate-8.jpeg";
+import golfHero from "@/assets/golf-hero.jpg";
+import golfHero2 from "@/assets/golf-hero2.jpeg";
+import golfLitibu from "@/assets/golf-litibu.jpg";
+import golfPacifico from "@/assets/golf-pacifico.jpg";
+import golfBahia from "@/assets/golf-bahia.jpg";
+import golfFlamingo from "@/assets/golf-flamingo.jpg";
+import golfTigre from "@/assets/golf-tigre.jpg";
 
 const { prev, next } = getPageNav(experiencePages, "/experiences/golf");
 
@@ -16,6 +21,7 @@ const courses = [
     holes: 18,
     distance: "15 minutes from the estate",
     desc: "An 18-hole Greg Norman Signature design carved through tropical jungle with stunning Pacific Ocean views. The course features dramatic elevation changes and several holes that play along the coastline. Open to the public — your concierge arranges tee times and transport.",
+    img: golfLitibu,
   },
   {
     name: "Four Seasons Pacífico",
@@ -23,6 +29,7 @@ const courses = [
     holes: 18,
     distance: "25 minutes from the estate",
     desc: "One of two Jack Nicklaus Signature courses at the Four Seasons Punta Mita. Features the iconic 'Tail of the Whale' — a natural island green accessible only at low tide by an amphibious cart. Bucket-list golf at its finest.",
+    img: golfPacifico,
   },
   {
     name: "Four Seasons Bahía",
@@ -30,6 +37,7 @@ const courses = [
     holes: 18,
     distance: "25 minutes from the estate",
     desc: "The second Nicklaus course at Punta Mita, offering a different character with more jungle-framed fairways and bay panoramas. Equally world-class, slightly more forgiving than Pacífico.",
+    img: golfBahia,
   },
   {
     name: "El Flamingo",
@@ -37,6 +45,7 @@ const courses = [
     holes: 9,
     distance: "30 minutes — near Bucerías",
     desc: "A charming 9-hole course near Bucerías. Casual, affordable, and fun — perfect for a relaxed morning round without the formality of resort courses.",
+    img: golfFlamingo,
   },
   {
     name: "El Tigre",
@@ -44,6 +53,7 @@ const courses = [
     holes: 18,
     distance: "40 minutes — Nuevo Vallarta",
     desc: "An 18-hole Robert von Hagge design in the heart of Nuevo Vallarta. Known for its signature island green and well-maintained fairways. A solid round in a resort setting.",
+    img: golfTigre,
   },
 ];
 
@@ -52,8 +62,8 @@ export default function Golf() {
     <Layout>
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-primary" />
-        <PhotoPlaceholder label="Golf" className="absolute inset-0 !aspect-auto opacity-30" />
+        <img src={golfHero} alt="Golf course on the Pacific coast" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 text-center text-primary-foreground px-4 w-full max-w-6xl mx-auto">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Experiences</p>
           <div className="flex items-center justify-between gap-4">
@@ -88,7 +98,7 @@ export default function Golf() {
                 transition={{ duration: 0.5, delay: i * 0.08 }}
                 className="grid grid-cols-1 md:grid-cols-3 gap-6 border-b border-border pb-8"
               >
-                <PhotoPlaceholder label={course.name} aspectRatio="video" className="rounded-xl overflow-hidden" />
+                <img src={course.img} alt={course.name} className="rounded-xl overflow-hidden object-cover w-full aspect-video" />
                 <div className="md:col-span-2">
                   <h3 className="font-serif text-2xl mb-2">{course.name}</h3>
                   <div className="flex flex-wrap gap-3 mb-3">
@@ -108,7 +118,7 @@ export default function Golf() {
 
       {/* CTA */}
       <section className="relative py-20 md:py-28 text-primary-foreground overflow-hidden">
-        <img src={estate8} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={golfHero2} alt="" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
         <div className="relative z-10 container max-w-4xl text-center">
           <SectionHeading
