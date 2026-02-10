@@ -15,10 +15,20 @@ import QuoteSection from "@/components/home/QuoteSection";
 import useEmblaCarousel from "embla-carousel-react";
 import { useCallback, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import estate1 from "@/assets/estate-1.jpeg";
+import estate2 from "@/assets/estate-2.jpeg";
+import estate3 from "@/assets/estate-3.jpeg";
+import estate4 from "@/assets/estate-4.jpeg";
+import estate5 from "@/assets/estate-5.jpeg";
+import estate6 from "@/assets/estate-6.jpeg";
+import estate7 from "@/assets/estate-7.jpeg";
+import estate8 from "@/assets/estate-8.jpeg";
+
+const ESTATE_PHOTOS = [estate1, estate2, estate3, estate4, estate5, estate6, estate7, estate8];
 
 const BOOKING_URL = "https://casasempreavanti.guestybookings.com/en/properties/697bcfcf3f5e990014fbc4dd?minOccupancy=1";
 
-function EstateCarousel({ pictures }: { pictures: Array<{ original: string; thumbnail: string }> }) {
+function EstateCarousel({ pictures }: { pictures: string[] }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
@@ -40,10 +50,10 @@ function EstateCarousel({ pictures }: { pictures: Array<{ original: string; thum
     <div className="relative">
       <div className="overflow-hidden rounded-tr-[60px] rounded-bl-[60px]" ref={emblaRef}>
         <div className="flex">
-          {pictures.slice(0, 8).map((pic, i) => (
+          {pictures.map((src, i) => (
             <div key={i} className="flex-[0_0_100%] min-w-0">
               <img
-                src={pic.original}
+                src={src}
                 alt={`Estate view ${i + 1}`}
                 className="w-full h-[400px] md:h-[500px] object-cover"
                 loading="lazy"
@@ -74,8 +84,6 @@ function EstateCarousel({ pictures }: { pictures: Array<{ original: string; thum
 
 export default function Index() {
   const { data: listings, isLoading } = useGuestyListings();
-
-  const allEstatePhotos = listings?.flatMap((l) => l.pictures || []) || [];
 
   return (
     <Layout>
@@ -139,29 +147,19 @@ export default function Index() {
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
             >
-              {isLoading ? (
-                <Skeleton className="h-[500px] lg:h-[600px] rounded-tr-[60px] rounded-bl-[60px]" />
-              ) : allEstatePhotos.length > 0 ? (
-                <>
-                  <EstateCarousel pictures={allEstatePhotos} />
-                  {/* Thumbnail strip */}
-                  <div className="flex gap-2 mt-3 overflow-x-auto pb-2">
-                    {allEstatePhotos.slice(0, 8).map((pic, i) => (
-                      <img
-                        key={i}
-                        src={pic.thumbnail || pic.original}
-                        alt={`Preview ${i + 1}`}
-                        className="w-16 h-12 object-cover rounded-lg opacity-70 hover:opacity-100 transition-opacity flex-shrink-0"
-                        loading="lazy"
-                      />
-                    ))}
-                  </div>
-                </>
-              ) : (
-                <div className="h-[500px] lg:h-[600px] bg-muted flex items-center justify-center rounded-tr-[60px] rounded-bl-[60px]">
-                  <span className="text-muted-foreground font-sans text-sm">Photos coming soon</span>
-                </div>
-              )}
+              <EstateCarousel pictures={ESTATE_PHOTOS} />
+              {/* Thumbnail strip */}
+              <div className="flex gap-2 mt-3 overflow-x-auto pb-2">
+                {ESTATE_PHOTOS.map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt={`Preview ${i + 1}`}
+                    className="w-16 h-12 object-cover rounded-lg opacity-70 hover:opacity-100 transition-opacity flex-shrink-0"
+                    loading="lazy"
+                  />
+                ))}
+              </div>
             </motion.div>
           </div>
         </div>
