@@ -1,9 +1,20 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
-import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArrows";
 import { motion } from "framer-motion";
 import InquiryDialog from "@/components/InquiryDialog";
+
+import heroImg from "@/assets/wellness-hero.jpeg";
+import yogaImg from "@/assets/wellness-yoga.png";
+import soundbathImg from "@/assets/wellness-soundbath.jpeg";
+import nirvannaImg from "@/assets/wellness-nirvanna.png";
+import benditaImg from "@/assets/wellness-bendita.jpeg";
+import buddhaImg from "@/assets/wellness-buddha.jpg";
+
+// Estate photos for practice spaces
+import estate3 from "@/assets/estate-3.jpeg";  // beachfront
+import estate6 from "@/assets/estate-6.jpeg";  // pool terrace
+import estate9 from "@/assets/estate-9.jpeg";  // garden
 
 const { prev, next } = getPageNav(estatePages, "/wellness");
 
@@ -15,17 +26,23 @@ const yogaProviders = [
 ];
 
 const massageProviders = [
-  { name: "Nirvanna Spa", services: "Shiatsu, Swedish, Aromatherapy, Deep Tissue", note: "In-villa or beachside" },
-  { name: "Bendita Waxing Studio & Spa", services: "Relaxation massage, facials, beauty treatments", note: "Full-service spa visits" },
-  { name: "Buddha Gallery Boutique Spa", services: "Holistic bodywork, energy healing", note: "Artisan spa experience" },
+  { name: "Nirvanna Spa", services: "Shiatsu, Swedish, Aromatherapy, Deep Tissue", note: "In-villa or beachside", img: nirvannaImg },
+  { name: "Bendita Waxing Studio & Spa", services: "Relaxation massage, facials, beauty treatments", note: "Full-service spa visits", img: benditaImg },
+  { name: "Buddha Gallery Boutique Spa", services: "Holistic bodywork, energy healing", note: "Artisan spa experience", img: buddhaImg },
+];
+
+const practiceSpaces = [
+  { label: "Beachfront", img: estate3 },
+  { label: "Pool Terrace", img: estate6 },
+  { label: "Garden Area", img: estate9 },
 ];
 
 export default function Wellness() {
   return (
     <Layout>
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-primary" />
-        <PhotoPlaceholder label="Beachside Wellness" className="absolute inset-0 !aspect-auto opacity-30" />
+        <img src={heroImg} alt="Wellness" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 text-center text-primary-foreground px-4 w-full max-w-6xl mx-auto">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">The Estate</p>
           <div className="flex items-center justify-between gap-4">
@@ -66,7 +83,7 @@ export default function Wellness() {
                 ))}
               </div>
             </div>
-            <PhotoPlaceholder label="Morning Yoga" aspectRatio="portrait" className="rounded-tl-[40px] rounded-br-[40px] overflow-hidden" />
+            <img src={yogaImg} alt="Morning Yoga" className="w-full aspect-[3/4] object-cover rounded-tl-[40px] rounded-br-[40px]" />
           </div>
         </div>
       </section>
@@ -75,7 +92,7 @@ export default function Wellness() {
       <section className="py-16 md:py-24 bg-card">
         <div className="container max-w-5xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <PhotoPlaceholder label="Personal Training" aspectRatio="square" className="rounded-tr-[40px] rounded-bl-[40px] overflow-hidden" />
+            <img src={yogaImg} alt="Personal Training" className="w-full aspect-square object-cover object-top rounded-tr-[40px] rounded-bl-[40px]" />
             <div>
               <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-3 block">Fitness</span>
               <h2 className="font-serif text-4xl font-light mb-6">Pilates & Personal Training</h2>
@@ -104,7 +121,7 @@ export default function Wellness() {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="bg-card p-6 rounded-xl"
               >
-                <PhotoPlaceholder label={p.name} aspectRatio="video" className="mb-4 rounded-xl overflow-hidden" />
+                <img src={p.img} alt={p.name} className="w-full aspect-video object-cover mb-4 rounded-xl" />
                 <h3 className="font-serif text-xl mb-2">{p.name}</h3>
                 <p className="text-xs font-sans text-accent mb-2">{p.services}</p>
                 <p className="text-sm font-sans text-muted-foreground">{p.note}</p>
@@ -128,7 +145,7 @@ export default function Wellness() {
                 Perfect for retreat groups, wedding parties, or anyone seeking a deeper connection to the rhythms of the coast.
               </p>
             </div>
-            <PhotoPlaceholder label="Sound Healing" className="!aspect-auto h-[400px]" />
+            <img src={soundbathImg} alt="Sound Healing" className="w-full h-[400px] object-cover rounded-lg" />
           </div>
         </div>
       </section>
@@ -138,17 +155,24 @@ export default function Wellness() {
         <div className="container max-w-5xl">
           <SectionHeading eyebrow="The Spaces" title="Your Practice, Your Setting" />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {["Beachfront", "Pool Terrace", "Garden Area"].map((space) => (
-              <PhotoPlaceholder key={space} label={space} aspectRatio="video" />
+            {practiceSpaces.map((space) => (
+              <div key={space.label} className="relative aspect-video overflow-hidden rounded-xl group">
+                <img src={space.img} alt={space.label} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-black/30 flex items-end p-4">
+                  <span className="font-serif text-lg text-white">{space.label}</span>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-card">
-        <div className="container text-center">
+      <section className="relative py-20 overflow-hidden">
+        <img src={soundbathImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+        <div className="relative z-10 container text-center text-primary-foreground">
           <p className="font-serif text-3xl md:text-4xl mb-6">All Wellness Services by Inquiry</p>
-          <p className="text-sm font-sans text-muted-foreground mb-8">Pricing and scheduling arranged through your concierge.</p>
+          <p className="text-sm font-sans opacity-80 mb-8">Pricing and scheduling arranged through your concierge.</p>
           <InquiryDialog>
             <button className="inline-block px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full">
               Inquire Now
