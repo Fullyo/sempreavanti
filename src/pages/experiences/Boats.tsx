@@ -60,7 +60,7 @@ export default function Boats() {
             <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent">Boat Tours & Fishing</span>
             <div className="h-px flex-1 bg-border" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {boatTours.map((item, i) => (
               <motion.div
                 key={item.name}
@@ -68,10 +68,13 @@ export default function Boats() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.06 }}
-                className="border-b border-border pb-4"
+                className="bg-card rounded-xl overflow-hidden border border-border"
               >
-                <h3 className="font-serif text-xl mb-1">{item.name}</h3>
-                <p className="text-sm font-sans text-muted-foreground leading-relaxed">{item.desc}</p>
+                <PhotoPlaceholder label={item.name} aspectRatio="video" />
+                <div className="p-5">
+                  <h3 className="font-serif text-xl mb-1">{item.name}</h3>
+                  <p className="text-sm font-sans text-muted-foreground leading-relaxed">{item.desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -88,7 +91,7 @@ export default function Boats() {
           <p className="text-base font-sans text-muted-foreground leading-relaxed max-w-3xl mb-8">
             The Ally Cat fleet is the premier sailing experience in Banderas Bay. Choose from intimate charters to full-size catamarans — all with open bar, fresh food, snorkel gear, and paddleboards. Perfect for sunset celebrations, family outings, or a day exploring the coastline.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {sailingFleet.map((item, i) => (
               <motion.div
                 key={item.name}
@@ -96,10 +99,13 @@ export default function Boats() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.06 }}
-                className="border-b border-border pb-4"
+                className="bg-background rounded-xl overflow-hidden border border-border"
               >
-                <h3 className="font-serif text-xl mb-1">{item.name}</h3>
-                <p className="text-sm font-sans text-muted-foreground leading-relaxed">{item.desc}</p>
+                <PhotoPlaceholder label={item.name} aspectRatio="video" />
+                <div className="p-5">
+                  <h3 className="font-serif text-xl mb-1">{item.name}</h3>
+                  <p className="text-sm font-sans text-muted-foreground leading-relaxed">{item.desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -124,8 +130,10 @@ export default function Boats() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 md:py-28 bg-primary text-primary-foreground">
-        <div className="container max-w-4xl text-center">
+      <section className="relative py-20 md:py-28 text-primary-foreground overflow-hidden">
+        <img src={fishingImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+        <div className="relative z-10 container max-w-4xl text-center">
           <SectionHeading
             eyebrow="Your Concierge"
             title="Charter, Sail, or Fish — We Handle It All"
@@ -139,7 +147,7 @@ export default function Boats() {
             Plan Your Day on the Water
           </Link>
         </div>
-        <div className="container max-w-4xl mt-10">
+        <div className="relative z-10 container max-w-4xl mt-10">
           <PageNavArrows prev={prev} next={next} variant="bottom" />
         </div>
       </section>

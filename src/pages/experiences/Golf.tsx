@@ -5,6 +5,8 @@ import PageNavArrows, { experiencePages, getPageNav } from "@/components/PageNav
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
+import estate8 from "@/assets/estate-8.jpeg";
+
 const { prev, next } = getPageNav(experiencePages, "/experiences/golf");
 
 const courses = [
@@ -105,8 +107,10 @@ export default function Golf() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 md:py-28 bg-primary text-primary-foreground">
-        <div className="container max-w-4xl text-center">
+      <section className="relative py-20 md:py-28 text-primary-foreground overflow-hidden">
+        <img src={estate8} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+        <div className="relative z-10 container max-w-4xl text-center">
           <SectionHeading
             eyebrow="Your Concierge"
             title="Tee Times, Transport & Clubs — Sorted"
@@ -120,7 +124,7 @@ export default function Golf() {
             Book a Round
           </Link>
         </div>
-        <div className="container max-w-4xl mt-10">
+        <div className="relative z-10 container max-w-4xl mt-10">
           <PageNavArrows prev={prev} next={next} variant="bottom" />
         </div>
       </section>

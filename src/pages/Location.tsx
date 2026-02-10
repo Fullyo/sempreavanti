@@ -6,6 +6,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { ChevronDown, MapPin, Clock } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import estate14 from "@/assets/estate-14.jpeg";
 import { useGuestyListings } from "@/hooks/useGuestyListings";
 
 const nearbyPlaces = [
@@ -318,8 +319,10 @@ export default function Location() {
       </section>
 
       {/* Safety */}
-      <section className="py-16 md:py-24 bg-primary text-primary-foreground">
-        <div className="container max-w-3xl text-center">
+      <section className="relative py-16 md:py-24 text-primary-foreground overflow-hidden">
+        <img src={estate14} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+        <div className="relative z-10 container max-w-3xl text-center">
           <SectionHeading
             eyebrow="Safety & Community"
             title="A Place That Feels Like Home"
