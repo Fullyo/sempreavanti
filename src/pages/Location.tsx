@@ -12,7 +12,7 @@ import { useGuestyListings } from "@/hooks/useGuestyListings";
 const nearbyPlaces = [
   { name: "Sayulita", distance: "5 min by UTV", description: "A vibrant surf town with boutiques, restaurants, and a lively beach scene." },
   { name: "San Pancho", distance: "15 min via Sayulita", description: "A quieter, artistic village with a cultural center and beautiful beach." },
-  { name: "Punta de Mita", distance: "25 min by car", description: "An upscale beach community with world-class dining, surf breaks, and the Four Seasons & St. Regis resorts." },
+  { name: "Punta de Mita", distance: "25 min by UTV", description: "An upscale beach community with world-class dining, surf breaks, and the Four Seasons & St. Regis resorts." },
   { name: "La Cruz de Huanacaxtle", distance: "30 min by car", description: "Home to the famous Sunday Market — fresh seafood, artisan crafts, live music." },
   { name: "Puerto Vallarta", distance: "45 min by car", description: "The Malecón boardwalk, art galleries, fine dining, and vibrant nightlife." },
   { name: "Chacala", distance: "45 min by car", description: "A hidden gem — serene beach town with no crowds. Perfect for a peaceful day trip." },
@@ -169,7 +169,7 @@ export default function Location() {
               <PhotoPlaceholder label="Polaris UTV" aspectRatio="video" className="mb-6 rounded-xl overflow-hidden" />
               <h3 className="font-serif text-2xl mb-3">Polaris UTV Rentals</h3>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-3">
-                The best way to explore the coast — zip to Sayulita in 5 minutes, Punta de Mita in 20–25. Available in 2, 4, and 6-seater options.
+                The best way to explore the coast — zip to Sayulita in 5 minutes, Punta de Mita in 25. Available in 2, 4, and 6-seater options.
               </p>
               <p className="text-sm font-sans text-muted-foreground italic">Pricing provided upon inquiry</p>
             </motion.div>

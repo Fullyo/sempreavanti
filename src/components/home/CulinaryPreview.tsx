@@ -1,14 +1,8 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { GuestyListing } from "@/hooks/useGuestyListings";
+import foodImg from "@/assets/food1.jpeg";
 
-interface CulinaryPreviewProps {
-  listings?: GuestyListing[];
-}
-
-export default function CulinaryPreview({ listings }: CulinaryPreviewProps) {
-  const photo = listings?.[2]?.pictures?.[2]?.original;
-
+export default function CulinaryPreview() {
   return (
     <section className="py-20 md:py-28" aria-label="Culinary experience">
       <div className="container max-w-6xl">
@@ -20,19 +14,15 @@ export default function CulinaryPreview({ listings }: CulinaryPreviewProps) {
             transition={{ duration: 0.7 }}
             className="lg:order-2"
           >
-            {photo ? (
-              <div className="relative">
-                <img
-                  src={photo}
-                  alt="Private chef preparing a gourmet meal at Casa Sempre Avanti"
-                  className="w-full h-[450px] object-cover rounded-tl-[80px] rounded-br-[80px]"
-                  loading="lazy"
-                />
-                <div className="absolute -top-3 -left-3 w-20 h-20 border-2 border-golden rounded-tl-[40px] opacity-40" />
-              </div>
-            ) : (
-              <div className="w-full h-[450px] bg-muted rounded-tl-[80px] rounded-br-[80px]" />
-            )}
+            <div className="relative">
+              <img
+                src={foodImg}
+                alt="Private chef preparing a gourmet meal at Casa Sempre Avanti"
+                className="w-full h-[450px] object-cover rounded-tl-[80px] rounded-br-[80px]"
+                loading="lazy"
+              />
+              <div className="absolute -top-3 -left-3 w-20 h-20 border-2 border-golden rounded-tl-[40px] opacity-40" />
+            </div>
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: 30 }}
