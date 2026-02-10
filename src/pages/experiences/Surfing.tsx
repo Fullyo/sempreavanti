@@ -4,16 +4,18 @@ import PageNavArrows, { experiencePages, getPageNav } from "@/components/PageNav
 import InquiryDialog from "@/components/InquiryDialog";
 import { motion } from "framer-motion";
 
-import surfAction from "@/assets/surf-action.jpg";
+import surfSayulitaAerial from "@/assets/surf-sayulita-aerial.jpg";
 import surfLalancha from "@/assets/surf-lalancha.jpg";
 import surfSayulitaDrone from "@/assets/surf-sayulita-drone.png";
-import surfSayulitaAerial from "@/assets/surf-sayulita-aerial.jpg";
 import surfBurros from "@/assets/surf-burros.jpeg";
-import surfPuntamita from "@/assets/surf-puntamita.jpeg";
+import surfPuntamitaAerial from "@/assets/surf-puntamita-aerial.jpg";
 import surfSayulitaMain from "@/assets/surf-sayulita-main.jpg";
-import surfChillo from "@/assets/surf-chillo.jpg";
+import surfChilloWater from "@/assets/surf-chillo-water.jpg";
 import surfBeginner from "@/assets/surf-beginner.jpeg";
+import surfAction from "@/assets/surf-action.jpg";
 import surfWalk from "@/assets/surf-walk.jpeg";
+import surfChillo from "@/assets/surf-chillo.jpg";
+import surfPuntamita from "@/assets/surf-puntamita.jpeg";
 
 const { prev, next } = getPageNav(experiencePages, "/experiences/surfing");
 
@@ -22,7 +24,7 @@ const surfBreaks = [
   { name: "Captain Pablo's", desc: "Right point break — consistent, fun, and great for intermediate surfers looking for a reliable wave.", img: surfSayulitaDrone },
   { name: "Don Pedro's", desc: "Left break right in front of the iconic beachfront restaurant in Sayulita.", img: surfSayulitaAerial },
   { name: "Burros", desc: "Powerful beach break north of Sayulita. Best suited for experienced surfers who want a challenge.", img: surfBurros },
-  { name: "Punta Mita", desc: "Several breaks around the point offering varied conditions for all levels, from mellow rollers to punchy reef breaks.", img: surfPuntamita },
+  { name: "Punta Mita", desc: "Several breaks around the point offering varied conditions for all levels, from mellow rollers to punchy reef breaks.", img: surfPuntamitaAerial },
   { name: "Sayulita Main Break", desc: "The town's signature wave — a gentle, forgiving break perfect for longboarders and beginners.", img: surfSayulitaMain },
 ];
 
@@ -31,7 +33,7 @@ export default function Surfing() {
     <Layout>
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <img src={surfAction} alt="Surfing in Riviera Nayarit" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={surfSayulitaAerial} alt="Surfing in Riviera Nayarit" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
         <div className="relative z-10 text-center text-primary-foreground px-4 w-full max-w-6xl mx-auto">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Experiences</p>
@@ -95,7 +97,7 @@ export default function Surfing() {
             className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
           >
             <div className="rounded-xl overflow-hidden aspect-square">
-              <img src={surfBeginner} alt="Chillo — Surf Instructor" className="w-full h-full object-cover" />
+              <img src={surfChilloWater} alt="Chillo — Surf Instructor" className="w-full h-full object-cover" />
             </div>
             <div>
               <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-2 block">Your Instructor</span>
