@@ -1,14 +1,8 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { GuestyListing } from "@/hooks/useGuestyListings";
+import patzcuaritoImg from "@/assets/patzcuarito.png";
 
-interface LocationPreviewProps {
-  listings?: GuestyListing[];
-}
-
-export default function LocationPreview({ listings }: LocationPreviewProps) {
-  const photo = listings?.[2]?.pictures?.[0]?.original;
-
+export default function LocationPreview() {
   return (
     <section className="py-20 md:py-28 bg-gradient-to-br from-background via-card to-background" aria-label="Location preview">
       <div className="container max-w-6xl">
@@ -19,30 +13,15 @@ export default function LocationPreview({ listings }: LocationPreviewProps) {
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            {photo ? (
-              <div className="relative">
-                <img
-                  src={photo}
-                  alt="Aerial view of Riviera Nayarit coastline near Sayulita"
-                  className="w-full h-[450px] object-cover rounded-tr-[80px] rounded-bl-[80px]"
-                  loading="lazy"
-                />
-                <div className="absolute -bottom-3 -right-3 w-24 h-24 border-2 border-turquoise rounded-br-[40px] opacity-40" />
-              </div>
-            ) : (
-              <div className="w-full h-[450px] overflow-hidden rounded-tr-[80px] rounded-bl-[80px]">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2896!2d-105.4640904!3d20.847732!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x84211561ab8a6c1b%3A0xe20445bb3abc738a!2sCasa%20Sempre%20Avanti!5e0!3m2!1sen!2smx!4v1700000000000!5m2!1sen!2smx"
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Casa Sempre Avanti location"
-                />
-              </div>
-            )}
+            <div className="relative">
+              <img
+                src={patzcuaritoImg}
+                alt="Aerial view of Patzcuarito coastline along the Riviera Nayarit"
+                className="w-full h-[450px] object-cover rounded-tr-[80px] rounded-bl-[80px]"
+                loading="lazy"
+              />
+              <div className="absolute -bottom-3 -right-3 w-24 h-24 border-2 border-turquoise rounded-br-[40px] opacity-40" />
+            </div>
           </motion.div>
           <motion.div
             initial={{ opacity: 0, x: 30 }}

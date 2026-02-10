@@ -5,6 +5,9 @@ import { GuestyListing } from "@/hooks/useGuestyListings";
 import foodImg from "@/assets/food3.jpeg";
 import weddingImg from "@/assets/wedding2.png";
 import atvImg from "@/assets/atv.jpeg";
+import yogaImg from "@/assets/yoga.png";
+import transportImg from "@/assets/transport.png";
+import monkeyMountainImg from "@/assets/monkeymountain.jpeg";
 
 const flowItems = [
   {
@@ -12,8 +15,7 @@ const flowItems = [
     subtitle: "Morning Flow",
     description: "Yoga, breathwork, and beachside meditation to start the day.",
     path: "/wellness",
-    staticImage: undefined as string | undefined,
-    apiPhotoCaption: "Pool with ocean view",
+    staticImage: yogaImg,
   },
   {
     title: "Private Dining",
@@ -37,18 +39,18 @@ const flowItems = [
     staticImage: weddingImg,
   },
   {
+    title: "Location",
+    subtitle: "Riviera Nayarit",
+    description: "5 min to Sayulita, 25 min to Punta de Mita — the best of the coast.",
+    path: "/location",
+    staticImage: monkeyMountainImg,
+  },
+  {
     title: "Transportation",
     subtitle: "UTV & Transfers",
     description: "Polaris UTVs and private Suburban transfers from the airport.",
     path: "/transportation",
-    staticImage: undefined as string | undefined,
-  },
-  {
-    title: "Location",
-    subtitle: "Riviera Nayarit",
-    description: "5 min to Sayulita, 20–25 min to Punta de Mita — the best of the coast.",
-    path: "/location",
-    staticImage: undefined as string | undefined,
+    staticImage: transportImg,
   },
 ];
 

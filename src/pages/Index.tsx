@@ -169,9 +169,9 @@ export default function Index() {
 
       <FlowOfDaySection listings={listings} />
 
-      <LocationPreview listings={listings} />
+      <LocationPreview />
 
-      <CulinaryPreview listings={listings} />
+      <CulinaryPreview />
 
       <HospitalitySection listings={listings} />
 
