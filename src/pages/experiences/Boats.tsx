@@ -16,7 +16,7 @@ import boatFatcat from "@/assets/boat-fatcat.jpg";
 import boatSunset from "@/assets/boat-sunset.jpg";
 
 const boatTours = [
-  { name: "Private Boat Tour", desc: "Whale watching, snorkeling, and light trolling with beverages included. 3 hours, up to 7 guests.", img: whaleImg },
+  { name: "Private Boat Tour", desc: "Whale watching, snorkeling, and light trolling with beverages included. 3 hours, up to 7 guests.", img: boatCat },
   { name: "Fishing Charter", desc: "4-hour deep-sea charter with all equipment and beverages. Up to 4 people. Bring your catch back to the estate — Ricardo, your private chef, will prepare it for dinner.", img: boatFishingCharter },
   { name: "Spearfishing", desc: "Inshore trips (4–5 hours) or full-day deep water expeditions (7 AM – 4 PM) with all equipment, beverages, and sashimi preparation. Up to 3–4 people.", img: boatSpearfishing },
 ];
@@ -25,7 +25,7 @@ const sailingFleet = [
   { name: "Intimate Sailing", desc: "Perfect for smaller groups up to 12. Snorkeling stops, open bar, and fresh ceviche prepared on board.", img: boatSunset },
   { name: "Private Charter", desc: "Charter for up to 16 with paddleboards, snorkel gear, and full bar service.", img: boatCat },
   { name: "Luxury Catamaran", desc: "Spacious catamaran perfect for sunset sails and celebrations. Accommodates up to 30 guests.", img: boatFatcat },
-  { name: "Large Group Sailing", desc: "The largest option — luxury sailing with all amenities for bigger parties and special occasions.", img: boatShoreSpearfishing },
+  { name: "Large Group Sailing", desc: "The largest option — luxury sailing with all amenities for bigger parties and special occasions.", img: boatCat },
 ];
 
 export default function Boats() {
