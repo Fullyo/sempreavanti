@@ -1,33 +1,74 @@
 
 
-# Restructured Navigation Menu
+# Consolidate the Website: 11 Pages to 8
 
-## New Menu Order
+## The Problem
 
-The navigation will be reorganized to lead with the property, then logistics, then activities:
+Three pages are thin, redundant, and fragment content that belongs together:
 
-1. **The Estate** (dropdown): The Villas, Private Chef, Wellness
-2. **Plan Your Stay** (dropdown): Concierge, Transportation, Pricing
-3. **Experiences** (direct link)
-4. **Weddings & Events** (direct link)
-5. **Location** (direct link)
-6. **Get in Touch** (direct link)
-7. **Check Availability** (CTA button)
+- **Transportation** (125 lines): Drive times already on the Location page. UTV info repeated on Villas, homepage Services Grid, and Location.
+- **Concierge** (125 lines): Staff bios and "what's included" list. The homepage already covers "Hosted, Not Rented" with the same messaging. The staff ARE the estate.
+- **Pricing** (80 lines): A simple reference table that could be a section rather than a destination.
 
-This puts the villas front and center, followed by planning logistics, then the experiential and informational pages.
+## Proposed Consolidation
 
-## Technical Details
+### 1. Merge Concierge into Villas
 
-### File: `src/components/layout/Navbar.tsx`
+The staff and service philosophy are inseparable from the estate itself. Add a "Your Team" section to the Villas page with the 5 staff bios and the "what's included" checklist. This strengthens the Villas page as the definitive "what you get" page and reinforces the "hosted, not rented" positioning.
 
-- Rebuild the desktop nav with two hover-triggered dropdown groups ("The Estate" and "Plan Your Stay") and four direct links
-- Dropdowns use onMouseEnter/onMouseLeave with a solid white background, shadow, rounded corners, and high z-index
-- Text styling matches existing uppercase, tracking-widest convention
-- Transparent/scrolled states preserved: triggers are white when unscrolled, dark when scrolled; dropdown panels always white with dark text
-- Active state: dropdown trigger highlights if current route matches any child link
-- Mobile menu shows all items flat with small category headers for grouping
-- "Get in Touch" links to `/contact` (existing route)
-- "Pricing" moves under "Plan Your Stay" since it relates to trip planning
+### 2. Merge Transportation into Location
 
-No other files are changed -- all routes and pages stay the same.
+Transportation is fundamentally about "where is this and how do I get there." Add an "Getting Here" section to the top of the Location page with airport transfer info, UTV details, and the drive times table. This creates one comprehensive "place and logistics" page.
+
+### 3. Merge Pricing into Contact (Get in Touch)
+
+Guests looking at pricing naturally want to inquire next. Place the pricing reference table above the inquiry form on the Contact page, creating a natural flow: see prices, then ask questions. The disclaimer "all pricing upon inquiry" already lives on the Contact page.
+
+## Resulting Site Structure (8 pages)
+
+```text
+Home
+Villas ........... (+ staff bios, what's included)
+Chef
+Wellness
+Experiences
+Weddings & Events
+Location ......... (+ airport transfers, UTVs, drive times)
+Get in Touch ..... (+ pricing reference table)
+```
+
+## Updated Navigation
+
+```text
+The Estate (dropdown)     Experiences     Weddings & Events     Location     Get in Touch     [Check Availability]
+  - The Villas
+  - Private Chef
+  - Wellness
+```
+
+- "Plan Your Stay" dropdown is eliminated -- its children are absorbed into other pages
+- 4 top-level items + 1 dropdown + CTA button
+- Cleaner, faster for guests to scan
+
+## What Changes
+
+### Files to modify:
+- **`src/pages/Villas.tsx`** -- Add "Your Team" section (staff bios from Concierge) and "Always Included" checklist before the sleeping config CTA
+- **`src/pages/Location.tsx`** -- Add "Getting Here" section at the top with airport transfer and UTV rental cards, plus the drive times table (from Transportation)
+- **`src/pages/Contact.tsx`** -- Add pricing reference table above the inquiry form
+- **`src/components/layout/Navbar.tsx`** -- Remove "Plan Your Stay" dropdown; update nav to 4 direct links + 1 dropdown
+- **`src/App.tsx`** -- Remove routes for `/concierge`, `/transportation`, `/pricing`; add redirects to their new homes
+- **`src/components/home/ServicesGrid.tsx`** -- Update links that pointed to `/concierge` or `/transportation` to point to `/villas` and `/location`
+- **`src/pages/Index.tsx`** -- Update any CTA links referencing removed pages
+
+### Files to delete:
+- `src/pages/Concierge.tsx`
+- `src/pages/Transportation.tsx`
+- `src/pages/Pricing.tsx`
+
+### Content preserved (nothing is lost):
+- All 5 staff bios move to Villas
+- All transportation details move to Location
+- Full pricing table moves to Contact
+- Links throughout the site updated to point to new locations
 
