@@ -64,7 +64,7 @@ export default function Villas() {
       {/* Intro — Casa Pietro + Casa Luisa = Sempre Avanti */}
       <section className="py-20 md:py-28">
         <div className="container max-w-4xl text-center">
-          <p className="text-xs font-sans uppercase tracking-[0.4em] text-accent mb-4">Casa Pietro + Casa Luisa</p>
+          <p className="text-xs font-sans uppercase tracking-[0.4em] text-accent mb-4">Casa Pietro + Villa Luisa</p>
           <h2 className="font-serif text-4xl md:text-5xl font-light mb-6">Together, They Are Sempre Avanti</h2>
           <p className="text-base md:text-lg font-sans text-muted-foreground leading-relaxed">
             Two adjacent beachfront villas united into a single private estate. Five luxury bedrooms, a private beach, pool, and dedicated staff — designed for families, celebrations, and groups who want it all.
@@ -84,11 +84,13 @@ export default function Villas() {
         <section className="pb-20">
           <div className="container grid grid-cols-1 lg:grid-cols-2 gap-10">
             {[
-              { villa: casaPietro, label: "Villa One", displayName: "Casa Pietro" },
-              { villa: casaLuisa, label: "Villa Two", displayName: "Casa Luisa" },
+              { villa: casaPietro, label: "Villa One" },
+              { villa: casaLuisa, label: "Villa Two" },
             ]
               .filter((v) => v.villa)
-              .map(({ villa, label, displayName }, idx) => (
+              .map(({ villa, label }, idx) => {
+                const displayName = villa!.nickname || villa!.title || "Villa";
+                return (
                 <motion.div
                   key={villa!._id}
                   initial={{ opacity: 0, y: 30 }}
@@ -97,13 +99,9 @@ export default function Villas() {
                   transition={{ duration: 0.6, delay: idx * 0.15 }}
                   className="flex flex-col"
                 >
-                  {/* Main photo */}
-                  {villa!.pictures?.[0] ? (
-                    <img
-                      src={villa!.pictures[0].original}
-                      alt={displayName}
-                      className="w-full h-[360px] object-cover rounded-tl-[40px] rounded-br-[40px]"
-                    />
+                  {/* Carousel as main image */}
+                  {villa!.pictures && villa!.pictures.length > 0 ? (
+                    <VillaCarousel pictures={villa!.pictures} villaName={displayName} />
                   ) : (
                     <PhotoPlaceholder label={displayName} className="h-[360px] !aspect-auto rounded-tl-[40px] rounded-br-[40px]" />
                   )}
@@ -114,34 +112,31 @@ export default function Villas() {
                       {label}
                     </span>
                     <h2 className="font-serif text-3xl md:text-4xl font-light mb-4">{displayName}</h2>
-                    <div className="flex gap-5 mb-4 text-sm font-sans text-muted-foreground">
-                      <span>{villa!.bedrooms} Bedrooms</span>
-                      <span>{villa!.bathrooms} Bathrooms</span>
-                      <span>Sleeps {villa!.accommodates}</span>
+
+                    {/* Stats — prominent */}
+                    <div className="flex gap-6 mb-5 text-sm font-sans">
+                      <div className="text-center">
+                        <span className="block text-2xl font-serif text-foreground">{villa!.bedrooms}</span>
+                        <span className="text-xs uppercase tracking-wider text-muted-foreground">Bedrooms</span>
+                      </div>
+                      <div className="text-center">
+                        <span className="block text-2xl font-serif text-foreground">{villa!.bathrooms}</span>
+                        <span className="text-xs uppercase tracking-wider text-muted-foreground">Bathrooms</span>
+                      </div>
+                      <div className="text-center">
+                        <span className="block text-2xl font-serif text-foreground">{villa!.accommodates}</span>
+                        <span className="text-xs uppercase tracking-wider text-muted-foreground">Guests</span>
+                      </div>
                     </div>
-                    <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-5">
+
+                    <p className="text-sm font-sans text-muted-foreground leading-relaxed">
                       {villa!.publicDescription?.summary || villa!.description || "Details coming soon."}
                     </p>
-                    {villa!.amenities && villa!.amenities.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {villa!.amenities.slice(0, 8).map((a) => (
-                          <span key={a} className="text-xs font-sans px-3 py-1 bg-secondary text-secondary-foreground rounded-sm">{a}</span>
-                        ))}
-                        {villa!.amenities.length > 8 && (
-                          <span className="text-xs font-sans px-3 py-1 text-muted-foreground">+{villa!.amenities.length - 8} more</span>
-                        )}
-                      </div>
-                    )}
                   </div>
-
-                  {/* Mini carousel for this villa */}
-                  {villa!.pictures && villa!.pictures.length > 1 && (
-                    <div className="mt-6">
-                      <VillaCarousel pictures={villa!.pictures} villaName={displayName} />
-                    </div>
-                  )}
                 </motion.div>
-              ))}
+                );
+              })}
+
           </div>
         </section>
       )}
