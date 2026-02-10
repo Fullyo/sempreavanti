@@ -81,7 +81,7 @@ export default function Ocean() {
             <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent">Water Activities</span>
             <div className="h-px flex-1 bg-border" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {activities.map((item, i) => (
               <motion.div
                 key={item.name}
@@ -89,10 +89,13 @@ export default function Ocean() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.06 }}
-                className="border-b border-border pb-4"
+                className="bg-background rounded-xl overflow-hidden border border-border"
               >
-                <h3 className="font-serif text-xl mb-1">{item.name}</h3>
-                <p className="text-sm font-sans text-muted-foreground leading-relaxed">{item.desc}</p>
+                <PhotoPlaceholder label={item.name} aspectRatio="video" />
+                <div className="p-5">
+                  <h3 className="font-serif text-xl mb-1">{item.name}</h3>
+                  <p className="text-sm font-sans text-muted-foreground leading-relaxed">{item.desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -114,8 +117,10 @@ export default function Ocean() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 md:py-28 bg-primary text-primary-foreground">
-        <div className="container max-w-4xl text-center">
+      <section className="relative py-20 md:py-28 text-primary-foreground overflow-hidden">
+        <img src={marietasImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+        <div className="relative z-10 container max-w-4xl text-center">
           <SectionHeading
             eyebrow="Your Concierge"
             title="Every Ocean Adventure, Arranged"
@@ -129,7 +134,7 @@ export default function Ocean() {
             Plan Your Ocean Day
           </Link>
         </div>
-        <div className="container max-w-4xl mt-10">
+        <div className="relative z-10 container max-w-4xl mt-10">
           <PageNavArrows prev={prev} next={next} variant="bottom" />
         </div>
       </section>

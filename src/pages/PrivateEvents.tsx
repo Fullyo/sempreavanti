@@ -4,6 +4,8 @@ import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
+import estate6 from "@/assets/estate-6.jpeg";
+
 const eventTypes = [
   { title: "Retreats & Workshops", description: "The estate is perfectly suited for wellness retreats, creative workshops, corporate offsites, and transformational gatherings. Five bedrooms, dedicated staff, and total privacy." },
   { title: "Corporate Offsites", description: "Escape the conference room. Strategy sessions on the terrace, team dinners on the beach, and activities that actually bond your team — from surfing to sunset sailing." },
@@ -103,8 +105,10 @@ export default function PrivateEvents() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 md:py-28 bg-primary text-primary-foreground">
-        <div className="container max-w-4xl text-center">
+      <section className="relative py-20 md:py-28 text-primary-foreground overflow-hidden">
+        <img src={estate6} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+        <div className="relative z-10 container max-w-4xl text-center">
           <SectionHeading
             eyebrow="Let's Plan Together"
             title="Tell Us About Your Event"

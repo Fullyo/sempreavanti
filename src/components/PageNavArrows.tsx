@@ -60,8 +60,9 @@ export const estatePages: PageNavItem[] = [
 
 export function getPageNav(pages: PageNavItem[], currentPath: string) {
   const idx = pages.findIndex((p) => p.path === currentPath);
+  if (idx === -1) return { prev: undefined, next: undefined };
   return {
-    prev: idx > 0 ? pages[idx - 1] : undefined,
-    next: idx < pages.length - 1 ? pages[idx + 1] : undefined,
+    prev: pages[(idx - 1 + pages.length) % pages.length],
+    next: pages[(idx + 1) % pages.length],
   };
 }

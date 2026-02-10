@@ -5,6 +5,9 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Heart, UtensilsCrossed, Wine, BedDouble, Users } from "lucide-react";
 
+import estate3 from "@/assets/estate-3.jpeg";
+import weddingImg from "@/assets/wedding2.png";
+
 const weddingFeatures = [
   {
     icon: Heart,
@@ -38,8 +41,8 @@ export default function Weddings() {
     <Layout>
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-primary" />
-        <PhotoPlaceholder label="Weddings" className="absolute inset-0 !aspect-auto opacity-30" />
+        <img src={weddingImg} alt="Beachfront wedding" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
         <div className="relative z-10 text-center text-primary-foreground px-4">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Celebrations</p>
           <h1 className="font-serif text-5xl md:text-7xl font-light">Weddings</h1>
@@ -94,8 +97,10 @@ export default function Weddings() {
       </section>
 
       {/* CTA */}
-      <section className="py-20 md:py-28 bg-primary text-primary-foreground">
-        <div className="container max-w-4xl text-center">
+      <section className="relative py-20 md:py-28 text-primary-foreground overflow-hidden">
+        <img src={estate3} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+        <div className="relative z-10 container max-w-4xl text-center">
           <SectionHeading
             eyebrow="Begin Planning"
             title="Your Dream Wedding Starts Here"

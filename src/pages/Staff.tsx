@@ -5,6 +5,8 @@ import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArro
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 
+import estate10 from "@/assets/estate-10.jpeg";
+
 const { prev, next } = getPageNav(estatePages, "/staff");
 
 const staffMembers = [
@@ -95,8 +97,10 @@ export default function Staff() {
       </section>
 
       {/* Bottom Nav */}
-      <section className="py-12 bg-primary text-primary-foreground">
-        <div className="container max-w-4xl">
+      <section className="relative py-12 text-primary-foreground overflow-hidden">
+        <img src={estate10} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+        <div className="relative z-10 container max-w-4xl">
           <PageNavArrows prev={prev} next={next} variant="bottom" />
         </div>
       </section>
