@@ -13,18 +13,18 @@ export default function VillaCarousel({ pictures, villaName }: VillaCarouselProp
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
-  if (!pictures || pictures.length <= 1) return null;
+  if (!pictures || pictures.length === 0) return null;
 
   return (
-    <div className="relative mt-12 group">
-      <div className="overflow-hidden" ref={emblaRef}>
+    <div className="relative group">
+      <div className="overflow-hidden rounded-tl-[40px] rounded-br-[40px]" ref={emblaRef}>
         <div className="flex">
-          {pictures.slice(1).map((pic, i) => (
-            <div key={i} className="flex-[0_0_100%] sm:flex-[0_0_50%] md:flex-[0_0_33.333%] min-w-0 px-1">
+          {pictures.map((pic, i) => (
+            <div key={i} className="flex-[0_0_100%] min-w-0">
               <img
                 src={pic.original}
                 alt={`${villaName} ${i + 1}`}
-                className="w-full h-72 md:h-96 object-cover"
+                className="w-full h-80 md:h-[28rem] object-cover"
                 loading="lazy"
               />
             </div>
