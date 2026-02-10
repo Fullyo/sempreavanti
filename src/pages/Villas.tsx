@@ -2,6 +2,7 @@ import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import VillaCarousel from "@/components/VillaCarousel";
+import GuestReviews from "@/components/home/GuestReviews";
 import { useGuestyListings } from "@/hooks/useGuestyListings";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
@@ -41,14 +42,14 @@ export default function Villas() {
         </div>
       </section>
 
-      {/* Intro */}
+      {/* Intro — Casa Pietro + Casa Luisa = Sempre Avanti */}
       <section className="py-20 md:py-28">
-        <div className="container">
-          <SectionHeading
-            eyebrow="One Destination, Two Homes"
-            title="Book as a Complete Estate"
-            description="Casa Sempre Avanti brings together two adjacent beachfront villas into a single private destination. Five luxury bedrooms, a private beach, pool, and dedicated staff — designed for families, celebrations, and groups who want it all."
-          />
+        <div className="container max-w-4xl text-center">
+          <p className="text-xs font-sans uppercase tracking-[0.4em] text-accent mb-4">Casa Pietro + Casa Luisa</p>
+          <h2 className="font-serif text-4xl md:text-5xl font-light mb-6">Together, They Are Sempre Avanti</h2>
+          <p className="text-base md:text-lg font-sans text-muted-foreground leading-relaxed">
+            Two adjacent beachfront villas united into a single private estate. Five luxury bedrooms, a private beach, pool, and dedicated staff — designed for families, celebrations, and groups who want it all.
+          </p>
         </div>
       </section>
 
@@ -154,16 +155,8 @@ export default function Villas() {
         </div>
       </section>
 
-      {/* Emotional Center */}
-      <section className="py-20 md:py-28 bg-card">
-        <div className="container max-w-4xl text-center">
-          <SectionHeading
-            eyebrow="The Rhythm of the Estate"
-            title="A Day at Sempre Avanti"
-            description="Morning wellness on the beach. Mid-morning smoothies by the pool. A chef-prepared lunch under the palapa. Afternoon adventures or hammock naps. Sunset margaritas on the sand. Fire-lit dinners under the stars. Every day flows differently, but always with intention."
-          />
-        </div>
-      </section>
+      {/* Guest Reviews */}
+      <GuestReviews />
 
       {/* Sleeping Config CTA */}
       <section className="py-20 md:py-28 bg-primary text-primary-foreground">
