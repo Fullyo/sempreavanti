@@ -54,6 +54,67 @@ export default function Contact() {
         </div>
       </section>
 
+      {/* Pricing Reference */}
+      <section className="py-16 md:py-24 bg-card">
+        <div className="container max-w-4xl">
+          <SectionHeading
+            eyebrow="Reference"
+            title="Pricing Guide"
+            description="All pricing is approximate and provided for reference only. Final charges are in Mexican Pesos at the current exchange rate."
+          />
+          {[
+            {
+              category: "Wellness",
+              items: [
+                { name: "Private Yoga Session", price: "~$125 USD", note: "1 hr 15 min" },
+                { name: "Pilates (Group)", price: "~$50 USD / person", note: "Min 2 people" },
+                { name: "Personal Training", price: "~$100 USD / person", note: "Weights included" },
+                { name: "Massage (Nirvanna Spa)", price: "~$75 USD / person", note: "In-villa or beachside" },
+                { name: "Sound Bath", price: "~$125 USD", note: "Up to 5 people, +~$25 per additional" },
+              ],
+            },
+            {
+              category: "Experiences & Adventures",
+              items: [
+                { name: "Surf Lesson — Sayulita", price: "~$60 USD / person", note: "Min 2 people" },
+                { name: "Surf Experience — La Lancha", price: "~$100 USD / person" },
+                { name: "Sayulita Taco Tour", price: "~$60 USD / person", note: "Tue–Sun, min 4 people" },
+                { name: "Private Cooking Class", price: "~$60 USD / person" },
+                { name: "Private Boat Tour (3 hrs)", price: "~$475 USD", note: "Up to 7 guests" },
+                { name: "Fishing Charter (4 hrs)", price: "~$500 USD", note: "Up to 4 people" },
+                { name: "Polaris UTV — 2-Seater", price: "~$80 USD / day" },
+                { name: "Polaris UTV — 4-Seater", price: "~$95 USD / day" },
+                { name: "Polaris UTV — 6-Seater", price: "~$110 USD / day" },
+              ],
+            },
+            {
+              category: "Transportation",
+              items: [
+                { name: "Private Airport Transfer (Round Trip)", price: "~$250 USD", note: "Luxury Suburban, seats up to 7" },
+              ],
+            },
+          ].map((cat) => (
+            <div key={cat.category} className="mb-8 last:mb-0">
+              <h3 className="font-serif text-xl md:text-2xl mb-4 text-foreground">{cat.category}</h3>
+              <div className="divide-y divide-border">
+                {cat.items.map((item) => (
+                  <div key={item.name} className="flex flex-col sm:flex-row sm:items-center justify-between py-3 gap-1">
+                    <div>
+                      <span className="text-sm font-sans font-medium text-foreground">{item.name}</span>
+                      {item.note && <span className="text-xs font-sans text-muted-foreground block">{item.note}</span>}
+                    </div>
+                    <span className="text-sm font-sans font-medium text-accent">{item.price}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+          <p className="text-xs font-sans text-muted-foreground text-center mt-8 italic">
+            Prices shown in USD are approximate. Final pricing is in Mexican Pesos at the current exchange rate.
+          </p>
+        </div>
+      </section>
+
       <section className="py-20 md:py-28">
         <div className="container max-w-2xl">
           <SectionHeading

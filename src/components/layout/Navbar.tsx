@@ -29,14 +29,6 @@ const navItems: NavItem[] = [
       { label: "Wellness", path: "/wellness" },
     ],
   },
-  {
-    label: "Plan Your Stay",
-    children: [
-      { label: "Concierge", path: "/concierge" },
-      { label: "Transportation", path: "/transportation" },
-      { label: "Pricing", path: "/pricing" },
-    ],
-  },
   { label: "Experiences", path: "/experiences" },
   { label: "Weddings & Events", path: "/events" },
   { label: "Location", path: "/location" },
