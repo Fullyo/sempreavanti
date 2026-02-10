@@ -25,11 +25,17 @@ const navItems: NavItem[] = [
     label: "The Estate",
     children: [
       { label: "The Villas", path: "/villas" },
+      { label: "Your Team", path: "/staff" },
       { label: "Private Chef", path: "/chef" },
+    ],
+  },
+  {
+    label: "Experiences",
+    children: [
+      { label: "Adventures", path: "/experiences" },
       { label: "Wellness", path: "/wellness" },
     ],
   },
-  { label: "Experiences", path: "/experiences" },
   { label: "Weddings & Events", path: "/events" },
   { label: "Location", path: "/location" },
   { label: "Get in Touch", path: "/contact" },
