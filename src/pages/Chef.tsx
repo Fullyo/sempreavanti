@@ -4,6 +4,12 @@ import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArrows";
 import { motion } from "framer-motion";
 import InquiryDialog from "@/components/InquiryDialog";
+import heroImg from "@/assets/chef-hero.jpeg";
+import ricardoImg from "@/assets/chef-ricardo.jpeg";
+import margaritaImg from "@/assets/chef-margarita.jpeg";
+import moleImg from "@/assets/chef-mole.jpeg";
+import cevicheImg from "@/assets/chef-ceviche.jpg";
+import pizzaImg from "@/assets/chef-pizza.jpg";
 
 const { prev, next } = getPageNav(estatePages, "/chef");
 
@@ -78,8 +84,8 @@ export default function Chef() {
     <Layout>
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-primary" />
-        <PhotoPlaceholder label="Chef Experience" className="absolute inset-0 !aspect-auto opacity-30" />
+        <img src={heroImg} alt="Chef Experience" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 text-center text-primary-foreground px-4 w-full max-w-6xl mx-auto">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">The Estate</p>
           <div className="flex items-center justify-between gap-4">
@@ -99,7 +105,7 @@ export default function Chef() {
             description="More than private chefs — Ricardo and Crethell are the heart of the Sempre Avanti dining experience. With deep roots in Mexican coastal cuisine and a passion for fresh, local ingredients, every meal becomes a celebration."
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-            <PhotoPlaceholder label="Chef Ricardo" aspectRatio="portrait" className="rounded-tl-[40px] rounded-br-[40px] overflow-hidden" />
+            <img src={ricardoImg} alt="Chef Ricardo" className="w-full aspect-[3/4] object-cover rounded-tl-[40px] rounded-br-[40px]" />
             <div className="flex flex-col justify-center">
               <p className="text-base font-sans text-muted-foreground leading-relaxed mb-4">
                 From the first morning's fresh juice to the final fire-lit dessert, Ricardo and Crethell craft each meal around your group's preferences. They source daily from local fishermen and markets, bringing the flavors of Riviera Nayarit directly to your table.
@@ -151,8 +157,13 @@ export default function Chef() {
       <section className="py-4">
         <div className="container max-w-6xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {["Ceviche", "Mole Poblano", "Wood-Fired Pizza", "Sunset Margaritas"].map((label) => (
-              <PhotoPlaceholder key={label} label={label} aspectRatio="square" />
+            {[
+              { src: cevicheImg, alt: "Ceviche" },
+              { src: moleImg, alt: "Mole Poblano" },
+              { src: pizzaImg, alt: "Wood-Fired Pizza" },
+              { src: margaritaImg, alt: "Sunset Margaritas" },
+            ].map((photo) => (
+              <img key={photo.alt} src={photo.src} alt={photo.alt} className="w-full aspect-square object-cover" />
             ))}
           </div>
         </div>
@@ -162,7 +173,7 @@ export default function Chef() {
       <section className="py-20 md:py-28">
         <div className="container max-w-5xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <PhotoPlaceholder label="Pizza Night" aspectRatio="square" className="rounded-tr-[40px] rounded-bl-[40px] overflow-hidden" />
+            <img src={pizzaImg} alt="Pizza Night" className="w-full aspect-square object-cover rounded-tr-[40px] rounded-bl-[40px]" />
             <div>
               <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-3 block">Guest Favorite</span>
               <h2 className="font-serif text-4xl md:text-5xl font-light mb-6">Pizza Night</h2>
@@ -194,7 +205,7 @@ export default function Chef() {
                 All pricing provided upon inquiry.
               </p>
             </div>
-            <PhotoPlaceholder label="Sunset Margaritas" className="!aspect-auto h-[400px]" />
+            <img src={margaritaImg} alt="Sunset Margaritas" className="w-full h-[400px] object-cover rounded-lg" />
           </div>
         </div>
       </section>
