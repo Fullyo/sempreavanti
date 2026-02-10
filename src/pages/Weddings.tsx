@@ -2,7 +2,7 @@ import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import InquiryDialog from "@/components/InquiryDialog";
 import { Heart, UtensilsCrossed, Wine, BedDouble, Users } from "lucide-react";
 
 import estate3 from "@/assets/estate-3.jpeg";
@@ -107,12 +107,11 @@ export default function Weddings() {
             description="Tell us about your vision — guest count, dates, and style. We'll share how the estate can bring it to life, with full coordination from your dedicated team."
             light
           />
-          <Link
-            to="/contact"
-            className="inline-block mt-6 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full"
-          >
-            Inquire About Weddings
-          </Link>
+          <InquiryDialog>
+            <button className="inline-block mt-6 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full">
+              Inquire About Weddings
+            </button>
+          </InquiryDialog>
         </div>
       </section>
     </Layout>

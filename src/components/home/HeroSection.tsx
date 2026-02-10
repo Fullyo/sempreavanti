@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import InquiryDialog from "@/components/InquiryDialog";
 import { motion } from "framer-motion";
 import heroVilla from "@/assets/hero-villa.png";
 
@@ -52,12 +53,11 @@ export default function HeroSection({ listings }: HeroSectionProps) {
           transition={{ delay: 0.8, duration: 0.8 }}
           className="mt-10 flex flex-col sm:flex-row gap-4 justify-center"
         >
-          <Link
-            to="/contact"
-            className="inline-block px-8 py-3 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full"
-          >
-            Inquire
-          </Link>
+          <InquiryDialog>
+            <button className="inline-block px-8 py-3 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full">
+              Inquire
+            </button>
+          </InquiryDialog>
           <Link
             to="/villas"
             className="inline-block px-8 py-3 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full"

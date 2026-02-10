@@ -2,7 +2,7 @@ import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import InquiryDialog from "@/components/InquiryDialog";
 
 const eventTypes = [
   { title: "Beach Ceremonies", description: "Exchange vows on your own private beach with the Pacific as your backdrop. Intimate or grand — the setting adapts to your vision." },
@@ -75,12 +75,11 @@ export default function Events() {
             description="From event planning to after-hours catering and dedicated bartender services, your concierge and the full Sempre Avanti team bring your vision to life — so you can simply be present."
             light
           />
-          <Link
-            to="/contact"
-            className="inline-block mt-6 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full"
-          >
-            Plan Your Event
-          </Link>
+          <InquiryDialog>
+            <button className="inline-block mt-6 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full">
+              Plan Your Event
+            </button>
+          </InquiryDialog>
         </div>
       </section>
     </Layout>

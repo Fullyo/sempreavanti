@@ -44,9 +44,7 @@ export default function Footer() {
             <h4 className="font-sans text-xs uppercase tracking-[0.2em] mb-4 opacity-50">Plan Your Stay</h4>
             <div className="flex flex-col gap-2.5">
               <Link to="/contact" className="text-sm font-sans opacity-70 hover:opacity-100 transition-opacity">Get in Touch</Link>
-              <Link to="/location" className="text-sm font-sans opacity-70 hover:opacity-100 transition-opacity">Location</Link>
-              <Link to="/transportation" className="text-sm font-sans opacity-70 hover:opacity-100 transition-opacity">Transportation</Link>
-              <Link to="/pricing" className="text-sm font-sans opacity-70 hover:opacity-100 transition-opacity">Pricing</Link>
+              <Link to="/location" className="text-sm font-sans opacity-70 hover:opacity-100 transition-opacity">Location & Travel</Link>
             </div>
           </div>
         </div>

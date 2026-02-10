@@ -2,7 +2,7 @@ import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import InquiryDialog from "@/components/InquiryDialog";
 
 import estate6 from "@/assets/estate-6.jpeg";
 
@@ -115,12 +115,11 @@ export default function PrivateEvents() {
             description="Share your vision — group size, dates, and style. We'll show you how the estate can make it happen."
             light
           />
-          <Link
-            to="/contact"
-            className="inline-block mt-6 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full"
-          >
-            Plan Your Event
-          </Link>
+          <InquiryDialog>
+            <button className="inline-block mt-6 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full">
+              Plan Your Event
+            </button>
+          </InquiryDialog>
         </div>
       </section>
     </Layout>

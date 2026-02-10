@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import InquiryDialog from "@/components/InquiryDialog";
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { useGuestyListings } from "@/hooks/useGuestyListings";
@@ -201,12 +202,11 @@ export default function Index() {
             light
           />
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
-            <Link
-              to="/contact"
-              className="inline-block px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full"
-            >
-              Inquire Now
-            </Link>
+            <InquiryDialog>
+              <button className="inline-block px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full">
+                Inquire Now
+              </button>
+            </InquiryDialog>
             <a
               href={BOOKING_URL}
               target="_blank"
