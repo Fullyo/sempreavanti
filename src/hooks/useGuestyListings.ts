@@ -57,9 +57,9 @@ const fallbackListings: GuestyListing[] = [
     title: "Villa Luisa - Private Beach Poolside Ocean View",
     nickname: "Villa Luisa",
     pictures: [],
-    description: "Villa Luisa offers the perfect blend of tropical elegance and privacy in the exclusive Patzcuaro community.",
+    description: "Villa Luisa is a 3-bedroom beachfront retreat within the Casa Sempre Avanti estate, featuring spacious living areas, a poolside tiki bar, pizza oven, and panoramic ocean views from every room.",
     publicDescription: {
-      summary: "Villa Luisa offers the perfect blend of tropical elegance and privacy in the exclusive Patzcuaro community. This luxury 3-bedroom villa is part of the Casa Sempre Avanti estate, giving guests five-star quality, an oceanfront setting, and personal services on an intimate scale. The villa sits on 250 feet of private beachfront, only 10 minutes from Sayulita and Punta de Mita.",
+      summary: "Villa Luisa is a 3-bedroom beachfront retreat within the Casa Sempre Avanti estate, offering tropical elegance across spacious indoor-outdoor living areas. Highlights include a poolside tiki bar, wood-fired pizza oven, panoramic ocean views from every room, and direct access to 250 feet of private beach. Located just 10 minutes from Sayulita and Punta de Mita.",
     },
     amenities: ["Beachfront", "Private Pool", "Air Conditioning", "WiFi", "Full Kitchen", "Beach Access", "Ocean View", "Terrace", "Fire Pit", "Outdoor Kitchen"],
     address: { city: "Sayulita", state: "Nayarit", country: "Mexico" },

@@ -7,7 +7,7 @@ import { useGuestyListings } from "@/hooks/useGuestyListings";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Flame, Umbrella, Waves, Star } from "lucide-react";
+import { Flame, Droplets, Waves, UtensilsCrossed } from "lucide-react";
 
 import villaHero from "@/assets/villa-hero.jpg";
 import estate1 from "@/assets/estate-1.jpeg";
@@ -33,20 +33,20 @@ const ESTATE_GALLERY = [
 ];
 
 const estateFeatures = [
-  { icon: Waves, title: "Private Beach", desc: "Your own stretch of Pacific coastline — swim, surf, or simply watch the sunset." },
-  { icon: Umbrella, title: "Beachfront Pool", desc: "An infinity-edge pool overlooking the ocean, surrounded by lounge areas." },
-  { icon: Flame, title: "Fire Pit", desc: "Gather around the beachside fire pit for evening stories and s'mores under the stars." },
-  { icon: Star, title: "Beachfront Dining", desc: "Long-table dinners on the sand, lit by fire and starlight, prepared by your private chefs." },
+  { icon: Waves, title: "250ft Private Beach", desc: "Your own stretch of Pacific coastline — swim, surf, or simply unwind on the sand." },
+  { icon: Droplets, title: "Two Infinity Pools", desc: "Each villa has its own infinity-edge pool overlooking the ocean." },
+  { icon: UtensilsCrossed, title: "Beachfront Dining", desc: "Long-table dinners on the sand, prepared by your private chefs with local ingredients." },
+  { icon: Flame, title: "Fire Pit & Lounge", desc: "Gather around the beachside fire pit for evening stories under the stars." },
 ];
 
 export default function Villas() {
   const { data: listings, isLoading } = useGuestyListings();
 
   const casaPietro = listings?.find((l) =>
-    (l.title || l.nickname || "").toLowerCase().includes("pietro")
+    l._id === "697bcfb8c91d8d0015ca285a" || l.nickname === "Casa Pietro" || l._id === "casa-pietro-fallback"
   );
   const casaLuisa = listings?.find((l) =>
-    (l.title || l.nickname || "").toLowerCase().includes("luisa")
+    l._id === "697bcfe3a874360012e8aa31" || l.nickname === "Villa Luisa" || l._id === "villa-luisa-fallback"
   );
 
   return (
@@ -144,7 +144,7 @@ export default function Villas() {
       {/* Estate Amenities */}
       <section className="py-16 md:py-24 bg-card">
         <div className="container max-w-6xl">
-          <SectionHeading eyebrow="The Grounds" title="A Private Resort" />
+          <SectionHeading eyebrow="The Complete Estate — Sleeps 14" title="Five Bedrooms. Two Pools. One Private Beach." />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {estateFeatures.map((feat, i) => (
               <motion.div
