@@ -7,7 +7,7 @@ import GuestReviews from "@/components/home/GuestReviews";
 import { useGuestyListings } from "@/hooks/useGuestyListings";
 import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import InquiryDialog from "@/components/InquiryDialog";
 import { Flame, Droplets, Waves, UtensilsCrossed } from "lucide-react";
 
 const { prev, next } = getPageNav(estatePages, "/villas");
@@ -207,12 +207,11 @@ export default function Villas() {
             description="All bedrooms are presented as luxury king suites by default, with hotel-grade mattresses and linens. Selected rooms can be configured with single beds for friends, retreat guests, or wedding parties — always intentional, always comfortable."
             light
           />
-          <Link
-            to="/contact"
-            className="inline-block mt-6 px-8 py-3 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full"
-          >
-            Inquire About Availability
-          </Link>
+          <InquiryDialog>
+            <button className="inline-block mt-6 px-8 py-3 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full">
+              Inquire About Availability
+            </button>
+          </InquiryDialog>
           <div className="mt-10">
             <PageNavArrows prev={prev} next={next} variant="bottom" />
           </div>

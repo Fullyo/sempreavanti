@@ -1,6 +1,6 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
-import { Link } from "react-router-dom";
+import InquiryDialog from "@/components/InquiryDialog";
 import ExperienceGallery from "@/components/experiences/ExperienceGallery";
 
 import atvImg from "@/assets/atv.jpeg";
@@ -180,12 +180,11 @@ export default function Experiences() {
             title="Everything Arranged for You"
             description="Your dedicated concierge knows every trail, every wave, every hidden gem. Tell them what you're dreaming of — they'll make it happen. All pricing provided upon inquiry."
           />
-          <Link
-            to="/contact"
-            className="inline-block mt-4 px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full"
-          >
-            Plan Your Adventures
-          </Link>
+          <InquiryDialog>
+            <button className="inline-block mt-4 px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full">
+              Plan Your Adventures
+            </button>
+          </InquiryDialog>
         </div>
       </section>
     </Layout>

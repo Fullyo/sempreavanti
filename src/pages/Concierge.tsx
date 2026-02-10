@@ -2,7 +2,7 @@ import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import InquiryDialog from "@/components/InquiryDialog";
 import { Check } from "lucide-react";
 
 const staff = [
@@ -112,12 +112,11 @@ export default function Concierge() {
               </div>
             ))}
           </div>
-          <Link
-            to="/contact"
-            className="inline-block mt-12 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full"
-          >
-            Get in Touch
-          </Link>
+          <InquiryDialog>
+            <button className="inline-block mt-12 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full">
+              Get in Touch
+            </button>
+          </InquiryDialog>
         </div>
       </section>
     </Layout>

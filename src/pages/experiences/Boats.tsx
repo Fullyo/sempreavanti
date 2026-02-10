@@ -3,7 +3,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import PageNavArrows, { experiencePages, getPageNav } from "@/components/PageNavArrows";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import InquiryDialog from "@/components/InquiryDialog";
 
 const { prev, next } = getPageNav(experiencePages, "/experiences/boats");
 
@@ -140,12 +140,11 @@ export default function Boats() {
             description="Your concierge coordinates directly with captains and the Ally Cat crew. Just pick a day and tell us what you're in the mood for. All pricing provided upon inquiry."
             light
           />
-          <Link
-            to="/contact"
-            className="inline-block mt-6 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full"
-          >
-            Plan Your Day on the Water
-          </Link>
+          <InquiryDialog>
+            <button className="inline-block mt-6 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full">
+              Plan Your Day on the Water
+            </button>
+          </InquiryDialog>
         </div>
         <div className="relative z-10 container max-w-4xl mt-10">
           <PageNavArrows prev={prev} next={next} variant="bottom" />

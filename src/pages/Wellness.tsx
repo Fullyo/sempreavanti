@@ -3,7 +3,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArrows";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import InquiryDialog from "@/components/InquiryDialog";
 
 const { prev, next } = getPageNav(estatePages, "/wellness");
 
@@ -149,12 +149,11 @@ export default function Wellness() {
         <div className="container text-center">
           <p className="font-serif text-3xl md:text-4xl mb-6">All Wellness Services by Inquiry</p>
           <p className="text-sm font-sans text-muted-foreground mb-8">Pricing and scheduling arranged through your concierge.</p>
-          <Link
-            to="/contact"
-            className="inline-block px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full"
-          >
-            Inquire Now
-          </Link>
+          <InquiryDialog>
+            <button className="inline-block px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full">
+              Inquire Now
+            </button>
+          </InquiryDialog>
           <div className="mt-10">
             <PageNavArrows prev={prev} next={next} variant="bottom" />
           </div>

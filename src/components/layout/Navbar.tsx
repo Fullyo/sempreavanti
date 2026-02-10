@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import InquiryDialog from "@/components/InquiryDialog";
 
 const BOOKING_URL = "https://casasempreavanti.guestybookings.com/en/properties/697bcfcf3f5e990014fbc4dd?minOccupancy=1";
 
@@ -14,6 +15,7 @@ interface DropdownGroup {
 interface DirectLink {
   label: string;
   path: string;
+  isInquiry?: boolean;
 }
 
 type NavItem = DropdownGroup | DirectLink;
@@ -49,7 +51,7 @@ const navItems: NavItem[] = [
     ],
   },
   { label: "Location", path: "/location" },
-  { label: "Get in Touch", path: "/contact" },
+  { label: "Get in Touch", path: "/contact", isInquiry: true },
 ];
 
 function NavDropdown({
@@ -167,12 +169,22 @@ export default function Navbar() {
                 scrolled={scrolled}
                 pathname={location.pathname}
               />
+            ) : (item as DirectLink).isInquiry ? (
+              <InquiryDialog key={item.label}>
+                <button
+                  className={`text-xs font-sans font-medium uppercase tracking-widest transition-colors hover:text-turquoise ${
+                    scrolled ? "text-foreground" : "text-white/80"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              </InquiryDialog>
             ) : (
               <Link
-                key={item.path}
-                to={item.path}
+                key={(item as DirectLink).path}
+                to={(item as DirectLink).path}
                 className={`text-xs font-sans font-medium uppercase tracking-widest transition-colors hover:text-turquoise ${
-                  location.pathname === item.path
+                  location.pathname === (item as DirectLink).path
                     ? "text-turquoise"
                     : scrolled
                     ? "text-foreground"
@@ -237,13 +249,22 @@ export default function Navbar() {
                       </Link>
                     ))}
                   </div>
+                ) : (item as DirectLink).isInquiry ? (
+                  <InquiryDialog key={item.label}>
+                    <button
+                      onClick={() => setMobileOpen(false)}
+                      className="block py-2 px-1 text-sm font-sans font-medium uppercase tracking-widest transition-colors hover:text-turquoise text-primary-foreground/80 text-left"
+                    >
+                      {item.label}
+                    </button>
+                  </InquiryDialog>
                 ) : (
                   <Link
-                    key={item.path}
-                    to={item.path}
+                    key={(item as DirectLink).path}
+                    to={(item as DirectLink).path}
                     onClick={() => setMobileOpen(false)}
                     className={`block py-2 px-1 text-sm font-sans font-medium uppercase tracking-widest transition-colors hover:text-turquoise ${
-                      location.pathname === item.path
+                      location.pathname === (item as DirectLink).path
                         ? "text-turquoise"
                         : "text-primary-foreground/80"
                     }`}
