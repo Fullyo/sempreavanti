@@ -1,22 +1,25 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
-import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import PageNavArrows, { experiencePages, getPageNav } from "@/components/PageNavArrows";
 import { motion } from "framer-motion";
 import InquiryDialog from "@/components/InquiryDialog";
 
 const { prev, next } = getPageNav(experiencePages, "/experiences/ocean");
 
-import marietasImg from "@/assets/marietas-islands.jpeg";
-import whaleImg from "@/assets/whale.jpeg";
+import oceanMarietasImg from "@/assets/ocean-marietas.jpeg";
+import oceanSnorkelingImg from "@/assets/ocean-snorkeling.jpg";
+import oceanScubaImg from "@/assets/ocean-scuba.jpg";
+import oceanKiteImg from "@/assets/ocean-kite.jpeg";
+import oceanPaddleboardImg from "@/assets/ocean-paddleboard.jpeg";
+import oceanWhaleImg from "@/assets/ocean-whale.jpeg";
 
 const activities = [
-  { name: "Snorkeling — Playa de los Muertos", desc: "Just 10 minutes from the estate. Calm, crystal-clear water with vibrant marine life — perfect for kids and first-time snorkelers." },
-  { name: "Marietas Islands", desc: "A UNESCO-protected national park in Banderas Bay. Snorkeling among tropical fish, the famous Hidden Beach, and seasonal whale watching. Limited daily permits — your concierge secures access." },
-  { name: "Scuba Diving", desc: "PADI-certified instructors for beginners through advanced certifications. Dive sites around the Marietas Islands and along the bay's volcanic formations." },
-  { name: "Kite Surfing", desc: "Available in Punta Mita where consistent thermal winds create ideal conditions. Equipment and instruction provided for all levels." },
-  { name: "Paddleboard Tours", desc: "Stand-up paddleboard excursions along the coast. Morning sessions offer the calmest water and best wildlife spotting — sea turtles, rays, and tropical fish." },
-  { name: "Whale Watching", desc: "Humpback whales migrate to Banderas Bay from December through March. Private boat tours for intimate encounters with these magnificent creatures." },
+  { name: "Snorkeling — Playa de los Muertos", desc: "Just 10 minutes from the estate. Calm, crystal-clear water with vibrant marine life — perfect for kids and first-time snorkelers.", img: oceanSnorkelingImg },
+  { name: "Marietas Islands", desc: "A UNESCO-protected national park in Banderas Bay. Snorkeling among tropical fish, the famous Hidden Beach, and seasonal whale watching. Limited daily permits — your concierge secures access.", img: oceanMarietasImg },
+  { name: "Scuba Diving", desc: "PADI-certified instructors for beginners through advanced certifications. Dive sites around the Marietas Islands and along the bay's volcanic formations.", img: oceanScubaImg },
+  { name: "Kite Surfing", desc: "Available in Punta Mita where consistent thermal winds create ideal conditions. Equipment and instruction provided for all levels.", img: oceanKiteImg },
+  { name: "Paddleboard Tours", desc: "Stand-up paddleboard excursions along the coast. Morning sessions offer the calmest water and best wildlife spotting — sea turtles, rays, and tropical fish.", img: oceanPaddleboardImg },
+  { name: "Whale Watching", desc: "Humpback whales migrate to Banderas Bay from December through March. Private boat tours for intimate encounters with these magnificent creatures.", img: oceanWhaleImg },
 ];
 
 export default function Ocean() {
@@ -24,7 +27,7 @@ export default function Ocean() {
     <Layout>
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <img src={marietasImg} alt="Marietas Islands" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={oceanSnorkelingImg} alt="Snorkeling in crystal-clear water" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
         <div className="relative z-10 text-center text-primary-foreground px-4 w-full max-w-6xl mx-auto">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Experiences</p>
@@ -58,7 +61,7 @@ export default function Ocean() {
             className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
           >
             <div className="overflow-hidden rounded-xl">
-              <img src={marietasImg} alt="Marietas Islands" className="w-full h-full object-cover aspect-square" />
+              <img src={oceanMarietasImg} alt="Marietas Islands Hidden Beach" className="w-full h-full object-cover aspect-square" />
             </div>
             <div>
               <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-2 block">Must-See</span>
@@ -91,7 +94,9 @@ export default function Ocean() {
                 transition={{ duration: 0.4, delay: i * 0.06 }}
                 className="bg-background rounded-xl overflow-hidden border border-border"
               >
-                <PhotoPlaceholder label={item.name} aspectRatio="video" />
+                <div className="aspect-video overflow-hidden">
+                  <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
+                </div>
                 <div className="p-5">
                   <h3 className="font-serif text-xl mb-1">{item.name}</h3>
                   <p className="text-sm font-sans text-muted-foreground leading-relaxed">{item.desc}</p>
@@ -106,11 +111,15 @@ export default function Ocean() {
       <section className="py-4">
         <div className="container max-w-6xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            <div className="aspect-video overflow-hidden rounded">
-              <img src={whaleImg} alt="Whale watching" className="w-full h-full object-cover" />
-            </div>
-            {["Snorkeling", "Paddleboard", "Scuba Diving"].map((label) => (
-              <PhotoPlaceholder key={label} label={label} />
+            {[
+              { src: oceanWhaleImg, alt: "Whale watching" },
+              { src: oceanSnorkelingImg, alt: "Snorkeling" },
+              { src: oceanPaddleboardImg, alt: "Paddleboard" },
+              { src: oceanScubaImg, alt: "Scuba Diving" },
+            ].map((photo) => (
+              <div key={photo.alt} className="aspect-video overflow-hidden rounded">
+                <img src={photo.src} alt={photo.alt} className="w-full h-full object-cover" />
+              </div>
             ))}
           </div>
         </div>
@@ -118,7 +127,7 @@ export default function Ocean() {
 
       {/* CTA */}
       <section className="relative py-20 md:py-28 text-primary-foreground overflow-hidden">
-        <img src={marietasImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={oceanWhaleImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
         <div className="relative z-10 container max-w-4xl text-center">
           <SectionHeading
