@@ -1,5 +1,6 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
+import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import { motion } from "framer-motion";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, MapPin, Clock } from "lucide-react";
@@ -131,6 +132,47 @@ export default function Location() {
         <div className="relative z-10 text-center text-primary-foreground px-4">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Patzcuarito, Riviera Nayarit</p>
           <h1 className="font-serif text-5xl md:text-7xl font-light">Secluded, Yet Connected</h1>
+        </div>
+      </section>
+
+      {/* Getting Here */}
+      <section className="py-20 md:py-28 bg-card">
+        <div className="container max-w-5xl">
+          <SectionHeading
+            eyebrow="Seamless Arrival"
+            title="Getting Here & Around"
+            description="Your journey begins the moment you land at Puerto Vallarta International Airport (PVR). Private luxury Suburban transfers bring you directly to the estate — approximately 45 minutes door-to-door."
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="bg-background p-8 rounded-xl border border-border"
+            >
+              <PhotoPlaceholder label="Private Suburban Transfer" aspectRatio="video" className="mb-6" />
+              <h3 className="font-serif text-2xl mb-3">Private Airport Transfers</h3>
+              <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-3">
+                Luxury Suburban vehicles with professional drivers. We'll track your flight and be there when you land — no waiting, no hassle. Seats up to 7 people.
+              </p>
+              <p className="text-sm font-sans text-muted-foreground italic">~$250 USD round-trip</p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="bg-background p-8 rounded-xl border border-border"
+            >
+              <PhotoPlaceholder label="Polaris UTV" aspectRatio="video" className="mb-6 rounded-xl overflow-hidden" />
+              <h3 className="font-serif text-2xl mb-3">Polaris UTV Rentals</h3>
+              <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-3">
+                The best way to explore the coast — zip to Sayulita in 5 minutes, Punta de Mita in 20–25. Available in 2, 4, and 6-seater options.
+              </p>
+              <p className="text-sm font-sans text-muted-foreground italic">Pricing provided upon inquiry</p>
+            </motion.div>
+          </div>
         </div>
       </section>
 

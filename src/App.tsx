@@ -11,11 +11,9 @@ import Wellness from "./pages/Wellness";
 import Experiences from "./pages/Experiences";
 import Events from "./pages/Events";
 import Location from "./pages/Location";
-import Concierge from "./pages/Concierge";
-import Transportation from "./pages/Transportation";
 import Contact from "./pages/Contact";
-import Pricing from "./pages/Pricing";
 import NotFound from "./pages/NotFound";
+import { Navigate } from "react-router-dom";
 
 const queryClient = new QueryClient();
 
@@ -33,10 +31,10 @@ const App = () => (
           <Route path="/experiences" element={<Experiences />} />
           <Route path="/events" element={<Events />} />
           <Route path="/location" element={<Location />} />
-          <Route path="/concierge" element={<Concierge />} />
-          <Route path="/transportation" element={<Transportation />} />
+          <Route path="/concierge" element={<Navigate to="/villas" replace />} />
+          <Route path="/transportation" element={<Navigate to="/location" replace />} />
+          <Route path="/pricing" element={<Navigate to="/contact" replace />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/pricing" element={<Pricing />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
