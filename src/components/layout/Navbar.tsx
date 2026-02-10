@@ -25,18 +25,29 @@ const navItems: NavItem[] = [
     label: "The Estate",
     children: [
       { label: "The Villas", path: "/villas" },
+      { label: "In-Villa Chef", path: "/chef" },
+      { label: "Wellness", path: "/wellness" },
       { label: "Your Team", path: "/staff" },
-      { label: "Private Chef", path: "/chef" },
     ],
   },
   {
     label: "Experiences",
     children: [
-      { label: "Adventures", path: "/experiences" },
-      { label: "Wellness", path: "/wellness" },
+      { label: "Surfing", path: "/experiences/surfing" },
+      { label: "Boat Tours & Sailing", path: "/experiences/boats" },
+      { label: "Tee Off", path: "/experiences/golf" },
+      { label: "Dive In", path: "/experiences/ocean" },
+      { label: "Land & Adventure", path: "/experiences/land" },
+      { label: "Cultural & Local", path: "/experiences/cultural" },
     ],
   },
-  { label: "Weddings & Events", path: "/events" },
+  {
+    label: "Celebrations",
+    children: [
+      { label: "Weddings", path: "/weddings" },
+      { label: "Private Events", path: "/events" },
+    ],
+  },
   { label: "Location", path: "/location" },
   { label: "Get in Touch", path: "/contact" },
 ];
@@ -53,7 +64,7 @@ function NavDropdown({
   const [open, setOpen] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout>>();
 
-  const isActive = group.children.some((c) => pathname === c.path);
+  const isActive = group.children.some((c) => pathname === c.path || pathname.startsWith(c.path + "/"));
 
   const handleEnter = () => {
     clearTimeout(timeout.current);

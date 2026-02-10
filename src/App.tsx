@@ -2,19 +2,24 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import Index from "./pages/Index";
 import Villas from "./pages/Villas";
 import Staff from "./pages/Staff";
 import Chef from "./pages/Chef";
 import Wellness from "./pages/Wellness";
-import Experiences from "./pages/Experiences";
-import Events from "./pages/Events";
 import Location from "./pages/Location";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
-import { Navigate } from "react-router-dom";
+import Weddings from "./pages/Weddings";
+import PrivateEvents from "./pages/PrivateEvents";
+import Surfing from "./pages/experiences/Surfing";
+import Boats from "./pages/experiences/Boats";
+import Golf from "./pages/experiences/Golf";
+import Ocean from "./pages/experiences/Ocean";
+import Land from "./pages/experiences/Land";
+import Cultural from "./pages/experiences/Cultural";
 
 const queryClient = new QueryClient();
 
@@ -30,8 +35,15 @@ const App = () => (
           <Route path="/staff" element={<Staff />} />
           <Route path="/chef" element={<Chef />} />
           <Route path="/wellness" element={<Wellness />} />
-          <Route path="/experiences" element={<Experiences />} />
-          <Route path="/events" element={<Events />} />
+          <Route path="/experiences" element={<Navigate to="/experiences/surfing" replace />} />
+          <Route path="/experiences/surfing" element={<Surfing />} />
+          <Route path="/experiences/boats" element={<Boats />} />
+          <Route path="/experiences/golf" element={<Golf />} />
+          <Route path="/experiences/ocean" element={<Ocean />} />
+          <Route path="/experiences/land" element={<Land />} />
+          <Route path="/experiences/cultural" element={<Cultural />} />
+          <Route path="/weddings" element={<Weddings />} />
+          <Route path="/events" element={<PrivateEvents />} />
           <Route path="/location" element={<Location />} />
           <Route path="/concierge" element={<Navigate to="/villas" replace />} />
           <Route path="/transportation" element={<Navigate to="/location" replace />} />
