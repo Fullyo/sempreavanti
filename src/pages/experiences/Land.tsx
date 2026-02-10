@@ -10,14 +10,17 @@ const { prev, next } = getPageNav(experiencePages, "/experiences/land");
 import atvImg from "@/assets/atv.jpeg";
 import ziplineImg from "@/assets/zipline.jpg";
 import horsebackImg from "@/assets/horseback.jpg";
+import monkeyMountainImg from "@/assets/land-monkeymountain.jpeg";
+import landAtvImg from "@/assets/land-atv.jpg";
+import birdWatchingImg from "@/assets/land-birdwatching.jpeg";
 
 const activities = [
   { name: "Zipline & Canopy Tours", desc: "Soar above the jungle canopy on world-class ziplines with panoramic views of the Sierra Madre and the Pacific coastline. Multiple courses available from beginner-friendly to adrenaline-pumping.", img: ziplineImg },
   { name: "ATV & RZR Tours", desc: "Guided off-road adventures through the mountains and along the coast. Half-day and full-day options available — all vehicles, helmets, and guides included.", img: atvImg },
   { name: "Horseback Riding", desc: "Trail rides through the jungle and along the beach at sunset. Experienced horses suited for all riding levels, from first-timers to experienced equestrians.", img: horsebackImg },
-  { name: "Jungle & Monkey Mountain Hikes", desc: "Guided hikes through tropical jungle with wildlife encounters — spider monkeys, tropical birds, and stunning viewpoints over Banderas Bay.", img: null },
-  { name: "Polaris UTV Rentals", desc: "Two Polaris UTVs are available at the property in 2, 4, and 6-seater configurations. Perfect for exploring the coast between Punta de Mita and San Pancho at your own pace.", img: null },
-  { name: "Bird Watching Tours", desc: "Early-morning guided tours spotting tropical species in the Sierra Madre foothills. The region hosts over 350 bird species including trogons, parrots, and the rare military macaw.", img: null },
+  { name: "Jungle & Monkey Mountain Hikes", desc: "Guided hikes through tropical jungle with wildlife encounters — spider monkeys, tropical birds, and stunning viewpoints over Banderas Bay.", img: monkeyMountainImg },
+  { name: "Polaris UTV Rentals", desc: "Two Polaris UTVs are available at the property in 2, 4, and 6-seater configurations. Perfect for exploring the coast between Punta de Mita and San Pancho at your own pace.", img: landAtvImg },
+  { name: "Bird Watching Tours", desc: "Early-morning guided tours spotting tropical species in the Sierra Madre foothills. The region hosts over 350 bird species including trogons, parrots, and the rare military macaw.", img: birdWatchingImg },
 ];
 
 export default function Land() {
@@ -25,7 +28,7 @@ export default function Land() {
     <Layout>
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <img src={atvImg} alt="ATV adventure in the mountains" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={monkeyMountainImg} alt="Monkey Mountain aerial view" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
         <div className="relative z-10 text-center text-primary-foreground px-4 w-full max-w-6xl mx-auto">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Experiences</p>
@@ -84,7 +87,7 @@ export default function Land() {
 
       {/* CTA */}
       <section className="relative py-20 md:py-28 text-primary-foreground overflow-hidden">
-        <img src={horsebackImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={monkeyMountainImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
         <div className="relative z-10 container max-w-4xl text-center">
           <SectionHeading
