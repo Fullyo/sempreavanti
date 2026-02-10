@@ -1,74 +1,57 @@
 
-
-# Consolidate the Website: 11 Pages to 8
+# Fix Villas Page: Correct Data, Full-Size Carousel, Combined Amenities Section
 
 ## The Problem
 
-Three pages are thin, redundant, and fragment content that belongs together:
+The right-side villa shows **Sempre Avanti** (the combined 5BR estate listing) instead of **Villa Luisa** because the code uses `.find()` searching for "luisa" in the title -- but the Sempre Avanti listing's title also contains "Villa Luisa", and it appears earlier in the API results, so it matches first.
 
-- **Transportation** (125 lines): Drive times already on the Location page. UTV info repeated on Villas, homepage Services Grid, and Location.
-- **Concierge** (125 lines): Staff bios and "what's included" list. The homepage already covers "Hosted, Not Rented" with the same messaging. The staff ARE the estate.
-- **Pricing** (80 lines): A simple reference table that could be a section rather than a destination.
+## Changes
 
-## Proposed Consolidation
+### 1. Fix Villa Luisa data matching (src/pages/Villas.tsx)
 
-### 1. Merge Concierge into Villas
+Instead of searching by name substring (which matches the wrong listing), match by Guesty listing ID or by exact nickname:
+- Casa Pietro: nickname === "Casa Pietro" (ID: `697bcfb8c91d8d0015ca285a`)
+- Villa Luisa: nickname === "Villa Luisa" (ID: `697bcfe3a874360012e8aa31`)
 
-The staff and service philosophy are inseparable from the estate itself. Add a "Your Team" section to the Villas page with the 5 staff bios and the "what's included" checklist. This strengthens the Villas page as the definitive "what you get" page and reinforces the "hosted, not rented" positioning.
+This guarantees the correct listing data (3 BR / 3.5 Bath / 8 Guests) and the correct Villa Luisa description and photos are shown on the right side.
 
-### 2. Merge Transportation into Location
+### 2. Full-size carousel images (src/components/VillaCarousel.tsx)
 
-Transportation is fundamentally about "where is this and how do I get there." Add an "Getting Here" section to the top of the Location page with airport transfer info, UTV details, and the drive times table. This creates one comprehensive "place and logistics" page.
+Currently the carousel shows 3 partial images side-by-side (`flex-[0_0_33.333%]`). Change to show one full-width image at a time (`flex-[0_0_100%]`) so each photo fills the entire card width. Remove the `mt-12` top margin since it serves as the main visual for each villa card. Keep the navigation arrows.
 
-### 3. Merge Pricing into Contact (Get in Touch)
+### 3. Rename "The Grounds" section to a combined estate highlight
 
-Guests looking at pricing naturally want to inquire next. Place the pricing reference table above the inquiry form on the Contact page, creating a natural flow: see prices, then ask questions. The disclaimer "all pricing upon inquiry" already lives on the Contact page.
+Replace the current "The Grounds / A Private Resort" section with a combined stats-forward section:
+- Title: something like "Five Bedrooms. Two Pools. One Private Beach."
+- Eyebrow: "The Complete Estate"
+- Show combined stats prominently: 5 Bedrooms, 5.5 Bathrooms, Sleeps 14, 250ft Private Beach
+- Keep 4 feature icons but update to more relevant ones:
+  - Private Beach (Waves icon)
+  - Two Infinity Pools (Droplets icon)  
+  - Beachfront Dining (UtensilsCrossed icon)
+  - Fire Pit & Lounge (Flame icon)
 
-## Resulting Site Structure (8 pages)
+### 4. Remove individual amenity tags
 
-```text
-Home
-Villas ........... (+ staff bios, what's included)
-Chef
-Wellness
-Experiences
-Weddings & Events
-Location ......... (+ airport transfers, UTVs, drive times)
-Get in Touch ..... (+ pricing reference table)
-```
+The small amenity squares below each villa's text are already removed in the current code, so no change needed there. The stats (bedrooms, bathrooms, guests) remain prominent.
 
-## Updated Navigation
+### 5. Update fallback data (src/hooks/useGuestyListings.ts)
 
-```text
-The Estate (dropdown)     Experiences     Weddings & Events     Location     Get in Touch     [Check Availability]
-  - The Villas
-  - Private Chef
-  - Wellness
-```
+Update the fallback Villa Luisa description to match the actual Guesty API description (tropical elegance, 3 spacious bedrooms, poolside tiki bar and pizza oven, etc.) instead of the generic text currently there.
 
-- "Plan Your Stay" dropdown is eliminated -- its children are absorbed into other pages
-- 4 top-level items + 1 dropdown + CTA button
-- Cleaner, faster for guests to scan
+## Technical Details
 
-## What Changes
+**File: src/pages/Villas.tsx**
+- Change villa matching from `.includes("pietro")` / `.includes("luisa")` to matching by exact nickname or `_id`
+- Update VillaCarousel usage: remove `slice(1)` so all photos are included
+- Rename "The Grounds" section heading and update feature icons/descriptions
+- Hardcode display names as "Casa Pietro" and "Villa Luisa" (not relying on API nickname which could change)
 
-### Files to modify:
-- **`src/pages/Villas.tsx`** -- Add "Your Team" section (staff bios from Concierge) and "Always Included" checklist before the sleeping config CTA
-- **`src/pages/Location.tsx`** -- Add "Getting Here" section at the top with airport transfer and UTV rental cards, plus the drive times table (from Transportation)
-- **`src/pages/Contact.tsx`** -- Add pricing reference table above the inquiry form
-- **`src/components/layout/Navbar.tsx`** -- Remove "Plan Your Stay" dropdown; update nav to 4 direct links + 1 dropdown
-- **`src/App.tsx`** -- Remove routes for `/concierge`, `/transportation`, `/pricing`; add redirects to their new homes
-- **`src/components/home/ServicesGrid.tsx`** -- Update links that pointed to `/concierge` or `/transportation` to point to `/villas` and `/location`
-- **`src/pages/Index.tsx`** -- Update any CTA links referencing removed pages
+**File: src/components/VillaCarousel.tsx**  
+- Change slide width from `flex-[0_0_33.333%]` to `flex-[0_0_100%]`
+- Remove `mt-12` class from wrapper
+- Remove `pictures.slice(1)` -- show all photos including the first one
+- Adjust image height for full-width display
 
-### Files to delete:
-- `src/pages/Concierge.tsx`
-- `src/pages/Transportation.tsx`
-- `src/pages/Pricing.tsx`
-
-### Content preserved (nothing is lost):
-- All 5 staff bios move to Villas
-- All transportation details move to Location
-- Full pricing table moves to Contact
-- Links throughout the site updated to point to new locations
-
+**File: src/hooks/useGuestyListings.ts**
+- Update Villa Luisa fallback summary to match real Guesty data
