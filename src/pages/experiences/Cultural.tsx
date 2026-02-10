@@ -6,23 +6,32 @@ import { motion } from "framer-motion";
 import InquiryDialog from "@/components/InquiryDialog";
 
 import estate12 from "@/assets/estate-12.jpeg";
+import sayulitaTownImg from "@/assets/cultural-sayulita-town.jpeg";
+import lacruzMarketImg from "@/assets/cultural-lacruz-market.jpeg";
+import siSenorImg from "@/assets/cultural-sisenor.jpeg";
+import donPedrosImg from "@/assets/cultural-donpedros.jpg";
+import huicholImg from "@/assets/cultural-huichol.jpeg";
+import sanPanchoImg from "@/assets/cultural-sanpancho.jpeg";
+import tequilaImg from "@/assets/cultural-tequila.jpg";
+import maleconImg from "@/assets/cultural-malecon.jpg";
+import fridayMarketImg from "@/assets/cultural-friday-market.png";
 
 const { prev, next } = getPageNav(experiencePages, "/experiences/cultural");
 
 const experiences = [
-  { name: "La Cruz Sunday Market", desc: "The region's premier open-air market. Fresh seafood, tropical fruits, artisan crafts, live music, and waterfront dining. Every Sunday morning at the La Cruz marina — 30 minutes from the estate." },
-  { name: "Sayulita Friday Market", desc: "Organic produce, local treats, artisan goods, and live music in the heart of Sayulita. A smaller, more intimate market just 5 minutes away by UTV." },
-  { name: "Puerto Vallarta Malecón", desc: "The iconic seaside boardwalk stretching a mile along the bay. World-class public art installations, galleries, restaurants, and vibrant nightlife. 45 minutes from the estate." },
-  { name: "Tequila & Mezcal Tastings", desc: "Curated tastings at La Selecta in Sayulita — learn the difference between blanco, reposado, and añejo from experts. Private group sessions available at the estate." },
-  { name: "San Pancho Cultural Center", desc: "A community-driven arts center in San Pancho (15 minutes away) featuring rotating exhibitions, workshops, live performances, and a vibrant circus arts program." },
-  { name: "Huichol Art Gallery", desc: "Traditional Wixárika (Huichol) indigenous art — intricate beadwork and yarn paintings depicting spiritual visions. Available in Sayulita galleries and at the La Cruz market." },
+  { name: "La Cruz Sunday Market", desc: "The region's premier open-air market. Fresh seafood, tropical fruits, artisan crafts, live music, and waterfront dining. Every Sunday morning at the La Cruz marina — 30 minutes from the estate.", img: lacruzMarketImg },
+  { name: "Sayulita Friday Market", desc: "Organic produce, local treats, artisan goods, and live music in the heart of Sayulita. A smaller, more intimate market just 5 minutes away by UTV.", img: fridayMarketImg },
+  { name: "Puerto Vallarta Malecón", desc: "The iconic seaside boardwalk stretching a mile along the bay. World-class public art installations, galleries, restaurants, and vibrant nightlife. 45 minutes from the estate.", img: maleconImg },
+  { name: "Tequila & Mezcal Tastings", desc: "Curated tastings at La Selecta in Sayulita — learn the difference between blanco, reposado, and añejo from experts. Private group sessions available at the estate.", img: tequilaImg },
+  { name: "San Pancho Cultural Center", desc: "A community-driven arts center in San Pancho (15 minutes away) featuring rotating exhibitions, workshops, live performances, and a vibrant circus arts program.", img: sanPanchoImg },
+  { name: "Huichol Art Gallery", desc: "Traditional Wixárika (Huichol) indigenous art — intricate beadwork and yarn paintings depicting spiritual visions. Available in Sayulita galleries and at the La Cruz market.", img: huicholImg },
 ];
 
 const diningHighlights = [
-  { name: "Don Pedro's", desc: "Beachfront fine dining in Sayulita. Fresh seafood, Mexican-international fusion, and live music with your feet in the sand." },
-  { name: "Si Señor", desc: "Upscale Mexican cuisine in the heart of Sayulita. Rooftop dining with sunset views." },
-  { name: "La Cruz Fish Market", desc: "Ultra-fresh seafood prepared to order at the marina. A local favorite for ceviche, whole grilled fish, and cold beers." },
-  { name: "Sayulita Town", desc: "Dozens of restaurants, taco stands, and beach bars within 5 minutes of the estate — your concierge knows every hidden gem." },
+  { name: "Don Pedro's", desc: "Beachfront fine dining in Sayulita. Fresh seafood, Mexican-international fusion, and live music with your feet in the sand.", img: donPedrosImg },
+  { name: "Si Señor", desc: "Upscale Mexican cuisine in the heart of Sayulita. Rooftop dining with sunset views.", img: siSenorImg },
+  { name: "La Cruz Fish Market", desc: "Ultra-fresh seafood prepared to order at the marina. A local favorite for ceviche, whole grilled fish, and cold beers.", img: lacruzMarketImg },
+  { name: "Sayulita Town", desc: "Dozens of restaurants, taco stands, and beach bars within 5 minutes of the estate — your concierge knows every hidden gem.", img: sayulitaTownImg },
 ];
 
 export default function Cultural() {
@@ -30,8 +39,8 @@ export default function Cultural() {
     <Layout>
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-primary" />
-        <PhotoPlaceholder label="Cultural & Local" className="absolute inset-0 !aspect-auto opacity-30" />
+        <img src={sayulitaTownImg} alt="Sayulita town street with colorful papel picado" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
         <div className="relative z-10 text-center text-primary-foreground px-4 w-full max-w-6xl mx-auto">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Experiences</p>
           <div className="flex items-center justify-between gap-4">
@@ -70,7 +79,13 @@ export default function Cultural() {
                 transition={{ duration: 0.4, delay: i * 0.06 }}
                 className="bg-card rounded-xl overflow-hidden border border-border"
               >
-                <PhotoPlaceholder label={item.name} aspectRatio="video" />
+                {item.img ? (
+                  <div className="aspect-video overflow-hidden">
+                    <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <PhotoPlaceholder label={item.name} aspectRatio="video" />
+                )}
                 <div className="p-5">
                   <h3 className="font-serif text-xl mb-1">{item.name}</h3>
                   <p className="text-sm font-sans text-muted-foreground leading-relaxed">{item.desc}</p>
@@ -101,7 +116,13 @@ export default function Cultural() {
                 transition={{ duration: 0.4, delay: i * 0.06 }}
                 className="bg-background rounded-xl overflow-hidden border border-border"
               >
-                <PhotoPlaceholder label={item.name} aspectRatio="video" />
+                {item.img ? (
+                  <div className="aspect-video overflow-hidden">
+                    <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <PhotoPlaceholder label={item.name} aspectRatio="video" />
+                )}
                 <div className="p-5">
                   <h3 className="font-serif text-xl mb-1">{item.name}</h3>
                   <p className="text-sm font-sans text-muted-foreground leading-relaxed">{item.desc}</p>
@@ -114,7 +135,7 @@ export default function Cultural() {
 
       {/* CTA */}
       <section className="relative py-20 md:py-28 text-primary-foreground overflow-hidden">
-        <img src={estate12} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={maleconImg} alt="" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
         <div className="relative z-10 container max-w-4xl text-center">
           <SectionHeading
