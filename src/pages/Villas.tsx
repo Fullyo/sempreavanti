@@ -1,6 +1,7 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
+import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArrows";
 import VillaCarousel from "@/components/VillaCarousel";
 import GuestReviews from "@/components/home/GuestReviews";
 import { useGuestyListings } from "@/hooks/useGuestyListings";
@@ -8,6 +9,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Flame, Droplets, Waves, UtensilsCrossed } from "lucide-react";
+
+const { prev, next } = getPageNav(estatePages, "/villas");
 
 import villaHero from "@/assets/villa-hero.jpg";
 import estate1 from "@/assets/estate-1.jpeg";
@@ -55,9 +58,13 @@ export default function Villas() {
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <img src={villaHero} alt="The Villas" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 text-center text-primary-foreground px-4">
+        <div className="relative z-10 text-center text-primary-foreground px-4 w-full max-w-6xl mx-auto">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">The Estate</p>
-          <h1 className="font-serif text-5xl md:text-7xl font-light">The Villas</h1>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex-1"><PageNavArrows prev={prev} next={undefined} variant="hero" /></div>
+            <h1 className="font-serif text-5xl md:text-7xl font-light">The Villas</h1>
+            <div className="flex-1"><PageNavArrows prev={undefined} next={next} variant="hero" /></div>
+          </div>
         </div>
       </section>
 
@@ -204,6 +211,9 @@ export default function Villas() {
           >
             Inquire About Availability
           </Link>
+          <div className="mt-10">
+            <PageNavArrows prev={prev} next={next} variant="bottom" />
+          </div>
         </div>
       </section>
     </Layout>
