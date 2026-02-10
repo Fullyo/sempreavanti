@@ -9,6 +9,36 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Flame, Umbrella, Waves, Star } from "lucide-react";
 
+import villaHero from "@/assets/villa-hero.jpg";
+import estate1 from "@/assets/estate-1.jpeg";
+import estate2 from "@/assets/estate-2.jpeg";
+import estate3 from "@/assets/estate-3.jpeg";
+import estate4 from "@/assets/estate-4.jpeg";
+import estate5 from "@/assets/estate-5.jpeg";
+import estate6 from "@/assets/estate-6.jpeg";
+import estate7 from "@/assets/estate-7.jpeg";
+import estate8 from "@/assets/estate-8.jpeg";
+import estate9 from "@/assets/estate-9.jpeg";
+import estate10 from "@/assets/estate-10.jpeg";
+import estate11 from "@/assets/estate-11.jpeg";
+import estate12 from "@/assets/estate-12.jpeg";
+import estate13 from "@/assets/estate-13.jpeg";
+import estate14 from "@/assets/estate-14.jpeg";
+import estate15 from "@/assets/estate-15.jpeg";
+import estate16 from "@/assets/estate-16.jpeg";
+
+const ESTATE_GALLERY = [
+  estate1, estate2, estate3, estate4, estate5, estate6, estate7, estate8,
+  estate9, estate10, estate11, estate12, estate13, estate14, estate15, estate16,
+];
+
+const estateFeatures = [
+  { icon: Waves, title: "Private Beach", desc: "Your own stretch of Pacific coastline — swim, surf, or simply watch the sunset." },
+  { icon: Umbrella, title: "Beachfront Pool", desc: "An infinity-edge pool overlooking the ocean, surrounded by lounge areas." },
+  { icon: Flame, title: "Fire Pit", desc: "Gather around the beachside fire pit for evening stories and s'mores under the stars." },
+  { icon: Star, title: "Beachfront Dining", desc: "Long-table dinners on the sand, lit by fire and starlight, prepared by your private chefs." },
+];
+
 export default function Villas() {
   const { data: listings, isLoading } = useGuestyListings();
 
@@ -19,22 +49,11 @@ export default function Villas() {
     (l.title || l.nickname || "").toLowerCase().includes("luisa")
   );
 
-  const estateFeatures = [
-    { icon: Waves, title: "Private Beach", desc: "Your own stretch of Pacific coastline — swim, surf, or simply watch the sunset." },
-    { icon: Umbrella, title: "Beachfront Pool", desc: "An infinity-edge pool overlooking the ocean, surrounded by lounge areas." },
-    { icon: Flame, title: "Fire Pit", desc: "Gather around the beachside fire pit for evening stories and s'mores under the stars." },
-    { icon: Star, title: "Beachfront Dining", desc: "Long-table dinners on the sand, lit by fire and starlight, prepared by your private chefs." },
-  ];
-
   return (
     <Layout>
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        {listings?.[0]?.pictures?.[0] ? (
-          <img src={listings[0].pictures[0].original} alt="The Villas" className="absolute inset-0 w-full h-full object-cover" />
-        ) : (
-          <div className="absolute inset-0 bg-primary" />
-        )}
+        <img src={villaHero} alt="The Villas" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 text-center text-primary-foreground px-4">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">The Estate</p>
@@ -64,65 +83,68 @@ export default function Villas() {
       ) : (
         <section className="pb-20">
           <div className="container grid grid-cols-1 lg:grid-cols-2 gap-10">
-            {[casaPietro, casaLuisa].filter(Boolean).map((villa, idx) => (
-              <motion.div
-                key={villa!._id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.15 }}
-                className="flex flex-col"
-              >
-                {villa!.pictures?.[0] ? (
-                  <img
-                    src={villa!.pictures[0].original}
-                    alt={villa!.title || villa!.nickname}
-                    className="w-full h-[360px] object-cover rounded-tl-[40px] rounded-br-[40px]"
-                  />
-                ) : (
-                  <PhotoPlaceholder label={villa!.title || villa!.nickname} className="h-[360px] !aspect-auto rounded-tl-[40px] rounded-br-[40px]" />
-                )}
-                <div className="mt-6">
-                  <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-2 block">
-                    {idx === 0 ? "Villa One" : "Villa Two"}
-                  </span>
-                  <h2 className="font-serif text-3xl md:text-4xl font-light mb-4">{villa!.title || villa!.nickname}</h2>
-                  <div className="flex gap-5 mb-4 text-sm font-sans text-muted-foreground">
-                    <span>{villa!.bedrooms} Bedrooms</span>
-                    <span>{villa!.bathrooms} Bathrooms</span>
-                    <span>Sleeps {villa!.accommodates}</span>
+            {[
+              { villa: casaPietro, label: "Villa One", displayName: "Casa Pietro" },
+              { villa: casaLuisa, label: "Villa Two", displayName: "Casa Luisa" },
+            ]
+              .filter((v) => v.villa)
+              .map(({ villa, label, displayName }, idx) => (
+                <motion.div
+                  key={villa!._id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: idx * 0.15 }}
+                  className="flex flex-col"
+                >
+                  {/* Main photo */}
+                  {villa!.pictures?.[0] ? (
+                    <img
+                      src={villa!.pictures[0].original}
+                      alt={displayName}
+                      className="w-full h-[360px] object-cover rounded-tl-[40px] rounded-br-[40px]"
+                    />
+                  ) : (
+                    <PhotoPlaceholder label={displayName} className="h-[360px] !aspect-auto rounded-tl-[40px] rounded-br-[40px]" />
+                  )}
+
+                  {/* Info */}
+                  <div className="mt-6">
+                    <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-2 block">
+                      {label}
+                    </span>
+                    <h2 className="font-serif text-3xl md:text-4xl font-light mb-4">{displayName}</h2>
+                    <div className="flex gap-5 mb-4 text-sm font-sans text-muted-foreground">
+                      <span>{villa!.bedrooms} Bedrooms</span>
+                      <span>{villa!.bathrooms} Bathrooms</span>
+                      <span>Sleeps {villa!.accommodates}</span>
+                    </div>
+                    <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-5">
+                      {villa!.publicDescription?.summary || villa!.description || "Details coming soon."}
+                    </p>
+                    {villa!.amenities && villa!.amenities.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {villa!.amenities.slice(0, 8).map((a) => (
+                          <span key={a} className="text-xs font-sans px-3 py-1 bg-secondary text-secondary-foreground rounded-sm">{a}</span>
+                        ))}
+                        {villa!.amenities.length > 8 && (
+                          <span className="text-xs font-sans px-3 py-1 text-muted-foreground">+{villa!.amenities.length - 8} more</span>
+                        )}
+                      </div>
+                    )}
                   </div>
-                  <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-5">
-                    {villa!.publicDescription?.summary || villa!.description || "Details coming soon."}
-                  </p>
-                  {villa!.amenities && villa!.amenities.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {villa!.amenities.slice(0, 8).map((a) => (
-                        <span key={a} className="text-xs font-sans px-3 py-1 bg-secondary text-secondary-foreground rounded-sm">{a}</span>
-                      ))}
-                      {villa!.amenities.length > 8 && (
-                        <span className="text-xs font-sans px-3 py-1 text-muted-foreground">+{villa!.amenities.length - 8} more</span>
-                      )}
+
+                  {/* Mini carousel for this villa */}
+                  {villa!.pictures && villa!.pictures.length > 1 && (
+                    <div className="mt-6">
+                      <VillaCarousel pictures={villa!.pictures} villaName={displayName} />
                     </div>
                   )}
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))}
           </div>
         </section>
       )}
-
-      {/* Villa Photo Carousels */}
-      {!isLoading && [casaPietro, casaLuisa].filter(Boolean).map((villa) => (
-        villa!.pictures && villa!.pictures.length > 1 && (
-          <section key={`carousel-${villa!._id}`} className="pb-16">
-            <div className="container">
-              <h3 className="font-serif text-2xl mb-6 text-center">{villa!.title || villa!.nickname} Gallery</h3>
-              <VillaCarousel pictures={villa!.pictures} villaName={villa!.title || villa!.nickname} />
-            </div>
-          </section>
-        )
-      ))}
 
       {/* Estate Amenities */}
       <section className="py-16 md:py-24 bg-card">
@@ -144,12 +166,26 @@ export default function Villas() {
               </motion.div>
             ))}
           </div>
-          {/* Estate photo gallery */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-12">
-            {listings?.[0]?.pictures?.slice(8, 14).map((pic, i) => (
-              <img key={i} src={pic.original} alt={`Estate ${i}`} className="w-full h-56 md:h-72 object-cover rounded-xl" loading="lazy" />
-            )) || Array.from({ length: 6 }).map((_, i) => (
-              <PhotoPlaceholder key={i} label="Estate" />
+        </div>
+      </section>
+
+      {/* More Than a Stay — A Destination (Estate Gallery) */}
+      <section className="py-16 md:py-24">
+        <div className="container max-w-6xl">
+          <SectionHeading eyebrow="The Estate" title="More Than a Stay — A Destination" />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+            {ESTATE_GALLERY.map((src, i) => (
+              <motion.img
+                key={i}
+                src={src}
+                alt={`Estate ${i + 1}`}
+                className="w-full h-48 md:h-64 object-cover rounded-xl"
+                loading="lazy"
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: (i % 4) * 0.05 }}
+              />
             ))}
           </div>
         </div>
