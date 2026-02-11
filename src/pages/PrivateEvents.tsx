@@ -3,17 +3,17 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import { motion } from "framer-motion";
 import EventInquiryForm from "@/components/EventInquiryForm";
 
-import estate1 from "@/assets/estate-1.jpeg";
 import estate3 from "@/assets/estate-3.jpeg";
 import estate6 from "@/assets/estate-6.jpeg";
 import estate7 from "@/assets/estate-7.jpeg";
 import estate8 from "@/assets/estate-8.jpeg";
 import estate11 from "@/assets/estate-11.jpeg";
-import estate12 from "@/assets/estate-12.jpeg";
-import chefMargarita from "@/assets/chef-margarita.jpeg";
 import wellnessYoga from "@/assets/wellness-yoga.png";
 import food1 from "@/assets/food1.jpeg";
 import food3 from "@/assets/food3.jpeg";
+import eventBeachfire from "@/assets/event-beachfire.png";
+import eventFamily from "@/assets/event-family.png";
+import eventBachelorette from "@/assets/event-bachelorette.png";
 
 const eventTypes = [
   { title: "Retreats & Workshops", description: "The estate is perfectly suited for wellness retreats, creative workshops, corporate offsites, and transformational gatherings. Five bedrooms, dedicated staff, and total privacy.", image: wellnessYoga },
