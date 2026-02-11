@@ -1,39 +1,57 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
-import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import { motion } from "framer-motion";
 import EventInquiryForm from "@/components/EventInquiryForm";
 import { Heart, UtensilsCrossed, Wine, BedDouble, Users } from "lucide-react";
 
 import estate3 from "@/assets/estate-3.jpeg";
-import weddingImg from "@/assets/wedding2.png";
+import estate5 from "@/assets/estate-5.jpeg";
+import estate8 from "@/assets/estate-8.jpeg";
+import estateSleeping from "@/assets/estate-sleeping.jpg";
+import chefMargarita from "@/assets/chef-margarita.jpeg";
+import weddingHero from "@/assets/wedding2.png";
+import weddingCeremony from "@/assets/wedding-ceremony.png";
+import weddingBeachCeremony from "@/assets/wedding-beach-ceremony.png";
+import weddingCelebration from "@/assets/wedding-celebration.png";
 
 const weddingFeatures = [
   {
     icon: Heart,
     title: "Beach Ceremony",
     desc: "Exchange vows on your own 250-foot private beach with the Pacific as your backdrop. Sunset ceremonies, barefoot elegance, and an intimate setting that feels worlds apart.",
+    image: weddingBeachCeremony,
   },
   {
     icon: UtensilsCrossed,
     title: "Beachfront Dining",
     desc: "Long-table dinners on the sand, prepared by your private chef Ricardo. Multi-course menus tailored to your celebration — from fresh-caught seafood to wood-fired pizza from the estate's outdoor oven.",
+    image: estate3,
   },
   {
     icon: Wine,
     title: "Bar & Cocktails",
     desc: "Your dedicated bartender serves craft cocktails, premium spirits, and the estate's signature sunset margarita ritual. Full open bar service for your entire stay.",
+    image: chefMargarita,
   },
   {
     icon: BedDouble,
     title: "Accommodation",
     desc: "Five luxury bedrooms across two villas sleep up to 14 guests. Flexible configurations with single beds available for larger wedding parties. The entire estate is exclusively yours.",
+    image: estateSleeping,
   },
   {
     icon: Users,
     title: "Full Coordination",
     desc: "Your concierge handles vendor coordination, music, decor logistics, and day-of timing. The full Sempre Avanti team — chef, bartender, housekeeper, and maintenance — ensures every detail is flawless.",
+    image: weddingCeremony,
   },
+];
+
+const galleryImages = [
+  { src: weddingCeremony, alt: "Wedding ceremony on the beach" },
+  { src: weddingCelebration, alt: "Celebration with petal toss" },
+  { src: estate5, alt: "Estate grounds" },
+  { src: estate8, alt: "Estate evening ambiance" },
 ];
 
 export default function Weddings() {
@@ -41,7 +59,7 @@ export default function Weddings() {
     <Layout>
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <img src={weddingImg} alt="Beachfront wedding" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={weddingHero} alt="Beachfront wedding" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
         <div className="relative z-10 text-center text-primary-foreground px-4">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Celebrations</p>
@@ -73,7 +91,9 @@ export default function Weddings() {
                 transition={{ duration: 0.5, delay: i * 0.08 }}
                 className={`grid grid-cols-1 md:grid-cols-2 gap-8 items-center ${i % 2 === 1 ? "md:direction-rtl" : ""}`}
               >
-                <PhotoPlaceholder label={feature.title} aspectRatio="video" className="rounded-xl overflow-hidden" />
+                <div className="aspect-video rounded-xl overflow-hidden">
+                  <img src={feature.image} alt={feature.title} className="w-full h-full object-cover" />
+                </div>
                 <div className={i % 2 === 1 ? "md:text-right" : ""}>
                   <feature.icon className="w-8 h-8 text-accent mb-3" strokeWidth={1.5} />
                   <h3 className="font-serif text-2xl md:text-3xl mb-3">{feature.title}</h3>
@@ -89,24 +109,12 @@ export default function Weddings() {
       <section className="py-4">
         <div className="container max-w-6xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {["Beach Ceremony", "Long Table Dinner", "Cocktail Hour", "First Dance"].map((label) => (
-              <PhotoPlaceholder key={label} label={label} />
+            {galleryImages.map((img) => (
+              <div key={img.alt} className="aspect-square overflow-hidden rounded-lg">
+                <img src={img.src} alt={img.alt} className="w-full h-full object-cover" />
+              </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="relative py-20 md:py-28 text-primary-foreground overflow-hidden">
-        <img src={estate3} alt="" className="absolute inset-0 w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
-        <div className="relative z-10 container max-w-4xl text-center">
-          <SectionHeading
-            eyebrow="Begin Planning"
-            title="Your Dream Wedding Starts Here"
-            description="Tell us about your vision — guest count, dates, and style. We'll share how the estate can bring it to life, with full coordination from your dedicated team."
-            light
-          />
         </div>
       </section>
 
@@ -127,6 +135,23 @@ export default function Weddings() {
         <div className="container max-w-3xl text-center">
           <p className="text-sm font-sans text-muted-foreground italic leading-relaxed">
             Planning on behalf of a client? We work closely with wedding planners, coordinators, and event professionals to ensure a seamless experience from first inquiry to farewell brunch.
+          </p>
+        </div>
+      </section>
+
+      {/* CTA Hero Banner */}
+      <section className="relative py-20 md:py-28 text-primary-foreground overflow-hidden">
+        <img src={estate3} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+        <div className="relative z-10 container max-w-4xl text-center">
+          <SectionHeading
+            eyebrow="Begin Planning"
+            title="Your Dream Wedding Starts Here"
+            description="Tell us about your vision — guest count, dates, and style. We'll share how the estate can bring it to life, with full coordination from your dedicated team."
+            light
+          />
+          <p className="mt-6 text-xs font-sans text-primary-foreground/60 italic">
+            Wedding planners and coordinators — we'd love to collaborate. Reach out above and let's create something extraordinary together.
           </p>
         </div>
       </section>
