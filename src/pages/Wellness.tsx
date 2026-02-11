@@ -4,12 +4,13 @@ import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArro
 import { motion } from "framer-motion";
 import InquiryDialog from "@/components/InquiryDialog";
 
-import heroImg from "@/assets/wellness-hero.jpeg";
+import heroImg from "@/assets/wellness-yogahero.png";
 import yogaImg from "@/assets/wellness-yoga.png";
 import soundbathImg from "@/assets/wellness-soundbath.jpeg";
 import nirvannaImg from "@/assets/wellness-nirvanna.png";
 import benditaImg from "@/assets/wellness-bendita.jpeg";
 import buddhaImg from "@/assets/wellness-buddha.jpg";
+import massagesImg from "@/assets/wellness-massages.png";
 
 // Estate photos for practice spaces
 import estate3 from "@/assets/estate-3.jpeg";  // beachfront
@@ -63,14 +64,17 @@ export default function Wellness() {
         </div>
       </section>
 
-      {/* Yoga */}
+      {/* Yoga, Pilates & Personal Training */}
       <section className="pb-20 md:pb-28">
         <div className="container max-w-5xl">
-          <SectionHeading eyebrow="8:30 – 9:30 AM" title="Daily Yoga & Movement" />
+          <SectionHeading eyebrow="8:30 – 9:30 AM" title="Yoga, Pilates & Personal Training" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <p className="text-base font-sans text-muted-foreground leading-relaxed mb-4">
-                Start each morning with a guided session on the beach or poolside. Your instructor tailors the practice to the group — yoga, stretching, breathwork, or light movement. Every day is different, every session is yours.
+                Start each morning with a guided session on the beach or poolside. Your instructor tailors the practice to the group — yoga, pilates, stretching, breathwork, or light movement. Every day is different, every session is yours.
+              </p>
+              <p className="text-base font-sans text-muted-foreground leading-relaxed mb-6">
+                <strong className="font-medium text-foreground">Shea</strong> — a certified personal trainer and Pilates instructor — offers personalized mat classes, outdoor workouts, and nutritional advice. Whether you want to maintain your routine, try something new, or design a group fitness experience, Shea adapts to your goals.
               </p>
               <h4 className="font-serif text-xl mb-4">Our Instructors</h4>
               <div className="space-y-4">
@@ -88,19 +92,19 @@ export default function Wellness() {
         </div>
       </section>
 
-      {/* Pilates & Training */}
+      {/* Massages at Home */}
       <section className="py-16 md:py-24 bg-card">
         <div className="container max-w-5xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <img src={yogaImg} alt="Personal Training" className="w-full aspect-square object-cover object-top rounded-tr-[40px] rounded-bl-[40px]" />
+            <img src={massagesImg} alt="In-villa massages" className="w-full aspect-square object-cover object-top rounded-tr-[40px] rounded-bl-[40px]" />
             <div>
-              <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-3 block">Fitness</span>
-              <h2 className="font-serif text-4xl font-light mb-6">Pilates & Personal Training</h2>
+              <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-3 block">Bodywork</span>
+              <h2 className="font-serif text-4xl font-light mb-6">Massages at Home</h2>
               <p className="text-base font-sans text-muted-foreground leading-relaxed mb-4">
-                <strong className="font-medium text-foreground">Shea</strong> — a certified personal trainer and Pilates instructor — offers personalized mat classes, outdoor workouts, and nutritional advice. Sessions are held poolside, on the beach, or in the garden.
+                Professional massage therapists come directly to the estate — poolside, on the terrace, or beachfront. Deep tissue, Swedish, aromatherapy, and more, all without leaving the property.
               </p>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed">
-                Whether you want to maintain your routine, try something new, or design a group fitness experience, Shea adapts to your goals.
+                Arrange group sessions for your entire party or enjoy a private treatment tailored to your preferences. Your concierge handles all the scheduling.
               </p>
             </div>
           </div>
