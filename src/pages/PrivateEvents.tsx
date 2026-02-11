@@ -3,24 +3,24 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import { motion } from "framer-motion";
 import EventInquiryForm from "@/components/EventInquiryForm";
 
-import estate1 from "@/assets/estate-1.jpeg";
 import estate3 from "@/assets/estate-3.jpeg";
 import estate6 from "@/assets/estate-6.jpeg";
 import estate7 from "@/assets/estate-7.jpeg";
 import estate8 from "@/assets/estate-8.jpeg";
 import estate11 from "@/assets/estate-11.jpeg";
-import estate12 from "@/assets/estate-12.jpeg";
-import chefMargarita from "@/assets/chef-margarita.jpeg";
 import wellnessYoga from "@/assets/wellness-yoga.png";
 import food1 from "@/assets/food1.jpeg";
 import food3 from "@/assets/food3.jpeg";
+import eventBeachfire from "@/assets/event-beachfire.png";
+import eventFamily from "@/assets/event-family.png";
+import eventBachelorette from "@/assets/event-bachelorette.png";
 
 const eventTypes = [
   { title: "Retreats & Workshops", description: "The estate is perfectly suited for wellness retreats, creative workshops, corporate offsites, and transformational gatherings. Five bedrooms, dedicated staff, and total privacy.", image: wellnessYoga },
   { title: "Corporate Offsites", description: "Escape the conference room. Strategy sessions on the terrace, team dinners on the beach, and activities that actually bond your team — from surfing to sunset sailing.", image: estate7 },
-  { title: "Bachelorette & Birthday", description: "Dedicated bartender, custom menus, adventure-packed days, and beachside lounging. We create celebrations that feel effortless and unforgettable.", image: chefMargarita },
-  { title: "Family Gatherings", description: "Five bedrooms, flexible sleeping configurations, and a full team to take care of everything. Multi-generational groups feel right at home with activities for every age.", image: estate1 },
-  { title: "Fire Pit Evenings", description: "Gather around the fire pit as the stars come out. Post-dinner celebrations, storytelling nights, or simply unforgettable evenings with your group under the Riviera sky.", image: estate12 },
+  { title: "Bachelorette & Birthday", description: "Dedicated bartender, custom menus, adventure-packed days, and beachside lounging. We create celebrations that feel effortless and unforgettable.", image: eventBachelorette },
+  { title: "Family Gatherings", description: "Five bedrooms, flexible sleeping configurations, and a full team to take care of everything. Multi-generational groups feel right at home with activities for every age.", image: eventFamily },
+  { title: "Fire Pit Evenings", description: "Gather around the fire pit as the stars come out. Post-dinner celebrations, storytelling nights, or simply unforgettable evenings with your group under the Riviera sky.", image: eventBeachfire },
   { title: "Long-Table Beachfront Dinners", description: "Chef-prepared multi-course dinners served at a beautifully set long table on the beach. Fire-lit, ocean-side, and unforgettable.", image: food1 },
 ];
 
@@ -36,7 +36,7 @@ export default function PrivateEvents() {
     <Layout>
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <img src={estate11} alt="Private estate venue" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={estate3} alt="Private estate venue" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
         <div className="relative z-10 text-center text-primary-foreground px-4">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Celebrations</p>
