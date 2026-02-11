@@ -4,7 +4,7 @@ import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArro
 import { motion } from "framer-motion";
 import InquiryDialog from "@/components/InquiryDialog";
 
-import heroImg from "@/assets/wellness-hero-yoga.png";
+import heroImg from "@/assets/wellness-hero-new.png";
 import yogaImg from "@/assets/wellness-yoga.png";
 import soundbathImg from "@/assets/wellness-soundbath.jpeg";
 import nirvannaImg from "@/assets/wellness-nirvanna.png";
