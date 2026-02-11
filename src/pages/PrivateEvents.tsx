@@ -20,13 +20,13 @@ const eventTypes = [
   { title: "Corporate Offsites", description: "Escape the conference room. Strategy sessions on the terrace, team dinners on the beach, and activities that actually bond your team — from surfing to sunset sailing.", image: estate7 },
   { title: "Bachelorette & Birthday", description: "Dedicated bartender, custom menus, adventure-packed days, and beachside lounging. We create celebrations that feel effortless and unforgettable.", image: eventBachelorette },
   { title: "Family Gatherings", description: "Five bedrooms, flexible sleeping configurations, and a full team to take care of everything. Multi-generational groups feel right at home with activities for every age.", image: eventFamily },
-  { title: "Fire Pit Evenings", description: "Gather around the fire pit as the stars come out. Post-dinner celebrations, storytelling nights, or simply unforgettable evenings with your group under the Riviera sky.", image: eventBeachfire },
+  { title: "Beach Fire Evenings", description: "Gather around the beach fire as the stars come out. Post-dinner celebrations, storytelling nights, or simply unforgettable evenings with your group under the Riviera sky.", image: eventBeachfire },
   { title: "Long-Table Beachfront Dinners", description: "Chef-prepared multi-course dinners served at a beautifully set long table on the beach. Fire-lit, ocean-side, and unforgettable.", image: food1 },
 ];
 
 const venueSpaces = [
   { label: "Private Beach", desc: "250 feet of secluded beachfront for ceremonies, dinners, bonfires, and morning yoga.", image: estate3 },
-  { label: "Fire Pit", desc: "Sunken fire pit with built-in seating overlooking the Pacific. Perfect for evening gatherings.", image: estate8 },
+  { label: "Beach Fire", desc: "Gather around the beach fire with built-in seating overlooking the Pacific. Perfect for evening gatherings.", image: eventBeachfire },
   { label: "Pool Terraces", desc: "Two infinity pools — one at each villa — with lounging areas and ocean views.", image: estate6 },
   { label: "Beachfront Dining", desc: "Long-table setup on the sand or covered terrace dining with full chef service.", image: food3 },
 ];
