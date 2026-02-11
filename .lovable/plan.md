@@ -1,44 +1,62 @@
 
-# Villas Page Updates
+# Weddings and Private Events Page Overhaul
 
-## 1. Replace "Flexible Sleeping Configurations" Background Image
-- Copy `DJI_0948.jpg` to `src/assets/` (e.g., as an estate asset or dedicated name)
-- Update line 201 in `Villas.tsx` to use this new image instead of `estate4`
+## Overview
+Restructure both celebration pages to: move inquiry forms before the bottom hero/CTA banner, replace all PhotoPlaceholders with real images (uploaded + existing estate assets), and add the three new wedding photos.
 
-## 2. Set Specific First Photos for Each Villa Carousel
-The Guesty API returns photos in its own order. The screenshot shows:
-- **Casa Pietro**: White villa exterior with palapa roofs, stone walls, and stairs (Guesty caption: "Casa Pietro", currently the 3rd photo)
-- **Villa Luisa**: Aerial shot of the orange/terracotta villa with pool (likely captioned with an aerial/exterior description)
+## New Assets
+- Copy `wedding.png` to `src/assets/wedding-ceremony.png` (couple at altar)
+- Copy `beachceremony.png` to `src/assets/wedding-beach-ceremony.png` (bohemian beach setup)
+- Copy `beachwedding.png` to `src/assets/wedding-celebration.png` (petal toss celebration)
 
-**Approach**: In `Villas.tsx`, after fetching the Guesty data, reorder each villa's `pictures` array to move the desired exterior/aerial photo to position 0 before passing to `VillaCarousel`. This will be done by matching on caption keywords:
-- For Casa Pietro: find the photo captioned "Casa Pietro" and move it to front
-- For Villa Luisa: find the aerial/exterior photo and move it to front
+## Weddings Page (`src/pages/Weddings.tsx`)
 
-If caption matching proves fragile, a fallback approach will use the Guesty photo URL fragments to identify the correct images.
+### New Section Flow (top to bottom):
+1. **Hero** -- keep `wedding2.png` (current hero)
+2. **Intro** -- keep as-is
+3. **Features (with real images)** -- replace PhotoPlaceholders:
+   - Beach Ceremony: `wedding-beach-ceremony.png` (the bohemian setup photo)
+   - Beachfront Dining: `estate-3.jpeg` (beachfront estate shot)
+   - Bar & Cocktails: `chef-margarita.jpeg` (cocktails)
+   - Accommodation: `estate-sleeping.jpg` (aerial DJI shot of estate)
+   - Full Coordination: `wedding-ceremony.png` (couple at altar -- shows the team in action)
+4. **Gallery** -- replace 4 placeholders with real photos:
+   - `wedding-ceremony.png`, `wedding-celebration.png`, `estate-5.jpeg`, `estate-8.jpeg`
+5. **Inquiry Form** -- moved BEFORE the CTA banner
+6. **Organizer note** -- kept with the form section
+7. **CTA Hero Banner** -- the `estate3` dark overlay section, now at the very bottom, with a subtle note for wedding planners/coordinators
 
-## 3. Clean Up Villa Luisa Description (Remove Checkmarks, Match Style)
-The Guesty `publicDescription.summary` for Villa Luisa contains checkmark characters and reads differently from Casa Pietro's. 
+### Private Events Page (`src/pages/PrivateEvents.tsx`)
 
-**Approach**: Instead of displaying raw Guesty descriptions, provide curated fallback descriptions directly in `Villas.tsx` for both villas so they match in length and editorial style. This ensures:
-- No checkmarks or bullet-style formatting from Guesty
-- Both descriptions are similar in tone, length, and structure
-- Consistent with the luxury editorial voice of the site
+### New Section Flow:
+1. **Hero** -- replace PhotoPlaceholder with `estate-11.jpeg` (scenic estate shot)
+2. **Intro** -- keep as-is
+3. **Event Types** -- replace PhotoPlaceholders with estate/food images:
+   - Retreats & Workshops: `wellness-yoga.png`
+   - Corporate Offsites: `estate-7.jpeg`
+   - Bachelorette & Birthday: `chef-margarita.jpeg`
+   - Family Gatherings: `estate-1.jpeg`
+   - Fire Pit Evenings: `estate-12.jpeg`
+   - Long-Table Beachfront Dinners: `food1.jpeg`
+4. **Venue Spaces** -- replace PhotoPlaceholders:
+   - Private Beach: `estate-3.jpeg`
+   - Fire Pit: `estate-8.jpeg`
+   - Pool Terraces: `estate-6.jpeg`
+   - Beachfront Dining: `food3.jpeg`
+5. **Services text** -- keep as-is
+6. **Inquiry Form** -- moved BEFORE the bottom CTA
+7. **Organizer note** -- kept near form
+8. **CTA Hero Banner** -- `estate6` dark overlay, now at the very bottom, with subtle coordinator note
 
 ## Technical Details
 
+### Files to create:
+- `src/assets/wedding-ceremony.png` (from `user-uploads://wedding.png`)
+- `src/assets/wedding-beach-ceremony.png` (from `user-uploads://beachceremony.png`)
+- `src/assets/wedding-celebration.png` (from `user-uploads://beachwedding.png`)
+
 ### Files to modify:
-- **`src/pages/Villas.tsx`**:
-  - Add import for new DJI_0948 asset
-  - Replace `estate4` reference in the Sleeping Config section (line 201) with the new image
-  - Add logic to reorder villa pictures arrays (move exterior photos to index 0)
-  - Replace the raw Guesty description output (line 140) with curated text for each villa, keyed by villa ID or nickname
+- **`src/pages/Weddings.tsx`**: Add new image imports, assign images to each feature, replace gallery placeholders, reorder sections (form before CTA banner)
+- **`src/pages/PrivateEvents.tsx`**: Add estate/food image imports, replace all placeholders with real images, replace hero placeholder with estate photo, reorder sections (form before CTA banner)
 
-### New asset:
-- Copy `user-uploads://DJI_0948.jpg` to `src/assets/` (e.g., `estate-sleeping.jpg` or similar)
-
-### Description approach:
-```text
-Casa Pietro: ~2-3 sentences describing the intimate 2BR villa, its design, and ocean views
-Villa Luisa:  ~2-3 sentences describing the spacious 3BR villa, its pool, and outdoor living
-```
-Both will be written in the same editorial tone without any special characters or checkmarks.
+### Image assignments use only existing assets plus the 3 new uploads -- no placeholders remain on either page.
