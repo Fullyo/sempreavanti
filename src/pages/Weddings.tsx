@@ -2,7 +2,7 @@ import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import { motion } from "framer-motion";
-import InquiryDialog from "@/components/InquiryDialog";
+import EventInquiryForm from "@/components/EventInquiryForm";
 import { Heart, UtensilsCrossed, Wine, BedDouble, Users } from "lucide-react";
 
 import estate3 from "@/assets/estate-3.jpeg";
@@ -107,11 +107,27 @@ export default function Weddings() {
             description="Tell us about your vision — guest count, dates, and style. We'll share how the estate can bring it to life, with full coordination from your dedicated team."
             light
           />
-          <InquiryDialog>
-            <button className="inline-block mt-6 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full">
-              Inquire About Weddings
-            </button>
-          </InquiryDialog>
+        </div>
+      </section>
+
+      {/* Inquiry Form */}
+      <section className="py-20 md:py-28">
+        <div className="container max-w-4xl text-center mb-12">
+          <p className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-3">Get in Touch</p>
+          <h2 className="font-serif text-3xl md:text-5xl font-light mb-4">Start the Conversation</h2>
+          <p className="text-base font-sans text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+            Share your vision and we'll show you how Sempre Avanti can bring it to life.
+          </p>
+        </div>
+        <EventInquiryForm type="wedding" />
+      </section>
+
+      {/* Organizer note */}
+      <section className="pb-20 md:pb-28">
+        <div className="container max-w-3xl text-center">
+          <p className="text-sm font-sans text-muted-foreground italic leading-relaxed">
+            Planning on behalf of a client? We work closely with wedding planners, coordinators, and event professionals to ensure a seamless experience from first inquiry to farewell brunch.
+          </p>
         </div>
       </section>
     </Layout>

@@ -6,8 +6,8 @@ import { motion } from "framer-motion";
 
 import surfSayulitaAerial from "@/assets/surf-sayulita-aerial.jpg";
 import surfLalancha from "@/assets/surf-lalancha.jpg";
-import surfSayulitaDrone from "@/assets/surf-sayulita-drone.png";
-import surfBurros from "@/assets/surf-burros.jpeg";
+import surfAnclote from "@/assets/surf-sayulita-drone.png";
+import surfStinky from "@/assets/surf-stinky.jpeg";
 import surfPuntamitaAerial from "@/assets/surf-puntamita-aerial.jpg";
 import surfSayulitaMain from "@/assets/surf-sayulita-main.jpg";
 import surfChilloWater from "@/assets/surf-chillo-water.jpg";
@@ -21,9 +21,9 @@ const { prev, next } = getPageNav(experiencePages, "/experiences/surfing");
 
 const surfBreaks = [
   { name: "La Lancha", desc: "World-class left point break near Punta de Mita. Transportation, boards, 1.5-hour lesson, and 30 min free surf included.", img: surfLalancha },
-  { name: "Captain Pablo's", desc: "Right point break — consistent, fun, and great for intermediate surfers looking for a reliable wave.", img: surfSayulitaDrone },
-  { name: "Don Pedro's", desc: "Left break right in front of the iconic beachfront restaurant in Sayulita.", img: surfSayulitaAerial },
-  { name: "Burros", desc: "Powerful beach break north of Sayulita. Best suited for experienced surfers who want a challenge.", img: surfBurros },
+  { name: "El Anclote", desc: "Mellow right-hander in the sheltered bay of Punta de Mita. Gentle, consistent waves make it ideal for longboarders and intermediate surfers.", img: surfAnclote },
+  { name: "Stinky's", desc: "Beginner-friendly beach break just north of Sayulita near the river mouth. Small, forgiving waves and a sandy bottom — perfect for first-timers and families.", img: surfStinky },
+  { name: "Burros", desc: "Powerful beach break north of Sayulita. Best suited for experienced surfers who want a challenge.", img: surfSayulitaAerial },
   { name: "Punta Mita", desc: "Several breaks around the point offering varied conditions for all levels, from mellow rollers to punchy reef breaks.", img: surfPuntamitaAerial },
   { name: "Sayulita Main Break", desc: "The town's signature wave — a gentle, forgiving break perfect for longboarders and beginners.", img: surfSayulitaMain },
 ];

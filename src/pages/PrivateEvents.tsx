@@ -2,7 +2,7 @@ import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import { motion } from "framer-motion";
-import InquiryDialog from "@/components/InquiryDialog";
+import EventInquiryForm from "@/components/EventInquiryForm";
 
 import estate6 from "@/assets/estate-6.jpeg";
 
@@ -115,11 +115,27 @@ export default function PrivateEvents() {
             description="Share your vision — group size, dates, and style. We'll show you how the estate can make it happen."
             light
           />
-          <InquiryDialog>
-            <button className="inline-block mt-6 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full">
-              Plan Your Event
-            </button>
-          </InquiryDialog>
+        </div>
+      </section>
+
+      {/* Inquiry Form */}
+      <section className="py-20 md:py-28">
+        <div className="container max-w-4xl text-center mb-12">
+          <p className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-3">Get in Touch</p>
+          <h2 className="font-serif text-3xl md:text-5xl font-light mb-4">Let's Bring It to Life</h2>
+          <p className="text-base font-sans text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+            Tell us what you're envisioning — our events team will take it from there.
+          </p>
+        </div>
+        <EventInquiryForm type="event" />
+      </section>
+
+      {/* Organizer note */}
+      <section className="pb-20 md:pb-28">
+        <div className="container max-w-3xl text-center">
+          <p className="text-sm font-sans text-muted-foreground italic leading-relaxed">
+            Are you a planner or coordinator looking for a private venue? We love collaborating with event professionals — reach out and let's create something extraordinary together.
+          </p>
         </div>
       </section>
     </Layout>
