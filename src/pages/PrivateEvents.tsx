@@ -18,9 +18,9 @@ import eventBachelorette from "@/assets/event-bachelorette.png";
 const eventTypes = [
   { title: "Retreats & Workshops", description: "The estate is perfectly suited for wellness retreats, creative workshops, corporate offsites, and transformational gatherings. Five bedrooms, dedicated staff, and total privacy.", image: wellnessYoga },
   { title: "Corporate Offsites", description: "Escape the conference room. Strategy sessions on the terrace, team dinners on the beach, and activities that actually bond your team — from surfing to sunset sailing.", image: estate7 },
-  { title: "Bachelorette & Birthday", description: "Dedicated bartender, custom menus, adventure-packed days, and beachside lounging. We create celebrations that feel effortless and unforgettable.", image: chefMargarita },
-  { title: "Family Gatherings", description: "Five bedrooms, flexible sleeping configurations, and a full team to take care of everything. Multi-generational groups feel right at home with activities for every age.", image: estate1 },
-  { title: "Fire Pit Evenings", description: "Gather around the fire pit as the stars come out. Post-dinner celebrations, storytelling nights, or simply unforgettable evenings with your group under the Riviera sky.", image: estate12 },
+  { title: "Bachelorette & Birthday", description: "Dedicated bartender, custom menus, adventure-packed days, and beachside lounging. We create celebrations that feel effortless and unforgettable.", image: eventBachelorette },
+  { title: "Family Gatherings", description: "Five bedrooms, flexible sleeping configurations, and a full team to take care of everything. Multi-generational groups feel right at home with activities for every age.", image: eventFamily },
+  { title: "Fire Pit Evenings", description: "Gather around the fire pit as the stars come out. Post-dinner celebrations, storytelling nights, or simply unforgettable evenings with your group under the Riviera sky.", image: eventBeachfire },
   { title: "Long-Table Beachfront Dinners", description: "Chef-prepared multi-course dinners served at a beautifully set long table on the beach. Fire-lit, ocean-side, and unforgettable.", image: food1 },
 ];
 
