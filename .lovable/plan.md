@@ -1,26 +1,49 @@
 
 
-# Fix Wellness Hero Image (For Real This Time)
+# Fix Wellness Hero Image -- New Approach via Storage
 
-## Root Cause
+## Why Previous Attempts Failed
 
-The file `wellness-hero-yoga.png` exists and is correctly imported in the code, but it contains the **wrong image data** -- it's still the old property/pool photo. Previous copy operations reported success but didn't actually overwrite the file content with the yoga group photo.
+Every attempt to copy the uploaded yoga photo to `src/assets/` has silently failed -- the file gets created but contains the old/wrong image data. This appears to be a persistent issue with the local file copy mechanism for this particular asset.
 
-## Solution
+## New Strategy: Use Supabase Storage
 
-1. **Delete** the existing `src/assets/wellness-hero-yoga.png` to clear any cached/stale file
-2. **Delete** the old `src/assets/wellness-yogahero.png` as well (no longer needed)
-3. **Copy** the uploaded `user-uploads://yogahero-4.png` to a brand new path: `src/assets/wellness-hero-new.png`
-4. **Update** the import in `src/pages/Wellness.tsx` line 7:
-   - From: `import heroImg from "@/assets/wellness-hero-yoga.png"`
-   - To: `import heroImg from "@/assets/wellness-hero-new.png"`
+Instead of fighting with local asset copies, we will:
 
-Using a completely new filename that has never existed before, combined with deleting the old files, should ensure no stale data or caching interferes.
+1. **Create a storage bucket** called `site-assets` in the backend (public, for serving static images)
+2. **Upload** `user-uploads://yogahero-5.png` to that bucket via an edge function or direct upload
+3. **Update `src/pages/Wellness.tsx`** to use the public storage URL for the hero image instead of a local import
+
+This completely sidesteps the broken local file copy mechanism.
+
+## Steps
+
+1. Create a public `site-assets` storage bucket (via SQL migration)
+2. Upload the yoga hero image to that bucket
+3. In `Wellness.tsx`, replace the local import with the Supabase storage public URL:
+   - Remove: `import heroImg from "@/assets/wellness-hero-new.png"`
+   - Add: construct the URL from the storage bucket
+   - Update the hero `<img>` tag to use this URL
 
 ## Technical Details
 
-- **Delete**: `src/assets/wellness-hero-yoga.png`
-- **Delete**: `src/assets/wellness-yogahero.png`
-- **Create**: `src/assets/wellness-hero-new.png` (from `user-uploads://yogahero-4.png`)
-- **Modify**: `src/pages/Wellness.tsx` -- update import on line 7
+**Migration SQL:**
+```sql
+INSERT INTO storage.buckets (id, name, public) 
+VALUES ('site-assets', 'site-assets', true);
 
+CREATE POLICY "Public read access" ON storage.objects
+  FOR SELECT USING (bucket_id = 'site-assets');
+
+CREATE POLICY "Authenticated upload" ON storage.objects
+  FOR INSERT WITH CHECK (bucket_id = 'site-assets');
+```
+
+**Wellness.tsx changes:**
+- Remove the `heroImg` import line for `wellness-hero-new.png`
+- Add a constant with the public storage URL for the uploaded image
+- The hero section `<img src={heroImg}>` will point to the storage URL
+
+**Files modified:**
+- `src/pages/Wellness.tsx` -- switch hero image source from local import to storage URL
+- New migration for `site-assets` bucket
