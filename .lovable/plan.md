@@ -1,49 +1,24 @@
 
 
-# Fix Wellness Hero Image -- New Approach via Storage
+# Step 1: Remove the Wellness Hero Image Completely
 
-## Why Previous Attempts Failed
+This is a trust-building step. No new image yet -- just prove the hero section changes.
 
-Every attempt to copy the uploaded yoga photo to `src/assets/` has silently failed -- the file gets created but contains the old/wrong image data. This appears to be a persistent issue with the local file copy mechanism for this particular asset.
+## What will change
 
-## New Strategy: Use Supabase Storage
+In `src/pages/Wellness.tsx`:
 
-Instead of fighting with local asset copies, we will:
+1. **Remove line 7** -- delete the `const heroImg = "https://..."` line entirely
+2. **Remove the `<img>` tag** in the hero section (around line 47) that displays the hero image
+3. **Set a solid background color** (dark/black) on the hero section so it still looks intentional without an image
 
-1. **Create a storage bucket** called `site-assets` in the backend (public, for serving static images)
-2. **Upload** `user-uploads://yogahero-5.png` to that bucket via an edge function or direct upload
-3. **Update `src/pages/Wellness.tsx`** to use the public storage URL for the hero image instead of a local import
+The hero section will display as a dark banner with just the "Wellness" title text and navigation arrows -- no image at all.
 
-This completely sidesteps the broken local file copy mechanism.
+## Why this matters
 
-## Steps
+If the hero image disappears after this change, it proves the code update works and we can confidently add the correct image in a follow-up step.
 
-1. Create a public `site-assets` storage bucket (via SQL migration)
-2. Upload the yoga hero image to that bucket
-3. In `Wellness.tsx`, replace the local import with the Supabase storage public URL:
-   - Remove: `import heroImg from "@/assets/wellness-hero-new.png"`
-   - Add: construct the URL from the storage bucket
-   - Update the hero `<img>` tag to use this URL
+## Files modified
 
-## Technical Details
+- `src/pages/Wellness.tsx` -- remove hero image URL constant and the `<img>` element from the hero section
 
-**Migration SQL:**
-```sql
-INSERT INTO storage.buckets (id, name, public) 
-VALUES ('site-assets', 'site-assets', true);
-
-CREATE POLICY "Public read access" ON storage.objects
-  FOR SELECT USING (bucket_id = 'site-assets');
-
-CREATE POLICY "Authenticated upload" ON storage.objects
-  FOR INSERT WITH CHECK (bucket_id = 'site-assets');
-```
-
-**Wellness.tsx changes:**
-- Remove the `heroImg` import line for `wellness-hero-new.png`
-- Add a constant with the public storage URL for the uploaded image
-- The hero section `<img src={heroImg}>` will point to the storage URL
-
-**Files modified:**
-- `src/pages/Wellness.tsx` -- switch hero image source from local import to storage URL
-- New migration for `site-assets` bucket
