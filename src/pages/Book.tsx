@@ -14,7 +14,7 @@ import estateHero from "@/assets/estate-1.jpeg";
 
 const LISTING_ID = "697bcfcf3f5e990014fbc4dd";
 const CHECKOUT_BASE = `https://casasempreavanti.guestybookings.com/en/properties/${LISTING_ID}/checkout`;
-const MAX_GUESTS = 14;
+const MAX_GUESTS = 12;
 const MIN_NIGHTS = 3;
 
 interface CalendarDay {

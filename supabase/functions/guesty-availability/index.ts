@@ -112,7 +112,8 @@ async function fetchQuote(token: string, checkIn: string, checkOut: string, gues
   if (!response.ok) {
     const body = await response.text();
     console.error(`Quote API error ${response.status}:`, body.substring(0, 500));
-    throw new Error(`Quote API returned ${response.status}`);
+    // Return structured error with details instead of throwing
+    return { error: true, status: response.status, message: body };
   }
 
   return await response.json();
@@ -163,6 +164,15 @@ serve(async (req) => {
       }
 
       const data = await fetchQuote(token, checkIn, checkOut, guests);
+      
+      // If fetchQuote returned an error object, pass it through with appropriate status
+      if (data?.error) {
+        return new Response(JSON.stringify({ error: "Guest count exceeds maximum allowed", details: data.message }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      
       return new Response(JSON.stringify(data), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
