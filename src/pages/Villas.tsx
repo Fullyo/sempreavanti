@@ -57,11 +57,7 @@ function reorderPictures(
   } else if (villaName === "Villa Luisa") {
     // Find an aerial/exterior shot
     preferredIdx = pics.findIndex(
-      (p) =>
-        p.caption?.toLowerCase().includes("aerial") ||
-        p.caption?.toLowerCase().includes("exterior") ||
-        p.original?.includes("DJI") ||
-        p.original?.includes("dji")
+      (p) => p.original?.includes("b296357f-3987-4b-2s6Ol")
     );
   }
 
