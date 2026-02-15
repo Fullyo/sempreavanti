@@ -3,8 +3,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArrows";
 import { motion } from "framer-motion";
 import InquiryDialog from "@/components/InquiryDialog";
-
-
+import wellnessHeroImg from "@/assets/wellness-hero-yoga.png";
 import yogaImg from "@/assets/wellness-yoga.png";
 import soundbathImg from "@/assets/wellness-soundbath.jpeg";
 import nirvannaImg from "@/assets/wellness-nirvanna.png";
@@ -41,8 +40,9 @@ const practiceSpaces = [
 export default function Wellness() {
   return (
     <Layout>
-      <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden bg-[hsl(var(--primary))]">
-        <div className="absolute inset-0 bg-black/60" />
+      <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+        <img src={wellnessHeroImg} alt="Wellness" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 text-center text-primary-foreground px-4 w-full max-w-6xl mx-auto">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">The Estate</p>
           <div className="flex items-center justify-between gap-4">
