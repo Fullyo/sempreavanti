@@ -103,9 +103,9 @@ async function fetchQuote(token: string, checkIn: string, checkOut: string, gues
     },
     body: JSON.stringify({
       listingId: LISTING_ID,
-      checkIn,
-      checkOut,
-      guests,
+      checkInDateLocalized: checkIn,
+      checkOutDateLocalized: checkOut,
+      guestsCount: guests,
     }),
   });
 
