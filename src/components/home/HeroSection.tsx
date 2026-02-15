@@ -10,7 +10,7 @@ interface HeroSectionProps {
 export default function HeroSection({ listings }: HeroSectionProps) {
 
   return (
-    <section className="relative h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+    <section className="relative h-[90dvh] min-h-[600px] flex items-center justify-center overflow-hidden">
       {heroVilla ? (
         <img
           src={heroVilla}
