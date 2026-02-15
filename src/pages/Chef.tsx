@@ -10,7 +10,7 @@ import crethellImg from "@/assets/staff-crethell.jpeg";
 import margaritaImg from "@/assets/chef-margarita.jpeg";
 import moleImg from "@/assets/chef-mole.jpeg";
 import cevicheImg from "@/assets/chef-ceviche.jpg";
-import pizzaImg from "@/assets/chef-pizza.jpg";
+import pizzaImg from "@/assets/chef-pizza-new.png";
 
 const { prev, next } = getPageNav(estatePages, "/chef");
 
