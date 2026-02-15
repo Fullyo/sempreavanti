@@ -27,7 +27,7 @@ import estate8 from "@/assets/estate-8.jpeg";
 
 const ESTATE_PHOTOS = [estate1, estate2, estate3, estate4, estate5, estate6, estate7, estate8];
 
-const BOOKING_URL = "https://casasempreavanti.guestybookings.com/en/properties/697bcfcf3f5e990014fbc4dd?minOccupancy=1";
+
 
 function EstateCarousel({ pictures }: { pictures: string[] }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" });
@@ -207,14 +207,12 @@ export default function Index() {
                 Inquire Now
               </button>
             </InquiryDialog>
-            <a
-              href={BOOKING_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              to="/book"
               className="inline-block px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full"
             >
               Check Availability
-            </a>
+            </Link>
           </div>
         </div>
       </section>
