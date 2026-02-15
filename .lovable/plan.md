@@ -1,78 +1,63 @@
 
 
-## Fix Pricing + Enrich the Booking Page
+## Instant Booking Flow + Inquiry Button
 
-### Problem 1: Pricing Fails on Valid Dates
+### What Changes
 
-The Guesty Booking Engine API requires fields named `checkInDateLocalized` and `checkOutDateLocalized`, but the edge function sends `checkIn` and `checkOut`. The API returns a 400 error: `"checkInDateLocalized" is required`.
+The current two-step flow ("Get Quote" then "Book Now") becomes a single smooth flow:
 
-**Fix:** Change the field names in the quote request body inside `supabase/functions/guesty-availability/index.ts`.
+1. Guest selects dates on the calendar
+2. Price loads automatically (no button click needed)
+3. Two action buttons appear:
+   - **Book Now** (primary) -- sends them to Guesty's secure checkout with pre-filled dates
+   - **Have Questions?** (secondary) -- opens the existing inquiry popup form
 
-### Problem 2: Booking Page Lacks Property Information
+### Why This Works
 
-The current `/book` page only shows a calendar and quote sidebar. The Guesty hosted page includes:
-- Photo gallery (92 photos)
-- Full property description
-- "The Space" details for each villa
-- Guest access info
-- Property features (5 bedrooms, 7 beds, 5.5 bathrooms)
-- Amenities list
-- Check-in/check-out times
-- Neighborhood and getting around info
+- The Guesty Booking Engine API `quotes` endpoint only returns pricing -- it never creates a reservation. The actual booking always happens on Guesty's checkout page. So showing the price automatically is just a better UX; it doesn't change the booking mechanics.
+- Your inquiry popup uses a completely separate API (Guesty Open API) and is independent of the booking engine. No conflict.
+- Your API key is set to allow instant bookings, so the checkout page will let guests pay immediately.
 
-### Solution
+### Detailed Changes
 
-#### 1. Fix the Edge Function (guesty-availability)
+**File: `src/pages/Book.tsx`**
 
-Change the quote request body from:
-```text
-{ listingId, checkIn, checkOut, guests }
-```
-to:
-```text
-{ listingId, checkInDateLocalized, checkOutDateLocalized, guestsCount }
-```
-This matches the documented Guesty Booking Engine API field names.
+1. **Auto-fetch pricing**: When both check-in and check-out are selected (and nights >= 3), automatically call `fetchQuote()` instead of waiting for a button click. Remove the "Get Quote" button entirely.
 
-#### 2. Add Property Content to the Book Page
+2. **Replace "Book Now" section**: Instead of showing "Book Now" only after a quote loads, show two buttons once dates are selected and price is loaded:
+   - "Book Now" -- primary gold button, same redirect to Guesty checkout as today
+   - "Ask a Question" -- secondary outlined button, wrapped in `<InquiryDialog>` to open the existing popup form
 
-Below the hero and above the calendar, add a rich property section with content from the Guesty listing. Since this content is static (it doesn't change), we'll hardcode it directly in the component rather than making another API call. This avoids rate limits and loads instantly.
+3. **Update copy**: Change hero subtitle from "see real-time pricing" to "book your private beachfront retreat" to reflect instant booking.
 
-The enriched page will include:
+4. **Loading state**: While the price is being fetched automatically, show a subtle loading spinner in the sidebar instead of nothing.
 
-**Photo Gallery** -- A carousel of estate photos using images already in `src/assets/estate-*.jpeg` (16 photos already available in the project).
-
-**Property Overview** -- Key stats bar showing 5 Bedrooms, 7 Beds, 5.5 Bathrooms, 14 Guests, with check-in (4 PM) and check-out (11 AM) times.
-
-**Description Section** -- The full property description from Guesty, covering the estate overview, Villa Luisa details, Casa Pietro details, and included services (housekeeping, chef, concierge).
-
-**Amenities Grid** -- A styled grid showing key amenities: private beach, infinity pools, ocean views, air conditioning, WiFi, full kitchen, BBQ, pizza oven, etc.
-
-**Additional Services** -- List of bookable activities (ATV, surfing, yoga, horseback riding, etc.) with a link to the Experiences page.
-
-Then the calendar + booking sidebar section follows below.
-
-### Page Layout (top to bottom)
+### New Sidebar Flow (visual)
 
 ```text
-1. Hero (existing, keep as-is)
-2. Photo Gallery Carousel (estate photos)
-3. Property Overview Bar (beds/baths/guests/check-in times)
-4. Description (collapsible "Read More")
-5. Amenities Grid
-6. Available Services
-7. Calendar + Quote Sidebar (existing, fix quote API)
-8. Footer CTA (contact/inquire link)
+[Guests: - 2 +]
+
+[Check-in:  May 27, 2026]
+[Check-out: May 31, 2026]
+4 nights
+
+--- Price Breakdown ---
+Accommodation (4 nights)    $X,XXX
+Cleaning Fee                  $XXX
+Total (USD)               $XX,XXX
+
+[====== Book Now ======]   (gold, primary)
+[--- Ask a Question ---]   (outlined, opens inquiry popup)
 ```
+
+### Technical Details
+
+- Import `InquiryDialog` from `@/components/InquiryDialog` into `Book.tsx`
+- Use `useEffect` to trigger `fetchQuote()` whenever `checkIn`, `checkOut`, or `guests` change (debounced to avoid rapid calls if guest count is adjusted quickly)
+- Remove the manual "Get Quote" button (lines 324-334 in current Book.tsx)
+- Add the "Ask a Question" button wrapped in `<InquiryDialog><button>Ask a Question</button></InquiryDialog>` below the "Book Now" button
+- No edge function changes needed -- the quote endpoint and checkout redirect work the same way
 
 ### Files Modified
 
-- `supabase/functions/guesty-availability/index.ts` -- fix quote field names
-- `src/pages/Book.tsx` -- add property content sections above the calendar
-
-### Technical Notes
-
-- The estate photos (`estate-1.jpeg` through `estate-16.jpeg`) are already in the project assets
-- The `VillaCarousel` component already exists and can be reused for the photo gallery
-- All property text is hardcoded from the Guesty listing to avoid extra API calls
-- The calendar and quote sidebar logic stays the same, just the API field names change
+- `src/pages/Book.tsx` -- auto-fetch quote, remove "Get Quote" button, add inquiry button, update copy
