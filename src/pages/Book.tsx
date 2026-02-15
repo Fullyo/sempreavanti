@@ -3,6 +3,7 @@ import { format, addMonths, startOfMonth, eachDayOfInterval, endOfMonth, isBefor
 import { ChevronLeft, ChevronRight, Users, Loader2, CalendarDays } from "lucide-react";
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
+import InquiryDialog from "@/components/InquiryDialog";
 import { supabase } from "@/integrations/supabase/client";
 import PropertyGallery from "@/components/book/PropertyGallery";
 import PropertyOverview from "@/components/book/PropertyOverview";
@@ -78,6 +79,16 @@ export default function Book() {
   useEffect(() => {
     fetchCalendar(baseMonth);
   }, [baseMonth, fetchCalendar]);
+
+  // Auto-fetch quote when dates and guests change
+  useEffect(() => {
+    if (checkIn && checkOut && differenceInDays(checkOut, checkIn) >= MIN_NIGHTS) {
+      const timer = setTimeout(() => {
+        fetchQuote();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [checkIn, checkOut, guests]);
 
   const blockedDates = new Set(
     calendarData
@@ -194,7 +205,7 @@ export default function Book() {
             transition={{ delay: 0.2 }}
             className="font-sans text-white/80 max-w-md text-sm"
           >
-            Select your dates and see real-time pricing for your private beachfront retreat.
+            Select your dates to book your private beachfront retreat instantly.
           </motion.p>
         </div>
       </section>
@@ -321,16 +332,12 @@ export default function Book() {
                   )}
                 </div>
 
-                {/* Get Quote Button */}
-                {checkIn && checkOut && nights >= MIN_NIGHTS && !quote && (
-                  <button
-                    onClick={fetchQuote}
-                    disabled={loadingQuote}
-                    className="w-full py-3 bg-foreground text-background font-sans text-sm uppercase tracking-widest rounded-full hover:bg-foreground/90 transition-colors mb-4 flex items-center justify-center gap-2 disabled:opacity-60"
-                  >
-                    {loadingQuote ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                    {loadingQuote ? "Getting Price..." : "Get Quote"}
-                  </button>
+                {/* Loading state for auto-fetch */}
+                {loadingQuote && (
+                  <div className="flex items-center justify-center gap-2 py-4 text-muted-foreground">
+                    <Loader2 className="w-4 h-4 animate-spin text-golden" />
+                    <span className="text-sm font-sans">Fetching pricing...</span>
+                  </div>
                 )}
 
                 {quoteError && (
@@ -371,14 +378,21 @@ export default function Book() {
                   </motion.div>
                 )}
 
-                {/* Book Now */}
+                {/* Book Now + Inquiry */}
                 {quote && totalPrice !== null && (
-                  <button
-                    onClick={handleBookNow}
-                    className="w-full py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest rounded-full hover:bg-accent/90 transition-colors"
-                  >
-                    Book Now
-                  </button>
+                  <div className="space-y-3">
+                    <button
+                      onClick={handleBookNow}
+                      className="w-full py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest rounded-full hover:bg-accent/90 transition-colors"
+                    >
+                      Book Now
+                    </button>
+                    <InquiryDialog>
+                      <button className="w-full py-3 border border-golden text-golden font-sans text-sm uppercase tracking-widest rounded-full hover:bg-golden/10 transition-colors">
+                        Ask a Question
+                      </button>
+                    </InquiryDialog>
+                  </div>
                 )}
 
                 {!checkIn && (
