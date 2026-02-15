@@ -167,12 +167,13 @@ export default function Book() {
 
   const nights = checkIn && checkOut ? differenceInDays(checkOut, checkIn) : 0;
 
-  // Extract pricing from quote (handle various API response shapes)
-  const totalPrice = quote?.money?.totalPrice ?? quote?.totalPrice ?? null;
-  const accommodation = quote?.money?.fareAccommodation ?? quote?.fareAccommodation ?? null;
-  const cleaning = quote?.money?.fareCleaning ?? quote?.fareCleaning ?? null;
-  const currency = quote?.money?.currency ?? quote?.currency ?? "USD";
-  const invoiceItems = quote?.money?.invoiceItems ?? quote?.invoiceItems ?? [];
+  // Extract pricing from quote (handle nested ratePlan structure from Guesty BE API)
+  const ratePlanMoney = (quote?.rates as any)?.ratePlans?.[0]?.ratePlan?.money;
+  const totalPrice = ratePlanMoney?.hostPayout ?? ratePlanMoney?.subTotalPrice ?? quote?.money?.totalPrice ?? quote?.totalPrice ?? null;
+  const accommodation = ratePlanMoney?.fareAccommodation ?? quote?.money?.fareAccommodation ?? quote?.fareAccommodation ?? null;
+  const cleaning = ratePlanMoney?.fareCleaning ?? quote?.money?.fareCleaning ?? quote?.fareCleaning ?? null;
+  const currency = ratePlanMoney?.currency ?? quote?.money?.currency ?? quote?.currency ?? "USD";
+  const invoiceItems = ratePlanMoney?.invoiceItems ?? quote?.money?.invoiceItems ?? quote?.invoiceItems ?? [];
 
   const prevMonth = () => setBaseMonth((m) => addMonths(m, -1));
   const nextMonth = () => setBaseMonth((m) => addMonths(m, 1));
@@ -410,12 +411,13 @@ export default function Book() {
         <div className="container max-w-2xl">
           <h2 className="font-serif text-3xl md:text-4xl font-light mb-4">Have Questions?</h2>
           <p className="font-sans text-muted-foreground mb-6">Our concierge team is happy to help you plan the perfect stay.</p>
-          <a
-            href="/contact"
-            className="inline-block py-3 px-8 bg-foreground text-background font-sans text-sm uppercase tracking-widest rounded-full hover:bg-foreground/90 transition-colors"
-          >
-            Contact Us
-          </a>
+          <InquiryDialog>
+            <button
+              className="inline-block py-3 px-8 bg-foreground text-background font-sans text-sm uppercase tracking-widest rounded-full hover:bg-foreground/90 transition-colors"
+            >
+              Get in Touch
+            </button>
+          </InquiryDialog>
         </div>
       </section>
     </Layout>
