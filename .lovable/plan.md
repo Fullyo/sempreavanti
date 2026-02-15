@@ -1,87 +1,78 @@
 
 
-## Custom Booking Page — Replace Guesty's Hosted Widget
+## Fix Pricing + Enrich the Booking Page
 
-### The Problem
-Right now, "Check Availability" sends guests to Guesty's generic hosted booking page (`casasempreavanti.guestybookings.com`). It's functional but visually disconnected from your brand. Guests leave your beautiful site and land on a plain template.
+### Problem 1: Pricing Fails on Valid Dates
 
-### The Solution
-Build a custom `/book` page directly on your site that uses the Guesty Booking Engine API (which you already have credentials for) to:
-1. Show a branded calendar with available/unavailable dates
-2. Let guests select dates and group size
-3. Display a real-time price quote
-4. Redirect to Guesty's checkout for secure payment processing
+The Guesty Booking Engine API requires fields named `checkInDateLocalized` and `checkOutDateLocalized`, but the edge function sends `checkIn` and `checkOut`. The API returns a 400 error: `"checkInDateLocalized" is required`.
 
-### Why not handle payment ourselves?
-Payment processing through Guesty requires their specific checkout flow to keep reservations properly synced, handle security deposits, cancellation policies, etc. We'll handle the "discovery + pricing" part beautifully on your site and hand off to Guesty only for the final payment step. This gives you 90% of the visual improvement while keeping the booking pipeline reliable.
+**Fix:** Change the field names in the quote request body inside `supabase/functions/guesty-availability/index.ts`.
 
-### What the guest sees (new flow)
+### Problem 2: Booking Page Lacks Property Information
+
+The current `/book` page only shows a calendar and quote sidebar. The Guesty hosted page includes:
+- Photo gallery (92 photos)
+- Full property description
+- "The Space" details for each villa
+- Guest access info
+- Property features (5 bedrooms, 7 beds, 5.5 bathrooms)
+- Amenities list
+- Check-in/check-out times
+- Neighborhood and getting around info
+
+### Solution
+
+#### 1. Fix the Edge Function (guesty-availability)
+
+Change the quote request body from:
+```text
+{ listingId, checkIn, checkOut, guests }
+```
+to:
+```text
+{ listingId, checkInDateLocalized, checkOutDateLocalized, guestsCount }
+```
+This matches the documented Guesty Booking Engine API field names.
+
+#### 2. Add Property Content to the Book Page
+
+Below the hero and above the calendar, add a rich property section with content from the Guesty listing. Since this content is static (it doesn't change), we'll hardcode it directly in the component rather than making another API call. This avoids rate limits and loads instantly.
+
+The enriched page will include:
+
+**Photo Gallery** -- A carousel of estate photos using images already in `src/assets/estate-*.jpeg` (16 photos already available in the project).
+
+**Property Overview** -- Key stats bar showing 5 Bedrooms, 7 Beds, 5.5 Bathrooms, 14 Guests, with check-in (4 PM) and check-out (11 AM) times.
+
+**Description Section** -- The full property description from Guesty, covering the estate overview, Villa Luisa details, Casa Pietro details, and included services (housekeeping, chef, concierge).
+
+**Amenities Grid** -- A styled grid showing key amenities: private beach, infinity pools, ocean views, air conditioning, WiFi, full kitchen, BBQ, pizza oven, etc.
+
+**Additional Services** -- List of bookable activities (ATV, surfing, yoga, horseback riding, etc.) with a link to the Experiences page.
+
+Then the calendar + booking sidebar section follows below.
+
+### Page Layout (top to bottom)
 
 ```text
-[Your Site: /book]                    [Guesty Checkout]
-                                      
-1. Beautiful calendar               4. Payment form
-   (available dates in gold,           (only step off-site)
-    blocked dates greyed out)
-2. Guest count selector
-3. Price breakdown card
-   with "Book Now" button
+1. Hero (existing, keep as-is)
+2. Photo Gallery Carousel (estate photos)
+3. Property Overview Bar (beds/baths/guests/check-in times)
+4. Description (collapsible "Read More")
+5. Amenities Grid
+6. Available Services
+7. Calendar + Quote Sidebar (existing, fix quote API)
+8. Footer CTA (contact/inquire link)
 ```
 
-### Changes
+### Files Modified
 
-**1. New edge function: `supabase/functions/guesty-availability/index.ts`**
+- `supabase/functions/guesty-availability/index.ts` -- fix quote field names
+- `src/pages/Book.tsx` -- add property content sections above the calendar
 
-Fetches calendar data and price quotes from the Booking Engine API:
-- `GET /api/listings/{id}/calendar` -- returns available/blocked dates for a given month range
-- `POST /api/reservations/quotes` -- returns pricing for selected dates and guest count
+### Technical Notes
 
-Uses the existing `GUESTY_CLIENT_ID` / `GUESTY_CLIENT_SECRET` (Booking Engine scope).
-
-**2. New page: `src/pages/Book.tsx`**
-
-A full-width branded page with:
-- Hero section with estate photo and heading
-- Interactive two-month calendar showing availability (green/gold = available, grey = blocked)
-- Guest count selector (1-14)
-- "Get Quote" button that fetches real-time pricing
-- Price breakdown card (nightly rate, cleaning fee, total)
-- "Book Now" button that redirects to the Guesty checkout URL with pre-filled dates and guest count
-
-The page matches your existing design language: Cormorant Garamond headings, Montserrat body text, golden accents, rounded corners, sand/ocean color palette.
-
-**3. Update all "Check Availability" links**
-
-Replace the external Guesty URL in:
-- `src/components/layout/Navbar.tsx` -- desktop and mobile buttons
-- `src/pages/Index.tsx` -- CTA section
-
-Change from `<a href={BOOKING_URL}>` to `<Link to="/book">` so guests stay on your site.
-
-**4. Add route in `src/App.tsx`**
-
-Add `/book` route pointing to the new `Book` page.
-
-### Technical Details
-
-**Edge function (`guesty-availability`):**
-- Reuses the token caching logic from `guesty-listings` (DB-cached access token with `booking_engine:api` scope)
-- Two modes based on a `action` parameter:
-  - `action: "calendar"` -- calls `GET /api/listings/{listingId}/calendar?from=YYYY-MM-DD&to=YYYY-MM-DD` and returns an array of dates with availability status
-  - `action: "quote"` -- calls `POST /api/reservations/quotes` with check-in, check-out, guests, and listing ID; returns the price breakdown
-- Returns clean JSON for the frontend to consume
-
-**Book page components:**
-- `AvailabilityCalendar` -- two-month calendar grid using `react-day-picker` (already installed). Blocked dates are disabled/greyed. Available dates are selectable. Selected range highlighted in gold.
-- `PriceQuote` -- card that appears after selecting dates, showing nightly rate, number of nights, fees, and total
-- "Book Now" constructs the Guesty checkout URL with query params: `?checkIn=YYYY-MM-DD&checkOut=YYYY-MM-DD&minOccupancy=N` and opens it (this is the only moment the guest leaves your site, and it's just the payment form)
-
-**Files created:**
-- `supabase/functions/guesty-availability/index.ts`
-- `src/pages/Book.tsx`
-
-**Files modified:**
-- `src/App.tsx` -- add `/book` route
-- `src/components/layout/Navbar.tsx` -- change Check Availability to internal link
-- `src/pages/Index.tsx` -- change CTA Check Availability to internal link
-
+- The estate photos (`estate-1.jpeg` through `estate-16.jpeg`) are already in the project assets
+- The `VillaCarousel` component already exists and can be reused for the photo gallery
+- All property text is hardcoded from the Guesty listing to avoid extra API calls
+- The calendar and quote sidebar logic stays the same, just the API field names change
