@@ -1,52 +1,87 @@
 
 
-## Switch to Guesty Open API for Inquiries
+## Custom Booking Page — Replace Guesty's Hosted Widget
 
-### What this fixes
-The current Booking Engine API requires available dates to create an inquiry. The Open API lets us create inquiries directly with `status: "inquiry"` -- no date availability needed. Every form submission will land in your Guesty inbox.
+### The Problem
+Right now, "Check Availability" sends guests to Guesty's generic hosted booking page (`casasempreavanti.guestybookings.com`). It's functional but visually disconnected from your brand. Guests leave your beautiful site and land on a plain template.
+
+### The Solution
+Build a custom `/book` page directly on your site that uses the Guesty Booking Engine API (which you already have credentials for) to:
+1. Show a branded calendar with available/unavailable dates
+2. Let guests select dates and group size
+3. Display a real-time price quote
+4. Redirect to Guesty's checkout for secure payment processing
+
+### Why not handle payment ourselves?
+Payment processing through Guesty requires their specific checkout flow to keep reservations properly synced, handle security deposits, cancellation policies, etc. We'll handle the "discovery + pricing" part beautifully on your site and hand off to Guesty only for the final payment step. This gives you 90% of the visual improvement while keeping the booking pipeline reliable.
+
+### What the guest sees (new flow)
+
+```text
+[Your Site: /book]                    [Guesty Checkout]
+                                      
+1. Beautiful calendar               4. Payment form
+   (available dates in gold,           (only step off-site)
+    blocked dates greyed out)
+2. Guest count selector
+3. Price breakdown card
+   with "Book Now" button
+```
 
 ### Changes
 
-**1. Store new Open API credentials as secrets**
+**1. New edge function: `supabase/functions/guesty-availability/index.ts`**
 
-Two new secrets:
-- `GUESTY_OPEN_API_CLIENT_ID` = `0oasxjn81wWHQpB4h5d7`
-- `GUESTY_OPEN_API_CLIENT_SECRET` = `C1eVEQQ-zYCqu6Oepuqd13idKxc3miVzQ7jDYyVtVaBgjucgn9ZozqKRS6viJ7ir`
+Fetches calendar data and price quotes from the Booking Engine API:
+- `GET /api/listings/{id}/calendar` -- returns available/blocked dates for a given month range
+- `POST /api/reservations/quotes` -- returns pricing for selected dates and guest count
 
-The existing `GUESTY_CLIENT_ID` / `GUESTY_CLIENT_SECRET` stay in place for the listings function.
+Uses the existing `GUESTY_CLIENT_ID` / `GUESTY_CLIENT_SECRET` (Booking Engine scope).
 
-**2. Rewrite `supabase/functions/guesty-inquiry/index.ts`**
+**2. New page: `src/pages/Book.tsx`**
 
-Replace the entire Booking Engine quote-to-inquiry flow with a single Open API call:
+A full-width branded page with:
+- Hero section with estate photo and heading
+- Interactive two-month calendar showing availability (green/gold = available, grey = blocked)
+- Guest count selector (1-14)
+- "Get Quote" button that fetches real-time pricing
+- Price breakdown card (nightly rate, cleaning fee, total)
+- "Book Now" button that redirects to the Guesty checkout URL with pre-filled dates and guest count
 
-```text
-Token endpoint:  https://open-api.guesty.com/oauth2/token  (scope: open-api)
-Inquiry endpoint: POST https://open-api.guesty.com/v1/reservations
-```
+The page matches your existing design language: Cormorant Garamond headings, Montserrat body text, golden accents, rounded corners, sand/ocean color palette.
 
-The new flow:
-1. Validate form input
-2. Save to the `inquiries` database table (guaranteed)
-3. Get an Open API token (cached as `open_api_access_token`)
-4. POST to `/v1/reservations` with:
-   - `listingId`: the estate listing ID
-   - `status`: "inquiry"
-   - `guest`: { firstName, lastName, email, phone }
-   - `note`: compiled from preferred dates, group size, activities, message
-5. If Guesty succeeds, update the DB row with the reservation ID
-6. Return success to the user
+**3. Update all "Check Availability" links**
 
-No date availability check needed. The inquiry lands in your Guesty inbox every time.
+Replace the external Guesty URL in:
+- `src/components/layout/Navbar.tsx` -- desktop and mobile buttons
+- `src/pages/Index.tsx` -- CTA section
 
-**3. No frontend changes**
+Change from `<a href={BOOKING_URL}>` to `<Link to="/book">` so guests stay on your site.
 
-The `InquiryDialog.tsx` form and the "Check Availability" booking widget link both remain as-is. They serve different purposes:
-- "Inquire" = custom form -> Open API inquiry (communication)
-- "Check Availability" = Guesty hosted widget (date-based booking)
+**4. Add route in `src/App.tsx`**
 
-### Files modified
-- `supabase/functions/guesty-inquiry/index.ts` -- rewrite to use Open API
-- Two new secrets added
+Add `/book` route pointing to the new `Book` page.
 
-### After implementation
-Test the form end-to-end and verify the inquiry appears in your Guesty inbox.
+### Technical Details
+
+**Edge function (`guesty-availability`):**
+- Reuses the token caching logic from `guesty-listings` (DB-cached access token with `booking_engine:api` scope)
+- Two modes based on a `action` parameter:
+  - `action: "calendar"` -- calls `GET /api/listings/{listingId}/calendar?from=YYYY-MM-DD&to=YYYY-MM-DD` and returns an array of dates with availability status
+  - `action: "quote"` -- calls `POST /api/reservations/quotes` with check-in, check-out, guests, and listing ID; returns the price breakdown
+- Returns clean JSON for the frontend to consume
+
+**Book page components:**
+- `AvailabilityCalendar` -- two-month calendar grid using `react-day-picker` (already installed). Blocked dates are disabled/greyed. Available dates are selectable. Selected range highlighted in gold.
+- `PriceQuote` -- card that appears after selecting dates, showing nightly rate, number of nights, fees, and total
+- "Book Now" constructs the Guesty checkout URL with query params: `?checkIn=YYYY-MM-DD&checkOut=YYYY-MM-DD&minOccupancy=N` and opens it (this is the only moment the guest leaves your site, and it's just the payment form)
+
+**Files created:**
+- `supabase/functions/guesty-availability/index.ts`
+- `src/pages/Book.tsx`
+
+**Files modified:**
+- `src/App.tsx` -- add `/book` route
+- `src/components/layout/Navbar.tsx` -- change Check Availability to internal link
+- `src/pages/Index.tsx` -- change CTA Check Availability to internal link
+
