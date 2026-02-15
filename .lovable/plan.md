@@ -1,41 +1,52 @@
 
 
-## Fix Hero Image Cropping on Published Site
+## Fix Guesty Inquiry Form -- Authentication Mismatch
 
-### Problem
-The preview environment shows the full pool, but the published site crops it because different screen sizes and aspect ratios cause `object-cover` to cut off different parts of the image. The current `h-[90dvh]` constraint combined with `object-cover` means the image will always be cropped on wider screens where the viewport is shorter relative to its width.
+### Root Cause
 
-### Solution: Make the hero taller and reposition the image anchor
+The edge function has **two separate problems**:
 
-Two changes to `src/components/home/HeroSection.tsx`:
+1. **Wrong endpoint for Booking Engine API**: It tries `POST https://booking.guesty.com/api/inquiries` which returns 404 -- this endpoint doesn't exist. The BE API requires creating a quote first, then converting it to an inquiry.
 
-**1. Increase hero height from `90dvh` to `100dvh`** (line 13)
-This gives the image more vertical space to display, reducing how much gets cropped.
+2. **Wrong token for Open API**: The fallback calls `https://open-api.guesty.com/v1/reservations` but uses a token obtained with scope `booking_engine:api` from `booking.guesty.com`. The Open API requires its own token with scope `open-api` from `open-api.guesty.com/oauth2/token`. That's why it returns 401 "Not Authorized".
 
-**2. Shift the image anchor from `object-[center_40%]` to `object-[center_60%]`** (line 18)
-`60%` means the anchor point is 60% from the top, which pulls the image up and reveals more of the bottom (where the pool is). The current `40%` isn't shifting it far enough.
+### Solution
 
-### File: `src/components/home/HeroSection.tsx`
+Rewrite the `getAccessToken` function and the inquiry submission to use the **Open API** exclusively:
 
+- Get the OAuth token from `https://open-api.guesty.com/oauth2/token` with scope `open-api`
+- POST the inquiry to `https://open-api.guesty.com/v1/reservations` with status `inquiry`
+- Cache the Open API token separately (key: `open_api_access_token`) so it doesn't conflict with the existing BE token used by the listings function
+- Remove the non-existent `/api/inquiries` endpoint call entirely
+
+### File Change: `supabase/functions/guesty-inquiry/index.ts`
+
+**Token function** -- change the OAuth endpoint and scope:
 ```text
-Line 13 (section height):
-  Before: h-[90dvh] min-h-[600px]
-  After:  h-[100dvh] min-h-[600px]
+Before:
+  URL:   https://booking.guesty.com/oauth2/token
+  scope: booking_engine:api
 
-Line 18 (image position):
-  Before: object-[center_40%]
-  After:  object-[center_60%]
+After:
+  URL:   https://open-api.guesty.com/oauth2/token
+  scope: open-api
 ```
 
-### Why this works across all screens
-- Taller hero = less aggressive cropping on all viewports
-- `60%` anchor = the pool area is always prioritized regardless of viewport width
-- These two changes together ensure the pool is visible on desktop, tablet, and mobile
+Cache key changes from `access_token` to `open_api_access_token` to avoid collisions with the listings function's cached BE token.
 
-### What stays the same
-- Gradient overlay (`from-black/35 via-black/15 to-black/50`)
-- All text, buttons, animations
-- The image file itself (already replaced)
+**Inquiry submission** -- replace both attempts with a single correct call:
+```text
+POST https://open-api.guesty.com/v1/reservations
+{
+  listingId: "697bcfcf3f5e990014fbc4dd",
+  status: "inquiry",
+  guest: { firstName, lastName, email, phone },
+  note: "..."
+}
+```
 
-### After implementing
-You will need to click **Publish** to push the changes to the live site at villassempreavanti.com.
+Also add response content-type checking before parsing JSON to handle unexpected HTML error pages gracefully.
+
+### No other files change
+The frontend `InquiryDialog.tsx` component is correct -- only the backend function needs fixing.
+
