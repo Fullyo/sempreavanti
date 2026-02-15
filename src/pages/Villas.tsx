@@ -88,7 +88,7 @@ export default function Villas() {
   return (
     <Layout>
       {/* Hero */}
-      <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[60dvh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <img src={villaHero} alt="The Villas" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 text-center text-primary-foreground px-4 w-full max-w-6xl mx-auto">

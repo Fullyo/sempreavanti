@@ -45,7 +45,7 @@ export default function Contact() {
 
   return (
     <Layout>
-      <section className="relative h-[50vh] min-h-[350px] flex items-center justify-center overflow-hidden">
+      <section className="relative h-[50dvh] min-h-[350px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-primary" />
         <PhotoPlaceholder label="Villas Sempre Avanti" className="absolute inset-0 !aspect-auto opacity-30" />
         <div className="relative z-10 text-center text-primary-foreground px-4">
