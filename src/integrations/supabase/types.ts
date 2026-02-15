@@ -35,6 +35,51 @@ export type Database = {
         }
         Relationships: []
       }
+      inquiries: {
+        Row: {
+          created_at: string | null
+          email: string
+          first_name: string
+          group_size: string | null
+          guesty_reservation_id: string | null
+          id: string
+          last_name: string
+          message: string | null
+          phone: string | null
+          preferred_dates: string | null
+          selected_activities: string[] | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          first_name: string
+          group_size?: string | null
+          guesty_reservation_id?: string | null
+          id?: string
+          last_name: string
+          message?: string | null
+          phone?: string | null
+          preferred_dates?: string | null
+          selected_activities?: string[] | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          first_name?: string
+          group_size?: string | null
+          guesty_reservation_id?: string | null
+          id?: string
+          last_name?: string
+          message?: string | null
+          phone?: string | null
+          preferred_dates?: string | null
+          selected_activities?: string[] | null
+          status?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

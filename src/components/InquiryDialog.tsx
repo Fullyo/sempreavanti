@@ -42,6 +42,7 @@ export default function InquiryDialog({ children }: InquiryDialogProps) {
     firstName: "",
     lastName: "",
     email: "",
+    confirmEmail: "",
     phone: "",
     dates: "",
     groupSize: "",
@@ -59,6 +60,14 @@ export default function InquiryDialog({ children }: InquiryDialogProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (form.email !== form.confirmEmail) {
+      toast({
+        title: "Email Mismatch",
+        description: "The email addresses don't match. Please check and try again.",
+        variant: "destructive",
+      });
+      return;
+    }
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("guesty-inquiry", {
@@ -71,7 +80,7 @@ export default function InquiryDialog({ children }: InquiryDialogProps) {
         title: "Inquiry Sent",
         description: "Thank you! We'll be in touch shortly to begin planning your stay.",
       });
-      setForm({ firstName: "", lastName: "", email: "", phone: "", dates: "", groupSize: "", message: "" });
+      setForm({ firstName: "", lastName: "", email: "", confirmEmail: "", phone: "", dates: "", groupSize: "", message: "" });
       setSelectedActivities([]);
       setOpen(false);
     } catch (err) {
@@ -151,15 +160,32 @@ export default function InquiryDialog({ children }: InquiryDialogProps) {
               </div>
               <div>
                 <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-2 block">
-                  Phone
+                  Confirm Email
                 </label>
                 <Input
-                  type="tel"
-                  value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  type="email"
+                  value={form.confirmEmail}
+                  onChange={(e) => setForm({ ...form, confirmEmail: e.target.value })}
+                  required
+                  placeholder="Re-enter your email"
                   className="bg-card border-border focus:border-accent"
                 />
               </div>
+            </div>
+
+            {/* Phone */}
+            <div>
+              <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-2 block">
+                Phone
+              </label>
+              <Input
+                type="tel"
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                required
+                placeholder="e.g., +1 (555) 123-4567"
+                className="bg-card border-border focus:border-accent"
+              />
             </div>
 
             {/* Trip Details */}
