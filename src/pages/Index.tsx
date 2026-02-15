@@ -117,13 +117,13 @@ export default function Index() {
                 Villas Sempre Avanti is a self-contained private resort on the Riviera Nayarit coast. Two adjacent beachfront villas — Villa Pietro and Villa Luisa — create a seamless estate with private beach, pool, and every detail attended to by your dedicated team.
               </p>
               <p className="text-base font-sans text-muted-foreground leading-relaxed mb-8">
-                Two adjacent beachfront villas with private pool, fire pit, beachfront dining, and a dedicated team of chefs, concierge, and housekeeping. Everything you need, nothing you don't.
+                Two adjacent beachfront villas with private pool, beachfront dining, and a dedicated team of chefs, concierge, and housekeeping. Everything you need, nothing you don't.
               </p>
               {/* 2x2 Stats Grid */}
               <div className="grid grid-cols-2 gap-6 mb-8">
                 {[
                   { value: "5", label: "Bedrooms" },
-                  { value: "10", label: "Guests" },
+                  { value: "14", label: "Guests" },
                   { value: "5", label: "Bathrooms" },
                   { value: "Private", label: "Beach" },
                 ].map((stat) => (
