@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import InquiryDialog from "@/components/InquiryDialog";
 
 export default function Footer() {
   return (
@@ -20,7 +21,7 @@ export default function Footer() {
               <Link to="/villas" className="text-sm font-sans opacity-70 hover:opacity-100 transition-opacity">The Villas</Link>
               <Link to="/chef" className="text-sm font-sans opacity-70 hover:opacity-100 transition-opacity">Private Chef</Link>
               <Link to="/wellness" className="text-sm font-sans opacity-70 hover:opacity-100 transition-opacity">Wellness</Link>
-              <Link to="/concierge" className="text-sm font-sans opacity-70 hover:opacity-100 transition-opacity">Your Team</Link>
+              <Link to="/staff" className="text-sm font-sans opacity-70 hover:opacity-100 transition-opacity">Your Team</Link>
             </div>
           </div>
           <div>
@@ -37,13 +38,16 @@ export default function Footer() {
             <div className="flex flex-col gap-2.5">
               <Link to="/events" className="text-sm font-sans opacity-70 hover:opacity-100 transition-opacity">Events</Link>
               <Link to="/weddings" className="text-sm font-sans opacity-70 hover:opacity-100 transition-opacity">Weddings</Link>
-              <Link to="/private-events" className="text-sm font-sans opacity-70 hover:opacity-100 transition-opacity">Private Events</Link>
             </div>
           </div>
           <div>
             <h4 className="font-sans text-xs uppercase tracking-[0.2em] mb-4 opacity-50">Plan Your Stay</h4>
             <div className="flex flex-col gap-2.5">
-              <Link to="/contact" className="text-sm font-sans opacity-70 hover:opacity-100 transition-opacity">Get in Touch</Link>
+              <InquiryDialog>
+                <button className="text-sm font-sans opacity-70 hover:opacity-100 transition-opacity text-left">
+                  Get in Touch
+                </button>
+              </InquiryDialog>
               <Link to="/location" className="text-sm font-sans opacity-70 hover:opacity-100 transition-opacity">Location & Travel</Link>
             </div>
           </div>

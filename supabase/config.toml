@@ -2,3 +2,6 @@ project_id = "hrtyncnxnbdteccigzav"
 
 [functions.guesty-listings]
 verify_jwt = false
+
+[functions.guesty-inquiry]
+verify_jwt = false
