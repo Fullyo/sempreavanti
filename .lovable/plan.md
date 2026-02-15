@@ -1,26 +1,41 @@
 
 
-## Update Homepage Hero Image and Show Full Photo
+## Fix Hero Image Cropping on Published Site
 
-### Changes
+### Problem
+The preview environment shows the full pool, but the published site crops it because different screen sizes and aspect ratios cause `object-cover` to cut off different parts of the image. The current `h-[90dvh]` constraint combined with `object-cover` means the image will always be cropped on wider screens where the viewport is shorter relative to its width.
 
-**1. Replace hero image asset**
-Copy the new uploaded photo (`VillaSempreAvantiHero1.png`) to `src/assets/hero-villa-new.png`, replacing the current file.
+### Solution: Make the hero taller and reposition the image anchor
 
-**2. Adjust image positioning (`src/components/home/HeroSection.tsx`, line 19)**
-Add `object-[center_40%]` to the image class so the pool at the bottom of the photo is visible instead of being cropped out.
+Two changes to `src/components/home/HeroSection.tsx`:
 
-Current:
+**1. Increase hero height from `90dvh` to `100dvh`** (line 13)
+This gives the image more vertical space to display, reducing how much gets cropped.
+
+**2. Shift the image anchor from `object-[center_40%]` to `object-[center_60%]`** (line 18)
+`60%` means the anchor point is 60% from the top, which pulls the image up and reveals more of the bottom (where the pool is). The current `40%` isn't shifting it far enough.
+
+### File: `src/components/home/HeroSection.tsx`
+
+```text
+Line 13 (section height):
+  Before: h-[90dvh] min-h-[600px]
+  After:  h-[100dvh] min-h-[600px]
+
+Line 18 (image position):
+  Before: object-[center_40%]
+  After:  object-[center_60%]
 ```
-className="absolute inset-0 w-full h-full object-cover"
-```
 
-Updated:
-```
-className="absolute inset-0 w-full h-full object-cover object-[center_40%]"
-```
+### Why this works across all screens
+- Taller hero = less aggressive cropping on all viewports
+- `60%` anchor = the pool area is always prioritized regardless of viewport width
+- These two changes together ensure the pool is visible on desktop, tablet, and mobile
 
 ### What stays the same
-- The gradient overlay remains at its current setting (`from-black/35 via-black/15 to-black/50`)
-- All other hero section content (text, buttons, layout) unchanged
+- Gradient overlay (`from-black/35 via-black/15 to-black/50`)
+- All text, buttons, animations
+- The image file itself (already replaced)
 
+### After implementing
+You will need to click **Publish** to push the changes to the live site at villassempreavanti.com.
