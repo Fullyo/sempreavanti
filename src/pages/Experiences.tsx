@@ -17,9 +17,9 @@ const categories = [
     gallery: [
       { src: marietasImg, alt: "Ocean waves near Sayulita" },
     ],
-    intro: "Chillo is the best beginner surf instructor in Sayulita — patient, fun, and incredible with kids and first-timers. He'll have your family standing on boards by day one. We can arrange lessons for your group any morning during your stay.",
+    intro: "Vary is your go-to surf guide in Sayulita — an incredible instructor for beginners and intermediates, and the perfect companion for experienced surfers looking to discover the best breaks along the coast. We can arrange lessons and guided sessions any morning during your stay.",
     items: [
-      { name: "Lessons with Chillo", desc: "Sayulita's top instructor for beginners and families. Patient, fun, and incredible with kids." },
+      { name: "Sessions with Vary", desc: "Expert instruction, local knowledge, and surf guidance for all levels — from first-timers to experienced wave chasers." },
       { name: "Surf Experience — La Lancha", desc: "World-class left point break near Punta de Mita. Transportation, boards, 1.5-hour lesson, and 30 min free surf." },
       { name: "Captain Pablo's", desc: "Right point break — consistent, fun, great for intermediate surfers." },
       { name: "Don Pedro's", desc: "Left break right in front of the iconic restaurant." },
