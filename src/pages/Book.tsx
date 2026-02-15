@@ -16,6 +16,8 @@ const LISTING_ID = "697bcfcf3f5e990014fbc4dd";
 const CHECKOUT_BASE = `https://casasempreavanti.guestybookings.com/en/properties/${LISTING_ID}/checkout`;
 const MAX_GUESTS = 14;
 const MIN_NIGHTS = 3;
+const BASE_OCCUPANCY = 12;
+const EXTRA_GUEST_FEE = 100;
 
 interface CalendarDay {
   date: string;
@@ -174,6 +176,11 @@ export default function Book() {
   const cleaning = ratePlanMoney?.fareCleaning ?? quote?.money?.fareCleaning ?? quote?.fareCleaning ?? null;
   const currency = ratePlanMoney?.currency ?? quote?.money?.currency ?? quote?.currency ?? "USD";
   const invoiceItems = ratePlanMoney?.invoiceItems ?? quote?.money?.invoiceItems ?? quote?.invoiceItems ?? [];
+
+  // Split out extra guest fee from accommodation for display
+  const extraGuests = Math.max(0, guests - BASE_OCCUPANCY);
+  const extraGuestTotal = extraGuests * EXTRA_GUEST_FEE * nights;
+  const displayAccommodation = accommodation !== null && extraGuests > 0 ? accommodation - extraGuestTotal : accommodation;
 
 
   const prevMonth = () => setBaseMonth((m) => addMonths(m, -1));
@@ -356,7 +363,13 @@ export default function Book() {
                     {accommodation !== null && (
                       <div className="flex justify-between font-sans text-sm">
                         <span className="text-muted-foreground">Accommodation ({nights} nights)</span>
-                        <span>${accommodation.toLocaleString()}</span>
+                        <span>${(displayAccommodation ?? accommodation).toLocaleString()}</span>
+                      </div>
+                    )}
+                    {extraGuests > 0 && extraGuestTotal > 0 && (
+                      <div className="flex justify-between font-sans text-sm">
+                        <span className="text-muted-foreground">Extra Guest Fee ({extraGuests} × ${EXTRA_GUEST_FEE}/night)</span>
+                        <span>${extraGuestTotal.toLocaleString()}</span>
                       </div>
                     )}
                     {cleaning !== null && cleaning > 0 && (
