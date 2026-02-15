@@ -16,43 +16,28 @@ function getSupabaseAdmin() {
   );
 }
 
-async function getFromCache(supabase: ReturnType<typeof createClient>, key: string) {
-  const { data, error } = await supabase
+async function getOpenApiToken(supabase: ReturnType<typeof createClient>): Promise<string> {
+  // Check cache
+  const { data: cached } = await supabase
     .from("guesty_cache")
     .select("value, expires_at")
-    .eq("key", key)
+    .eq("key", "open_api_access_token")
     .maybeSingle();
-  if (error) {
-    console.error(`Cache read error for ${key}:`, error.message);
-    return null;
-  }
-  return data;
-}
 
-async function setCache(supabase: ReturnType<typeof createClient>, key: string, value: unknown, ttlSeconds: number) {
-  const expiresAt = new Date(Date.now() + ttlSeconds * 1000).toISOString();
-  const { error } = await supabase
-    .from("guesty_cache")
-    .upsert({ key, value, expires_at: expiresAt, updated_at: new Date().toISOString() }, { onConflict: "key" });
-  if (error) console.error(`Cache write error for ${key}:`, error.message);
-}
-
-async function getAccessToken(supabase: ReturnType<typeof createClient>): Promise<string> {
-  const cached = await getFromCache(supabase, "access_token");
   if (cached && new Date(cached.expires_at) > new Date()) {
     return (cached.value as { token: string }).token;
   }
 
-  const clientId = Deno.env.get("GUESTY_CLIENT_ID");
-  const clientSecret = Deno.env.get("GUESTY_CLIENT_SECRET");
-  if (!clientId || !clientSecret) throw new Error("Guesty API credentials not configured");
+  const clientId = Deno.env.get("GUESTY_OPEN_API_CLIENT_ID");
+  const clientSecret = Deno.env.get("GUESTY_OPEN_API_CLIENT_SECRET");
+  if (!clientId || !clientSecret) throw new Error("Open API credentials not configured");
 
-  const response = await fetch("https://booking.guesty.com/oauth2/token", {
+  const response = await fetch("https://open-api.guesty.com/oauth2/token", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
       grant_type: "client_credentials",
-      scope: "booking_engine:api",
+      scope: "open-api",
       client_id: clientId,
       client_secret: clientSecret,
     }),
@@ -60,114 +45,22 @@ async function getAccessToken(supabase: ReturnType<typeof createClient>): Promis
 
   if (!response.ok) {
     const errorBody = await response.text();
-    console.error("Token request failed:", response.status, errorBody);
-    throw new Error(`Failed to get access token: ${response.status}`);
+    console.error("Open API token request failed:", response.status, errorBody);
+    throw new Error(`Failed to get Open API token: ${response.status}`);
   }
 
   const data = await response.json();
   const ttl = Math.min(data.expires_in - 300, 23 * 3600);
-  await setCache(supabase, "access_token", { token: data.access_token }, ttl);
+  const expiresAt = new Date(Date.now() + ttl * 1000).toISOString();
+
+  await supabase
+    .from("guesty_cache")
+    .upsert(
+      { key: "open_api_access_token", value: { token: data.access_token }, expires_at: expiresAt, updated_at: new Date().toISOString() },
+      { onConflict: "key" }
+    );
+
   return data.access_token;
-}
-
-async function tryGuestyInquiry(
-  supabase: ReturnType<typeof createClient>,
-  token: string,
-  firstName: string,
-  lastName: string,
-  email: string,
-  phone: string | undefined,
-  notes: string
-): Promise<string | null> {
-  // Try multiple date windows to find availability
-  const offsets = [30, 60, 90];
-
-  for (const offset of offsets) {
-    const checkIn = new Date();
-    checkIn.setDate(checkIn.getDate() + offset);
-    const checkOut = new Date(checkIn);
-    checkOut.setDate(checkOut.getDate() + 7);
-    const checkInStr = checkIn.toISOString().split("T")[0];
-    const checkOutStr = checkOut.toISOString().split("T")[0];
-
-    try {
-      // Step 1: Create quote
-      const quoteResponse = await fetch("https://booking.guesty.com/api/reservations/quotes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json; charset=utf-8",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          listingId: LISTING_ID,
-          checkInDateLocalized: checkInStr,
-          checkOutDateLocalized: checkOutStr,
-          guestsCount: 1,
-          guest: { firstName, lastName, email, phone: phone || undefined },
-        }),
-      });
-
-      if (!quoteResponse.ok) {
-        const errText = await quoteResponse.text();
-        console.log(`Quote failed for ${checkInStr} (${quoteResponse.status}): ${errText.substring(0, 200)}`);
-        continue; // Try next date window
-      }
-
-      const quoteData = await quoteResponse.json();
-      const quoteId = quoteData._id || quoteData.id;
-      if (!quoteId) {
-        console.log("No quote ID returned, trying next window");
-        continue;
-      }
-
-      // Step 2: Convert to inquiry
-      const inquiryResponse = await fetch(`https://booking.guesty.com/api/reservations/quotes/${quoteId}/inquiry`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json; charset=utf-8",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({}),
-      });
-
-      if (!inquiryResponse.ok) {
-        const errText = await inquiryResponse.text();
-        console.error(`Inquiry conversion failed (${inquiryResponse.status}): ${errText.substring(0, 200)}`);
-        continue;
-      }
-
-      const inquiryData = await inquiryResponse.json();
-      const reservationId = inquiryData._id || inquiryData.id;
-      console.log("Guesty inquiry created:", reservationId);
-
-      // Step 3: Add notes
-      if (notes && reservationId) {
-        try {
-          await fetch(`https://booking.guesty.com/api/reservations/${reservationId}`, {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json; charset=utf-8",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ note: notes }),
-          });
-        } catch (noteErr) {
-          console.error("Failed to add notes (non-critical):", noteErr);
-        }
-      }
-
-      return reservationId || null;
-    } catch (err) {
-      console.error(`Error trying date offset ${offset}:`, err);
-      continue;
-    }
-  }
-
-  console.log("All date windows failed — inquiry saved to DB only");
-  return null;
 }
 
 serve(async (req) => {
@@ -186,7 +79,6 @@ serve(async (req) => {
     const body = await req.json();
     const { firstName, lastName, email, phone, dates, groupSize, message, selectedActivities } = body;
 
-    // Validate required fields
     if (!firstName || !lastName || !email) {
       return new Response(JSON.stringify({ error: "Name and email are required" }), {
         status: 400,
@@ -194,7 +86,6 @@ serve(async (req) => {
       });
     }
 
-    // Basic email format check
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return new Response(JSON.stringify({ error: "Invalid email format" }), {
@@ -231,26 +122,50 @@ serve(async (req) => {
 
     console.log("Inquiry saved to database:", inquiry.id);
 
-    // Step 2: Try Guesty (best effort)
+    // Step 2: Push to Guesty via Open API (best effort)
     let guestyReservationId: string | null = null;
     try {
-      const token = await getAccessToken(supabase);
+      const token = await getOpenApiToken(supabase);
 
-      const notesParts: string[] = [];
-      if (dates) notesParts.push(`Preferred Dates: ${dates}`);
-      if (groupSize) notesParts.push(`Group Size: ${groupSize}`);
-      if (selectedActivities?.length) notesParts.push(`Activities: ${selectedActivities.join(", ")}`);
-      if (message) notesParts.push(`Message: ${message}`);
-      const notes = notesParts.join("\n");
+      const noteParts: string[] = [];
+      if (dates) noteParts.push(`Preferred Dates: ${dates}`);
+      if (groupSize) noteParts.push(`Group Size: ${groupSize}`);
+      if (selectedActivities?.length) noteParts.push(`Activities: ${selectedActivities.join(", ")}`);
+      if (message) noteParts.push(`Message: ${message}`);
 
-      guestyReservationId = await tryGuestyInquiry(supabase, token, firstName, lastName, email, phone, notes);
+      const guestyResponse = await fetch("https://open-api.guesty.com/v1/reservations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          listingId: LISTING_ID,
+          status: "inquiry",
+          guest: {
+            firstName,
+            lastName,
+            email,
+            phone: phone || undefined,
+          },
+          note: noteParts.join("\n") || undefined,
+        }),
+      });
 
-      if (guestyReservationId) {
-        await supabase
-          .from("inquiries")
-          .update({ guesty_reservation_id: guestyReservationId })
-          .eq("id", inquiry.id);
-        console.log("Updated DB row with Guesty reservation ID");
+      if (guestyResponse.ok) {
+        const guestyData = await guestyResponse.json();
+        guestyReservationId = guestyData._id || guestyData.id || null;
+        console.log("Guesty inquiry created:", guestyReservationId);
+
+        if (guestyReservationId) {
+          await supabase
+            .from("inquiries")
+            .update({ guesty_reservation_id: guestyReservationId })
+            .eq("id", inquiry.id);
+        }
+      } else {
+        const errText = await guestyResponse.text();
+        console.error(`Guesty Open API failed (${guestyResponse.status}):`, errText.substring(0, 500));
       }
     } catch (guestyErr) {
       console.error("Guesty attempt failed (non-critical):", guestyErr);
