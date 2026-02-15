@@ -81,9 +81,9 @@ export default function InquiryDialog({ children }: InquiryDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0 border-none bg-background rounded-2xl shadow-2xl">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0 border-none bg-background rounded-2xl shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="bg-primary px-8 pt-10 pb-8 rounded-t-2xl">
+        <div className="bg-primary px-8 pt-10 pb-8">
           <p className="text-xs font-sans uppercase tracking-[0.4em] text-primary-foreground/60 mb-2">
             Begin Your Journey
           </p>
