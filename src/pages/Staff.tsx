@@ -1,20 +1,25 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
-import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArrows";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 
+import heroImg from "@/assets/staff-hero.jpeg";
 import estate10 from "@/assets/estate-10.jpeg";
+import enoImg from "@/assets/staff-eno.jpeg";
+import ricardoImg from "@/assets/staff-ricardo.jpeg";
+import crethellImg from "@/assets/staff-crethell.jpeg";
+import angyImg from "@/assets/staff-angy.jpeg";
+import pacoImg from "@/assets/staff-paco.jpeg";
 
 const { prev, next } = getPageNav(estatePages, "/staff");
 
 const staffMembers = [
-  { name: "Your Concierge", role: "Head Concierge", language: "English & Spanish", description: "Your dedicated concierge is born and raised in the region, knows everything and everyone. They personally greet every guest upon arrival and see them off at departure, while maintaining your privacy during the stay. Adventures, dining, wellness, transportation — they arrange it all." },
-  { name: "Ricardo", role: "Private Chef", language: "English & Spanish", description: "The lead chef and heart of the culinary experience. Ricardo crafts every meal from the freshest local ingredients — from morning juices to fire-lit dinners. He loves discussing menus, dietary needs, and creating surprise celebrations." },
-  { name: "Crethell", role: "Private Chef", language: "Spanish (Google Translate works great)", description: "Ricardo's partner in the kitchen. Crethell brings deep expertise in traditional Mexican coastal cuisine and ensures every detail — from presentation to timing — is perfect." },
-  { name: "Angy", role: "Daily Housekeeping", language: "Spanish (Google Translate works great)", description: "Angy ensures every space is impeccable — daily housekeeping, fresh linens, and the small details that make the villas feel like a five-star hotel." },
-  { name: "Paco", role: "Caretaker & Grounds", language: "Spanish (Google Translate works great)", description: "Paco maintains the property, pool, gardens, and beach setup. He handles beach chairs, umbrellas, bonfire preparation, and everything behind the scenes. The quiet force ensuring everything is always ready." },
+  { name: "Eno", role: "Head Concierge", language: "English & Spanish", description: "Your dedicated concierge is born and raised in the region, knows everything and everyone. They personally greet every guest upon arrival and see them off at departure, while maintaining your privacy during the stay. Adventures, dining, wellness, transportation — they arrange it all.", img: enoImg },
+  { name: "Ricardo", role: "Private Chef", language: "English & Spanish", description: "The lead chef and heart of the culinary experience. Ricardo crafts every meal from the freshest local ingredients — from morning juices to fire-lit dinners. He loves discussing menus, dietary needs, and creating surprise celebrations.", img: ricardoImg },
+  { name: "Crethell", role: "Private Chef", language: "Spanish (Google Translate works great)", description: "Ricardo's partner in the kitchen. Crethell brings deep expertise in traditional Mexican coastal cuisine and ensures every detail — from presentation to timing — is perfect.", img: crethellImg },
+  { name: "Angy", role: "Daily Housekeeping", language: "Spanish (Google Translate works great)", description: "Angy ensures every space is impeccable — daily housekeeping, fresh linens, and the small details that make the villas feel like a five-star hotel.", img: angyImg },
+  { name: "Paco", role: "Caretaker & Grounds", language: "Spanish (Google Translate works great)", description: "Paco maintains the property, pool, gardens, and beach setup. He handles beach chairs, umbrellas, bonfire preparation, and everything behind the scenes. The quiet force ensuring everything is always ready.", img: pacoImg },
 ];
 
 const includedServices = [
@@ -33,8 +38,8 @@ export default function Staff() {
     <Layout>
       {/* Hero */}
       <section className="relative h-[50vh] min-h-[350px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-primary" />
-        <div className="absolute inset-0 bg-black/30" />
+        <img src={heroImg} alt="The estate" className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 text-center text-primary-foreground px-4 w-full max-w-6xl mx-auto">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">The Estate</p>
           <div className="flex items-center justify-between gap-4">
@@ -64,10 +69,10 @@ export default function Staff() {
                 transition={{ duration: 0.6, delay: 0.1 }}
                 className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
               >
-                <PhotoPlaceholder
-                  label={person.name}
-                  aspectRatio="portrait"
-                  className={`rounded-tl-[40px] rounded-br-[40px] overflow-hidden ${i % 2 === 1 ? "md:order-2" : ""}`}
+                <img
+                  src={person.img}
+                  alt={person.name}
+                  className={`w-full aspect-[3/4] object-cover object-top rounded-tl-[40px] rounded-br-[40px] ${i % 2 === 1 ? "md:order-2" : ""}`}
                 />
                 <div className={i % 2 === 1 ? "md:order-1" : ""}>
                   <span className="text-xs font-sans uppercase tracking-widest text-accent mb-1 block">{person.role}</span>
