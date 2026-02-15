@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import InquiryDialog from "@/components/InquiryDialog";
 import { motion } from "framer-motion";
-import heroVilla from "@/assets/hero-villa.png";
+import heroVilla from "@/assets/hero-villa-new.png";
 
 interface HeroSectionProps {
   listings?: unknown[];
@@ -20,7 +20,7 @@ export default function HeroSection({ listings }: HeroSectionProps) {
       ) : (
         <div className="absolute inset-0 bg-primary" />
       )}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/10 to-black/45" />
       <div className="relative z-10 text-center text-primary-foreground px-4 max-w-4xl">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
