@@ -14,6 +14,7 @@ import weddingCelebration from "@/assets/wedding-celebration.png";
 import wedding4 from "@/assets/wedding4.png";
 import wedding1 from "@/assets/wedding1.png";
 import wedding2_2 from "@/assets/wedding2-2.png";
+import food1 from "@/assets/food1.jpeg";
 
 const weddingFeatures = [
   {
@@ -26,7 +27,7 @@ const weddingFeatures = [
     icon: UtensilsCrossed,
     title: "Beachfront Dining",
     desc: "Long-table dinners on the sand, prepared by your private chef Ricardo. Multi-course menus tailored to your celebration — from fresh-caught seafood to wood-fired pizza from the estate's outdoor oven.",
-    image: estate8,
+    image: food1,
   },
   {
     icon: Wine,
@@ -50,8 +51,8 @@ const weddingFeatures = [
 
 const galleryImages = [
   { src: wedding1, alt: "Sunset celebration on the beach" },
-  { src: wedding2_2, alt: "Beach ceremony with guests" },
-  { src: weddingCeremony, alt: "Wedding ceremony on the beach" },
+  { src: wedding4, alt: "Beach ceremony on the sand" },
+  { src: weddingCelebration, alt: "Full coordination celebration" },
   { src: weddingBeachCeremony, alt: "Beachfront ceremony setup" },
 ];
 
