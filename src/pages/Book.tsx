@@ -4,6 +4,11 @@ import { ChevronLeft, ChevronRight, Users, Loader2, CalendarDays } from "lucide-
 import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
 import { supabase } from "@/integrations/supabase/client";
+import PropertyGallery from "@/components/book/PropertyGallery";
+import PropertyOverview from "@/components/book/PropertyOverview";
+import PropertyDescription from "@/components/book/PropertyDescription";
+import AmenitiesGrid from "@/components/book/AmenitiesGrid";
+import AvailableServices from "@/components/book/AvailableServices";
 import estateHero from "@/assets/estate-1.jpeg";
 
 const LISTING_ID = "697bcfcf3f5e990014fbc4dd";
@@ -194,6 +199,13 @@ export default function Book() {
         </div>
       </section>
 
+      {/* Property Content */}
+      <PropertyGallery />
+      <PropertyOverview />
+      <PropertyDescription />
+      <AmenitiesGrid />
+      <AvailableServices />
+
       {/* Booking Interface */}
       <section className="py-16 md:py-24">
         <div className="container max-w-5xl">
@@ -377,6 +389,19 @@ export default function Book() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+      {/* Footer CTA */}
+      <section className="py-16 bg-card text-center">
+        <div className="container max-w-2xl">
+          <h2 className="font-serif text-3xl md:text-4xl font-light mb-4">Have Questions?</h2>
+          <p className="font-sans text-muted-foreground mb-6">Our concierge team is happy to help you plan the perfect stay.</p>
+          <a
+            href="/contact"
+            className="inline-block py-3 px-8 bg-foreground text-background font-sans text-sm uppercase tracking-widest rounded-full hover:bg-foreground/90 transition-colors"
+          >
+            Contact Us
+          </a>
         </div>
       </section>
     </Layout>
