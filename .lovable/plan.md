@@ -1,26 +1,26 @@
 
 
-## Fix Remaining "10 Guests" and "Fire Pit" on Homepage
+## Update Homepage Hero Image and Show Full Photo
 
-Two issues remain on the homepage (`src/pages/Index.tsx`):
+### Changes
 
-### 1. Guest capacity: "10" should be "14"
+**1. Replace hero image asset**
+Copy the new uploaded photo (`VillaSempreAvantiHero1.png`) to `src/assets/hero-villa-new.png`, replacing the current file.
 
-Line 126 has a hardcoded stat `{ value: "10", label: "Guests" }`. This needs to change to `"14"`.
+**2. Adjust image positioning (`src/components/home/HeroSection.tsx`, line 19)**
+Add `object-[center_40%]` to the image class so the pool at the bottom of the photo is visible instead of being cropped out.
 
-### 2. "Fire pit" in body copy
+Current:
+```
+className="absolute inset-0 w-full h-full object-cover"
+```
 
-Line 120 reads:
-> "Two adjacent beachfront villas with private pool, fire pit, beachfront dining, and a dedicated team..."
-
-Remove "fire pit, " from this sentence so it reads:
-> "Two adjacent beachfront villas with private pool, beachfront dining, and a dedicated team..."
-
-### Files to modify
-- `src/pages/Index.tsx` — two changes (lines 120 and 126)
+Updated:
+```
+className="absolute inset-0 w-full h-full object-cover object-[center_40%]"
+```
 
 ### What stays the same
-- "Fire pit" references on the Events, Weddings, and PrivateEvents pages remain — those describe the actual venue feature in context
-- "Fire Pit" in amenity lists within fallback listing data remains — it's an accurate amenity
-- All other pages already reflect the correct capacity from the API or fallback data (which was already updated to 14)
+- The gradient overlay remains at its current setting (`from-black/35 via-black/15 to-black/50`)
+- All other hero section content (text, buttons, layout) unchanged
 
