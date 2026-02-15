@@ -1,13 +1,15 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
-import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
+
 import { motion } from "framer-motion";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown, MapPin, Clock } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import estate14 from "@/assets/estate-14.jpeg";
-import { useGuestyListings } from "@/hooks/useGuestyListings";
+import patzcuaritoHero from "@/assets/patzcuarito-hero.png";
+import transportImg from "@/assets/transport.png";
+import landAtvImg from "@/assets/land-atv.jpg";
 
 const nearbyPlaces = [
   { name: "Sayulita", distance: "5 min by UTV", description: "A vibrant surf town with boutiques, restaurants, and a lively beach scene." },
@@ -117,18 +119,11 @@ function CollapsibleSection({ title, children }: { title: string; children: Reac
 }
 
 export default function Location() {
-  const { data: listings } = useGuestyListings();
-  const heroPhoto = listings?.[2]?.pictures?.[0]?.original;
-
   return (
     <Layout>
       {/* Hero */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        {heroPhoto ? (
-          <img src={heroPhoto} alt="Riviera Nayarit coastline" className="absolute inset-0 w-full h-full object-cover" />
-        ) : (
-          <div className="absolute inset-0 bg-primary" />
-        )}
+        <img src={patzcuaritoHero} alt="Aerial view of Patzcuarito coastline" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/50" />
         <div className="relative z-10 text-center text-primary-foreground px-4">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Patzcuarito, Riviera Nayarit</p>
@@ -152,7 +147,7 @@ export default function Location() {
               transition={{ duration: 0.7 }}
               className="bg-background p-8 rounded-xl border border-border"
             >
-              <PhotoPlaceholder label="Private Suburban Transfer" aspectRatio="video" className="mb-6" />
+              <img src={transportImg} alt="Private Suburban Transfer" className="w-full aspect-video object-cover rounded-xl mb-6" />
               <h3 className="font-serif text-2xl mb-3">Private Airport Transfers</h3>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-3">
                 Luxury Suburban vehicles with professional drivers. We'll track your flight and be there when you land — no waiting, no hassle. Seats up to 7 people.
@@ -166,7 +161,7 @@ export default function Location() {
               transition={{ duration: 0.7 }}
               className="bg-background p-8 rounded-xl border border-border"
             >
-              <PhotoPlaceholder label="Polaris UTV" aspectRatio="video" className="mb-6 rounded-xl overflow-hidden" />
+              <img src={landAtvImg} alt="Polaris UTV" className="w-full aspect-video object-cover rounded-xl mb-6" />
               <h3 className="font-serif text-2xl mb-3">Polaris UTV Rentals</h3>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-3">
                 The best way to explore the coast — zip to Sayulita in 5 minutes, Punta de Mita in 25. Available in 2, 4, and 6-seater options.

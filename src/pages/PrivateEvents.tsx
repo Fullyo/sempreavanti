@@ -14,6 +14,7 @@ import food3 from "@/assets/food3.jpeg";
 import eventBeachfire from "@/assets/event-beachfire.png";
 import eventFamily from "@/assets/event-family.png";
 import eventBachelorette from "@/assets/event-bachelorette.png";
+import privateBeach from "@/assets/private-beach.png";
 
 const eventTypes = [
   { title: "Retreats & Workshops", description: "The estate is perfectly suited for wellness retreats, creative workshops, corporate offsites, and transformational gatherings. Five bedrooms, dedicated staff, and total privacy.", image: wellnessYoga },
@@ -140,7 +141,7 @@ export default function PrivateEvents() {
 
       {/* CTA Hero Banner */}
       <section className="relative py-20 md:py-28 text-primary-foreground overflow-hidden">
-        <img src={estate6} alt="" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={privateBeach} alt="" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
         <div className="relative z-10 container max-w-4xl text-center">
           <SectionHeading

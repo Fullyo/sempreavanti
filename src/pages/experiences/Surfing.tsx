@@ -108,21 +108,21 @@ export default function Surfing() {
               <div className="grid grid-cols-2 gap-2 rounded-xl overflow-hidden">
                 {varyMontage.map((img, i) => (
                   <div key={i} className="aspect-square overflow-hidden">
-                    <img src={img} alt={`Vary — Surf Instructor ${i + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                    <img src={img} alt={`Victor — Surf Instructor ${i + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                   </div>
                 ))}
               </div>
               <div>
                 <span className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-2 block">Your Instructor & Guide</span>
-                <h2 className="font-serif text-3xl md:text-4xl font-light mb-4">Sessions with Vary</h2>
+                <h2 className="font-serif text-3xl md:text-4xl font-light mb-4">Sessions with Victor</h2>
                 <p className="text-base font-sans text-muted-foreground leading-relaxed mb-4">
-                  Vary is your go-to surf guide in Sayulita — an incredible instructor for beginners and intermediates, and the perfect companion for experienced surfers looking to discover the best breaks along the coast.
+                  Victor is your go-to surf guide in Sayulita — an incredible instructor for beginners and intermediates, and the perfect companion for experienced surfers looking to discover the best breaks along the coast.
                 </p>
                 <p className="text-base font-sans text-muted-foreground leading-relaxed mb-4">
-                  Whether it's your first time on a board or you're chasing bigger waves, Vary provides hands-on coaching, local knowledge, and guidance to match you with the right spot and conditions. He knows every break from Punta Mita to Sayulita and will get you to the right wave at the right time.
+                  Whether it's your first time on a board or you're chasing bigger waves, Victor provides hands-on coaching, local knowledge, and guidance to match you with the right spot and conditions. He knows every break from Punta Mita to Sayulita and will get you to the right wave at the right time.
                 </p>
                 <p className="text-base font-sans text-muted-foreground leading-relaxed">
-                  Lessons and guided sessions are arranged any morning during your stay. Vary provides boards, rash guards, and all the stoke you need.
+                  Lessons and guided sessions are arranged any morning during your stay. Victor provides boards, rash guards, and all the stoke you need.
                 </p>
                 <a
                   href="https://www.instagram.com/yeahvary.surf"
