@@ -89,10 +89,10 @@ export default function InquiryDialog({ children }: InquiryDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="max-w-2xl p-0 border-none bg-background rounded-2xl shadow-2xl overflow-hidden">
+      <DialogContent className="max-w-2xl p-0 border-none bg-background rounded-tr-[30px] rounded-bl-[30px] shadow-2xl overflow-hidden">
         <div className="overflow-y-auto max-h-[90vh]">
           {/* Header with hero photo */}
-          <div className="relative px-8 pt-10 pb-8 overflow-hidden">
+          <div className="relative px-8 pt-10 pb-8 overflow-hidden rounded-bl-[30px]">
             <img src={heroVilla} alt="" className="absolute inset-0 w-full h-full object-cover" />
             <div className="absolute inset-0 bg-black/50" />
             <div className="relative z-10">
