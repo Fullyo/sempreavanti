@@ -1,35 +1,26 @@
 
 
-## Fix Guest Limit, Error Handling, and Expand Gallery
+## Remove Manual Surcharge -- Let Guesty Handle It
 
-### Issue 1: MAX_GUESTS capped at 12
+Since Guesty is now configured with occupancy set to 14, the API will accept 14 guests and automatically include the $100/guest surcharge in the quote response. The manual frontend surcharge logic is no longer needed and is double-counting/miscalculating the fee.
 
-The property allows up to 14 guests (with an extra $100/night surcharge for guests 13 and 14, configured in Guesty). The Guesty API handles this surcharge automatically in the quote response. The last fix incorrectly lowered MAX_GUESTS to 12, blocking guests 13-14 entirely.
+### What changed in Guesty
+- Occupancy is now **14** (was 12)
+- Guesty automatically calculates the extra guest fee in the quote response
 
-**Fix:** Change `MAX_GUESTS` back to `14` in `src/pages/Book.tsx`.
+### Changes in `src/pages/Book.tsx`
 
-### Issue 2: Edge function error message is misleading
+1. **Remove** the `GUESTY_MAX_GUESTS` and `EXTRA_GUEST_FEE` constants
+2. **Remove** the `extraGuests`, `extraGuestSurcharge`, and `adjustedTotal` calculations
+3. **Pass the real guest count** to the API instead of capping at 12: `guests: guests` (not `Math.min(guests, GUESTY_MAX_GUESTS)`)
+4. **Remove** the "Extra Guest Fee" line item from the price breakdown UI (Guesty will include it in `invoiceItems` automatically)
+5. **Revert** button visibility and total display to use `totalPrice` directly instead of `adjustedTotal`
 
-When the quote API returns any 400 error, the edge function currently returns a hardcoded message: "Guest count exceeds maximum allowed". This is inaccurate -- a 400 could be for many reasons (invalid dates, listing unavailable, etc.).
-
-**Fix:** In `supabase/functions/guesty-availability/index.ts`, change the error response to pass through the actual API error message instead of a hardcoded guess. Parse the error body from Guesty and return a generic but accurate message like "Unable to get pricing" with the details for debugging.
-
-### Issue 3: Gallery should include more photos
-
-The current gallery only shows the 16 estate-*.jpeg files. Additional relevant photos already exist in the project assets that showcase different parts of the property:
-
-- `estate-sleeping.jpg` (bedroom configuration)
-- `villa-hero.jpg` (villa exterior)
-- `private-beach.png` (the private beach)
-- `wellness-drone.jpg` (aerial/drone view of property)
-- `patzcuarito.png` / `patzcuarito-hero.png` (nearby area)
-- Various food/chef photos that show the on-site dining experience
-
-**Fix:** Add `estate-sleeping.jpg`, `villa-hero.jpg`, `private-beach.png`, and `wellness-drone.jpg` to the gallery in `src/components/book/PropertyGallery.tsx`. These show the bedrooms, villa exterior, beach, and aerial view -- all core property features a booking guest would want to see.
+### Result
+- Guesty returns the correct quote including any extra guest fees
+- No manual calculation needed on the frontend
+- The price breakdown will show whatever line items Guesty returns (accommodation, taxes, extra guest fees, etc.)
 
 ### Files Modified
-
-- `src/pages/Book.tsx` -- change `MAX_GUESTS` from 12 to 14
-- `supabase/functions/guesty-availability/index.ts` -- fix error message to pass through actual API error instead of hardcoded text
-- `src/components/book/PropertyGallery.tsx` -- add additional property photos to the gallery carousel
+- `src/pages/Book.tsx`
 
