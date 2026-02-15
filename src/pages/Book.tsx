@@ -15,8 +15,6 @@ import estateHero from "@/assets/estate-1.jpeg";
 const LISTING_ID = "697bcfcf3f5e990014fbc4dd";
 const CHECKOUT_BASE = `https://casasempreavanti.guestybookings.com/en/properties/${LISTING_ID}/checkout`;
 const MAX_GUESTS = 14;
-const GUESTY_MAX_GUESTS = 12; // Guesty listing cap; guests 13-14 have $100/night surcharge
-const EXTRA_GUEST_FEE = 100; // USD per night per extra guest beyond GUESTY_MAX_GUESTS
 const MIN_NIGHTS = 3;
 
 interface CalendarDay {
@@ -143,7 +141,7 @@ export default function Book() {
           action: "quote",
           checkIn: format(checkIn, "yyyy-MM-dd"),
           checkOut: format(checkOut, "yyyy-MM-dd"),
-          guests: Math.min(guests, GUESTY_MAX_GUESTS),
+          guests,
         },
       });
       if (error) throw error;
@@ -177,10 +175,6 @@ export default function Book() {
   const currency = ratePlanMoney?.currency ?? quote?.money?.currency ?? quote?.currency ?? "USD";
   const invoiceItems = ratePlanMoney?.invoiceItems ?? quote?.money?.invoiceItems ?? quote?.invoiceItems ?? [];
 
-  // Extra guest surcharge for guests beyond Guesty's listing cap
-  const extraGuests = Math.max(0, guests - GUESTY_MAX_GUESTS);
-  const extraGuestSurcharge = extraGuests * EXTRA_GUEST_FEE * nights;
-  const adjustedTotal = totalPrice !== null ? totalPrice + extraGuestSurcharge : null;
 
   const prevMonth = () => setBaseMonth((m) => addMonths(m, -1));
   const nextMonth = () => setBaseMonth((m) => addMonths(m, 1));
@@ -377,23 +371,17 @@ export default function Book() {
                         <span>${item.amount?.toLocaleString()}</span>
                       </div>
                     ))}
-                    {extraGuestSurcharge > 0 && (
-                      <div className="flex justify-between font-sans text-sm">
-                        <span className="text-muted-foreground">Extra Guest Fee ({extraGuests} × ${EXTRA_GUEST_FEE}/night)</span>
-                        <span>${extraGuestSurcharge.toLocaleString()}</span>
-                      </div>
-                    )}
-                    {adjustedTotal !== null && (
+                    {totalPrice !== null && (
                       <div className="flex justify-between font-sans text-base font-semibold pt-2 border-t border-border">
                         <span>Total ({currency})</span>
-                        <span className="text-golden">${adjustedTotal.toLocaleString()}</span>
+                        <span className="text-golden">${totalPrice.toLocaleString()}</span>
                       </div>
                     )}
                   </motion.div>
                 )}
 
                 {/* Book Now + Inquiry */}
-                {quote && adjustedTotal !== null && (
+                {quote && totalPrice !== null && (
                   <div className="space-y-3">
                     <button
                       onClick={handleBookNow}
