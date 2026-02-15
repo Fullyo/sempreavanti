@@ -133,7 +133,9 @@ export default function Villas() {
             ]
               .filter((v) => v.villa)
               .map(({ villa, label }, idx) => {
-                const displayName = villa!.nickname || villa!.title || "Villa";
+                const nameMap: Record<string, string> = { "Casa Pietro": "Villa Pietro", "Casa Luisa": "Villa Luisa" };
+                const rawName = villa!.nickname || villa!.title || "Villa";
+                const displayName = nameMap[rawName] || rawName;
                 return (
                 <motion.div
                   key={villa!._id}

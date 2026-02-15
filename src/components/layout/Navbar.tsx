@@ -156,7 +156,7 @@ export default function Navbar() {
             scrolled ? "text-foreground" : "text-white"
           }`}
         >
-          Sempre Avanti
+          Villas Sempre Avanti
         </Link>
 
         {/* Desktop nav */}
