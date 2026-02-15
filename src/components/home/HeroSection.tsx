@@ -15,7 +15,7 @@ export default function HeroSection({ listings }: HeroSectionProps) {
         <img
           src={heroVilla}
           alt="Villas Sempre Avanti beachfront"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover object-[center_40%]"
         />
       ) : (
         <div className="absolute inset-0 bg-primary" />
