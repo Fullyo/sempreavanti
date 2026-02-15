@@ -5,8 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import InquiryDialog from "@/components/InquiryDialog";
 
-const BOOKING_URL = "https://casasempreavanti.guestybookings.com/en/properties/697bcfcf3f5e990014fbc4dd?minOccupancy=1";
-
 interface DropdownGroup {
   label: string;
   children: { label: string; path: string }[];
@@ -200,9 +198,9 @@ export default function Navbar() {
             size="sm"
             className="ml-2 rounded-full bg-accent text-accent-foreground hover:bg-accent/90"
           >
-            <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer">
+            <Link to="/book">
               Check Availability
-            </a>
+            </Link>
           </Button>
         </nav>
 
@@ -279,9 +277,9 @@ export default function Navbar() {
                 variant="secondary"
                 className="mt-3 w-full rounded-full"
               >
-                <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer">
+                <Link to="/book" onClick={() => setMobileOpen(false)}>
                   Check Availability
-                </a>
+                </Link>
               </Button>
             </div>
           </motion.nav>

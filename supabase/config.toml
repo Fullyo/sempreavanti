@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.guesty-inquiry]
 verify_jwt = false
+
+[functions.guesty-availability]
+verify_jwt = false

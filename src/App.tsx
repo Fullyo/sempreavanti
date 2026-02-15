@@ -21,6 +21,7 @@ import Ocean from "./pages/experiences/Ocean";
 import Land from "./pages/experiences/Land";
 import Cultural from "./pages/experiences/Cultural";
 import Pricing from "./pages/Pricing";
+import Book from "./pages/Book";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => (
           <Route path="/concierge" element={<Navigate to="/villas" replace />} />
           <Route path="/transportation" element={<Navigate to="/location" replace />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/book" element={<Book />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
