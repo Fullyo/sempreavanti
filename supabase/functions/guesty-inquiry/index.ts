@@ -70,6 +70,106 @@ async function getAccessToken(supabase: ReturnType<typeof createClient>): Promis
   return data.access_token;
 }
 
+async function tryGuestyInquiry(
+  supabase: ReturnType<typeof createClient>,
+  token: string,
+  firstName: string,
+  lastName: string,
+  email: string,
+  phone: string | undefined,
+  notes: string
+): Promise<string | null> {
+  // Try multiple date windows to find availability
+  const offsets = [30, 60, 90];
+
+  for (const offset of offsets) {
+    const checkIn = new Date();
+    checkIn.setDate(checkIn.getDate() + offset);
+    const checkOut = new Date(checkIn);
+    checkOut.setDate(checkOut.getDate() + 7);
+    const checkInStr = checkIn.toISOString().split("T")[0];
+    const checkOutStr = checkOut.toISOString().split("T")[0];
+
+    try {
+      // Step 1: Create quote
+      const quoteResponse = await fetch("https://booking.guesty.com/api/reservations/quotes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json; charset=utf-8",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          listingId: LISTING_ID,
+          checkInDateLocalized: checkInStr,
+          checkOutDateLocalized: checkOutStr,
+          guestsCount: 1,
+          guest: { firstName, lastName, email, phone: phone || undefined },
+        }),
+      });
+
+      if (!quoteResponse.ok) {
+        const errText = await quoteResponse.text();
+        console.log(`Quote failed for ${checkInStr} (${quoteResponse.status}): ${errText.substring(0, 200)}`);
+        continue; // Try next date window
+      }
+
+      const quoteData = await quoteResponse.json();
+      const quoteId = quoteData._id || quoteData.id;
+      if (!quoteId) {
+        console.log("No quote ID returned, trying next window");
+        continue;
+      }
+
+      // Step 2: Convert to inquiry
+      const inquiryResponse = await fetch(`https://booking.guesty.com/api/reservations/quotes/${quoteId}/inquiry`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json; charset=utf-8",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({}),
+      });
+
+      if (!inquiryResponse.ok) {
+        const errText = await inquiryResponse.text();
+        console.error(`Inquiry conversion failed (${inquiryResponse.status}): ${errText.substring(0, 200)}`);
+        continue;
+      }
+
+      const inquiryData = await inquiryResponse.json();
+      const reservationId = inquiryData._id || inquiryData.id;
+      console.log("Guesty inquiry created:", reservationId);
+
+      // Step 3: Add notes
+      if (notes && reservationId) {
+        try {
+          await fetch(`https://booking.guesty.com/api/reservations/${reservationId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json; charset=utf-8",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ note: notes }),
+          });
+        } catch (noteErr) {
+          console.error("Failed to add notes (non-critical):", noteErr);
+        }
+      }
+
+      return reservationId || null;
+    } catch (err) {
+      console.error(`Error trying date offset ${offset}:`, err);
+      continue;
+    }
+  }
+
+  console.log("All date windows failed — inquiry saved to DB only");
+  return null;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -86,6 +186,7 @@ serve(async (req) => {
     const body = await req.json();
     const { firstName, lastName, email, phone, dates, groupSize, message, selectedActivities } = body;
 
+    // Validate required fields
     if (!firstName || !lastName || !email) {
       return new Response(JSON.stringify({ error: "Name and email are required" }), {
         status: 400,
@@ -93,123 +194,69 @@ serve(async (req) => {
       });
     }
 
+    // Basic email format check
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return new Response(JSON.stringify({ error: "Invalid email format" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const supabase = getSupabaseAdmin();
-    const token = await getAccessToken(supabase);
 
-    // Build notes from all extra fields
-    const notesParts: string[] = [];
-    if (dates) notesParts.push(`Preferred Dates: ${dates}`);
-    if (groupSize) notesParts.push(`Group Size: ${groupSize}`);
-    if (selectedActivities?.length) notesParts.push(`Activities: ${selectedActivities.join(", ")}`);
-    if (message) notesParts.push(`Message: ${message}`);
-    const notes = notesParts.join("\n");
-
-    // Use placeholder dates 30 days from now (7-night stay) for the quote
-    const checkIn = new Date();
-    checkIn.setDate(checkIn.getDate() + 30);
-    const checkOut = new Date(checkIn);
-    checkOut.setDate(checkOut.getDate() + 7);
-    const checkInStr = checkIn.toISOString().split("T")[0];
-    const checkOutStr = checkOut.toISOString().split("T")[0];
-
-    // Step 1: Create a reservation quote
-    const quotePayload = {
-      listingId: LISTING_ID,
-      checkInDateLocalized: checkInStr,
-      checkOutDateLocalized: checkOutStr,
-      guestsCount: 1,
-      guest: {
-        firstName,
-        lastName,
+    // Step 1: Save to database FIRST (guaranteed)
+    const { data: inquiry, error: dbError } = await supabase
+      .from("inquiries")
+      .insert({
+        first_name: firstName,
+        last_name: lastName,
         email,
-        phone: phone || undefined,
-      },
-    };
+        phone: phone || null,
+        preferred_dates: dates || null,
+        group_size: groupSize || null,
+        message: message || null,
+        selected_activities: selectedActivities?.length ? selectedActivities : null,
+      })
+      .select("id")
+      .single();
 
-    console.log("Step 1: Creating reservation quote...");
-    const quoteResponse = await fetch("https://booking.guesty.com/api/reservations/quotes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json; charset=utf-8",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(quotePayload),
-    });
-
-    const quoteContentType = quoteResponse.headers.get("content-type") || "";
-    if (!quoteResponse.ok) {
-      const errorBody = quoteContentType.includes("application/json")
-        ? JSON.stringify(await quoteResponse.json())
-        : await quoteResponse.text();
-      console.error(`Quote creation failed ${quoteResponse.status}: ${errorBody.substring(0, 500)}`);
-      return new Response(JSON.stringify({ error: "Failed to create inquiry", details: errorBody.substring(0, 200) }), {
-        status: 502,
+    if (dbError) {
+      console.error("Database insert failed:", dbError);
+      return new Response(JSON.stringify({ error: "Failed to save inquiry" }), {
+        status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const quoteData = await quoteResponse.json();
-    const quoteId = quoteData._id || quoteData.id;
-    console.log("Quote created:", quoteId);
+    console.log("Inquiry saved to database:", inquiry.id);
 
-    if (!quoteId) {
-      console.error("No quote ID in response:", JSON.stringify(quoteData).substring(0, 500));
-      return new Response(JSON.stringify({ error: "Failed to create inquiry - no quote ID returned" }), {
-        status: 502,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    // Step 2: Try Guesty (best effort)
+    let guestyReservationId: string | null = null;
+    try {
+      const token = await getAccessToken(supabase);
 
-    // Step 2: Convert quote to inquiry
-    console.log("Step 2: Converting quote to inquiry...");
-    const inquiryResponse = await fetch(`https://booking.guesty.com/api/reservations/quotes/${quoteId}/inquiry`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json; charset=utf-8",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({}),
-    });
+      const notesParts: string[] = [];
+      if (dates) notesParts.push(`Preferred Dates: ${dates}`);
+      if (groupSize) notesParts.push(`Group Size: ${groupSize}`);
+      if (selectedActivities?.length) notesParts.push(`Activities: ${selectedActivities.join(", ")}`);
+      if (message) notesParts.push(`Message: ${message}`);
+      const notes = notesParts.join("\n");
 
-    const inquiryContentType = inquiryResponse.headers.get("content-type") || "";
-    if (!inquiryResponse.ok) {
-      const errorBody = inquiryContentType.includes("application/json")
-        ? JSON.stringify(await inquiryResponse.json())
-        : await inquiryResponse.text();
-      console.error(`Inquiry creation failed ${inquiryResponse.status}: ${errorBody.substring(0, 500)}`);
-      return new Response(JSON.stringify({ error: "Failed to finalize inquiry", details: errorBody.substring(0, 200) }), {
-        status: 502,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+      guestyReservationId = await tryGuestyInquiry(supabase, token, firstName, lastName, email, phone, notes);
 
-    const inquiryData = await inquiryResponse.json();
-    const reservationId = inquiryData._id || inquiryData.id;
-    console.log("Inquiry created successfully:", reservationId);
-
-    // Step 3: If we have notes, add them to the reservation
-    if (notes && reservationId) {
-      try {
-        console.log("Adding notes to reservation...");
-        // Use the update reservation endpoint to add notes
-        await fetch(`https://booking.guesty.com/api/reservations/${reservationId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json; charset=utf-8",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ note: notes }),
-        });
-      } catch (noteErr) {
-        // Non-critical - the inquiry was already created
-        console.error("Failed to add notes (non-critical):", noteErr);
+      if (guestyReservationId) {
+        await supabase
+          .from("inquiries")
+          .update({ guesty_reservation_id: guestyReservationId })
+          .eq("id", inquiry.id);
+        console.log("Updated DB row with Guesty reservation ID");
       }
+    } catch (guestyErr) {
+      console.error("Guesty attempt failed (non-critical):", guestyErr);
     }
 
-    return new Response(JSON.stringify({ success: true, reservationId }), {
+    return new Response(JSON.stringify({ success: true, inquiryId: inquiry.id, guestyReservationId }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
