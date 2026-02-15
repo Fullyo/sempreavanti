@@ -114,7 +114,7 @@ export default function Index() {
                 <div className="h-px w-12 bg-golden" />
               </div>
               <p className="text-base font-sans text-muted-foreground leading-relaxed mb-4">
-                Casa Sempre Avanti is a self-contained private resort on the Riviera Nayarit coast. Two adjacent beachfront villas — Casa Pietro and Casa Luisa — create a seamless estate with private beach, pool, and every detail attended to by your dedicated team.
+                Villas Sempre Avanti is a self-contained private resort on the Riviera Nayarit coast. Two adjacent beachfront villas — Villa Pietro and Villa Luisa — create a seamless estate with private beach, pool, and every detail attended to by your dedicated team.
               </p>
               <p className="text-base font-sans text-muted-foreground leading-relaxed mb-8">
                 Two adjacent beachfront villas with private pool, fire pit, beachfront dining, and a dedicated team of chefs, concierge, and housekeeping. Everything you need, nothing you don't.

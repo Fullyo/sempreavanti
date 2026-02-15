@@ -14,7 +14,7 @@ export default function HeroSection({ listings }: HeroSectionProps) {
       {heroVilla ? (
         <img
           src={heroVilla}
-          alt="Casa Sempre Avanti beachfront"
+          alt="Villas Sempre Avanti beachfront"
           className="absolute inset-0 w-full h-full object-cover"
         />
       ) : (

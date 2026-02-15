@@ -43,7 +43,7 @@ export default function PhotoMosaicSection({ listings }: PhotoMosaicSectionProps
               >
                 <img
                   src={pic.original}
-                  alt={`Casa Sempre Avanti ${i + 1}`}
+                  alt={`Villas Sempre Avanti ${i + 1}`}
                   className={`w-full object-cover hover:scale-105 transition-transform duration-700 ${
                     isLarge ? "h-64 md:h-full" : "h-48 md:h-64"
                   }`}

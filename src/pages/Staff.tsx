@@ -1,6 +1,7 @@
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArrows";
+import InquiryDialog from "@/components/InquiryDialog";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
 
@@ -101,12 +102,25 @@ export default function Staff() {
         </div>
       </section>
 
-      {/* Bottom Nav */}
-      <section className="relative py-12 text-primary-foreground overflow-hidden">
+      {/* CTA */}
+      <section className="relative py-20 md:py-28 text-primary-foreground overflow-hidden">
         <img src={estate10} alt="" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
-        <div className="relative z-10 container max-w-4xl">
-          <PageNavArrows prev={prev} next={next} variant="bottom" />
+        <div className="relative z-10 container max-w-4xl text-center">
+          <SectionHeading
+            eyebrow="Begin Your Journey"
+            title="Let Us Take Care of Everything"
+            description="From the moment you arrive to the day you leave, your dedicated team handles every detail."
+            light
+          />
+          <InquiryDialog>
+            <button className="inline-block mt-6 px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full">
+              Get in Touch
+            </button>
+          </InquiryDialog>
+          <div className="mt-10">
+            <PageNavArrows prev={prev} next={next} variant="bottom" />
+          </div>
         </div>
       </section>
     </Layout>

@@ -17,7 +17,7 @@ export default function CulinaryPreview() {
             <div className="relative">
               <img
                 src={foodImg}
-                alt="Private chef preparing a gourmet meal at Casa Sempre Avanti"
+                alt="Private chef preparing a gourmet meal at Villas Sempre Avanti"
                 className="w-full h-[450px] object-cover rounded-tl-[80px] rounded-br-[80px]"
                 loading="lazy"
               />
