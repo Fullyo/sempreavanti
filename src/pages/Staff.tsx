@@ -73,7 +73,7 @@ export default function Staff() {
                 <img
                   src={person.img}
                   alt={person.name}
-                  className={`w-full aspect-[3/4] object-cover object-top rounded-tl-[40px] rounded-br-[40px] ${i % 2 === 1 ? "md:order-2" : ""}`}
+                  className={`w-full max-w-[280px] mx-auto aspect-[3/4] object-cover object-top rounded-tl-[40px] rounded-br-[40px] ${i % 2 === 1 ? "md:order-2" : ""}`}
                 />
                 <div className={i % 2 === 1 ? "md:order-1" : ""}>
                   <span className="text-xs font-sans uppercase tracking-widest text-accent mb-1 block">{person.role}</span>

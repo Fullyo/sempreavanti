@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import heroVilla from "@/assets/hero-villa.png";
 
 const activityOptions = [
   "Surfing",
@@ -90,17 +91,21 @@ export default function InquiryDialog({ children }: InquiryDialogProps) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="max-w-2xl p-0 border-none bg-background rounded-2xl shadow-2xl overflow-hidden">
         <div className="overflow-y-auto max-h-[90vh]">
-          {/* Header */}
-          <div className="bg-primary px-8 pt-10 pb-8">
-            <p className="text-xs font-sans uppercase tracking-[0.4em] text-primary-foreground/60 mb-2">
-              Begin Your Journey
-            </p>
-            <h2 className="font-serif text-3xl md:text-4xl font-light text-primary-foreground">
-              Tell Us About Your Stay
-            </h2>
-            <p className="text-sm font-sans text-primary-foreground/70 mt-2 leading-relaxed">
-              Share your dates and interests — we'll personally curate every detail.
-            </p>
+          {/* Header with hero photo */}
+          <div className="relative px-8 pt-10 pb-8 overflow-hidden">
+            <img src={heroVilla} alt="" className="absolute inset-0 w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-black/50" />
+            <div className="relative z-10">
+              <p className="text-xs font-sans uppercase tracking-[0.4em] text-primary-foreground/60 mb-2">
+                Begin Your Journey
+              </p>
+              <h2 className="font-serif text-3xl md:text-4xl font-light text-primary-foreground">
+                Tell Us About Your Stay
+              </h2>
+              <p className="text-sm font-sans text-primary-foreground/70 mt-2 leading-relaxed">
+                Share your dates and interests — we'll personally curate every detail.
+              </p>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="px-8 py-8 space-y-6">

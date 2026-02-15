@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import InquiryDialog from "@/components/InquiryDialog";
+import { Facebook, Instagram } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -58,6 +59,26 @@ export default function Footer() {
           <p className="text-xs font-sans opacity-40">
             © {new Date().getFullYear()} Villas Sempre Avanti. All rights reserved.
           </p>
+          <div className="flex items-center gap-4">
+            <a
+              href="https://www.facebook.com/profile.php?id=100054539826977"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="opacity-50 hover:opacity-100 transition-opacity"
+              aria-label="Facebook"
+            >
+              <Facebook className="w-4 h-4" />
+            </a>
+            <a
+              href="https://www.instagram.com/casa_sempre_avanti/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="opacity-50 hover:opacity-100 transition-opacity"
+              aria-label="Instagram"
+            >
+              <Instagram className="w-4 h-4" />
+            </a>
+          </div>
           <p className="text-xs font-sans opacity-40">
             Designed & built by{" "}
             <a
