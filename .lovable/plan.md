@@ -1,86 +1,52 @@
 
 
-## Reliable Inquiry System with Email Confirmation
+## Switch to Guesty Open API for Inquiries
 
-### Overview
-Save every inquiry to the database first (guaranteed), then attempt to push it to Guesty as a bonus. Add a "Confirm Email" field to catch typos.
+### What this fixes
+The current Booking Engine API requires available dates to create an inquiry. The Open API lets us create inquiries directly with `status: "inquiry"` -- no date availability needed. Every form submission will land in your Guesty inbox.
 
 ### Changes
 
-**1. Create `inquiries` database table**
+**1. Store new Open API credentials as secrets**
 
-A new table to store all form submissions locally, ensuring no inquiry is ever lost regardless of Guesty API status.
+Two new secrets:
+- `GUESTY_OPEN_API_CLIENT_ID` = `0oasxjn81wWHQpB4h5d7`
+- `GUESTY_OPEN_API_CLIENT_SECRET` = `C1eVEQQ-zYCqu6Oepuqd13idKxc3miVzQ7jDYyVtVaBgjucgn9ZozqKRS6viJ7ir`
 
-Columns: id, first_name, last_name, email, phone, preferred_dates, group_size, message, selected_activities, guesty_reservation_id (nullable -- filled only if Guesty succeeds), status (default: 'new'), created_at
+The existing `GUESTY_CLIENT_ID` / `GUESTY_CLIENT_SECRET` stay in place for the listings function.
 
-**2. Add "Confirm Email" field to the form (`src/components/InquiryDialog.tsx`)**
+**2. Rewrite `supabase/functions/guesty-inquiry/index.ts`**
 
-- Add a `confirmEmail` field below the existing email input
-- Add client-side validation: if the two emails don't match, show an error and block submission
-- This prevents typos from making guests unreachable
+Replace the entire Booking Engine quote-to-inquiry flow with a single Open API call:
 
-**3. Rewrite the edge function (`supabase/functions/guesty-inquiry/index.ts`)**
-
-New flow:
-1. Validate input (name, email required; add server-side email format check)
-2. Save the inquiry to the `inquiries` table immediately -- this is the guaranteed step
-3. Attempt the Guesty Booking Engine quote-to-inquiry flow, trying multiple date windows (30, 60, 90 days out)
-4. If Guesty succeeds, update the database row with the Guesty reservation ID
-5. Return success to the user regardless of Guesty outcome
-
-The user always sees "Inquiry Sent" because the data is safely stored. You can view all inquiries in your backend.
-
-**4. Make phone number required**
-
-Change the phone input from optional to required in both the frontend form and the backend validation. This gives you a secondary way to reach guests if their email has issues.
-
-### What this means for you
-- Every inquiry is saved in your database -- you will never lose one
-- If Guesty's calendar has available dates, the inquiry also appears in Guesty's inbox
-- If Guesty's calendar is blocked, you still have the inquiry in your database to follow up manually
-- The confirm-email field prevents the most common contact issue (email typos)
-- Required phone number gives you a backup contact method
-
-### Technical Details
-
-Database migration:
-```sql
-CREATE TABLE public.inquiries (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  first_name TEXT NOT NULL,
-  last_name TEXT NOT NULL,
-  email TEXT NOT NULL,
-  phone TEXT,
-  preferred_dates TEXT,
-  group_size TEXT,
-  message TEXT,
-  selected_activities TEXT[],
-  guesty_reservation_id TEXT,
-  status TEXT DEFAULT 'new',
-  created_at TIMESTAMPTZ DEFAULT now()
-);
-
-ALTER TABLE public.inquiries ENABLE ROW LEVEL SECURITY;
-
--- Allow the edge function (service role) to insert/update
--- No public access needed since only the edge function writes to this table
+```text
+Token endpoint:  https://open-api.guesty.com/oauth2/token  (scope: open-api)
+Inquiry endpoint: POST https://open-api.guesty.com/v1/reservations
 ```
 
-Frontend changes to `src/components/InquiryDialog.tsx`:
-- Add `confirmEmail` to the form state
-- Add a "Confirm Email" input field below the email field
-- Add validation on submit: if `email !== confirmEmail`, show a toast error and prevent submission
-- Change phone field to `required`
+The new flow:
+1. Validate form input
+2. Save to the `inquiries` database table (guaranteed)
+3. Get an Open API token (cached as `open_api_access_token`)
+4. POST to `/v1/reservations` with:
+   - `listingId`: the estate listing ID
+   - `status`: "inquiry"
+   - `guest`: { firstName, lastName, email, phone }
+   - `note`: compiled from preferred dates, group size, activities, message
+5. If Guesty succeeds, update the DB row with the reservation ID
+6. Return success to the user
 
-Edge function changes to `supabase/functions/guesty-inquiry/index.ts`:
-- Add database insert as the first action after validation
-- Wrap Guesty API calls in a try/catch so failures don't affect the user response
-- Try 3 date windows for the quote (30, 60, 90 days out)
-- On Guesty success, update the row with the reservation ID
-- Always return success if the database insert worked
+No date availability check needed. The inquiry lands in your Guesty inbox every time.
+
+**3. No frontend changes**
+
+The `InquiryDialog.tsx` form and the "Check Availability" booking widget link both remain as-is. They serve different purposes:
+- "Inquire" = custom form -> Open API inquiry (communication)
+- "Check Availability" = Guesty hosted widget (date-based booking)
 
 ### Files modified
-- `src/components/InquiryDialog.tsx` -- add confirm email field, make phone required
-- `supabase/functions/guesty-inquiry/index.ts` -- rewrite with DB-first approach
-- Database migration -- create `inquiries` table
+- `supabase/functions/guesty-inquiry/index.ts` -- rewrite to use Open API
+- Two new secrets added
 
+### After implementation
+Test the form end-to-end and verify the inquiry appears in your Guesty inbox.
