@@ -5,27 +5,28 @@ import EventInquiryForm from "@/components/EventInquiryForm";
 import { Heart, UtensilsCrossed, Wine, BedDouble, Users } from "lucide-react";
 
 import estate3 from "@/assets/estate-3.jpeg";
-import estate5 from "@/assets/estate-5.jpeg";
 import estate8 from "@/assets/estate-8.jpeg";
-import estateSleeping from "@/assets/estate-sleeping.jpg";
 import chefMargarita from "@/assets/chef-margarita.jpeg";
 import weddingHero from "@/assets/wedding2.png";
 import weddingCeremony from "@/assets/wedding-ceremony.png";
 import weddingBeachCeremony from "@/assets/wedding-beach-ceremony.png";
 import weddingCelebration from "@/assets/wedding-celebration.png";
+import wedding4 from "@/assets/wedding4.png";
+import wedding1 from "@/assets/wedding1.png";
+import wedding2_2 from "@/assets/wedding2-2.png";
 
 const weddingFeatures = [
   {
     icon: Heart,
     title: "Beach Ceremony",
     desc: "Exchange vows on your own 250-foot private beach with the Pacific as your backdrop. Sunset ceremonies, barefoot elegance, and an intimate setting that feels worlds apart.",
-    image: weddingBeachCeremony,
+    image: wedding4,
   },
   {
     icon: UtensilsCrossed,
     title: "Beachfront Dining",
     desc: "Long-table dinners on the sand, prepared by your private chef Ricardo. Multi-course menus tailored to your celebration — from fresh-caught seafood to wood-fired pizza from the estate's outdoor oven.",
-    image: estate3,
+    image: estate8,
   },
   {
     icon: Wine,
@@ -37,21 +38,21 @@ const weddingFeatures = [
     icon: BedDouble,
     title: "Accommodation",
     desc: "Five luxury bedrooms across two villas sleep up to 14 guests. Flexible configurations with single beds available for larger wedding parties. The entire estate is exclusively yours.",
-    image: estateSleeping,
+    image: estate3,
   },
   {
     icon: Users,
     title: "Full Coordination",
     desc: "Your concierge handles vendor coordination, music, decor logistics, and day-of timing. The full Sempre Avanti team — chef, bartender, housekeeper, and maintenance — ensures every detail is flawless.",
-    image: weddingCeremony,
+    image: weddingCelebration,
   },
 ];
 
 const galleryImages = [
+  { src: wedding1, alt: "Sunset celebration on the beach" },
+  { src: wedding2_2, alt: "Beach ceremony with guests" },
   { src: weddingCeremony, alt: "Wedding ceremony on the beach" },
-  { src: weddingCelebration, alt: "Celebration with petal toss" },
-  { src: estate5, alt: "Estate grounds" },
-  { src: estate8, alt: "Estate evening ambiance" },
+  { src: weddingBeachCeremony, alt: "Beachfront ceremony setup" },
 ];
 
 export default function Weddings() {
