@@ -7,7 +7,7 @@ import InquiryDialog from "@/components/InquiryDialog";
 import heroImg from "@/assets/chef-hero.jpeg";
 import ricardoImg from "@/assets/staff-ricardo.jpeg";
 import crethellImg from "@/assets/staff-crethell.jpeg";
-import margaritaImg from "@/assets/chef-margarita.jpeg";
+import margaritaImg from "@/assets/chef-margarita-sunset.png";
 import moleImg from "@/assets/chef-mole.jpeg";
 import cevicheImg from "@/assets/chef-ceviche.jpg";
 import pizzaImg from "@/assets/chef-pizza-new.png";
