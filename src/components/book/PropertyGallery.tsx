@@ -16,10 +16,15 @@ import estate13 from "@/assets/estate-13.jpeg";
 import estate14 from "@/assets/estate-14.jpeg";
 import estate15 from "@/assets/estate-15.jpeg";
 import estate16 from "@/assets/estate-16.jpeg";
+import estateSleeping from "@/assets/estate-sleeping.jpg";
+import villaHero from "@/assets/villa-hero.jpg";
+import privateBeach from "@/assets/private-beach.png";
+import wellnessDrone from "@/assets/wellness-drone.jpg";
 
 const ESTATE_PHOTOS = [
   estate1, estate2, estate3, estate4, estate5, estate6, estate7, estate8,
   estate9, estate10, estate11, estate12, estate13, estate14, estate15, estate16,
+  estateSleeping, villaHero, privateBeach, wellnessDrone,
 ].map((src, i) => ({ original: src, caption: `Estate photo ${i + 1}` }));
 
 export default function PropertyGallery() {

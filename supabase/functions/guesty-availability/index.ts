@@ -167,7 +167,12 @@ serve(async (req) => {
       
       // If fetchQuote returned an error object, pass it through with appropriate status
       if (data?.error) {
-        return new Response(JSON.stringify({ error: "Guest count exceeds maximum allowed", details: data.message }), {
+        let msg = "Unable to get pricing for the selected dates/guests";
+        try {
+          const parsed = JSON.parse(data.message);
+          msg = parsed?.error?.message || msg;
+        } catch { /* use default */ }
+        return new Response(JSON.stringify({ error: msg, details: data.message }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
