@@ -83,8 +83,8 @@ const fallbackListings: GuestyListing[] = [
     bedrooms: 5,
     bathrooms: 5,
     beds: 5,
-    guests: 10,
-    accommodates: 10,
+    guests: 14,
+    accommodates: 14,
   },
 ];
 
