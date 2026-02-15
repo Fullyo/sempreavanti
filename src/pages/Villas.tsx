@@ -12,7 +12,7 @@ import { Flame, Droplets, Waves, UtensilsCrossed } from "lucide-react";
 
 const { prev, next } = getPageNav(estatePages, "/villas");
 
-import villaHero from "@/assets/villa-hero.jpg";
+import villaHero from "@/assets/villas-hero-new.png";
 import estateSleeping from "@/assets/estate-sleeping.jpg";
 import estate1 from "@/assets/estate-1.jpeg";
 import estate2 from "@/assets/estate-2.jpeg";
@@ -124,8 +124,8 @@ export default function Villas() {
         <section className="pb-20">
           <div className="container grid grid-cols-1 lg:grid-cols-2 gap-10">
             {[
-              { villa: casaPietro, label: "Villa One" },
-              { villa: casaLuisa, label: "Villa Two" },
+              { villa: casaLuisa, label: "Villa One" },
+              { villa: casaPietro, label: "Villa Two" },
             ]
               .filter((v) => v.villa)
               .map(({ villa, label }, idx) => {
