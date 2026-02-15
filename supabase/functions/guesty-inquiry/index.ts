@@ -104,78 +104,112 @@ serve(async (req) => {
     if (message) notesParts.push(`Message: ${message}`);
     const notes = notesParts.join("\n");
 
-    // Try Booking Engine inquiry endpoint first
-    const bePayload = {
+    // Use placeholder dates 30 days from now (7-night stay) for the quote
+    const checkIn = new Date();
+    checkIn.setDate(checkIn.getDate() + 30);
+    const checkOut = new Date(checkIn);
+    checkOut.setDate(checkOut.getDate() + 7);
+    const checkInStr = checkIn.toISOString().split("T")[0];
+    const checkOutStr = checkOut.toISOString().split("T")[0];
+
+    // Step 1: Create a reservation quote
+    const quotePayload = {
       listingId: LISTING_ID,
-      checkIn: "",
-      checkOut: "",
-      status: "inquiry",
+      checkInDateLocalized: checkInStr,
+      checkOutDateLocalized: checkOutStr,
+      guestsCount: 1,
       guest: {
         firstName,
         lastName,
         email,
         phone: phone || undefined,
       },
-      note: notes,
     };
 
-    console.log("Submitting inquiry via Booking Engine API...");
-    let response = await fetch("https://booking.guesty.com/api/inquiries", {
+    console.log("Step 1: Creating reservation quote...");
+    const quoteResponse = await fetch("https://booking.guesty.com/api/reservations/quotes", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json; charset=utf-8",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(bePayload),
+      body: JSON.stringify(quotePayload),
     });
 
-    if (response.ok) {
-      const result = await response.json();
-      console.log("Inquiry submitted via BE API:", result);
-      return new Response(JSON.stringify({ success: true, source: "booking_engine" }), {
+    const quoteContentType = quoteResponse.headers.get("content-type") || "";
+    if (!quoteResponse.ok) {
+      const errorBody = quoteContentType.includes("application/json")
+        ? JSON.stringify(await quoteResponse.json())
+        : await quoteResponse.text();
+      console.error(`Quote creation failed ${quoteResponse.status}: ${errorBody.substring(0, 500)}`);
+      return new Response(JSON.stringify({ error: "Failed to create inquiry", details: errorBody.substring(0, 200) }), {
+        status: 502,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const beError = await response.text();
-    console.log(`BE inquiry returned ${response.status}: ${beError.substring(0, 300)}`);
+    const quoteData = await quoteResponse.json();
+    const quoteId = quoteData._id || quoteData.id;
+    console.log("Quote created:", quoteId);
 
-    // Fallback: Open API reservations endpoint
-    const openApiPayload = {
-      listingId: LISTING_ID,
-      status: "inquiry",
-      guest: {
-        firstName,
-        lastName,
-        email,
-        phone: phone || undefined,
-      },
-      note: notes,
-    };
-
-    console.log("Falling back to Open API...");
-    response = await fetch("https://open-api.guesty.com/v1/reservations", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(openApiPayload),
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-      console.log("Inquiry submitted via Open API:", result);
-      return new Response(JSON.stringify({ success: true, source: "open_api" }), {
+    if (!quoteId) {
+      console.error("No quote ID in response:", JSON.stringify(quoteData).substring(0, 500));
+      return new Response(JSON.stringify({ error: "Failed to create inquiry - no quote ID returned" }), {
+        status: 502,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const openError = await response.text();
-    console.error(`Open API inquiry returned ${response.status}: ${openError.substring(0, 500)}`);
+    // Step 2: Convert quote to inquiry
+    console.log("Step 2: Converting quote to inquiry...");
+    const inquiryResponse = await fetch(`https://booking.guesty.com/api/reservations/quotes/${quoteId}/inquiry`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json; charset=utf-8",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({}),
+    });
 
-    return new Response(JSON.stringify({ error: "Failed to submit inquiry to Guesty", details: openError.substring(0, 200) }), {
-      status: 502,
+    const inquiryContentType = inquiryResponse.headers.get("content-type") || "";
+    if (!inquiryResponse.ok) {
+      const errorBody = inquiryContentType.includes("application/json")
+        ? JSON.stringify(await inquiryResponse.json())
+        : await inquiryResponse.text();
+      console.error(`Inquiry creation failed ${inquiryResponse.status}: ${errorBody.substring(0, 500)}`);
+      return new Response(JSON.stringify({ error: "Failed to finalize inquiry", details: errorBody.substring(0, 200) }), {
+        status: 502,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const inquiryData = await inquiryResponse.json();
+    const reservationId = inquiryData._id || inquiryData.id;
+    console.log("Inquiry created successfully:", reservationId);
+
+    // Step 3: If we have notes, add them to the reservation
+    if (notes && reservationId) {
+      try {
+        console.log("Adding notes to reservation...");
+        // Use the update reservation endpoint to add notes
+        await fetch(`https://booking.guesty.com/api/reservations/${reservationId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json; charset=utf-8",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ note: notes }),
+        });
+      } catch (noteErr) {
+        // Non-critical - the inquiry was already created
+        console.error("Failed to add notes (non-critical):", noteErr);
+      }
+    }
+
+    return new Response(JSON.stringify({ success: true, reservationId }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
