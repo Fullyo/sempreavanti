@@ -4,7 +4,7 @@ import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArro
 import { motion } from "framer-motion";
 import InquiryDialog from "@/components/InquiryDialog";
 import wellnessHeroImg from "@/assets/wellness-hero-yoga.png";
-import yogaImg from "@/assets/wellness-yoga.png";
+import yogaImg from "@/assets/wellness-yoga-new.png";
 import soundbathImg from "@/assets/wellness-soundbath.jpeg";
 import nirvannaImg from "@/assets/wellness-nirvanna.png";
 import benditaImg from "@/assets/wellness-bendita.jpeg";
@@ -12,9 +12,9 @@ import buddhaImg from "@/assets/wellness-buddha.jpg";
 import massagesImg from "@/assets/wellness-massages.png";
 
 // Estate photos for practice spaces
-import estate3 from "@/assets/estate-3.jpeg";  // beachfront
+import estate3 from "@/assets/wellness-beach.png";  // beachfront
 import estate6 from "@/assets/estate-6.jpeg";  // pool terrace
-import estate9 from "@/assets/estate-9.jpeg";  // garden
+import estate9 from "@/assets/wellness-drone.jpg";  // garden
 
 const { prev, next } = getPageNav(estatePages, "/wellness");
 
