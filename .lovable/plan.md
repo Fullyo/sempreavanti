@@ -1,34 +1,45 @@
 
 
-# Fix: Villa Name Display and Header/Footer Branding
+## Fix Inquiry Form, Connect to Guesty API, Update Footer & Hide Pricing
 
-## Issues Found
+### 1. Fix Pop-up Form Scrollability
 
-### 1. "Casa Pietro" still showing on Villas page
-The villa name displayed on the page comes directly from the Guesty API response (`villa.nickname`), which returns "Casa Pietro". The fallback data was updated, but when the live API responds, it overrides with the old name.
+The scroll bug is caused by conflicting CSS on line 84 of `InquiryDialog.tsx`: `overflow-y-auto` and `overflow-hidden` are both applied to the same `DialogContent` element. `overflow-hidden` wins and kills scrolling.
 
-**Fix:** Add a name-mapping function in `src/pages/Villas.tsx` that normalizes API nicknames before display:
+**Fix:** Use a wrapper structure where:
+- The outer `DialogContent` has `overflow-hidden` and `rounded-2xl` (fixes the white corner artifacts)
+- An inner scrollable `div` with `overflow-y-auto` and `max-h-[90vh]` wraps all content (header + form)
 
-```text
-"Casa Pietro" -> "Villa Pietro"
-"Casa Luisa"  -> "Villa Luisa"
-```
+### 2. Connect Form to Guesty Inquiry API
 
-This will be applied on line 136 where `displayName` is set, so no matter what the API returns, the correct name is shown.
+Create a new edge function `guesty-inquiry` that submits inquiries to Guesty's Open API:
 
-### 2. Header brand name needs updating
-The Navbar (`src/components/layout/Navbar.tsx`, line 159) currently shows "Sempre Avanti". Update to "Villas Sempre Avanti".
+- **Endpoint:** `POST https://open-api.guesty.com/v1/reservations`
+- **Payload:** `status: "inquiry"`, `listingId`, guest details (name, email, phone), dates, notes (group size, activities, message)
+- Reuses the existing OAuth token flow from `guesty-listings` (same `GUESTY_CLIENT_ID` / `GUESTY_CLIENT_SECRET` secrets)
+- Note: The Open API scope may differ from the Booking Engine scope. The edge function will attempt the Open API first, then fall back to the Booking Engine inquiry endpoint if needed.
 
-### 3. Footer brand name needs updating  
-The Footer (`src/components/layout/Footer.tsx`, line 9) currently shows "Sempre Avanti". Update to "Villas Sempre Avanti".
+The `InquiryDialog` component will call this edge function on form submit via `supabase.functions.invoke('guesty-inquiry', { body: formData })`.
 
-### 4. Footer copyright line
-Line 62 of Footer says "Villas Sempre Avanti" -- this one is already correct.
+### 3. Footer "Get in Touch" -> Inquiry Dialog
 
-## Files to Modify
+The footer currently uses a `<Link to="/contact">` for "Get in Touch" (line 46 of `Footer.tsx`). This will be replaced with an `InquiryDialog`-wrapped button that triggers the pop-up form, matching the same pattern used in the Navbar.
 
-| File | Change |
-|------|--------|
-| `src/pages/Villas.tsx` | Add nickname normalization map so "Casa Pietro" from API displays as "Villa Pietro" |
-| `src/components/layout/Navbar.tsx` | Line 159: "Sempre Avanti" to "Villas Sempre Avanti" |
-| `src/components/layout/Footer.tsx` | Line 9: "Sempre Avanti" to "Villas Sempre Avanti" |
+### 4. Hide Pricing Page from Navigation
+
+- The `/pricing` route in `App.tsx` currently redirects to `/contact`. This redirect will be removed and replaced with a direct route to the `Pricing` component so the URL still works.
+- The `/pricing` route will render the `Pricing` page component directly (no redirect), but it won't be linked from any navigation, footer, or other visible UI element.
+- The `/contact` route will also remain functional, rendering the `Contact` page.
+
+---
+
+### Technical Details
+
+**Files to create:**
+- `supabase/functions/guesty-inquiry/index.ts` -- new edge function that authenticates with Guesty OAuth and POSTs an inquiry reservation
+
+**Files to modify:**
+- `src/components/InquiryDialog.tsx` -- fix scroll (restructure overflow), wire up `supabase.functions.invoke('guesty-inquiry')` on submit
+- `src/components/layout/Footer.tsx` -- replace "Get in Touch" `<Link>` with `<InquiryDialog>` trigger
+- `src/App.tsx` -- change `/pricing` from redirect to direct render of `Pricing` component; import `Pricing`
+
