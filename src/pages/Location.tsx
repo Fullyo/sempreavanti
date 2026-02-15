@@ -210,7 +210,7 @@ export default function Location() {
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Casa Sempre Avanti — between Sayulita and Punta de Mita"
+              title="Villas Sempre Avanti — between Sayulita and Punta de Mita"
               className="w-full h-full"
             />
           </div>

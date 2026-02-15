@@ -5,7 +5,8 @@ import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArro
 import { motion } from "framer-motion";
 import InquiryDialog from "@/components/InquiryDialog";
 import heroImg from "@/assets/chef-hero.jpeg";
-import ricardoImg from "@/assets/chef-ricardo.jpeg";
+import ricardoImg from "@/assets/staff-ricardo.jpeg";
+import crethellImg from "@/assets/staff-crethell.jpeg";
 import margaritaImg from "@/assets/chef-margarita.jpeg";
 import moleImg from "@/assets/chef-mole.jpeg";
 import cevicheImg from "@/assets/chef-ceviche.jpg";
@@ -105,7 +106,10 @@ export default function Chef() {
             description="More than private chefs — Ricardo and Crethell are the heart of the Sempre Avanti dining experience. With deep roots in Mexican coastal cuisine and a passion for fresh, local ingredients, every meal becomes a celebration."
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-            <img src={ricardoImg} alt="Chef Ricardo" className="w-full aspect-[3/4] object-cover rounded-tl-[40px] rounded-br-[40px]" />
+            <div className="grid grid-cols-2 gap-3">
+              <img src={ricardoImg} alt="Chef Ricardo" className="w-full aspect-[3/4] object-cover object-top rounded-tl-[40px]" />
+              <img src={crethellImg} alt="Chef Crethell" className="w-full aspect-[3/4] object-cover object-top rounded-br-[40px]" />
+            </div>
             <div className="flex flex-col justify-center">
               <p className="text-base font-sans text-muted-foreground leading-relaxed mb-4">
                 From the first morning's fresh juice to the final fire-lit dessert, Ricardo and Crethell craft each meal around your group's preferences. They source daily from local fishermen and markets, bringing the flavors of Riviera Nayarit directly to your table.

@@ -37,6 +37,7 @@ const ESTATE_GALLERY = [
 ];
 
 const CURATED_DESCRIPTIONS: Record<string, string> = {
+  "Villa Pietro": "An intimate two-bedroom beachfront villa blending refined tropical design with ocean views from every room. Stone walls, palapa roofs, and open-air living spaces create a sense of seclusion just steps from the Pacific — ideal for couples or a small family seeking privacy and understated luxury.",
   "Casa Pietro": "An intimate two-bedroom beachfront villa blending refined tropical design with ocean views from every room. Stone walls, palapa roofs, and open-air living spaces create a sense of seclusion just steps from the Pacific — ideal for couples or a small family seeking privacy and understated luxury.",
   "Villa Luisa": "A spacious three-bedroom retreat anchored by a stunning infinity pool and sweeping ocean panoramas. Indoor-outdoor living flows effortlessly across sun-drenched terraces, a poolside lounge, and a wood-fired pizza kitchen — designed for families and friends who love to gather.",
 };
@@ -50,9 +51,9 @@ function reorderPictures(
   const pics = [...pictures];
 
   let preferredIdx = -1;
-  if (villaName === "Casa Pietro") {
-    // Find the exterior shot captioned "Casa Pietro"
-    preferredIdx = pics.findIndex((p) => p.caption === "Casa Pietro");
+  if (villaName === "Villa Pietro" || villaName === "Casa Pietro") {
+    // Find the exterior shot
+    preferredIdx = pics.findIndex((p) => p.caption === "Casa Pietro" || p.caption === "Villa Pietro");
   } else if (villaName === "Villa Luisa") {
     // Find an aerial/exterior shot
     preferredIdx = pics.findIndex(
@@ -82,7 +83,7 @@ export default function Villas() {
   const { data: listings, isLoading } = useGuestyListings();
 
   const casaPietro = listings?.find((l) =>
-    l._id === "697bcfb8c91d8d0015ca285a" || l.nickname === "Casa Pietro" || l._id === "casa-pietro-fallback"
+    l._id === "697bcfb8c91d8d0015ca285a" || l.nickname === "Villa Pietro" || l.nickname === "Casa Pietro" || l._id === "casa-pietro-fallback"
   );
   const casaLuisa = listings?.find((l) =>
     l._id === "697bcfe3a874360012e8aa31" || l.nickname === "Villa Luisa" || l._id === "villa-luisa-fallback"
@@ -107,7 +108,7 @@ export default function Villas() {
       {/* Intro — Casa Pietro + Casa Luisa = Sempre Avanti */}
       <section className="py-20 md:py-28">
         <div className="container max-w-4xl text-center">
-          <p className="text-xs font-sans uppercase tracking-[0.4em] text-accent mb-4">Casa Pietro + Villa Luisa</p>
+          <p className="text-xs font-sans uppercase tracking-[0.4em] text-accent mb-4">Villa Pietro + Villa Luisa</p>
           <h2 className="font-serif text-4xl md:text-5xl font-light mb-6">Together, They Are Sempre Avanti</h2>
           <p className="text-base md:text-lg font-sans text-muted-foreground leading-relaxed">
             Two adjacent beachfront villas united into a single private estate. Five luxury bedrooms, a private beach, pool, and dedicated staff — designed for families, celebrations, and groups who want it all.

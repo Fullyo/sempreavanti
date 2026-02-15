@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="text-center mb-12">
           <h3 className="font-serif text-3xl md:text-4xl mb-3">Sempre Avanti</h3>
           <p className="text-sm font-sans opacity-70 max-w-md mx-auto leading-relaxed">
-            A private beachfront estate on Mexico's Riviera Nayarit. Two luxury villas, five bedrooms, fully hosted — always forward.
+            A private beachfront estate on Mexico's Riviera Nayarit. Villa Pietro & Villa Luisa — five bedrooms, fully hosted — always forward.
           </p>
         </div>
 
@@ -52,7 +52,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-primary-foreground/15 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs font-sans opacity-40">
-            © {new Date().getFullYear()} Casa Sempre Avanti. All rights reserved.
+            © {new Date().getFullYear()} Villas Sempre Avanti. All rights reserved.
           </p>
           <p className="text-xs font-sans opacity-40">
             Designed & built by{" "}

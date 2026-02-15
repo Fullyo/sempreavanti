@@ -47,7 +47,7 @@ export default function Contact() {
     <Layout>
       <section className="relative h-[50vh] min-h-[350px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-primary" />
-        <PhotoPlaceholder label="Casa Sempre Avanti" className="absolute inset-0 !aspect-auto opacity-30" />
+        <PhotoPlaceholder label="Villas Sempre Avanti" className="absolute inset-0 !aspect-auto opacity-30" />
         <div className="relative z-10 text-center text-primary-foreground px-4">
           <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">We'd Love to Hear from You</p>
           <h1 className="font-serif text-5xl md:text-7xl font-light">Get in Touch</h1>
