@@ -184,25 +184,31 @@ serve(async (req) => {
       guestyReservationId = guestyData._id || null;
       console.log("SUCCESS - Guesty inquiry created:", guestyReservationId, "status:", guestyData.status);
 
-      // Add notes to the reservation
+      // Attach notes via reservations-v3 notes endpoint
       if (guestyReservationId) {
-        // Add notes via the owner-inbox conversation
         try {
           const notesResponse = await fetch(
-            `https://open-api.guesty.com/v1/communication/reservations/${guestyReservationId}/notes`,
+            `https://open-api.guesty.com/v1/reservations-v3/${guestyReservationId}/notes`,
             {
-              method: "POST",
+              method: "PUT",
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
               },
-              body: JSON.stringify({ body: noteString }),
+              body: JSON.stringify({
+                notes: {
+                  guestRemarks: noteString,
+                  specialRequests: noteString,
+                },
+              }),
             }
           );
+
           if (!notesResponse.ok) {
-            console.error("Notes API failed:", (await notesResponse.text()).substring(0, 500));
+            const errText = await notesResponse.text();
+            console.error(`Notes v3 failed (${notesResponse.status}):`, errText.substring(0, 500));
           } else {
-            console.log("Notes added to inquiry conversation");
+            console.log("Notes attached via reservations-v3 endpoint");
           }
         } catch (noteErr) {
           console.error("Notes update failed:", noteErr);
