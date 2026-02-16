@@ -10,7 +10,7 @@ import PropertyOverview from "@/components/book/PropertyOverview";
 import PropertyDescription from "@/components/book/PropertyDescription";
 import AmenitiesGrid from "@/components/book/AmenitiesGrid";
 import AvailableServices from "@/components/book/AvailableServices";
-import estateHero from "@/assets/estate-1.jpeg";
+import heroVilla from "@/assets/hero-villa-new.png";
 
 const LISTING_ID = "697bcfcf3f5e990014fbc4dd";
 const CHECKOUT_BASE = `https://villassempreavanti.guestybookings.com/en/properties/${LISTING_ID}`;
@@ -203,7 +203,7 @@ export default function Book() {
     <Layout>
       {/* Hero */}
       <section className="relative h-[50vh] min-h-[350px]">
-        <img src={estateHero} alt="Villas Sempre Avanti beachfront" className="absolute inset-0 w-full h-full object-cover" />
+        <img src={heroVilla} alt="Villas Sempre Avanti beachfront" className="absolute inset-0 w-full h-full object-cover object-[center_60%]" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
           <motion.span
@@ -415,6 +415,9 @@ export default function Book() {
                     >
                       Book Now
                     </button>
+                    <p className="text-xs font-sans text-muted-foreground text-center">
+                      You'll confirm your booking on the next page
+                    </p>
                     <InquiryDialog>
                       <button className="w-full py-3 border border-golden text-golden font-sans text-sm uppercase tracking-widest rounded-full hover:bg-golden/10 transition-colors">
                         Ask a Question

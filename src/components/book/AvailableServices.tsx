@@ -2,15 +2,20 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
 const services = [
-  "Private Chef (Breakfast & Lunch included)",
-  "Surfing Lessons",
-  "Yoga & Wellness Sessions",
-  "ATV & Jungle Tours",
+  "Private Chef (Breakfast, Lunch & Dinner upon request)",
+  "Surfing Lessons & Guides",
+  "Yoga, Sound Healing & Massage",
+  "ATV Rentals & Guided Tours",
   "Horseback Riding",
+  "Hiking Excursions",
+  "Zipline Adventures",
+  "Cooking Classes",
   "Boat Charters & Fishing",
   "Whale Watching & Snorkeling",
   "Golf at World-Class Courses",
   "Cultural Tours & Tequila Tastings",
+  "Laundry Service",
+  "Concierge Assistance",
   "Wedding & Event Planning",
 ];
 
