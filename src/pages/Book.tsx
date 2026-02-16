@@ -13,9 +13,9 @@ import AvailableServices from "@/components/book/AvailableServices";
 import estateHero from "@/assets/estate-1.jpeg";
 
 const LISTING_ID = "697bcfcf3f5e990014fbc4dd";
-const CHECKOUT_BASE = `https://casasempreavanti.guestybookings.com/en/properties/${LISTING_ID}/checkout`;
+const CHECKOUT_BASE = `https://villassempreavanti.guestybookings.com/en/properties/${LISTING_ID}/checkout`;
 const MAX_GUESTS = 14;
-const MIN_NIGHTS = 3;
+const DEFAULT_MIN_NIGHTS = 4;
 const BASE_OCCUPANCY = 12;
 const EXTRA_GUEST_FEE = 100;
 
@@ -60,6 +60,15 @@ export default function Book() {
   const [loadingQuote, setLoadingQuote] = useState(false);
   const [quoteError, setQuoteError] = useState<string | null>(null);
 
+  const getMinNights = useCallback((checkInDate: Date | null): number => {
+    if (!checkInDate) return DEFAULT_MIN_NIGHTS;
+    const dateStr = format(checkInDate, "yyyy-MM-dd");
+    const dayData = calendarData.find(d => d.date === dateStr);
+    return dayData?.minNights ?? DEFAULT_MIN_NIGHTS;
+  }, [calendarData]);
+
+  const minNights = getMinNights(checkIn);
+
   const fetchCalendar = useCallback(async (month: Date) => {
     setLoadingCalendar(true);
     try {
@@ -84,13 +93,17 @@ export default function Book() {
 
   // Auto-fetch quote when dates and guests change
   useEffect(() => {
-    if (checkIn && checkOut && differenceInDays(checkOut, checkIn) >= MIN_NIGHTS) {
+    if (checkIn && checkOut && differenceInDays(checkOut, checkIn) >= minNights) {
+      setQuoteError(null);
       const timer = setTimeout(() => {
         fetchQuote();
       }, 300);
       return () => clearTimeout(timer);
+    } else if (checkIn && checkOut && differenceInDays(checkOut, checkIn) < minNights) {
+      setQuote(null);
+      setQuoteError(null);
     }
-  }, [checkIn, checkOut, guests]);
+  }, [checkIn, checkOut, guests, minNights]);
 
   const blockedDates = new Set(
     calendarData
@@ -336,7 +349,7 @@ export default function Book() {
                   {nights > 0 && (
                     <p className="text-sm font-sans text-muted-foreground">
                       {nights} night{nights !== 1 ? "s" : ""}
-                      {nights < MIN_NIGHTS && <span className="text-destructive ml-1">(min {MIN_NIGHTS})</span>}
+                      {nights < minNights && <span className="text-destructive ml-1">(minimum {minNights} nights from this date)</span>}
                     </p>
                   )}
                 </div>
