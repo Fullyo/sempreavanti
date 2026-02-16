@@ -1,85 +1,44 @@
 
 
-## Fix: Post Form Data as a Message in the Guesty Inbox
+## Add Check-in and Check-out Date Pickers to the Inquiry Form
 
-### What's been happening
-The `guestRemarks` and `specialRequests` fields we've been writing to are stored on the reservation record but are NOT displayed in the inbox conversation view. That's why you see "New guest inquiry" with nothing else.
+### What Changes
 
-### The fix
-Use Guesty's Communications API to post an actual message into the conversation thread:
+Replace the single free-text "Preferred Dates" field with two proper date picker fields: **Check-in Date** and **Check-out Date**. These real dates will then be sent directly to Guesty instead of the placeholder dates set 1 year in the future.
 
-1. After creating the inquiry reservation, fetch its conversation using `GET /v1/communication/conversations?reservationId={id}`
-2. Post the form details as a message using `POST /v1/communication/conversations/{conversationId}/send-message`
-3. This message will appear directly in the inbox thread — exactly where you're looking
+### Frontend Changes
 
-### What changes
+**File: `src/components/InquiryDialog.tsx`**
+
+1. Replace the `dates` string in form state with `checkIn` and `checkOut` (both `Date | undefined`)
+2. Replace the text input with two date picker popover buttons using the existing Calendar component (already installed via react-day-picker)
+3. Format selected dates for display (e.g., "Mar 15, 2026")
+4. Send `checkIn` and `checkOut` as ISO date strings to the backend instead of the free-text `dates` field
+5. Validate that check-out is after check-in before submitting
+
+### Backend Changes
 
 **File: `supabase/functions/guesty-inquiry/index.ts`**
 
-Replace the current notes section (the `PUT /v1/reservations-v3/{id}/notes` call) with two API calls:
+1. Accept `checkIn` and `checkOut` fields from the request body (ISO date strings like "2026-03-15")
+2. Use these actual dates for `checkInDateLocalized` and `checkOutDateLocalized` in the Guesty API call instead of the placeholder dates
+3. Fall back to the current placeholder logic if dates aren't provided (backward compatibility)
+4. Update the note string to show the actual selected dates
 
-```text
-Step 1: GET conversation for the reservation
-  GET https://open-api.guesty.com/v1/communication/conversations?reservationId={id}
-  -> extract conversationId from response
+### Database
 
-Step 2: POST message to conversation  
-  POST https://open-api.guesty.com/v1/communication/conversations/{conversationId}/send-message
-  Body: { body: noteString, module: "email" }
-```
+The existing `preferred_dates` text column in the `inquiries` table will store the formatted date range (e.g., "2026-03-15 to 2026-03-22") -- no schema change needed.
 
-The `noteString` already contains the correctly formatted data:
-```
---- Website Inquiry ---
-Preferred Dates: March 15-22, 2026
-Group Size: 8 adults
-Activities: Surfing, Sailing, Massage and Spa
-Message: Tequilla
-```
+### Result
 
-### What stays the same
-- The inquiry creation (POST /v1/reservations with status: "inquiry") -- this works perfectly
-- The frontend form -- no changes needed
-- The database-first save -- all inquiries are still stored locally first
-- The placeholder dates (required by API) remain, but the real preferred dates are now visible in the conversation
+- Your team sees the actual requested dates on the inquiry in Guesty
+- Converting an inquiry to a reservation becomes straightforward since the dates are already correct
+- The calendar mini-view on the right side of the Guesty inbox will show the real dates instead of random future ones
 
-### Is this the last step?
-Yes. The inquiry creation works. The form data is being captured. The only broken piece is getting that data to display in your inbox view. This fix targets that exact location.
+### Technical Details
 
-### Technical details
-
-The full notes section replacement in `supabase/functions/guesty-inquiry/index.ts` (lines ~187-215):
-
-```typescript
-// Fetch the conversation for this reservation
-const convResponse = await fetch(
-  `https://open-api.guesty.com/v1/communication/conversations?reservationId=${guestyReservationId}`,
-  {
-    headers: { Authorization: `Bearer ${token}` },
-  }
-);
-
-if (convResponse.ok) {
-  const convData = await convResponse.json();
-  const conversationId = convData?.results?.[0]?._id;
-  
-  if (conversationId) {
-    // Post message to the conversation thread
-    const msgResponse = await fetch(
-      `https://open-api.guesty.com/v1/communication/conversations/${conversationId}/send-message`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          body: noteString,
-        }),
-      }
-    );
-    // Log success/failure
-  }
-}
-```
+- Uses the existing `@/components/ui/calendar` (react-day-picker) and `@/components/ui/popover` components
+- Date formatting via the already-installed `date-fns` library
+- Minimum selectable date set to today to prevent past-date submissions
+- Check-out minimum automatically set to the day after check-in
 
