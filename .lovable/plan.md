@@ -1,72 +1,44 @@
-## Align /book Page with Guesty Booking Engine Data + Fix Checkout Redirect
 
-### 1. Checkout Redirect -- Guesty Limitation
 
-Guesty's hosted booking engine does NOT support a direct-to-checkout URL. The `/checkout` path on their domain actually redirects to the generic search/listing page (as you saw). The only supported flow is:
+## Fix Checkout Direct Link + Add Full Amenities List
 
-**Property page (with pre-filled dates/guests) -> Guest clicks Guesty's "Book Now" -> Checkout form**
+### 1. Fix "Book Now" to go directly to checkout
 
-The current URL format (`/properties/{id}?checkIn=...&checkOut=...&minOccupancy=...`) is actually the correct one -- it's the deepest link Guesty supports. There is no way to bypass their property page and land directly on a payment form using their hosted booking engine.
+The `/checkout` path on Guesty's booking engine DOES work -- your screenshot confirms it loads the payment form directly at:
+`villassempreavanti.guestybookings.com/en/properties/{id}/checkout?minOccupancy=2&checkIn=...&checkOut=...`
 
-**Proposed approach**: Keep the current redirect to the property page with pre-filled parameters. Add a small note near the "Book Now" button explaining that they'll confirm their booking on the next page. This is the standard flow for all Guesty booking engines.
+The fix is simple: append `/checkout` to `CHECKOUT_BASE` in `src/pages/Book.tsx`.
 
-### 2. Replace All Property Content with Guesty-Sourced Data
+```
+// Current (goes to property page)
+const CHECKOUT_BASE = `https://villassempreavanti.guestybookings.com/en/properties/${LISTING_ID}`;
 
-The current descriptions contain inaccuracies (fabricated details not from the API). Here's what needs to change:
+// Fixed (goes directly to payment form)
+const CHECKOUT_BASE = `https://villassempreavanti.guestybookings.com/en/properties/${LISTING_ID}/checkout`;
+```
 
-**PropertyDescription.tsx -- Complete rewrite using Guesty's actual text:**
+### 2. Add full amenities from Guesty API
 
-- Remove: "prestigious gated community of La Cruz de Huanacaxtle"
-- Replace with: "exclusive Patzcuaro Beach community" (from Guesty)
-- Remove: "private stretch of pristine beach" / "infinity pool" (singular)
-- Replace with: "250 feet of private beachfront" / "Two private infinity pools" (from Guesty)
-- Remove: "private plunge pool" for Casa Pietro
-- Replace with: "its own private infinity pool" (from Guesty)
-- Remove: "Rooftop palapa" reference
-- Add the full Guesty sections: Description, The Space, Guest Access, Neighborhood, Getting Around, Other things to note
-- Fix chef service: currently says "breakfast and lunch" -- Guesty says "breakfast, lunch, and dinner upon request" with specific meal ordering instructions
+Keep the current curated 3x3 key amenities grid (Private Beach, Two Infinity Pools, etc.) as a highlight section. Below it, add an expandable "All Amenities" section that pulls the complete amenities list from the Guesty API.
 
-**AmenitiesGrid.tsx -- Remove unverified amenities:**
-
-- Remove: "Gated Community" (not in Guesty data)
-- Remove: "Private Parking" (not in Guesty data) 
-- Remove: "Rooftop Palapa" (not in Guesty data)
-- Remove: "Tropical Gardens" (not specifically listed)
-- Keep: Private Beach, Infinity Pools (change to "Two Infinity Pools"), Ocean Views, Air Conditioning, High-Speed WiFi (not in Guesty but commonly expected), Gourmet Kitchen (not in Guesty but mentioned in space desc), BBQ and Pizza Oven, Daily Housekeeping
-- Add from Guesty amenities: items like accessibility features are listed but these are auto-generated Guesty fields, so we'll stick with the major amenities mentioned in the description text
-
-**PropertyOverview.tsx -- Already correct** (5 BR, 7 beds, 5.5 bath, up to 14 guests, 4PM/11AM check-in/out matches Guesty)
-
-**AvailableServices.tsx -- Align with Guesty's "Additional services" list:**
-
-- Keep items that match Guesty: ATV tours, Horseback riding, Surf lessons, Yoga/massage/sound healing, Cooking classes
-- Add from Guesty: Hiking excursions, Zipline adventures, Laundry service, Concierge assistance
-- Update chef description: "Private Chef (Breakfast, Lunch & Dinner upon request)" instead of just "Breakfast & Lunch included"
-- Remove items not in Guesty: Golf, Whale Watching & Snorkeling, Cultural Tours & Tequila Tastings, Boat Charters, Wedding & Event Planning (these are site-wide services but not listed as property-specific in Guesty)
-
-### 3. Add Missing Guesty Sections
-
-Add expandable sections to the /book page matching the booking engine layout:
-
-- **The Space** -- Detailed description of Villa Luisa and Casa Pietro
-- **Guest Access** -- Exclusive access details
-- **Neighborhood** -- Patzcuaro Beach area info
-- **Getting Around** -- Distance to Sayulita, airport, etc.
-- **Other Things to Note** -- Chef service details, meal ordering info
+The API returns 80+ amenities per listing (accessibility, kitchen items, safety features, activities, etc.). These will be:
+- Deduplicated across all listings
+- Filtered to remove redundant/internal items (e.g., "Cleaning Disinfection", "Essentials")
+- Grouped into categories matching the Guesty booking engine layout:
+  - **Accessibility** (Wide doorway, Wide clearance to bed, etc.)
+  - **Bathroom** (Body soap, Shampoo, Shower gel, Hot water, etc.)
+  - **Safety** (Smoke detector, Carbon monoxide detector, Fire extinguisher, etc.)
+  - **Kitchen & Dining** (Coffee maker, Blender, Cookware, Microwave, etc.)
+  - **Outdoor** (Private pool, BBQ grill, Fire Pit, Hammock, Patio, etc.)
+  - **Activities** (Fishing, Horseback Riding, Cycling, Water Sports, etc.)
+  - **General** (Air conditioning, WiFi, Washer, Dryer, etc.)
+- Displayed in a collapsible accordion or "Show all amenities" expandable section
+- Uses the `useGuestyListings` hook already available in the project
 
 ### Technical Details
 
 **Files to modify:**
 
-- `src/components/book/PropertyDescription.tsx` -- Replace hardcoded text with Guesty's actual description sections, organized with expandable headers
-- `src/components/book/AmenitiesGrid.tsx` -- Remove unverified items ("Gated Community", "Private Parking", "Rooftop Palapa", "Tropical Gardens")
-- `src/components/book/AvailableServices.tsx` -- Align service list with Guesty's "Additional services"
-- `src/pages/Book.tsx` -- Add helper text near "Book Now" button: "You'll confirm your booking on the next page"  
-  
-  
-you also need to show all the photos from Villas Sempre Avanti. Like All the photos that are linked to Sempre Avanti api, that show all the bedrooms & bathrooms.  
-  
-on the Book page, use the same hero photo of the home page for the hero of /book page  
-  
-  
-Now above you have to be careful I see that you're removing certain things but if you were provided the information inside of the website as an example of some of the tour and Adventures those can remain on here the Nuance is that not everything is inside of guesty yet the description needs to be updated. I just didn't want you to make any assumptions like the Gated Community which I'm not sure but that was one example. So you need to evaluate the information that I gave you when we were building the website that is 100% factual as well as combining what is factual inside of the API and the booking engine.
+- **`src/pages/Book.tsx`** -- Change `CHECKOUT_BASE` to include `/checkout` path. Remove the "You'll confirm your booking on the next page" helper text since guests now land directly on the payment form.
+
+- **`src/components/book/AmenitiesGrid.tsx`** -- Keep the existing 3x3 key amenities grid. Add below it a "View all amenities" button that expands to show the full categorized list pulled from `useGuestyListings()`. Each category displayed as a heading with a grid of amenity items beneath it, matching the style shown on the Guesty booking engine page.
