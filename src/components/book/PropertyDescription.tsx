@@ -7,9 +7,8 @@ import {
 
 export default function PropertyDescription() {
   return (
-    <section className="py-12 md:py-16">
-      <div className="container max-w-5xl">
-        <h2 className="font-serif text-3xl md:text-4xl font-light mb-6">About the Estate</h2>
+    <div className="py-8 md:py-10">
+      <h2 className="font-serif text-2xl md:text-3xl font-light mb-6">About the Estate</h2>
 
         <div className="font-sans text-muted-foreground leading-relaxed space-y-4 mb-8">
           <p>
@@ -90,8 +89,7 @@ export default function PropertyDescription() {
               </p>
             </AccordionContent>
           </AccordionItem>
-        </Accordion>
-      </div>
-    </section>
+      </Accordion>
+    </div>
   );
 }

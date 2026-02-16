@@ -89,9 +89,8 @@ export default function AmenitiesGrid() {
   const sortedCategories = categoryOrder.filter((c) => grouped[c]?.length);
 
   return (
-    <section className="py-12 md:py-16 bg-card">
-      <div className="container max-w-5xl">
-        <h2 className="font-serif text-3xl md:text-4xl font-light mb-8 text-center">Amenities</h2>
+    <div className="py-8 md:py-10 border-t border-border">
+      <h2 className="font-serif text-2xl md:text-3xl font-light mb-6">Amenities</h2>
 
         {/* Key amenities grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-4">
@@ -133,7 +132,6 @@ export default function AmenitiesGrid() {
             )}
           </div>
         )}
-      </div>
-    </section>
+    </div>
   );
 }
