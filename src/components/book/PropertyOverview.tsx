@@ -11,18 +11,20 @@ const stats = [
 
 export default function PropertyOverview() {
   return (
-    <section className="py-8 border-y border-border">
-      <div className="container max-w-5xl">
-        <div className="grid grid-cols-3 md:grid-cols-6 gap-6 text-center">
+    <div className="py-6 border-b border-border">
+      <div className="container max-w-6xl">
+        <div className="grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-6">
           {stats.map((s) => (
-            <div key={s.label} className="flex flex-col items-center gap-1.5">
-              <s.icon className="w-5 h-5 text-accent" />
-              <span className="font-sans text-sm font-semibold">{s.value}</span>
-              <span className="font-sans text-xs text-muted-foreground uppercase tracking-wider">{s.label}</span>
+            <div key={s.label} className="flex items-center gap-2">
+              <s.icon className="w-4 h-4 text-accent shrink-0" />
+              <div>
+                <span className="font-sans text-sm font-semibold block">{s.value}</span>
+                <span className="font-sans text-[10px] text-muted-foreground uppercase tracking-wider">{s.label}</span>
+              </div>
             </div>
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }

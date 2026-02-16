@@ -5,12 +5,11 @@ import { motion } from "framer-motion";
 import Layout from "@/components/layout/Layout";
 import InquiryDialog from "@/components/InquiryDialog";
 import { supabase } from "@/integrations/supabase/client";
-import PropertyGallery from "@/components/book/PropertyGallery";
+import PhotoGrid from "@/components/book/PhotoGrid";
 import PropertyOverview from "@/components/book/PropertyOverview";
 import PropertyDescription from "@/components/book/PropertyDescription";
 import AmenitiesGrid from "@/components/book/AmenitiesGrid";
 import AvailableServices from "@/components/book/AvailableServices";
-import heroVilla from "@/assets/hero-villa-new.png";
 
 const LISTING_ID = "697bcfcf3f5e990014fbc4dd";
 const CHECKOUT_BASE = `https://villassempreavanti.guestybookings.com/en/properties/${LISTING_ID}/checkout`;
@@ -40,7 +39,6 @@ interface QuoteData {
     subTotalPrice?: number;
     totalPrice?: number;
   };
-  // Alternative shapes from BE API
   fareAccommodation?: number;
   fareCleaning?: number;
   totalPrice?: number;
@@ -91,7 +89,6 @@ export default function Book() {
     fetchCalendar(baseMonth);
   }, [baseMonth, fetchCalendar]);
 
-  // Auto-fetch quote when dates and guests change
   useEffect(() => {
     if (checkIn && checkOut && differenceInDays(checkOut, checkIn) >= minNights) {
       setQuoteError(null);
@@ -117,7 +114,6 @@ export default function Book() {
 
   const handleDayClick = (date: Date) => {
     if (isBlocked(date)) return;
-
     if (!checkIn || (checkIn && checkOut)) {
       setCheckIn(date);
       setCheckOut(null);
@@ -128,7 +124,6 @@ export default function Book() {
         setCheckIn(date);
         setCheckOut(null);
       } else {
-        // Check if any blocked dates in range
         const days = eachDayOfInterval({ start: checkIn, end: date });
         const hasBlocked = days.some((d) => isBlocked(d) && !isSameDay(d, checkIn));
         if (hasBlocked) {
@@ -182,131 +177,58 @@ export default function Book() {
 
   const nights = checkIn && checkOut ? differenceInDays(checkOut, checkIn) : 0;
 
-  // Extract pricing from quote (handle nested ratePlan structure from Guesty BE API)
   const ratePlanMoney = (quote?.rates as any)?.ratePlans?.[0]?.ratePlan?.money;
-   const totalPrice = ratePlanMoney?.hostPayout ?? ratePlanMoney?.subTotalPrice ?? quote?.money?.totalPrice ?? quote?.totalPrice ?? null;
+  const totalPrice = ratePlanMoney?.hostPayout ?? ratePlanMoney?.subTotalPrice ?? quote?.money?.totalPrice ?? quote?.totalPrice ?? null;
   const accommodation = ratePlanMoney?.fareAccommodation ?? quote?.money?.fareAccommodation ?? quote?.fareAccommodation ?? null;
   const cleaning = ratePlanMoney?.fareCleaning ?? quote?.money?.fareCleaning ?? quote?.fareCleaning ?? null;
   const currency = ratePlanMoney?.currency ?? quote?.money?.currency ?? quote?.currency ?? "USD";
   const invoiceItems = ratePlanMoney?.invoiceItems ?? quote?.money?.invoiceItems ?? quote?.invoiceItems ?? [];
 
-  // Split out extra guest fee from accommodation for display
   const extraGuests = Math.max(0, guests - BASE_OCCUPANCY);
   const extraGuestTotal = extraGuests * EXTRA_GUEST_FEE * nights;
   const displayAccommodation = accommodation !== null && extraGuests > 0 ? accommodation - extraGuestTotal : accommodation;
-
 
   const prevMonth = () => setBaseMonth((m) => addMonths(m, -1));
   const nextMonth = () => setBaseMonth((m) => addMonths(m, 1));
 
   return (
     <Layout>
-      {/* Hero */}
-      <section className="relative h-[50vh] min-h-[350px]">
-        <img src={heroVilla} alt="Villas Sempre Avanti beachfront" className="absolute inset-0 w-full h-full object-cover object-[center_60%]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-4">
-          <motion.span
+      {/* Header */}
+      <div className="pt-24 pb-4">
+        <div className="container max-w-6xl">
+          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-xs font-sans uppercase tracking-[0.3em] text-golden mb-3"
           >
-            Reserve Your Stay
-          </motion.span>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="font-serif text-4xl md:text-6xl font-light text-white mb-4"
-          >
-            Check Availability
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="font-sans text-white/80 max-w-md text-sm"
-          >
-            Select your dates to book your private beachfront retreat instantly.
-          </motion.p>
+            <h1 className="font-serif text-3xl md:text-4xl font-light">Villas Sempre Avanti</h1>
+            <p className="font-sans text-sm text-muted-foreground mt-1">Private beachfront estate · Patzcuarito, Nayarit, Mexico</p>
+          </motion.div>
         </div>
-      </section>
+      </div>
 
-      {/* Property Content */}
-      <PropertyGallery />
+      {/* Photo Grid */}
+      <div className="container max-w-6xl pb-8">
+        <PhotoGrid />
+      </div>
+
+      {/* Property Overview Stats */}
       <PropertyOverview />
-      <PropertyDescription />
-      <AmenitiesGrid />
-      <AvailableServices />
 
-      {/* Booking Interface */}
-      <section className="py-16 md:py-24">
-        <div className="container max-w-5xl">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Calendar - 2 columns wide */}
-            <div className="lg:col-span-2">
-              <div className="flex items-center justify-between mb-6">
-                <button
-                  onClick={prevMonth}
-                  disabled={isBefore(addMonths(baseMonth, -1), startOfMonth(today))}
-                  className="w-10 h-10 flex items-center justify-center rounded-full border border-border hover:bg-muted transition-colors disabled:opacity-30"
-                  aria-label="Previous month"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <div className="flex gap-8">
-                  <h3 className="font-serif text-xl md:text-2xl font-light">{format(baseMonth, "MMMM yyyy")}</h3>
-                  <h3 className="font-serif text-xl md:text-2xl font-light hidden md:block">{format(addMonths(baseMonth, 1), "MMMM yyyy")}</h3>
-                </div>
-                <button
-                  onClick={nextMonth}
-                  className="w-10 h-10 flex items-center justify-center rounded-full border border-border hover:bg-muted transition-colors"
-                  aria-label="Next month"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
+      {/* Two-column layout: Content left, Booking sidebar right */}
+      <div className="container max-w-6xl py-8 md:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12">
+          {/* Left column: Property details */}
+          <div className="lg:col-span-2 space-y-0">
+            <PropertyDescription />
+            <AmenitiesGrid />
+            <AvailableServices />
+          </div>
 
-              {loadingCalendar ? (
-                <div className="flex items-center justify-center py-20">
-                  <Loader2 className="w-8 h-8 animate-spin text-golden" />
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <MonthGrid
-                    month={baseMonth}
-                    blockedDates={blockedDates}
-                    today={today}
-                    checkIn={checkIn}
-                    checkOut={checkOut}
-                    isInRange={isInRange}
-                    onDayClick={handleDayClick}
-                  />
-                  <div>
-                    <h3 className="font-serif text-xl md:text-2xl font-light mb-4 md:hidden">{format(addMonths(baseMonth, 1), "MMMM yyyy")}</h3>
-                    <MonthGrid
-                      month={addMonths(baseMonth, 1)}
-                      blockedDates={blockedDates}
-                      today={today}
-                      checkIn={checkIn}
-                      checkOut={checkOut}
-                      isInRange={isInRange}
-                      onDayClick={handleDayClick}
-                    />
-                  </div>
-                </div>
-              )}
-
-              <div className="flex items-center gap-6 mt-6 text-xs font-sans text-muted-foreground">
-                <span className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-golden/20 border border-golden" /> Available</span>
-                <span className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-muted border border-border" /> Unavailable</span>
-                <span className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-golden" /> Selected</span>
-              </div>
-            </div>
-
-            {/* Sidebar - Quote & Actions */}
-            <div className="lg:col-span-1">
-              <div className="bg-card border border-border rounded-2xl p-6 sticky top-24">
+          {/* Right column: Sticky booking sidebar */}
+          <div className="lg:col-span-1">
+            <div className="lg:sticky lg:top-24 space-y-6">
+              {/* Booking Card */}
+              <div className="bg-card border border-border rounded-2xl p-6">
                 <h3 className="font-serif text-2xl font-light mb-6">Your Stay</h3>
 
                 {/* Guest Selector */}
@@ -317,7 +239,7 @@ export default function Book() {
                     <button
                       onClick={() => setGuests((g) => Math.max(1, g - 1))}
                       className="w-8 h-8 flex items-center justify-center rounded-full border border-border hover:bg-muted text-sm"
-                    >−</button>
+                    >-</button>
                     <span className="font-sans text-lg w-8 text-center">{guests}</span>
                     <button
                       onClick={() => setGuests((g) => Math.min(MAX_GUESTS, g + 1))}
@@ -354,7 +276,6 @@ export default function Book() {
                   )}
                 </div>
 
-                {/* Loading state for auto-fetch */}
                 {loadingQuote && (
                   <div className="flex items-center justify-center gap-2 py-4 text-muted-foreground">
                     <Loader2 className="w-4 h-4 animate-spin text-golden" />
@@ -366,7 +287,6 @@ export default function Book() {
                   <p className="text-sm font-sans text-destructive mb-4">{quoteError}</p>
                 )}
 
-                {/* Price Breakdown */}
                 {quote && (
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
@@ -406,7 +326,6 @@ export default function Book() {
                   </motion.div>
                 )}
 
-                {/* Book Now + Inquiry */}
                 {quote && totalPrice !== null && (
                   <div className="space-y-3">
                     <button
@@ -425,23 +344,88 @@ export default function Book() {
 
                 {!checkIn && (
                   <p className="text-sm font-sans text-muted-foreground text-center">
-                    Select your check-in date on the calendar to begin.
+                    Select your check-in date on the calendar below.
                   </p>
                 )}
               </div>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Calendar Section - Full Width */}
+      <section className="py-12 md:py-16 bg-card">
+        <div className="container max-w-6xl">
+          <h2 className="font-serif text-3xl md:text-4xl font-light mb-8 text-center">Select Your Dates</h2>
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center justify-between mb-6">
+              <button
+                onClick={prevMonth}
+                disabled={isBefore(addMonths(baseMonth, -1), startOfMonth(today))}
+                className="w-10 h-10 flex items-center justify-center rounded-full border border-border hover:bg-muted transition-colors disabled:opacity-30"
+                aria-label="Previous month"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <div className="flex gap-8">
+                <h3 className="font-serif text-xl md:text-2xl font-light">{format(baseMonth, "MMMM yyyy")}</h3>
+                <h3 className="font-serif text-xl md:text-2xl font-light hidden md:block">{format(addMonths(baseMonth, 1), "MMMM yyyy")}</h3>
+              </div>
+              <button
+                onClick={nextMonth}
+                className="w-10 h-10 flex items-center justify-center rounded-full border border-border hover:bg-muted transition-colors"
+                aria-label="Next month"
+              >
+                <ChevronRight className="w-5 h-5" />
+              </button>
+            </div>
+
+            {loadingCalendar ? (
+              <div className="flex items-center justify-center py-20">
+                <Loader2 className="w-8 h-8 animate-spin text-golden" />
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <MonthGrid
+                  month={baseMonth}
+                  blockedDates={blockedDates}
+                  today={today}
+                  checkIn={checkIn}
+                  checkOut={checkOut}
+                  isInRange={isInRange}
+                  onDayClick={handleDayClick}
+                />
+                <div>
+                  <h3 className="font-serif text-xl md:text-2xl font-light mb-4 md:hidden">{format(addMonths(baseMonth, 1), "MMMM yyyy")}</h3>
+                  <MonthGrid
+                    month={addMonths(baseMonth, 1)}
+                    blockedDates={blockedDates}
+                    today={today}
+                    checkIn={checkIn}
+                    checkOut={checkOut}
+                    isInRange={isInRange}
+                    onDayClick={handleDayClick}
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="flex items-center gap-6 mt-6 text-xs font-sans text-muted-foreground">
+              <span className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-golden/20 border border-golden" /> Available</span>
+              <span className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-muted border border-border" /> Unavailable</span>
+              <span className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-golden" /> Selected</span>
+            </div>
+          </div>
+        </div>
       </section>
+
       {/* Footer CTA */}
-      <section className="py-16 bg-card text-center">
+      <section className="py-16 text-center">
         <div className="container max-w-2xl">
           <h2 className="font-serif text-3xl md:text-4xl font-light mb-4">Have Questions?</h2>
           <p className="font-sans text-muted-foreground mb-6">Our concierge team is happy to help you plan the perfect stay.</p>
           <InquiryDialog>
-            <button
-              className="inline-block py-3 px-8 bg-foreground text-background font-sans text-sm uppercase tracking-widest rounded-full hover:bg-foreground/90 transition-colors"
-            >
+            <button className="inline-block py-3 px-8 bg-foreground text-background font-sans text-sm uppercase tracking-widest rounded-full hover:bg-foreground/90 transition-colors">
               Get in Touch
             </button>
           </InquiryDialog>
