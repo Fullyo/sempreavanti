@@ -13,7 +13,7 @@ import AvailableServices from "@/components/book/AvailableServices";
 import heroVilla from "@/assets/hero-villa-new.png";
 
 const LISTING_ID = "697bcfcf3f5e990014fbc4dd";
-const CHECKOUT_BASE = `https://villassempreavanti.guestybookings.com/en/properties/${LISTING_ID}`;
+const CHECKOUT_BASE = `https://villassempreavanti.guestybookings.com/en/properties/${LISTING_ID}/checkout`;
 const MAX_GUESTS = 14;
 const DEFAULT_MIN_NIGHTS = 4;
 const BASE_OCCUPANCY = 12;
@@ -415,9 +415,6 @@ export default function Book() {
                     >
                       Book Now
                     </button>
-                    <p className="text-xs font-sans text-muted-foreground text-center">
-                      You'll confirm your booking on the next page
-                    </p>
                     <InquiryDialog>
                       <button className="w-full py-3 border border-golden text-golden font-sans text-sm uppercase tracking-widest rounded-full hover:bg-golden/10 transition-colors">
                         Ask a Question
