@@ -16,23 +16,23 @@ function getSupabaseAdmin() {
   );
 }
 
-async function getOpenApiToken(supabase: ReturnType<typeof createClient>): Promise<string> {
+async function getBookingApiToken(supabase: ReturnType<typeof createClient>): Promise<string> {
   // Check cache
   const { data: cached } = await supabase
     .from("guesty_cache")
     .select("value, expires_at")
-    .eq("key", "open_api_access_token")
+    .eq("key", "booking_api_access_token")
     .maybeSingle();
 
   if (cached && new Date(cached.expires_at) > new Date()) {
     return (cached.value as { token: string }).token;
   }
 
-  const clientId = Deno.env.get("GUESTY_OPEN_API_CLIENT_ID");
-  const clientSecret = Deno.env.get("GUESTY_OPEN_API_CLIENT_SECRET");
-  if (!clientId || !clientSecret) throw new Error("Open API credentials not configured");
+  const clientId = Deno.env.get("GUESTY_CLIENT_ID");
+  const clientSecret = Deno.env.get("GUESTY_CLIENT_SECRET");
+  if (!clientId || !clientSecret) throw new Error("Booking API credentials not configured");
 
-  const response = await fetch("https://open-api.guesty.com/oauth2/token", {
+  const response = await fetch("https://booking.guesty.com/oauth2/token", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
@@ -45,8 +45,8 @@ async function getOpenApiToken(supabase: ReturnType<typeof createClient>): Promi
 
   if (!response.ok) {
     const errorBody = await response.text();
-    console.error("Open API token request failed:", response.status, errorBody);
-    throw new Error(`Failed to get Open API token: ${response.status}`);
+    console.error("Booking API token request failed:", response.status, errorBody);
+    throw new Error(`Failed to get Booking API token: ${response.status}`);
   }
 
   const data = await response.json();
@@ -56,7 +56,7 @@ async function getOpenApiToken(supabase: ReturnType<typeof createClient>): Promi
   await supabase
     .from("guesty_cache")
     .upsert(
-      { key: "open_api_access_token", value: { token: data.access_token }, expires_at: expiresAt, updated_at: new Date().toISOString() },
+      { key: "booking_api_access_token", value: { token: data.access_token }, expires_at: expiresAt, updated_at: new Date().toISOString() },
       { onConflict: "key" }
     );
 
@@ -122,10 +122,10 @@ serve(async (req) => {
 
     console.log("Inquiry saved to database:", inquiry.id);
 
-    // Step 2: Push to Guesty via Open API (best effort)
+    // Step 2: Push to Guesty via Booking API (best effort)
     let guestyReservationId: string | null = null;
     try {
-      const token = await getOpenApiToken(supabase);
+      const token = await getBookingApiToken(supabase);
 
       const noteParts: string[] = [];
       if (dates) noteParts.push(`Preferred Dates: ${dates}`);
@@ -133,7 +133,7 @@ serve(async (req) => {
       if (selectedActivities?.length) noteParts.push(`Activities: ${selectedActivities.join(", ")}`);
       if (message) noteParts.push(`Message: ${message}`);
 
-      const guestyResponse = await fetch("https://open-api.guesty.com/v1/reservations", {
+      const guestyResponse = await fetch("https://booking.guesty.com/api/reservations", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -165,7 +165,7 @@ serve(async (req) => {
         }
       } else {
         const errText = await guestyResponse.text();
-        console.error(`Guesty Open API failed (${guestyResponse.status}):`, errText.substring(0, 500));
+        console.error(`Guesty Booking API failed (${guestyResponse.status}):`, errText.substring(0, 500));
       }
     } catch (guestyErr) {
       console.error("Guesty attempt failed (non-critical):", guestyErr);

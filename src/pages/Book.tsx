@@ -214,23 +214,19 @@ export default function Book() {
       {/* Property Overview Stats */}
       <PropertyOverview />
 
-      {/* Property details - full width */}
+      {/* Main content: two-column grid with sticky sidebar */}
       <div className="container max-w-6xl py-8 md:py-12">
-        <div className="max-w-4xl">
-          <PropertyDescription />
-          <AmenitiesGrid />
-          <AvailableServices />
-        </div>
-      </div>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 lg:gap-12 items-start">
+          {/* Left column: property details + calendar */}
+          <div>
+            <PropertyDescription />
+            <AmenitiesGrid />
+            <AvailableServices />
 
-      {/* Calendar + Booking Sidebar - Airbnb style */}
-      <section className="py-12 md:py-16 bg-card">
-        <div className="container max-w-6xl">
-          <h2 className="font-serif text-3xl md:text-4xl font-light mb-8">Select Your Dates</h2>
+            {/* Calendar */}
+            <div className="py-8 md:py-10 border-t border-border">
+              <h2 className="font-serif text-2xl md:text-3xl font-light mb-8">Select Your Dates</h2>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 lg:gap-12 items-start">
-            {/* Left: Dual-month calendar */}
-            <div>
               <div className="flex items-center justify-between mb-6">
                 <button
                   onClick={prevMonth}
@@ -289,133 +285,133 @@ export default function Book() {
                 <span className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-golden" /> Selected</span>
               </div>
             </div>
+          </div>
 
-            {/* Right: Booking card - scrolls with page */}
-            <div>
-              <div className="bg-background border border-border rounded-2xl p-6 shadow-lg">
-                <h3 className="font-serif text-2xl font-light mb-6">Your Stay</h3>
+          {/* Right column: Sticky booking card */}
+          <div className="lg:sticky lg:top-24">
+            <div className="bg-card border border-border rounded-2xl p-6 shadow-lg">
+              <h3 className="font-serif text-2xl font-light mb-6">Your Stay</h3>
 
-                {/* Guest Selector */}
-                <div className="mb-6">
-                  <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-2 block">Guests</label>
-                  <div className="flex items-center gap-3">
-                    <Users className="w-5 h-5 text-golden" />
-                    <button
-                      onClick={() => setGuests((g) => Math.max(1, g - 1))}
-                      className="w-8 h-8 flex items-center justify-center rounded-full border border-border hover:bg-muted text-sm"
-                    >-</button>
-                    <span className="font-sans text-lg w-8 text-center">{guests}</span>
-                    <button
-                      onClick={() => setGuests((g) => Math.min(MAX_GUESTS, g + 1))}
-                      className="w-8 h-8 flex items-center justify-center rounded-full border border-border hover:bg-muted text-sm"
-                    >+</button>
+              {/* Guest Selector */}
+              <div className="mb-6">
+                <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-2 block">Guests</label>
+                <div className="flex items-center gap-3">
+                  <Users className="w-5 h-5 text-golden" />
+                  <button
+                    onClick={() => setGuests((g) => Math.max(1, g - 1))}
+                    className="w-8 h-8 flex items-center justify-center rounded-full border border-border hover:bg-muted text-sm"
+                  >-</button>
+                  <span className="font-sans text-lg w-8 text-center">{guests}</span>
+                  <button
+                    onClick={() => setGuests((g) => Math.min(MAX_GUESTS, g + 1))}
+                    className="w-8 h-8 flex items-center justify-center rounded-full border border-border hover:bg-muted text-sm"
+                  >+</button>
+                </div>
+              </div>
+
+              {/* Selected Dates */}
+              <div className="mb-6 space-y-3">
+                <div>
+                  <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-1 block">Check-in</label>
+                  <div className="flex items-center gap-2 font-sans">
+                    <CalendarDays className="w-4 h-4 text-golden" />
+                    <span className={checkIn ? "text-foreground" : "text-muted-foreground"}>
+                      {checkIn ? format(checkIn, "MMM d, yyyy") : "Select date"}
+                    </span>
                   </div>
                 </div>
-
-                {/* Selected Dates */}
-                <div className="mb-6 space-y-3">
-                  <div>
-                    <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-1 block">Check-in</label>
-                    <div className="flex items-center gap-2 font-sans">
-                      <CalendarDays className="w-4 h-4 text-golden" />
-                      <span className={checkIn ? "text-foreground" : "text-muted-foreground"}>
-                        {checkIn ? format(checkIn, "MMM d, yyyy") : "Select date"}
-                      </span>
-                    </div>
+                <div>
+                  <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-1 block">Check-out</label>
+                  <div className="flex items-center gap-2 font-sans">
+                    <CalendarDays className="w-4 h-4 text-golden" />
+                    <span className={checkOut ? "text-foreground" : "text-muted-foreground"}>
+                      {checkOut ? format(checkOut, "MMM d, yyyy") : "Select date"}
+                    </span>
                   </div>
-                  <div>
-                    <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-1 block">Check-out</label>
-                    <div className="flex items-center gap-2 font-sans">
-                      <CalendarDays className="w-4 h-4 text-golden" />
-                      <span className={checkOut ? "text-foreground" : "text-muted-foreground"}>
-                        {checkOut ? format(checkOut, "MMM d, yyyy") : "Select date"}
-                      </span>
-                    </div>
-                  </div>
-                  {nights > 0 && (
-                    <p className="text-sm font-sans text-muted-foreground">
-                      {nights} night{nights !== 1 ? "s" : ""}
-                      {nights < minNights && <span className="text-destructive ml-1">(minimum {minNights} nights from this date)</span>}
-                    </p>
-                  )}
                 </div>
-
-                {loadingQuote && (
-                  <div className="flex items-center justify-center gap-2 py-4 text-muted-foreground">
-                    <Loader2 className="w-4 h-4 animate-spin text-golden" />
-                    <span className="text-sm font-sans">Fetching pricing...</span>
-                  </div>
-                )}
-
-                {quoteError && (
-                  <p className="text-sm font-sans text-destructive mb-4">{quoteError}</p>
-                )}
-
-                {quote && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="border-t border-border pt-4 mb-6 space-y-2"
-                  >
-                    {accommodation !== null && (
-                      <div className="flex justify-between font-sans text-sm">
-                        <span className="text-muted-foreground">Accommodation ({nights} nights)</span>
-                        <span>${(displayAccommodation ?? accommodation).toLocaleString()}</span>
-                      </div>
-                    )}
-                    {extraGuests > 0 && extraGuestTotal > 0 && (
-                      <div className="flex justify-between font-sans text-sm">
-                        <span className="text-muted-foreground">Extra Guest Fee ({extraGuests} × ${EXTRA_GUEST_FEE}/night)</span>
-                        <span>${extraGuestTotal.toLocaleString()}</span>
-                      </div>
-                    )}
-                    {cleaning !== null && cleaning > 0 && (
-                      <div className="flex justify-between font-sans text-sm">
-                        <span className="text-muted-foreground">Cleaning Fee</span>
-                        <span>${cleaning.toLocaleString()}</span>
-                      </div>
-                    )}
-                    {invoiceItems.filter((i: { title?: string; amount?: number }) => i.title && i.amount && i.title !== "Accommodation fare" && i.title !== "Cleaning fee").map((item: { title?: string; amount?: number }, idx: number) => (
-                      <div key={idx} className="flex justify-between font-sans text-sm">
-                        <span className="text-muted-foreground">{item.title}</span>
-                        <span>${item.amount?.toLocaleString()}</span>
-                      </div>
-                    ))}
-                    {totalPrice !== null && (
-                      <div className="flex justify-between font-sans text-base font-semibold pt-2 border-t border-border">
-                        <span>Total ({currency})</span>
-                        <span className="text-golden">${totalPrice.toLocaleString()}</span>
-                      </div>
-                    )}
-                  </motion.div>
-                )}
-
-                {quote && totalPrice !== null && (
-                  <div className="space-y-3">
-                    <button
-                      onClick={handleBookNow}
-                      className="w-full py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest rounded-full hover:bg-accent/90 transition-colors"
-                    >
-                      Book Now
-                    </button>
-                    <InquiryDialog>
-                      <button className="w-full py-3 border border-golden text-golden font-sans text-sm uppercase tracking-widest rounded-full hover:bg-golden/10 transition-colors">
-                        Ask a Question
-                      </button>
-                    </InquiryDialog>
-                  </div>
-                )}
-
-                {!checkIn && (
-                  <p className="text-sm font-sans text-muted-foreground text-center">
-                    Select your check-in date on the calendar.
+                {nights > 0 && (
+                  <p className="text-sm font-sans text-muted-foreground">
+                    {nights} night{nights !== 1 ? "s" : ""}
+                    {nights < minNights && <span className="text-destructive ml-1">(minimum {minNights} nights from this date)</span>}
                   </p>
                 )}
               </div>
+
+              {loadingQuote && (
+                <div className="flex items-center justify-center gap-2 py-4 text-muted-foreground">
+                  <Loader2 className="w-4 h-4 animate-spin text-golden" />
+                  <span className="text-sm font-sans">Fetching pricing...</span>
+                </div>
+              )}
+
+              {quoteError && (
+                <p className="text-sm font-sans text-destructive mb-4">{quoteError}</p>
+              )}
+
+              {quote && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="border-t border-border pt-4 mb-6 space-y-2"
+                >
+                  {accommodation !== null && (
+                    <div className="flex justify-between font-sans text-sm">
+                      <span className="text-muted-foreground">Accommodation ({nights} nights)</span>
+                      <span>${(displayAccommodation ?? accommodation).toLocaleString()}</span>
+                    </div>
+                  )}
+                  {extraGuests > 0 && extraGuestTotal > 0 && (
+                    <div className="flex justify-between font-sans text-sm">
+                      <span className="text-muted-foreground">Extra Guest Fee ({extraGuests} × ${EXTRA_GUEST_FEE}/night)</span>
+                      <span>${extraGuestTotal.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {cleaning !== null && cleaning > 0 && (
+                    <div className="flex justify-between font-sans text-sm">
+                      <span className="text-muted-foreground">Cleaning Fee</span>
+                      <span>${cleaning.toLocaleString()}</span>
+                    </div>
+                  )}
+                  {invoiceItems.filter((i: { title?: string; amount?: number }) => i.title && i.amount && i.title !== "Accommodation fare" && i.title !== "Cleaning fee").map((item: { title?: string; amount?: number }, idx: number) => (
+                    <div key={idx} className="flex justify-between font-sans text-sm">
+                      <span className="text-muted-foreground">{item.title}</span>
+                      <span>${item.amount?.toLocaleString()}</span>
+                    </div>
+                  ))}
+                  {totalPrice !== null && (
+                    <div className="flex justify-between font-sans text-base font-semibold pt-2 border-t border-border">
+                      <span>Total ({currency})</span>
+                      <span className="text-golden">${totalPrice.toLocaleString()}</span>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+
+              {quote && totalPrice !== null && (
+                <div className="space-y-3">
+                  <button
+                    onClick={handleBookNow}
+                    className="w-full py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest rounded-full hover:bg-accent/90 transition-colors"
+                  >
+                    Book Now
+                  </button>
+                  <InquiryDialog>
+                    <button className="w-full py-3 border border-golden text-golden font-sans text-sm uppercase tracking-widest rounded-full hover:bg-golden/10 transition-colors">
+                      Ask a Question
+                    </button>
+                  </InquiryDialog>
+                </div>
+              )}
+
+              {!checkIn && (
+                <p className="text-sm font-sans text-muted-foreground text-center">
+                  Select your check-in date on the calendar.
+                </p>
+              )}
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Footer CTA */}
       <section className="py-16 text-center">
