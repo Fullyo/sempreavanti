@@ -13,7 +13,7 @@ import AvailableServices from "@/components/book/AvailableServices";
 import estateHero from "@/assets/estate-1.jpeg";
 
 const LISTING_ID = "697bcfcf3f5e990014fbc4dd";
-const CHECKOUT_BASE = `https://villassempreavanti.guestybookings.com/en/properties/${LISTING_ID}/checkout`;
+const CHECKOUT_BASE = `https://villassempreavanti.guestybookings.com/en/properties/${LISTING_ID}`;
 const MAX_GUESTS = 14;
 const DEFAULT_MIN_NIGHTS = 4;
 const BASE_OCCUPANCY = 12;
