@@ -184,7 +184,7 @@ serve(async (req) => {
       guestyReservationId = guestyData._id || null;
       console.log("SUCCESS - Guesty inquiry created:", guestyReservationId, "status:", guestyData.status);
 
-      // Attach notes via reservations-v3 notes endpoint
+      // Attach form data to the reservation via reservations-v3 notes
       if (guestyReservationId) {
         try {
           const notesResponse = await fetch(
@@ -206,9 +206,9 @@ serve(async (req) => {
 
           if (!notesResponse.ok) {
             const errText = await notesResponse.text();
-            console.error(`Notes v3 failed (${notesResponse.status}):`, errText.substring(0, 500));
+            console.error(`Notes update failed (${notesResponse.status}):`, errText.substring(0, 500));
           } else {
-            console.log("Notes attached via reservations-v3 endpoint");
+            console.log("Notes attached to reservation successfully");
           }
         } catch (noteErr) {
           console.error("Notes update failed:", noteErr);
