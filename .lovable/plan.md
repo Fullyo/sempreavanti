@@ -1,37 +1,85 @@
 
 
-## Fix Inquiry Notes and Date Display
+## Fix: Post Form Data as a Message in the Guesty Inbox
 
-### Problem 1: Missing Notes/Activities/Message
-The notes API endpoint `/v1/communication/reservations/{id}/notes` returned "Not Found". The Guesty Open API uses a different endpoint for reservation notes.
+### What's been happening
+The `guestRemarks` and `specialRequests` fields we've been writing to are stored on the reservation record but are NOT displayed in the inbox conversation view. That's why you see "New guest inquiry" with nothing else.
 
-**Fix:** Try the correct Guesty Open API endpoint for adding notes to a reservation. Based on the API structure, the options are:
-- `PUT /v1/reservations/{id}` with a `note` field in the body (update the reservation itself)
-- If that doesn't support notes, fall back to including the note content in the guest's `remarks` or custom fields
+### The fix
+Use Guesty's Communications API to post an actual message into the conversation thread:
 
-The note string is already being built correctly (activities, dates, message). Only the delivery mechanism needs to change.
+1. After creating the inquiry reservation, fetch its conversation using `GET /v1/communication/conversations?reservationId={id}`
+2. Post the form details as a message using `POST /v1/communication/conversations/{conversationId}/send-message`
+3. This message will appear directly in the inbox thread — exactly where you're looking
 
-### Problem 2: Random Check-in/Check-out Dates
-Guesty requires dates even for inquiries. The current code sets placeholder dates 1 year in the future. This is confusing when you view the inquiry in Guesty.
-
-**Fix:** Include the user's "Preferred Dates" text prominently in the note/remarks so it's immediately visible when you open the inquiry. The placeholder dates are unavoidable (API requirement) but the real requested dates will be clearly labeled in the notes.
-
-### Technical Changes
+### What changes
 
 **File: `supabase/functions/guesty-inquiry/index.ts`**
 
-1. Replace the failed `/v1/communication/reservations/{id}/notes` call with `PUT /v1/reservations/{id}` to update the reservation's note field directly
-2. If the `note` field isn't supported on PUT, try adding it as part of the initial `POST /v1/reservations` body using alternative field names (`customFields`, `remarks`, or `guestComment`)
-3. Keep the note string format:
-   ```
-   --- Website Inquiry ---
-   Preferred Dates: March 6
-   Group Size: 8 adults
-   Activities: Surfing, Sailing, Massage & Spa
-   Message: Tequilla
-   ```
+Replace the current notes section (the `PUT /v1/reservations-v3/{id}/notes` call) with two API calls:
 
-### What This Achieves
-- All form data (activities, message, preferred dates, group size) will be visible on the inquiry in Guesty
-- The placeholder dates remain (required by API) but real requested dates are clearly shown in the notes
-- No changes needed to the frontend form
+```text
+Step 1: GET conversation for the reservation
+  GET https://open-api.guesty.com/v1/communication/conversations?reservationId={id}
+  -> extract conversationId from response
+
+Step 2: POST message to conversation  
+  POST https://open-api.guesty.com/v1/communication/conversations/{conversationId}/send-message
+  Body: { body: noteString, module: "email" }
+```
+
+The `noteString` already contains the correctly formatted data:
+```
+--- Website Inquiry ---
+Preferred Dates: March 15-22, 2026
+Group Size: 8 adults
+Activities: Surfing, Sailing, Massage and Spa
+Message: Tequilla
+```
+
+### What stays the same
+- The inquiry creation (POST /v1/reservations with status: "inquiry") -- this works perfectly
+- The frontend form -- no changes needed
+- The database-first save -- all inquiries are still stored locally first
+- The placeholder dates (required by API) remain, but the real preferred dates are now visible in the conversation
+
+### Is this the last step?
+Yes. The inquiry creation works. The form data is being captured. The only broken piece is getting that data to display in your inbox view. This fix targets that exact location.
+
+### Technical details
+
+The full notes section replacement in `supabase/functions/guesty-inquiry/index.ts` (lines ~187-215):
+
+```typescript
+// Fetch the conversation for this reservation
+const convResponse = await fetch(
+  `https://open-api.guesty.com/v1/communication/conversations?reservationId=${guestyReservationId}`,
+  {
+    headers: { Authorization: `Bearer ${token}` },
+  }
+);
+
+if (convResponse.ok) {
+  const convData = await convResponse.json();
+  const conversationId = convData?.results?.[0]?._id;
+  
+  if (conversationId) {
+    // Post message to the conversation thread
+    const msgResponse = await fetch(
+      `https://open-api.guesty.com/v1/communication/conversations/${conversationId}/send-message`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          body: noteString,
+        }),
+      }
+    );
+    // Log success/failure
+  }
+}
+```
+
