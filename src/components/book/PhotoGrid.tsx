@@ -149,11 +149,12 @@ function LightboxGallery({ photos, open, onClose }: { photos: Photo[]; open: boo
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-5xl w-[95vw] max-h-[90dvh] overflow-y-auto p-4 md:p-6">
+        {/* Floating close button - always visible */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 z-50 w-9 h-9 flex items-center justify-center rounded-full bg-background border border-border hover:bg-muted transition-colors"
+          className="fixed top-4 right-4 z-[60] w-10 h-10 flex items-center justify-center rounded-full bg-background/95 border border-border hover:bg-muted transition-colors shadow-lg backdrop-blur-sm"
         >
-          <X className="w-4 h-4" />
+          <X className="w-5 h-5" />
         </button>
         <h3 className="font-serif text-2xl font-light mb-4">All Photos</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">

@@ -290,8 +290,8 @@ export default function Book() {
               </div>
             </div>
 
-            {/* Right: Sticky booking card */}
-            <div className="lg:sticky lg:top-24">
+            {/* Right: Booking card - scrolls with page */}
+            <div>
               <div className="bg-background border border-border rounded-2xl p-6 shadow-lg">
                 <h3 className="font-serif text-2xl font-light mb-6">Your Stay</h3>
 
