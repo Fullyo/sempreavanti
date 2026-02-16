@@ -100,7 +100,7 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { firstName, lastName, email, phone, dates, groupSize, message, selectedActivities } = body;
+    const { firstName, lastName, email, phone, checkIn, checkOut, groupSize, message, selectedActivities } = body;
 
     if (!firstName || !lastName || !email) {
       return new Response(JSON.stringify({ error: "Name and email are required" }), {
@@ -127,7 +127,7 @@ serve(async (req) => {
         last_name: lastName,
         email,
         phone: phone || null,
-        preferred_dates: dates || null,
+        preferred_dates: checkIn && checkOut ? `${checkIn} to ${checkOut}` : null,
         group_size: groupSize || null,
         message: message || null,
         selected_activities: selectedActivities?.length ? selectedActivities : null,
@@ -149,7 +149,8 @@ serve(async (req) => {
     let guestyReservationId: string | null = null;
     try {
       const token = await getOpenApiToken(supabase);
-      const noteString = buildNoteString({ dates, groupSize, selectedActivities, message });
+      const datesDisplay = checkIn && checkOut ? `${checkIn} to ${checkOut}` : undefined;
+      const noteString = buildNoteString({ dates: datesDisplay, groupSize, selectedActivities, message });
 
       console.log("Creating Guesty inquiry via Open API...");
       console.log("Note:", noteString.substring(0, 200));
@@ -163,8 +164,8 @@ serve(async (req) => {
         body: JSON.stringify({
           listingId: LISTING_ID,
           status: "inquiry",
-          checkInDateLocalized: new Date(Date.now() + 365 * 86400000).toISOString().split("T")[0],
-          checkOutDateLocalized: new Date(Date.now() + 372 * 86400000).toISOString().split("T")[0],
+          checkInDateLocalized: checkIn || new Date(Date.now() + 365 * 86400000).toISOString().split("T")[0],
+          checkOutDateLocalized: checkOut || new Date(Date.now() + 372 * 86400000).toISOString().split("T")[0],
           guest: {
             firstName,
             lastName,
