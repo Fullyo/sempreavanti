@@ -214,21 +214,85 @@ export default function Book() {
       {/* Property Overview Stats */}
       <PropertyOverview />
 
-      {/* Two-column layout: Content left, Booking sidebar right */}
+      {/* Property details - full width */}
       <div className="container max-w-6xl py-8 md:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12">
-          {/* Left column: Property details */}
-          <div className="lg:col-span-2 space-y-0">
-            <PropertyDescription />
-            <AmenitiesGrid />
-            <AvailableServices />
-          </div>
+        <div className="max-w-4xl">
+          <PropertyDescription />
+          <AmenitiesGrid />
+          <AvailableServices />
+        </div>
+      </div>
 
-          {/* Right column: Sticky booking sidebar */}
-          <div className="lg:col-span-1">
-            <div className="lg:sticky lg:top-24 space-y-6">
-              {/* Booking Card */}
-              <div className="bg-card border border-border rounded-2xl p-6">
+      {/* Calendar + Booking Sidebar - Airbnb style */}
+      <section className="py-12 md:py-16 bg-card">
+        <div className="container max-w-6xl">
+          <h2 className="font-serif text-3xl md:text-4xl font-light mb-8">Select Your Dates</h2>
+
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-8 lg:gap-12 items-start">
+            {/* Left: Dual-month calendar */}
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <button
+                  onClick={prevMonth}
+                  disabled={isBefore(addMonths(baseMonth, -1), startOfMonth(today))}
+                  className="w-10 h-10 flex items-center justify-center rounded-full border border-border hover:bg-muted transition-colors disabled:opacity-30"
+                  aria-label="Previous month"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <div className="flex gap-8">
+                  <h3 className="font-serif text-xl md:text-2xl font-light">{format(baseMonth, "MMMM yyyy")}</h3>
+                  <h3 className="font-serif text-xl md:text-2xl font-light hidden md:block">{format(addMonths(baseMonth, 1), "MMMM yyyy")}</h3>
+                </div>
+                <button
+                  onClick={nextMonth}
+                  className="w-10 h-10 flex items-center justify-center rounded-full border border-border hover:bg-muted transition-colors"
+                  aria-label="Next month"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+
+              {loadingCalendar ? (
+                <div className="flex items-center justify-center py-20">
+                  <Loader2 className="w-8 h-8 animate-spin text-golden" />
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <MonthGrid
+                    month={baseMonth}
+                    blockedDates={blockedDates}
+                    today={today}
+                    checkIn={checkIn}
+                    checkOut={checkOut}
+                    isInRange={isInRange}
+                    onDayClick={handleDayClick}
+                  />
+                  <div>
+                    <h3 className="font-serif text-xl md:text-2xl font-light mb-4 md:hidden">{format(addMonths(baseMonth, 1), "MMMM yyyy")}</h3>
+                    <MonthGrid
+                      month={addMonths(baseMonth, 1)}
+                      blockedDates={blockedDates}
+                      today={today}
+                      checkIn={checkIn}
+                      checkOut={checkOut}
+                      isInRange={isInRange}
+                      onDayClick={handleDayClick}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-center gap-6 mt-6 text-xs font-sans text-muted-foreground">
+                <span className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-golden/20 border border-golden" /> Available</span>
+                <span className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-muted border border-border" /> Unavailable</span>
+                <span className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-golden" /> Selected</span>
+              </div>
+            </div>
+
+            {/* Right: Sticky booking card */}
+            <div className="lg:sticky lg:top-24">
+              <div className="bg-background border border-border rounded-2xl p-6 shadow-lg">
                 <h3 className="font-serif text-2xl font-light mb-6">Your Stay</h3>
 
                 {/* Guest Selector */}
@@ -344,76 +408,10 @@ export default function Book() {
 
                 {!checkIn && (
                   <p className="text-sm font-sans text-muted-foreground text-center">
-                    Select your check-in date on the calendar below.
+                    Select your check-in date on the calendar.
                   </p>
                 )}
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Calendar Section - Full Width */}
-      <section className="py-12 md:py-16 bg-card">
-        <div className="container max-w-6xl">
-          <h2 className="font-serif text-3xl md:text-4xl font-light mb-8 text-center">Select Your Dates</h2>
-          <div className="max-w-4xl mx-auto">
-            <div className="flex items-center justify-between mb-6">
-              <button
-                onClick={prevMonth}
-                disabled={isBefore(addMonths(baseMonth, -1), startOfMonth(today))}
-                className="w-10 h-10 flex items-center justify-center rounded-full border border-border hover:bg-muted transition-colors disabled:opacity-30"
-                aria-label="Previous month"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <div className="flex gap-8">
-                <h3 className="font-serif text-xl md:text-2xl font-light">{format(baseMonth, "MMMM yyyy")}</h3>
-                <h3 className="font-serif text-xl md:text-2xl font-light hidden md:block">{format(addMonths(baseMonth, 1), "MMMM yyyy")}</h3>
-              </div>
-              <button
-                onClick={nextMonth}
-                className="w-10 h-10 flex items-center justify-center rounded-full border border-border hover:bg-muted transition-colors"
-                aria-label="Next month"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
-
-            {loadingCalendar ? (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="w-8 h-8 animate-spin text-golden" />
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <MonthGrid
-                  month={baseMonth}
-                  blockedDates={blockedDates}
-                  today={today}
-                  checkIn={checkIn}
-                  checkOut={checkOut}
-                  isInRange={isInRange}
-                  onDayClick={handleDayClick}
-                />
-                <div>
-                  <h3 className="font-serif text-xl md:text-2xl font-light mb-4 md:hidden">{format(addMonths(baseMonth, 1), "MMMM yyyy")}</h3>
-                  <MonthGrid
-                    month={addMonths(baseMonth, 1)}
-                    blockedDates={blockedDates}
-                    today={today}
-                    checkIn={checkIn}
-                    checkOut={checkOut}
-                    isInRange={isInRange}
-                    onDayClick={handleDayClick}
-                  />
-                </div>
-              </div>
-            )}
-
-            <div className="flex items-center gap-6 mt-6 text-xs font-sans text-muted-foreground">
-              <span className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-golden/20 border border-golden" /> Available</span>
-              <span className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-muted border border-border" /> Unavailable</span>
-              <span className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-golden" /> Selected</span>
             </div>
           </div>
         </div>
