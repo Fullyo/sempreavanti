@@ -10,6 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { CalendarIcon } from "lucide-react";
+import { format, addDays } from "date-fns";
+import { cn } from "@/lib/utils";
 import heroVilla from "@/assets/hero-villa.png";
 
 const activityOptions = [
@@ -44,10 +49,11 @@ export default function InquiryDialog({ children }: InquiryDialogProps) {
     email: "",
     confirmEmail: "",
     phone: "",
-    dates: "",
     groupSize: "",
     message: "",
   });
+  const [checkIn, setCheckIn] = useState<Date | undefined>();
+  const [checkOut, setCheckOut] = useState<Date | undefined>();
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
 
   const toggleActivity = (activity: string) => {
@@ -68,10 +74,23 @@ export default function InquiryDialog({ children }: InquiryDialogProps) {
       });
       return;
     }
+    if (checkIn && checkOut && checkOut <= checkIn) {
+      toast({
+        title: "Invalid Dates",
+        description: "Check-out date must be after check-in date.",
+        variant: "destructive",
+      });
+      return;
+    }
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke("guesty-inquiry", {
-        body: { ...form, selectedActivities },
+        body: {
+          ...form,
+          selectedActivities,
+          checkIn: checkIn ? format(checkIn, "yyyy-MM-dd") : undefined,
+          checkOut: checkOut ? format(checkOut, "yyyy-MM-dd") : undefined,
+        },
       });
 
       if (error) throw error;
@@ -80,7 +99,9 @@ export default function InquiryDialog({ children }: InquiryDialogProps) {
         title: "Inquiry Sent",
         description: "Thank you! We'll be in touch shortly to begin planning your stay.",
       });
-      setForm({ firstName: "", lastName: "", email: "", confirmEmail: "", phone: "", dates: "", groupSize: "", message: "" });
+      setForm({ firstName: "", lastName: "", email: "", confirmEmail: "", phone: "", groupSize: "", message: "" });
+      setCheckIn(undefined);
+      setCheckOut(undefined);
       setSelectedActivities([]);
       setOpen(false);
     } catch (err) {
@@ -192,26 +213,78 @@ export default function InquiryDialog({ children }: InquiryDialogProps) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-2 block">
-                  Preferred Dates
+                  Check-in Date
                 </label>
-                <Input
-                  value={form.dates}
-                  onChange={(e) => setForm({ ...form, dates: e.target.value })}
-                  placeholder="e.g., March 15–22, 2026"
-                  className="bg-card border-border focus:border-accent"
-                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal bg-card border-border",
+                        !checkIn && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {checkIn ? format(checkIn, "MMM d, yyyy") : "Select date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 z-[60]" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={checkIn}
+                      onSelect={(date) => {
+                        setCheckIn(date);
+                        if (date && checkOut && checkOut <= date) {
+                          setCheckOut(addDays(date, 1));
+                        }
+                      }}
+                      disabled={(date) => date < new Date()}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
               <div>
                 <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-2 block">
-                  Group Size
+                  Check-out Date
                 </label>
-                <Input
-                  value={form.groupSize}
-                  onChange={(e) => setForm({ ...form, groupSize: e.target.value })}
-                  placeholder="e.g., 8 adults, 2 children"
-                  className="bg-card border-border focus:border-accent"
-                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal bg-card border-border",
+                        !checkOut && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {checkOut ? format(checkOut, "MMM d, yyyy") : "Select date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 z-[60]" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={checkOut}
+                      onSelect={setCheckOut}
+                      disabled={(date) => date < (checkIn ? addDays(checkIn, 1) : new Date())}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
+            </div>
+
+            {/* Group Size */}
+            <div>
+              <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-2 block">
+                Group Size
+              </label>
+              <Input
+                value={form.groupSize}
+                onChange={(e) => setForm({ ...form, groupSize: e.target.value })}
+                placeholder="e.g., 8 adults, 2 children"
+                className="bg-card border-border focus:border-accent"
+              />
             </div>
 
             {/* Activity Interests */}
