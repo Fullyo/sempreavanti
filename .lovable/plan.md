@@ -1,51 +1,37 @@
 
 
-## Fix: Create True Inquiries (Not Reservations) in Guesty
+## Fix Inquiry Notes and Date Display
 
-### The Problem
-The Booking Engine API's "inquiry" endpoint actually creates reservations with status "reserved", which blocks calendar dates. Your website form is meant to be a simple question/correspondence, not a booking.
+### Problem 1: Missing Notes/Activities/Message
+The notes API endpoint `/v1/communication/reservations/{id}/notes` returned "Not Found". The Guesty Open API uses a different endpoint for reservation notes.
 
-### The Solution
-Switch from the Booking Engine API to the Guesty **Open API** for inquiry submissions. The Open API's `POST /api/reservations` endpoint supports `status: "inquiry"` which:
-- Appears in the Guesty inbox
-- Does NOT block calendar dates
-- Includes guest contact info and questionnaire data in notes
+**Fix:** Try the correct Guesty Open API endpoint for adding notes to a reservation. Based on the API structure, the options are:
+- `PUT /v1/reservations/{id}` with a `note` field in the body (update the reservation itself)
+- If that doesn't support notes, fall back to including the note content in the guest's `remarks` or custom fields
 
-### What You Need To Provide
-New API credentials with Open API access, created in your Guesty dashboard:
-- Go to Guesty dashboard -> Marketplace or Developer Tools -> Open API
-- Create a new integration to get a Client ID and Client Secret with `open-api` scope
-- Share them so they can be added as backend secrets (`GUESTY_OPEN_API_CLIENT_ID` and `GUESTY_OPEN_API_CLIENT_SECRET`)
+The note string is already being built correctly (activities, dates, message). Only the delivery mechanism needs to change.
+
+### Problem 2: Random Check-in/Check-out Dates
+Guesty requires dates even for inquiries. The current code sets placeholder dates 1 year in the future. This is confusing when you view the inquiry in Guesty.
+
+**Fix:** Include the user's "Preferred Dates" text prominently in the note/remarks so it's immediately visible when you open the inquiry. The placeholder dates are unavoidable (API requirement) but the real requested dates will be clearly labeled in the notes.
 
 ### Technical Changes
 
-**File: `supabase/functions/guesty-inquiry/index.ts`** (rewrite)
+**File: `supabase/functions/guesty-inquiry/index.ts`**
 
-1. Add a new `getOpenApiToken` function that requests a token from `https://open-api.guesty.com/v1/oauth2/token` with `scope: "open-api"` using the new credentials
-2. Replace the entire two-step quote flow with a single API call:
+1. Replace the failed `/v1/communication/reservations/{id}/notes` call with `PUT /v1/reservations/{id}` to update the reservation's note field directly
+2. If the `note` field isn't supported on PUT, try adding it as part of the initial `POST /v1/reservations` body using alternative field names (`customFields`, `remarks`, or `guestComment`)
+3. Keep the note string format:
    ```
-   POST https://open-api.guesty.com/api/reservations
-   {
-     "listingId": "697bcfcf3f5e990014fbc4dd",
-     "status": "inquiry",
-     "guest": { "firstName", "lastName", "email", "phone" },
-     "note": "--- Website Inquiry ---\nPreferred Dates: ...\nGroup Size: ...\nActivities: ...\nMessage: ..."
-   }
+   --- Website Inquiry ---
+   Preferred Dates: March 6
+   Group Size: 8 adults
+   Activities: Surfing, Sailing, Massage & Spa
+   Message: Tequilla
    ```
-3. Remove the `findAvailableDates` function (no longer needed -- inquiries don't require dates)
-4. Keep the database-first approach and `guesty_reservation_id` writeback
-5. Cache the Open API token separately (cache key: `open_api_access_token`) so it doesn't conflict with the Booking Engine API token used by the /book page
 
 ### What This Achieves
-- Inquiries appear in Guesty inbox with status "inquiry" (not "reserved")
-- Calendar is NOT blocked by website form submissions
-- All questionnaire answers (activities, dates, group size, message) visible in the reservation notes
-- Guest contact info (name, email, phone) stored as structured fields on the reservation
-- The existing Booking Engine API integration for the /book page (calendar, pricing, instant booking) remains completely unchanged
-
-### Verification Plan
-After deployment, I will call the edge function with test data and confirm the response includes `status: "inquiry"`. You verify in Guesty that:
-1. The inquiry appears in the inbox
-2. The calendar is NOT blocked
-3. All form data is visible in the notes
-
+- All form data (activities, message, preferred dates, group size) will be visible on the inquiry in Guesty
+- The placeholder dates remain (required by API) but real requested dates are clearly shown in the notes
+- No changes needed to the frontend form
