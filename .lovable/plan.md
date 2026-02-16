@@ -1,55 +1,27 @@
 
 
-## Fix Booking Engine URL, Dynamic Min Nights, and Extra Guest Fee Display
+## Fix Checkout Redirect URL + Guesty Fee Clarification
 
-### Issues Identified
+### Issue 1: Redirect URL (Fixable)
 
-1. **404 on checkout** -- The booking engine URL was renamed from `casasempreavanti` to `villassempreavanti`, so the "Book Now" redirect is broken.
+The "Book Now" button currently redirects to:
+`villassempreavanti.guestybookings.com/en/properties/{id}/checkout?...`
 
-2. **Min nights is hardcoded to 3** -- The rate plan shows min night = 4. Currently, selecting 3 nights triggers a quote API call that fails with a `minNights` restriction, but the UI just shows a generic error instead of telling the guest the minimum. Also, when selecting 2 nights, it shows "(min 3)" which is wrong.
+But Guesty's booking engine expects the property page URL (without `/checkout`):
+`villassempreavanti.guestybookings.com/en/properties/{id}?...`
 
-3. **Min nights should be dynamic** -- The Guesty calendar API returns a `minNights` field per day. The code should read this from the check-in date's calendar data so it always matches whatever is set in Guesty (including overrides).
+Guesty then handles the checkout flow internally from the property page.
 
-4. **Extra guest fee display** -- The current `BASE_OCCUPANCY` and `EXTRA_GUEST_FEE` constants and display logic are already in place from the last edit. These remain correct since Guesty bundles the fee inside `fareAccommodation`.
+**Fix in `src/pages/Book.tsx`:**
+- Change `CHECKOUT_BASE` from `.../properties/{id}/checkout` to `.../properties/{id}`
+- This will take guests directly to the property page with dates and guest count pre-filled, where they click Guesty's own "Book now" button to proceed to payment
 
----
+### Issue 2: Extra Guest Fee on Guesty Checkout (NOT fixable from our side)
 
-### Changes in `src/pages/Book.tsx`
+The totals match perfectly between our page ($6,287.16) and Guesty's checkout ($6,287.00). Guesty includes the extra guest fee inside their "Subtotal" line rather than showing it separately. This is how Guesty's hosted checkout widget works -- it consolidates accommodation + extra person fees into one subtotal.
 
-**1. Update checkout URL**
-- Change `CHECKOUT_BASE` from `casasempreavanti.guestybookings.com` to `villassempreavanti.guestybookings.com`
-
-**2. Remove hardcoded `MIN_NIGHTS = 3` constant**
-- Replace with a computed value derived from the calendar data
-
-**3. Add dynamic min nights logic**
-- Create a helper that looks up the `minNights` value from the calendar data for the selected check-in date
-- Default to 4 if no calendar data is available (matching the rate plan default)
-- Use this dynamic value everywhere: in the auto-quote trigger condition, in the "(min X)" warning text, and in validation
-
-**4. Improve the 3-night error UX**
-- When nights are selected but below the dynamic minimum, show a clear message like "Minimum stay is X nights from this date" instead of firing a quote request that will fail with a generic error
-
-### Technical Details
-
-```
-- const MIN_NIGHTS = 3;
-+ const DEFAULT_MIN_NIGHTS = 4;
-
-// Derive min nights from calendar data for the check-in date
-+ const getMinNights = (checkInDate: Date | null): number => {
-+   if (!checkInDate) return DEFAULT_MIN_NIGHTS;
-+   const dateStr = format(checkInDate, "yyyy-MM-dd");
-+   const dayData = calendarData.find(d => d.date === dateStr);
-+   return dayData?.minNights ?? DEFAULT_MIN_NIGHTS;
-+ };
-+ const minNights = getMinNights(checkIn);
-```
-
-- The auto-quote `useEffect` will use the dynamic `minNights` instead of the old constant
-- The sidebar night count display will show `(min {minNights})` using the dynamic value
-- Quotes will only be requested when nights >= dynamic minNights, preventing the API error
+This is a Guesty platform limitation. To get the fee displayed separately on their checkout, you would need to contact Guesty support or check if there's a setting in their booking engine configuration for itemized fee display.
 
 ### Files Modified
-- `src/pages/Book.tsx`
+- `src/pages/Book.tsx` (one line change to `CHECKOUT_BASE`)
 
