@@ -35,13 +35,16 @@ async function getOpenApiToken(supabase: ReturnType<typeof createClient>): Promi
   if (!clientId || !clientSecret) throw new Error("Open API credentials not configured");
 
   console.log("Fetching new Open API access token");
+  const params = new URLSearchParams();
+  params.set("grant_type", "client_credentials");
+  params.set("scope", "open-api");
+  params.set("client_id", clientId);
+  params.set("client_secret", clientSecret);
+
   const response = await fetch("https://open-api.guesty.com/oauth2/token", {
     method: "POST",
-    headers: { "Content-Type": "application/json", "Accept": "application/json" },
-    body: JSON.stringify({
-      clientId,
-      clientSecret,
-    }),
+    headers: { "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json" },
+    body: params.toString(),
   });
 
   if (!response.ok) {
@@ -160,13 +163,14 @@ serve(async (req) => {
         body: JSON.stringify({
           listingId: LISTING_ID,
           status: "inquiry",
+          checkInDateLocalized: new Date(Date.now() + 365 * 86400000).toISOString().split("T")[0],
+          checkOutDateLocalized: new Date(Date.now() + 372 * 86400000).toISOString().split("T")[0],
           guest: {
             firstName,
             lastName,
             email,
             phone: phone || undefined,
           },
-          note: noteString,
         }),
       });
 
@@ -180,7 +184,30 @@ serve(async (req) => {
       guestyReservationId = guestyData._id || null;
       console.log("SUCCESS - Guesty inquiry created:", guestyReservationId, "status:", guestyData.status);
 
+      // Add notes to the reservation
       if (guestyReservationId) {
+        // Add notes via the owner-inbox conversation
+        try {
+          const notesResponse = await fetch(
+            `https://open-api.guesty.com/v1/communication/reservations/${guestyReservationId}/notes`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ body: noteString }),
+            }
+          );
+          if (!notesResponse.ok) {
+            console.error("Notes API failed:", (await notesResponse.text()).substring(0, 500));
+          } else {
+            console.log("Notes added to inquiry conversation");
+          }
+        } catch (noteErr) {
+          console.error("Notes update failed:", noteErr);
+        }
+
         await supabase
           .from("inquiries")
           .update({ guesty_reservation_id: guestyReservationId })
