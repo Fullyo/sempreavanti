@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://sempreavanti.lovable.app/sitemap.xml
+Sitemap: https://villassempreavanti.com/sitemap.xml
