@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { GuestyListing } from "@/hooks/useGuestyListings";
-import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
+import staffHeroFallback from "@/assets/staff-hero.jpeg";
 
 interface HospitalitySectionProps {
   listings?: GuestyListing[];
@@ -50,15 +50,11 @@ export default function HospitalitySection({ listings }: HospitalitySectionProps
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            {staffPhoto ? (
-              <img
-                src={staffPhoto}
-                alt="Sempre Avanti hospitality"
-                className="w-full h-[500px] object-cover rounded-tl-[80px] rounded-br-[80px]"
-              />
-            ) : (
-              <PhotoPlaceholder label="Your Dedicated Team" className="h-[500px] !aspect-auto rounded-tl-[80px] rounded-br-[80px]" />
-            )}
+            <img
+              src={staffPhoto || staffHeroFallback}
+              alt="Sempre Avanti hospitality"
+              className="w-full h-[500px] object-cover rounded-tl-[80px] rounded-br-[80px]"
+            />
           </motion.div>
         </div>
       </div>
