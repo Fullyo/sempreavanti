@@ -1,82 +1,48 @@
 
 
-## Two Tasks
+## Fix SEO: Domain References, Meta Description, Sitemap & Favicon
 
-### 1. Remove the "Massage & Spa" Section from Wellness Page
+### The Problems
 
-Remove lines 113-135 of `src/pages/Wellness.tsx` -- the section with the 3 spa provider cards (Nirvanna, Bendita, Buddha Gallery). The "Massages at Home" section above it (lines 94-111) stays, as does the Sound Bath section below.
+1. **Wrong domain everywhere** -- All canonical URLs, sitemap entries, OG tags, structured data, and robots.txt reference `sempreavanti.lovable.app` instead of `villassempreavanti.com`. Google can't connect the sitemap to the actual domain it's crawling.
 
-Also remove the now-unused imports and data: `nirvannaImg`, `benditaImg`, `buddhaImg`, and the `massageProviders` array.
+2. **Meta description still says "private beach"** -- Line 7 of `index.html` was missed in the previous wording audit. This is exactly what Google is displaying in the screenshot.
 
-**File**: `src/pages/Wellness.tsx`
+3. **JSON-LD structured data still says "private beach"** -- Line 37 of `index.html`.
 
----
+4. **No proper favicon for Google** -- Google strongly prefers favicons that are multiples of 48px. The current `favicon.png` may not meet Google's requirements. We should also add an `apple-touch-icon` for better cross-platform support.
 
-### 2. "Private Beach" Wording Audit
+5. **"Fire Pit" still in amenities** -- Per project positioning memory, fire pit was removed from branding but remains in the JSON-LD structured data.
 
-The beach is public, not private. The estate has direct beachfront access on a secluded stretch, but the beach itself cannot be called "private." Here is every instance found and the proposed replacement:
+### Changes
 
-**Suggested framing**: Instead of "private beach," use phrases like:
-- **"secluded beachfront"** -- emphasizes the feel without the legal claim
-- **"direct beach access"** -- factual
-- **"250 feet of oceanfront"** -- specific and impressive
-- **"beachfront setting"** -- neutral and elegant
+**`index.html`** -- Update all domain references + fix wording:
+- Line 7: Fix meta description -- replace "private beach" with "secluded beachfront"
+- Line 9: Canonical URL → `https://villassempreavanti.com/`
+- Line 15: OG URL → `https://villassempreavanti.com/`
+- Line 16: OG image → `https://villassempreavanti.com/hero-villa.png`
+- Line 21: Twitter image → `https://villassempreavanti.com/hero-villa.png`
+- Line 37: JSON-LD description -- replace "private beach" with "secluded beachfront"
+- Line 38: JSON-LD url → `https://villassempreavanti.com`
+- Line 39: JSON-LD image → `https://villassempreavanti.com/hero-villa.png`
+- Line 57: Remove "Fire Pit" amenity from JSON-LD
+- Add `<link rel="apple-touch-icon" href="/favicon.png" />` for mobile bookmarks
 
-#### File-by-file changes:
+**`public/sitemap.xml`** -- Replace all 19 `sempreavanti.lovable.app` URLs with `villassempreavanti.com`
 
-**`index.html`** (SEO meta tags + structured data)
-- `"private beach, pool"` → `"direct beach access, pool"`
-- `"Private Beach"` amenity → `"Beachfront Access"`
-- `"private beach"` in descriptions → `"secluded beachfront"`
+**`public/robots.txt`** -- Update sitemap reference to `https://villassempreavanti.com/sitemap.xml`
 
-**`src/components/book/AmenitiesGrid.tsx`**
-- `"Private Beach"` → `"Beachfront Access"`
+**`sitemap.xml`** -- Also add `<lastmod>` dates (today's date) to help Google understand freshness
 
-**`src/components/home/FlowOfDaySection.tsx`**
-- `"on your private beach"` → `"on your secluded beachfront"`
+### Why Google Looks Bad Right Now
 
-**`src/pages/PrivateEvents.tsx`**
-- Venue space label `"Private Beach"` → `"Secluded Beachfront"`
-- Venue space desc `"250 feet of secluded beachfront"` -- already good, no change
-- Description text `"A private beach, fire pit"` → `"A secluded beachfront, fire pit"`
-
-**`src/pages/Events.tsx`**
-- `"on your own private beach"` → `"on your own secluded beachfront"`
-
-**`src/pages/Weddings.tsx`**
-- `"250-foot private beach"` → `"250-foot secluded beachfront"`
-
-**`src/pages/Location.tsx`**
-- `"you wake up on a private beach"` → `"you wake up on a secluded beach"`
-
-**`src/hooks/useGuestyListings.ts`** (fallback data)
-- Villa Pietro summary: `"250 feet of private beachfront"` → `"250 feet of secluded beachfront"`
-- Villa Luisa title: `"Private Beach Poolside"` → `"Beachfront Poolside"`
-- Villa Luisa summary: `"250 feet of private beach"` → `"250 feet of secluded beachfront"`
-- Full Estate description (x2): `"private beach"` → `"secluded beachfront"`
-- Full Estate amenities: `"Private Beach"` → `"Beachfront Access"`
-
-**`src/components/book/PropertyDescription.tsx`**
-- `"250 feet of private beachfront"` → `"250 feet of secluded beachfront"`
-- `"private beachfront estate"` → `"secluded beachfront estate"`
-- `"private beach access"` → `"direct beach access"`
-- `"private beachfront access"` → `"direct beachfront access"`
-
-**No changes needed** (already accurate wording):
-- `src/components/home/HeroSection.tsx` -- says "Private Beachfront Destination" (refers to the estate being private, not the beach -- this is fine)
-- `src/components/layout/Footer.tsx` -- says "private beachfront estate" (the estate is private -- fine)
-- `src/components/home/LocationPreview.tsx` -- no "private beach" reference
-- `src/pages/Weddings.tsx` intro -- says "private estate" (correct)
+Google is crawling `villassempreavanti.com` but:
+- The canonical tag points to a different domain (`sempreavanti.lovable.app`) -- this confuses Google about which is the "real" site
+- The sitemap URL in robots.txt points to the wrong domain, so Google never finds or trusts it
+- The meta description was never updated with the "private beach" fix, so Google shows the old misleading text
 
 ### Files Changed
-1. `src/pages/Wellness.tsx` -- remove Massage & Spa section
-2. `index.html` -- fix SEO meta
-3. `src/components/book/AmenitiesGrid.tsx` -- fix amenity label
-4. `src/components/home/FlowOfDaySection.tsx` -- fix description
-5. `src/pages/PrivateEvents.tsx` -- fix venue space + description
-6. `src/pages/Events.tsx` -- fix event description
-7. `src/pages/Weddings.tsx` -- fix wedding feature desc
-8. `src/pages/Location.tsx` -- fix narrative text
-9. `src/hooks/useGuestyListings.ts` -- fix fallback data
-10. `src/components/book/PropertyDescription.tsx` -- fix multiple instances
+1. `index.html`
+2. `public/sitemap.xml`
+3. `public/robots.txt`
 
