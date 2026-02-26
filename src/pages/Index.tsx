@@ -182,18 +182,12 @@ export default function Index() {
 
       {/* CTA */}
       <section className="relative py-20 md:py-32 overflow-hidden" aria-label="Call to action">
-        {listings?.[2]?.pictures?.[1] ? (
-          <>
-            <img
-              src={listings[2].pictures[1].original}
-              alt="Sempre Avanti beachfront estate at sunset"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
-          </>
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-primary via-ocean to-primary" />
-        )}
+        <img
+          src={listings?.[2]?.pictures?.[1]?.original || estate1}
+          alt="Sempre Avanti beachfront estate at sunset"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
         <div className="container text-center relative z-10 text-primary-foreground">
           <SectionHeading
             eyebrow="Begin Your Journey"
