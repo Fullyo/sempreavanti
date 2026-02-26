@@ -22,6 +22,7 @@ import Land from "./pages/experiences/Land";
 import Cultural from "./pages/experiences/Cultural";
 import Pricing from "./pages/Pricing";
 import Book from "./pages/Book";
+import Menu from "./pages/Menu";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +52,7 @@ const App = () => (
           <Route path="/transportation" element={<Navigate to="/location" replace />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/book" element={<Book />} />
+          <Route path="/menu" element={<Menu />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

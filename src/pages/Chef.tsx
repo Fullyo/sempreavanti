@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
@@ -153,6 +154,14 @@ export default function Chef() {
                 </ul>
               </motion.div>
             ))}
+          </div>
+          <div className="text-center mt-12">
+            <Link
+              to="/menu"
+              className="inline-block px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full"
+            >
+              View Full Menu
+            </Link>
           </div>
         </div>
       </section>
