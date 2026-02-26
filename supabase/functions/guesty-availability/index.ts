@@ -1,11 +1,20 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+const ALLOWED_ORIGINS = [
+  "https://villassempreavanti.com",
+  "https://sempreavanti.lovable.app",
+];
+
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("origin") || "";
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers":
+      "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  };
+}
 
 const LISTING_ID = "697bcfcf3f5e990014fbc4dd";
 
@@ -112,7 +121,6 @@ async function fetchQuote(token: string, checkIn: string, checkOut: string, gues
   if (!response.ok) {
     const body = await response.text();
     console.error(`Quote API error ${response.status}:`, body.substring(0, 500));
-    // Return structured error with details instead of throwing
     return { error: true, status: response.status, message: body };
   }
 
@@ -120,6 +128,8 @@ async function fetchQuote(token: string, checkIn: string, checkOut: string, gues
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
@@ -165,14 +175,9 @@ serve(async (req) => {
 
       const data = await fetchQuote(token, checkIn, checkOut, guests);
       
-      // If fetchQuote returned an error object, pass it through with appropriate status
       if (data?.error) {
-        let msg = "Unable to get pricing for the selected dates/guests";
-        try {
-          const parsed = JSON.parse(data.message);
-          msg = parsed?.error?.message || msg;
-        } catch { /* use default */ }
-        return new Response(JSON.stringify({ error: msg, details: data.message }), {
+        console.error("Quote error details:", data.message);
+        return new Response(JSON.stringify({ error: "Unable to get pricing for the selected dates. Please try different dates or contact us directly." }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -189,8 +194,7 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error("Error:", error);
-    const msg = error instanceof Error ? error.message : "Unknown error";
-    return new Response(JSON.stringify({ error: msg }), {
+    return new Response(JSON.stringify({ error: "We're experiencing technical difficulties. Please try again later." }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

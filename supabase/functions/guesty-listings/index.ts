@@ -229,8 +229,7 @@ serve(async (req) => {
     throw new Error("No listing data available from any source");
   } catch (error) {
     console.error("Error in guesty-listings function:", error);
-    const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    return new Response(JSON.stringify({ error: errorMessage }), {
+    return new Response(JSON.stringify({ error: "We're experiencing technical difficulties. Please try again later." }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
