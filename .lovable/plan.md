@@ -1,49 +1,82 @@
-## Menu Page Updates
 
-### Changes to `src/pages/Menu.tsx`
 
-**1. Hero image -- use a food photo instead of chef-hero**
+## Two Tasks
 
-- Switch hero from `chef-hero.jpeg` to `food1.jpeg` (or `food3.jpeg`) -- an actual food photo sets the right tone for a menu page.
+### 1. Remove the "Massage & Spa" Section from Wellness Page
 
-**2. Category header naming -- English first, Spanish subtitle**
+Remove lines 113-135 of `src/pages/Wellness.tsx` -- the section with the 3 spa provider cards (Nirvanna, Bendita, Buddha Gallery). The "Massages at Home" section above it (lines 94-111) stays, as does the Sound Bath section below.
 
-- **Breakfast** (main) / *Desayuno* (sub) -- currently reversed
-- **Lunch & Dinner** (main) / *Almuerzo / Cena* (sub) -- currently reversed
-- **Desserts** (main) / *Postres* (sub) -- currently reversed
-- **Appetizers** / *Entradas* -- already correct, no change
+Also remove the now-unused imports and data: `nirvannaImg`, `benditaImg`, `buddhaImg`, and the `massageProviders` array.
 
-**3. Move Pizza Night inside the menu card, after Desserts**
+**File**: `src/pages/Wellness.tsx`
 
-- Remove the separate standalone Pizza Night section below the menu card
-- Instead, place "Pizza Night" as a styled callout at the bottom of the Desserts column (or as a 5th item spanning the bottom of the grid) to fill the visual gap
-- Restyle it as a warm, inviting "Guest Favorite" card that sits within the parchment container -- golden accent border, smaller scale, integrated feel rather than a big dark block
+---
 
-**4. Use pizza emoji in the bottom CTA footer area**
+### 2. "Private Beach" Wording Audit
 
-- Add a 🍕 accent near the bottom CTA section
+The beach is public, not private. The estate has direct beachfront access on a secluded stretch, but the beach itself cannot be called "private." Here is every instance found and the proposed replacement:
 
-### Specific data changes
+**Suggested framing**: Instead of "private beach," use phrases like:
+- **"secluded beachfront"** -- emphasizes the feel without the legal claim
+- **"direct beach access"** -- factual
+- **"250 feet of oceanfront"** -- specific and impressive
+- **"beachfront setting"** -- neutral and elegant
 
-```
-Before:                          After:
-title: "Desayuno"                title: "Breakfast"
-subtitle: "Breakfast"            subtitle: "Desayuno"
+#### File-by-file changes:
 
-title: "Almuerzo / Cena"         title: "Lunch & Dinner"  
-subtitle: "Lunch & Dinner"       subtitle: "Almuerzo / Cena"
+**`index.html`** (SEO meta tags + structured data)
+- `"private beach, pool"` → `"direct beach access, pool"`
+- `"Private Beach"` amenity → `"Beachfront Access"`
+- `"private beach"` in descriptions → `"secluded beachfront"`
 
-title: "Postres"                 title: "Desserts"
-subtitle: "Desserts"             subtitle: "Postres"
-```
+**`src/components/book/AmenitiesGrid.tsx`**
+- `"Private Beach"` → `"Beachfront Access"`
 
-### Pizza Night placement
+**`src/components/home/FlowOfDaySection.tsx`**
+- `"on your private beach"` → `"on your secluded beachfront"`
 
-The Desserts column has 9 items while Lunch/Dinner has 11. Pizza Night as a styled card at the bottom of the Desserts column creates visual balance in the 2-col grid. It will use a warm golden accent style (border-accent, bg-accent/10) with the 🍕 emoji and "Guest Favorite" label -- fitting naturally inside the menu card rather than breaking out as a separate dark section.
+**`src/pages/PrivateEvents.tsx`**
+- Venue space label `"Private Beach"` → `"Secluded Beachfront"`
+- Venue space desc `"250 feet of secluded beachfront"` -- already good, no change
+- Description text `"A private beach, fire pit"` → `"A secluded beachfront, fire pit"`
 
-### Files changed
+**`src/pages/Events.tsx`**
+- `"on your own private beach"` → `"on your own secluded beachfront"`
 
-1. `src/pages/Menu.tsx` -- all changes in this single file  
-  
-  
-i agree but no emogi, that is cheap for this beuty website
+**`src/pages/Weddings.tsx`**
+- `"250-foot private beach"` → `"250-foot secluded beachfront"`
+
+**`src/pages/Location.tsx`**
+- `"you wake up on a private beach"` → `"you wake up on a secluded beach"`
+
+**`src/hooks/useGuestyListings.ts`** (fallback data)
+- Villa Pietro summary: `"250 feet of private beachfront"` → `"250 feet of secluded beachfront"`
+- Villa Luisa title: `"Private Beach Poolside"` → `"Beachfront Poolside"`
+- Villa Luisa summary: `"250 feet of private beach"` → `"250 feet of secluded beachfront"`
+- Full Estate description (x2): `"private beach"` → `"secluded beachfront"`
+- Full Estate amenities: `"Private Beach"` → `"Beachfront Access"`
+
+**`src/components/book/PropertyDescription.tsx`**
+- `"250 feet of private beachfront"` → `"250 feet of secluded beachfront"`
+- `"private beachfront estate"` → `"secluded beachfront estate"`
+- `"private beach access"` → `"direct beach access"`
+- `"private beachfront access"` → `"direct beachfront access"`
+
+**No changes needed** (already accurate wording):
+- `src/components/home/HeroSection.tsx` -- says "Private Beachfront Destination" (refers to the estate being private, not the beach -- this is fine)
+- `src/components/layout/Footer.tsx` -- says "private beachfront estate" (the estate is private -- fine)
+- `src/components/home/LocationPreview.tsx` -- no "private beach" reference
+- `src/pages/Weddings.tsx` intro -- says "private estate" (correct)
+
+### Files Changed
+1. `src/pages/Wellness.tsx` -- remove Massage & Spa section
+2. `index.html` -- fix SEO meta
+3. `src/components/book/AmenitiesGrid.tsx` -- fix amenity label
+4. `src/components/home/FlowOfDaySection.tsx` -- fix description
+5. `src/pages/PrivateEvents.tsx` -- fix venue space + description
+6. `src/pages/Events.tsx` -- fix event description
+7. `src/pages/Weddings.tsx` -- fix wedding feature desc
+8. `src/pages/Location.tsx` -- fix narrative text
+9. `src/hooks/useGuestyListings.ts` -- fix fallback data
+10. `src/components/book/PropertyDescription.tsx` -- fix multiple instances
+
