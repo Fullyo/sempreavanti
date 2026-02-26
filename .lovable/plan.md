@@ -1,48 +1,37 @@
 
 
-## Fix SEO: Domain References, Meta Description, Sitemap & Favicon
+## Fix: Photos Not Loading Across the Site
 
-### The Problems
+### Root Cause
 
-1. **Wrong domain everywhere** -- All canonical URLs, sitemap entries, OG tags, structured data, and robots.txt reference `sempreavanti.lovable.app` instead of `villassempreavanti.com`. Google can't connect the sitemap to the actual domain it's crawling.
+There are **two problems**:
 
-2. **Meta description still says "private beach"** -- Line 7 of `index.html` was missed in the previous wording audit. This is exactly what Google is displaying in the screenshot.
+1. **CORS blocking preview/dev origins** -- The `guesty-listings` edge function only allows `villassempreavanti.com` and `sempreavanti.lovable.app`. The preview uses origins like `*.lovableproject.com` and `id-preview--*.lovable.app`, which get rejected. Every network request in the logs shows "Failed to fetch."
 
-3. **JSON-LD structured data still says "private beach"** -- Line 37 of `index.html`.
-
-4. **No proper favicon for Google** -- Google strongly prefers favicons that are multiples of 48px. The current `favicon.png` may not meet Google's requirements. We should also add an `apple-touch-icon` for better cross-platform support.
-
-5. **"Fire Pit" still in amenities** -- Per project positioning memory, fire pit was removed from branding but remains in the JSON-LD structured data.
+2. **No local fallback photos** -- When Guesty API fails, the fallback listings have `pictures: []`. Components that depend on Guesty photos (HospitalitySection, CTA section on homepage) show empty placeholders instead of real images.
 
 ### Changes
 
-**`index.html`** -- Update all domain references + fix wording:
-- Line 7: Fix meta description -- replace "private beach" with "secluded beachfront"
-- Line 9: Canonical URL → `https://villassempreavanti.com/`
-- Line 15: OG URL → `https://villassempreavanti.com/`
-- Line 16: OG image → `https://villassempreavanti.com/hero-villa.png`
-- Line 21: Twitter image → `https://villassempreavanti.com/hero-villa.png`
-- Line 37: JSON-LD description -- replace "private beach" with "secluded beachfront"
-- Line 38: JSON-LD url → `https://villassempreavanti.com`
-- Line 39: JSON-LD image → `https://villassempreavanti.com/hero-villa.png`
-- Line 57: Remove "Fire Pit" amenity from JSON-LD
-- Add `<link rel="apple-touch-icon" href="/favicon.png" />` for mobile bookmarks
+#### 1. Fix CORS in `guesty-listings` edge function
 
-**`public/sitemap.xml`** -- Replace all 19 `sempreavanti.lovable.app` URLs with `villassempreavanti.com`
+Add pattern matching for Lovable preview/dev origins so the function works during development:
 
-**`public/robots.txt`** -- Update sitemap reference to `https://villassempreavanti.com/sitemap.xml`
+**`supabase/functions/guesty-listings/index.ts`** -- Update `getCorsHeaders` to also accept origins matching `*.lovable.app` and `*.lovableproject.com` patterns, in addition to the two hardcoded production domains.
 
-**`sitemap.xml`** -- Also add `<lastmod>` dates (today's date) to help Google understand freshness
+Also apply the same fix to `guesty-availability/index.ts` and `guesty-inquiry/index.ts` for consistency.
 
-### Why Google Looks Bad Right Now
+#### 2. Add local fallback image to HospitalitySection
 
-Google is crawling `villassempreavanti.com` but:
-- The canonical tag points to a different domain (`sempreavanti.lovable.app`) -- this confuses Google about which is the "real" site
-- The sitemap URL in robots.txt points to the wrong domain, so Google never finds or trusts it
-- The meta description was never updated with the "private beach" fix, so Google shows the old misleading text
+**`src/components/home/HospitalitySection.tsx`** -- Import `staff-hero.jpeg` as fallback. Use Guesty photo if available, otherwise show the local image instead of the placeholder.
+
+#### 3. Add local fallback image to Index CTA section
+
+**`src/pages/Index.tsx`** (lines 185-196) -- Import a local estate image (e.g. `estate-1.jpeg` which is already imported) as fallback for the CTA background, instead of showing a plain gradient when Guesty is unavailable.
 
 ### Files Changed
-1. `index.html`
-2. `public/sitemap.xml`
-3. `public/robots.txt`
+1. `supabase/functions/guesty-listings/index.ts` -- CORS pattern matching
+2. `supabase/functions/guesty-availability/index.ts` -- CORS pattern matching
+3. `supabase/functions/guesty-inquiry/index.ts` -- CORS pattern matching
+4. `src/components/home/HospitalitySection.tsx` -- local fallback image
+5. `src/pages/Index.tsx` -- local fallback image for CTA
 
