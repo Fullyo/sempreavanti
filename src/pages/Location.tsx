@@ -187,7 +187,7 @@ export default function Location() {
               Yet everything the Riviera Nayarit has to offer is minutes away. Jump in a Polaris UTV and you're in Sayulita in 5 minutes — its surf breaks, tacos, boutiques, and nightlife all at your doorstep. Punta de Mita, with the Four Seasons and St. Regis, is a 25-minute drive south. The famous La Cruz Sunday Market is 30 minutes away.
             </p>
             <p>
-              This is what makes the location extraordinary: you wake up on a private beach with nothing but jungle and ocean around you, and by lunch you're eating fresh ceviche at Don Pedro's or teeing off at a Jack Nicklaus course. It's the feeling of being completely away — while never being far from anything.
+              This is what makes the location extraordinary: you wake up on a secluded beach with nothing but jungle and ocean around you, and by lunch you're eating fresh ceviche at Don Pedro's or teeing off at a Jack Nicklaus course. It's the feeling of being completely away — while never being far from anything.
             </p>
           </div>
         </div>

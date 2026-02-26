@@ -26,7 +26,7 @@ const eventTypes = [
 ];
 
 const venueSpaces = [
-  { label: "Private Beach", desc: "250 feet of secluded beachfront for ceremonies, dinners, bonfires, and morning yoga.", image: estate3 },
+  { label: "Secluded Beachfront", desc: "250 feet of secluded beachfront for ceremonies, dinners, bonfires, and morning yoga.", image: estate3 },
   { label: "Beach Fire", desc: "Gather around the beach fire with built-in seating overlooking the Pacific. Perfect for evening gatherings.", image: eventBeachfire },
   { label: "Pool Terraces", desc: "Two infinity pools — one at each villa — with lounging areas and ocean views.", image: estate6 },
   { label: "Beachfront Dining", desc: "Long-table setup on the sand or covered terrace dining with full chef service.", image: food3 },
@@ -51,7 +51,7 @@ export default function PrivateEvents() {
           <SectionHeading
             eyebrow="Every Gathering, Elevated"
             title="Your Private Venue on the Pacific"
-            description="Sempre Avanti isn't just a place to host an event — it's a place where events feel like they were always meant to happen. A private beach, fire pit, infinity pools, and a full team to bring any vision to life."
+            description="Sempre Avanti isn't just a place to host an event — it's a place where events feel like they were always meant to happen. A secluded beachfront, fire pit, infinity pools, and a full team to bring any vision to life."
           />
         </div>
       </section>

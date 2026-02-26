@@ -42,7 +42,7 @@ const fallbackListings: GuestyListing[] = [
     pictures: [],
     description: "Villa Pietro in Patzcuarito offers an exclusive blend of tropical serenity and refined design within the private Patzcuaro Beach enclave.",
     publicDescription: {
-      summary: "Villa Pietro in Patzcuarito offers an exclusive blend of tropical serenity and refined design within the private Patzcuaro Beach enclave. This two-bedroom beachfront villa is part of the Villas Sempre Avanti estate, featuring five-star architecture, ocean views, and personalized hospitality in a more intimate and romantic setting. Surrounded by lush jungle and the sound of the Pacific, the villa sits along 250 feet of private beachfront, just 8–10 minutes from both Sayulita and Punta de Mita.",
+      summary: "Villa Pietro in Patzcuarito offers an exclusive blend of tropical serenity and refined design within the private Patzcuaro Beach enclave. This two-bedroom beachfront villa is part of the Villas Sempre Avanti estate, featuring five-star architecture, ocean views, and personalized hospitality in a more intimate and romantic setting. Surrounded by lush jungle and the sound of the Pacific, the villa sits along 250 feet of secluded beachfront, just 8–10 minutes from both Sayulita and Punta de Mita.",
     },
     amenities: ["Beachfront", "Private Pool", "Air Conditioning", "WiFi", "Full Kitchen", "BBQ", "Fire Pit", "Beach Access", "Ocean View", "Parking", "Outdoor Dining", "Terrace"],
     address: { city: "Patzcuarito", state: "Nayarit", country: "Mexico" },
@@ -54,12 +54,12 @@ const fallbackListings: GuestyListing[] = [
   },
   {
     _id: "villa-luisa-fallback",
-    title: "Villa Luisa - Private Beach Poolside Ocean View",
+    title: "Villa Luisa - Beachfront Poolside Ocean View",
     nickname: "Villa Luisa",
     pictures: [],
     description: "Villa Luisa is a 3-bedroom beachfront retreat within the Villas Sempre Avanti estate, featuring spacious living areas, a poolside tiki bar, pizza oven, and panoramic ocean views from every room.",
     publicDescription: {
-      summary: "Villa Luisa is a 3-bedroom beachfront retreat within the Villas Sempre Avanti estate, offering tropical elegance across spacious indoor-outdoor living areas. Highlights include a poolside tiki bar, wood-fired pizza oven, panoramic ocean views from every room, and direct access to 250 feet of private beach. Located just 10 minutes from Sayulita and Punta de Mita.",
+      summary: "Villa Luisa is a 3-bedroom beachfront retreat within the Villas Sempre Avanti estate, offering tropical elegance across spacious indoor-outdoor living areas. Highlights include a poolside tiki bar, wood-fired pizza oven, panoramic ocean views from every room, and direct access to 250 feet of secluded beachfront. Located just 10 minutes from Sayulita and Punta de Mita.",
     },
     amenities: ["Beachfront", "Private Pool", "Air Conditioning", "WiFi", "Full Kitchen", "Beach Access", "Ocean View", "Terrace", "Fire Pit", "Outdoor Kitchen"],
     address: { city: "Patzcuarito", state: "Nayarit", country: "Mexico" },
@@ -74,11 +74,11 @@ const fallbackListings: GuestyListing[] = [
     title: "Villas Sempre Avanti — Full Estate",
     nickname: "Full Estate",
     pictures: [],
-    description: "The complete Villas Sempre Avanti estate — both villas combined into one private beachfront destination with five bedrooms, private beach, pool, fire pit, and dedicated staff.",
+    description: "The complete Villas Sempre Avanti estate — both villas combined into one private beachfront destination with five bedrooms, secluded beachfront, pool, fire pit, and dedicated staff.",
     publicDescription: {
-      summary: "The complete Villas Sempre Avanti estate — both villas combined into one private beachfront destination with five bedrooms, private beach, pool, fire pit, and dedicated staff including private chefs, concierge, and daily housekeeping.",
+      summary: "The complete Villas Sempre Avanti estate — both villas combined into one private beachfront destination with five bedrooms, secluded beachfront, pool, fire pit, and dedicated staff including private chefs, concierge, and daily housekeeping.",
     },
-    amenities: ["Private Beach", "Pool", "Fire Pit", "Full Staff", "Private Chef", "Concierge", "UTV Rentals", "WiFi", "Air Conditioning", "Beachfront Dining", "Yoga Space", "BBQ"],
+    amenities: ["Beachfront Access", "Pool", "Fire Pit", "Full Staff", "Private Chef", "Concierge", "UTV Rentals", "WiFi", "Air Conditioning", "Beachfront Dining", "Yoga Space", "BBQ"],
     address: { city: "Patzcuarito", state: "Nayarit", country: "Mexico" },
     bedrooms: 5,
     bathrooms: 5,

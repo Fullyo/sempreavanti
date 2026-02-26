@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import InquiryDialog from "@/components/InquiryDialog";
 
 const eventTypes = [
-  { title: "Beach Ceremonies", description: "Exchange vows on your own private beach with the Pacific as your backdrop. Intimate or grand — the setting adapts to your vision." },
+  { title: "Beach Ceremonies", description: "Exchange vows on your own secluded beachfront with the Pacific as your backdrop. Intimate or grand — the setting adapts to your vision." },
   { title: "Fire Pit Evenings", description: "Gather around the fire pit as the stars come out. Post-ceremony celebrations, rehearsal dinners, or simply unforgettable evenings with your group." },
   { title: "Long-Table Beachfront Dinners", description: "Chef-prepared multi-course dinners served at a beautifully set long table on the beach. Fire-lit, ocean-side, unforgettable." },
   { title: "Retreats & Workshops", description: "The estate is perfectly suited for wellness retreats, creative workshops, corporate offsites, and transformational gatherings." },

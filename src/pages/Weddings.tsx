@@ -20,7 +20,7 @@ const weddingFeatures = [
   {
     icon: Heart,
     title: "Beach Ceremony",
-    desc: "Exchange vows on your own 250-foot private beach with the Pacific as your backdrop. Sunset ceremonies, barefoot elegance, and an intimate setting that feels worlds apart.",
+    desc: "Exchange vows on your own 250-foot secluded beachfront with the Pacific as your backdrop. Sunset ceremonies, barefoot elegance, and an intimate setting that feels worlds apart.",
     image: wedding4,
   },
   {

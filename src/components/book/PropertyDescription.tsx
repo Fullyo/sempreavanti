@@ -12,10 +12,10 @@ export default function PropertyDescription() {
 
         <div className="font-sans text-muted-foreground leading-relaxed space-y-4 mb-8">
           <p>
-            Casa Sempre Avanti is a private 5-bedroom beachfront estate in the exclusive Patzcuaro Beach community, formed by renting Villa Luisa (3BR) and Casa Pietro (2BR) together as one complete property. Set along 250 feet of private beachfront, the estate offers luxury, privacy, and space in a secluded oceanfront setting—just 8–10 minutes from Sayulita and a short drive to Punta de Mita.
+            Casa Sempre Avanti is a private 5-bedroom beachfront estate in the exclusive Patzcuaro Beach community, formed by renting Villa Luisa (3BR) and Casa Pietro (2BR) together as one complete property. Set along 250 feet of secluded beachfront, the estate offers luxury, privacy, and space in a secluded oceanfront setting—just 8–10 minutes from Sayulita and a short drive to Punta de Mita.
           </p>
           <p>
-            Designed for large groups, multi-family stays, retreats, and hosted gatherings, Casa Sempre Avanti offers the rare combination of togetherness and privacy, with two fully independent villas sharing one private beachfront estate.
+            Designed for large groups, multi-family stays, retreats, and hosted gatherings, Casa Sempre Avanti offers the rare combination of togetherness and privacy, with two fully independent villas sharing one secluded beachfront estate.
           </p>
         </div>
 
@@ -42,7 +42,7 @@ export default function PropertyDescription() {
             <AccordionTrigger className="font-serif text-xl font-light">Guest Access</AccordionTrigger>
             <AccordionContent className="font-sans text-muted-foreground leading-relaxed">
               <p>
-                Guests booking Casa Sempre Avanti have exclusive access to the entire estate, including both villas (Villa Luisa and Casa Pietro), two private infinity pools, all outdoor living and dining areas, and private beachfront access. No other guests are present on the property during your stay.
+                Guests booking Casa Sempre Avanti have exclusive access to the entire estate, including both villas (Villa Luisa and Casa Pietro), two private infinity pools, all outdoor living and dining areas, and direct beachfront access. No other guests are present on the property during your stay.
               </p>
             </AccordionContent>
           </AccordionItem>
@@ -51,7 +51,7 @@ export default function PropertyDescription() {
             <AccordionTrigger className="font-serif text-xl font-light">Neighborhood</AccordionTrigger>
             <AccordionContent className="font-sans text-muted-foreground leading-relaxed">
               <p>
-                Patzcuaro Beach is a secluded and unique beachfront community. Close to the popular surf town of Sayulita with its restaurants and shops, and a short drive from the resorts and golf courses of Punta de Mita, Patzcuaro offers a peaceful retreat with private beach access and uninterrupted ocean views.
+                Patzcuaro Beach is a secluded and unique beachfront community. Close to the popular surf town of Sayulita with its restaurants and shops, and a short drive from the resorts and golf courses of Punta de Mita, Patzcuaro offers a peaceful retreat with direct beach access and uninterrupted ocean views.
               </p>
             </AccordionContent>
           </AccordionItem>
