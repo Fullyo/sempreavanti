@@ -1,13 +1,80 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
-};
+const ALLOWED_ORIGINS = [
+  "https://villassempreavanti.com",
+  "https://sempreavanti.lovable.app",
+];
+
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("origin") || "";
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers":
+      "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  };
+}
 
 const LISTING_ID = "697bcfcf3f5e990014fbc4dd";
+const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+const ALLOWED_ACTIVITIES = [
+  "Surfing",
+  "Golf",
+  "Boat Tours",
+  "Fishing",
+  "Private Chef",
+  "Wellness & Yoga",
+  "Cultural Tours",
+  "Whale Watching",
+  "Horseback Riding",
+  "ATV Tours",
+  "Scuba Diving",
+  "Snorkeling",
+  "Wedding",
+  "Event",
+];
+
+function validateInquiry(body: unknown): { valid: true; data: ValidatedInquiry } | { valid: false; error: string } {
+  if (!body || typeof body !== "object") return { valid: false, error: "Invalid request body" };
+  const b = body as Record<string, unknown>;
+
+  const firstName = typeof b.firstName === "string" ? b.firstName.trim().slice(0, 100) : "";
+  const lastName = typeof b.lastName === "string" ? b.lastName.trim().slice(0, 100) : "";
+  const email = typeof b.email === "string" ? b.email.trim().toLowerCase().slice(0, 255) : "";
+
+  if (!firstName) return { valid: false, error: "First name is required" };
+  if (!lastName) return { valid: false, error: "Last name is required" };
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return { valid: false, error: "A valid email address is required" };
+
+  const phone = typeof b.phone === "string" ? b.phone.trim().slice(0, 30) : undefined;
+  const checkIn = typeof b.checkIn === "string" && DATE_REGEX.test(b.checkIn) ? b.checkIn : undefined;
+  const checkOut = typeof b.checkOut === "string" && DATE_REGEX.test(b.checkOut) ? b.checkOut : undefined;
+  const groupSize = typeof b.groupSize === "string" ? b.groupSize.trim().slice(0, 50) : undefined;
+  const message = typeof b.message === "string" ? b.message.trim().slice(0, 2000) : undefined;
+
+  let selectedActivities: string[] | undefined;
+  if (Array.isArray(b.selectedActivities)) {
+    selectedActivities = b.selectedActivities
+      .filter((a): a is string => typeof a === "string" && ALLOWED_ACTIVITIES.includes(a))
+      .slice(0, 20);
+    if (selectedActivities.length === 0) selectedActivities = undefined;
+  }
+
+  return { valid: true, data: { firstName, lastName, email, phone, checkIn, checkOut, groupSize, message, selectedActivities } };
+}
+
+interface ValidatedInquiry {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  checkIn?: string;
+  checkOut?: string;
+  groupSize?: string;
+  message?: string;
+  selectedActivities?: string[];
+}
 
 function getSupabaseAdmin() {
   return createClient(
@@ -18,7 +85,6 @@ function getSupabaseAdmin() {
 
 async function getOpenApiToken(supabase: ReturnType<typeof createClient>): Promise<string> {
   const CACHE_KEY = "open_api_access_token";
-
   const { data: cached } = await supabase
     .from("guesty_cache")
     .select("value, expires_at")
@@ -43,7 +109,7 @@ async function getOpenApiToken(supabase: ReturnType<typeof createClient>): Promi
 
   const response = await fetch("https://open-api.guesty.com/oauth2/token", {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json" },
+    headers: { "Content-Type": "application/x-www-form-urlencoded", Accept: "application/json" },
     body: params.toString(),
   });
 
@@ -59,14 +125,12 @@ async function getOpenApiToken(supabase: ReturnType<typeof createClient>): Promi
   const data = await response.json();
   const ttl = Math.min(data.expires_in - 300, 23 * 3600);
   const expiresAt = new Date(Date.now() + ttl * 1000).toISOString();
-
   await supabase
     .from("guesty_cache")
     .upsert(
       { key: CACHE_KEY, value: { token: data.access_token }, expires_at: expiresAt, updated_at: new Date().toISOString() },
       { onConflict: "key" }
     );
-
   return data.access_token;
 }
 
@@ -87,6 +151,8 @@ function buildNoteString(fields: {
 }
 
 serve(async (req) => {
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
@@ -100,23 +166,15 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { firstName, lastName, email, phone, checkIn, checkOut, groupSize, message, selectedActivities } = body;
-
-    if (!firstName || !lastName || !email) {
-      return new Response(JSON.stringify({ error: "Name and email are required" }), {
+    const validation = validateInquiry(body);
+    if (!validation.valid) {
+      return new Response(JSON.stringify({ error: validation.error }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return new Response(JSON.stringify({ error: "Invalid email format" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
-
+    const { firstName, lastName, email, phone, checkIn, checkOut, groupSize, message, selectedActivities } = validation.data;
     const supabase = getSupabaseAdmin();
 
     // Step 1: Save to database FIRST (guaranteed)
@@ -137,7 +195,7 @@ serve(async (req) => {
 
     if (dbError) {
       console.error("Database insert failed:", dbError);
-      return new Response(JSON.stringify({ error: "Failed to save inquiry" }), {
+      return new Response(JSON.stringify({ error: "We couldn't process your inquiry. Please try again later." }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -153,7 +211,6 @@ serve(async (req) => {
       const noteString = buildNoteString({ dates: datesDisplay, groupSize, selectedActivities, message });
 
       console.log("Creating Guesty inquiry via Open API...");
-      console.log("Note:", noteString.substring(0, 200));
 
       const guestyResponse = await fetch("https://open-api.guesty.com/v1/reservations", {
         method: "POST",
@@ -183,7 +240,7 @@ serve(async (req) => {
 
       const guestyData = await guestyResponse.json();
       guestyReservationId = guestyData._id || null;
-      console.log("SUCCESS - Guesty inquiry created:", guestyReservationId, "status:", guestyData.status);
+      console.log("SUCCESS - Guesty inquiry created:", guestyReservationId);
 
       // Attach form data to the reservation via reservations-v3 notes
       if (guestyReservationId) {
@@ -229,7 +286,7 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error("Error in guesty-inquiry:", error);
-    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }), {
+    return new Response(JSON.stringify({ error: "We couldn't process your inquiry. Please try again later." }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
