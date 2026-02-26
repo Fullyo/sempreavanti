@@ -6,7 +6,7 @@ import {
 import { useGuestyListings } from "@/hooks/useGuestyListings";
 
 const keyAmenities = [
-  { icon: Waves, label: "Private Beach" },
+  { icon: Waves, label: "Beachfront Access" },
   { icon: Droplets, label: "Two Infinity Pools" },
   { icon: Eye, label: "Ocean Views" },
   { icon: Wind, label: "Air Conditioning" },

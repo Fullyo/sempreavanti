@@ -6,9 +6,6 @@ import InquiryDialog from "@/components/InquiryDialog";
 import wellnessHeroImg from "@/assets/wellness-hero-yoga.png";
 import yogaImg from "@/assets/wellness-yoga-new.png";
 import soundbathImg from "@/assets/wellness-soundbath.jpeg";
-import nirvannaImg from "@/assets/wellness-nirvanna.png";
-import benditaImg from "@/assets/wellness-bendita.jpeg";
-import buddhaImg from "@/assets/wellness-buddha.jpg";
 import massagesImg from "@/assets/wellness-massages.png";
 
 // Estate photos for practice spaces
@@ -25,11 +22,6 @@ const yogaProviders = [
   { name: "Hotelito de los Sueños", style: "Yoga Retreat Partnership", note: "Extended retreat programming available" },
 ];
 
-const massageProviders = [
-  { name: "Nirvanna Spa", services: "Shiatsu, Swedish, Aromatherapy, Deep Tissue", note: "In-villa or beachside", img: nirvannaImg },
-  { name: "Bendita Waxing Studio & Spa", services: "Relaxation massage, facials, beauty treatments", note: "Full-service spa visits", img: benditaImg },
-  { name: "Buddha Gallery Boutique Spa", services: "Holistic bodywork, energy healing", note: "Artisan spa experience", img: buddhaImg },
-];
 
 const practiceSpaces = [
   { label: "Beachfront", img: estate3 },
@@ -110,29 +102,6 @@ export default function Wellness() {
         </div>
       </section>
 
-      {/* Massage */}
-      <section className="py-16 md:py-24">
-        <div className="container max-w-5xl">
-          <SectionHeading eyebrow="Bodywork" title="Massage & Spa" />
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {massageProviders.map((p, i) => (
-              <motion.div
-                key={p.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="bg-card p-6 rounded-xl"
-              >
-                <img src={p.img} alt={p.name} className="w-full aspect-video object-cover mb-4 rounded-xl" />
-                <h3 className="font-serif text-xl mb-2">{p.name}</h3>
-                <p className="text-xs font-sans text-accent mb-2">{p.services}</p>
-                <p className="text-sm font-sans text-muted-foreground">{p.note}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Sound Bath */}
       <section className="py-20 md:py-28 bg-primary text-primary-foreground">

@@ -34,7 +34,7 @@ const flowItems = [
   {
     title: "Celebrations",
     subtitle: "Your Venue",
-    description: "Weddings, retreats, and gatherings on your private beach.",
+    description: "Weddings, retreats, and gatherings on your secluded beachfront.",
     path: "/events",
     staticImage: weddingImg,
   },
