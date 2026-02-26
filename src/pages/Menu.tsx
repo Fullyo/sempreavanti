@@ -1,8 +1,8 @@
 import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import chefHero from "@/assets/chef-hero.jpeg";
-import foodImg from "@/assets/food1.jpeg";
+import foodHero from "@/assets/food1.jpeg";
+import foodImg from "@/assets/food3.jpeg";
 
 interface MenuItem {
   name: string;
@@ -18,8 +18,8 @@ interface MenuCategory {
 
 const menuData: MenuCategory[] = [
   {
-    title: "Desayuno",
-    subtitle: "Breakfast",
+    title: "Breakfast",
+    subtitle: "Desayuno",
     items: [
       { name: "Chilaquiles with Egg", description: "Green or red, served with egg" },
       { name: "Ranchero Eggs", description: "Fried egg on top of fried tortilla with salsa" },
@@ -57,8 +57,8 @@ const menuData: MenuCategory[] = [
     ],
   },
   {
-    title: "Almuerzo / Cena",
-    subtitle: "Lunch & Dinner",
+    title: "Lunch & Dinner",
+    subtitle: "Almuerzo / Cena",
     items: [
       { name: "Pozole", description: "Broth with corn kernels, served with your choice of chicken, shrimp, pork or vegetarian" },
       { name: "Pastor Catch of the Day", description: "Fish fillet with pastor adobo, served with purée & pineapple chutney" },
@@ -74,8 +74,8 @@ const menuData: MenuCategory[] = [
     ],
   },
   {
-    title: "Postres",
-    subtitle: "Desserts",
+    title: "Desserts",
+    subtitle: "Postres",
     items: [
       { name: "Caramel Flan", description: "Creamy caramel flan with a brûlée sugar layer on top" },
       { name: "Rice Pudding", description: "Grandma's special dessert, milky rice pudding" },
@@ -166,7 +166,7 @@ export default function Menu() {
       {/* Hero Header */}
       <section className="relative h-[50dvh] md:h-[60dvh] flex items-center justify-center overflow-hidden">
         <img
-          src={chefHero}
+          src={foodHero}
           alt="Gourmet dining at Sempre Avanti"
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -259,6 +259,21 @@ export default function Menu() {
                     </div>
                   )}
 
+                  {/* Pizza Night callout inside Desserts column */}
+                  {category.title === "Desserts" && (
+                    <div className="mt-8 border border-accent/30 bg-accent/5 rounded-xl p-6 text-center">
+                      <p className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-2">
+                        Guest Favorite
+                      </p>
+                      <h3 className="font-serif text-2xl font-light text-foreground mb-3">
+                        Pizza Night
+                      </h3>
+                      <p className="text-sm font-sans text-muted-foreground leading-relaxed max-w-sm mx-auto">
+                        Pizza night can be arranged but we need to know the night before or first thing in the morning to make sure the oven can be heated for at least 5 hours and we have the necessary toppings for your specific pizza.
+                      </p>
+                    </div>
+                  )}
+
                   {/* Agave divider between categories on mobile */}
                   {catIdx < menuData.length - 1 && (
                     <div className="md:hidden mt-10">
@@ -278,32 +293,6 @@ export default function Menu() {
             <div className="flex justify-center mt-6">
               <AgaveAccent className="text-accent/40 rotate-180" />
             </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Pizza Night Callout */}
-      <section className="pb-12 md:pb-20">
-        <div className="container max-w-3xl">
-          <motion.div
-            {...fadeUp}
-            className="relative bg-primary text-primary-foreground rounded-2xl p-8 md:p-12 text-center overflow-hidden"
-          >
-            {/* Subtle decorative corners */}
-            <div className="absolute top-3 left-3 w-8 h-8 border-t border-l border-primary-foreground/20 rounded-tl-lg" />
-            <div className="absolute top-3 right-3 w-8 h-8 border-t border-r border-primary-foreground/20 rounded-tr-lg" />
-            <div className="absolute bottom-3 left-3 w-8 h-8 border-b border-l border-primary-foreground/20 rounded-bl-lg" />
-            <div className="absolute bottom-3 right-3 w-8 h-8 border-b border-r border-primary-foreground/20 rounded-br-lg" />
-
-            <span className="text-xs font-sans uppercase tracking-[0.3em] opacity-60 mb-3 block">
-              🍕 Guest Favorite
-            </span>
-            <h2 className="font-serif text-3xl md:text-4xl font-light mb-4">
-              Pizza Night
-            </h2>
-            <p className="text-sm md:text-base font-sans font-light leading-relaxed opacity-85 max-w-xl mx-auto">
-              Pizza night can be arranged but we need to know the night before or first thing in the morning to make sure the oven can be heated for at least 5 hours and we have the necessary toppings for your specific pizza.
-            </p>
           </motion.div>
         </div>
       </section>
