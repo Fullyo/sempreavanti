@@ -1,37 +1,25 @@
+## Create Landscape Screenshot Menu Page at `/menu2`
 
+### Approach
 
-## Fix: Photos Not Loading Across the Site
+Create a standalone page (no Layout/Navbar wrapper) with a fixed landscape aspect ratio (roughly 16:9), designed as a single self-contained image-like card. The page will use a 4-column grid (Breakfast | Appetizers | Lunch & Dinner | Desserts) similar to the WhatsApp screenshot reference, with a branded header and Pizza Night footer. No scrolling -- everything fits in one viewport-sized landscape frame.
 
-### Root Cause
+### Design Decisions
 
-There are **two problems**:
+- **No Layout wrapper** -- this is a screenshot tool, not a browsable page
+- **Fixed dimensions** -- use a container with `width: 1400px; aspect-ratio: 16/10` so the screenshot is always landscape regardless of browser window
+- **4-column grid** -- each menu category in its own column, item names bold with descriptions in smaller text below
+- **Dark navy/teal background with gold accents** -- inspired by the WhatsApp screenshot aesthetic, high contrast for readability at small sizes in a Google Form
+- **Compact typography** -- items need to be readable when the image is scaled down to ~50% of screen width on mobile
 
-1. **CORS blocking preview/dev origins** -- The `guesty-listings` edge function only allows `villassempreavanti.com` and `sempreavanti.lovable.app`. The preview uses origins like `*.lovableproject.com` and `id-preview--*.lovable.app`, which get rejected. Every network request in the logs shows "Failed to fetch."
+### Route
 
-2. **No local fallback photos** -- When Guesty API fails, the fallback listings have `pictures: []`. Components that depend on Guesty photos (HospitalitySection, CTA section on homepage) show empty placeholders instead of real images.
+- Add `/menu2` route in `App.tsx` -- no nav link needed (hidden)
 
-### Changes
+### Files
 
-#### 1. Fix CORS in `guesty-listings` edge function
-
-Add pattern matching for Lovable preview/dev origins so the function works during development:
-
-**`supabase/functions/guesty-listings/index.ts`** -- Update `getCorsHeaders` to also accept origins matching `*.lovable.app` and `*.lovableproject.com` patterns, in addition to the two hardcoded production domains.
-
-Also apply the same fix to `guesty-availability/index.ts` and `guesty-inquiry/index.ts` for consistency.
-
-#### 2. Add local fallback image to HospitalitySection
-
-**`src/components/home/HospitalitySection.tsx`** -- Import `staff-hero.jpeg` as fallback. Use Guesty photo if available, otherwise show the local image instead of the placeholder.
-
-#### 3. Add local fallback image to Index CTA section
-
-**`src/pages/Index.tsx`** (lines 185-196) -- Import a local estate image (e.g. `estate-1.jpeg` which is already imported) as fallback for the CTA background, instead of showing a plain gradient when Guesty is unavailable.
-
-### Files Changed
-1. `supabase/functions/guesty-listings/index.ts` -- CORS pattern matching
-2. `supabase/functions/guesty-availability/index.ts` -- CORS pattern matching
-3. `supabase/functions/guesty-inquiry/index.ts` -- CORS pattern matching
-4. `src/components/home/HospitalitySection.tsx` -- local fallback image
-5. `src/pages/Index.tsx` -- local fallback image for CTA
-
+1. `**src/pages/MenuScreenshot.tsx**` -- New standalone page component
+2. `**src/App.tsx**` -- Add route for `/menu2`  
+  
+`no need for header and footer. all i want is a menu to take a screenshot of`
+  &nbsp;
