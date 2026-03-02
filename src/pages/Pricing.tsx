@@ -296,13 +296,13 @@ export default function Pricing() {
 
       {/* Sticky category nav */}
       <div className="sticky top-16 z-30 bg-background/95 backdrop-blur-sm border-b border-border">
-        <div className="container max-w-5xl">
-          <nav className="flex overflow-x-auto gap-3 py-2 no-scrollbar justify-center">
+        <div className="container">
+          <nav className="flex flex-wrap justify-center gap-2 py-2">
             {allNavItems.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => scrollTo(cat.id)}
-                className={`whitespace-nowrap px-6 py-2.5 text-xs font-sans uppercase tracking-widest transition-colors rounded-full ${
+                className={`whitespace-nowrap px-5 py-2 text-[10px] sm:text-xs font-sans uppercase tracking-widest transition-colors rounded-full ${
                   activeId === cat.id
                     ? "bg-accent text-accent-foreground"
                     : "text-muted-foreground hover:text-foreground"
@@ -429,6 +429,19 @@ export default function Pricing() {
           MXN.
         </p>
       </div>
+
+      {/* Passive CTA footer */}
+      <section className="relative h-[40dvh] md:h-[50dvh] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-foreground" />
+        <div className="relative z-10 text-center text-white px-6 max-w-2xl mx-auto">
+          <p className="font-serif text-2xl md:text-4xl lg:text-5xl font-light mb-4">
+            Ready to book an experience?
+          </p>
+          <p className="text-sm md:text-base font-sans font-light leading-relaxed opacity-80">
+            Simply reply to this email with the activities you'd like and your preferred dates — our concierge team will handle the rest.
+          </p>
+        </div>
+      </section>
     </Layout>
   );
 }
