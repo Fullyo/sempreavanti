@@ -1,8 +1,7 @@
 import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import menuHero from "@/assets/menu-hero.jpg";
-import foodImg from "@/assets/food3.jpeg";
+import foodbeachImg from "@/assets/foodbeach.jpg";
 import chefPizzaImg from "@/assets/chef-pizza-new.png";
 
 interface MenuItem {
@@ -147,16 +146,8 @@ function CategoryHeader({ title, subtitle }: { title: string; subtitle: string }
       <p className="text-xs font-sans uppercase tracking-[0.3em] text-accent">
         {subtitle}
       </p>
-    </div>
-  );
-}
-
-function ItemDivider() {
-  return (
-    <div className="flex justify-center my-1">
-      <svg viewBox="0 0 8 8" className="w-1.5 h-1.5 text-accent/30" fill="currentColor">
-        <rect x="1" y="1" width="6" height="6" transform="rotate(45 4 4)" />
-      </svg>
+      {/* Thin gold underline accent */}
+      <div className="mt-3 mx-auto w-12 h-px bg-accent/50" />
     </div>
   );
 }
@@ -167,7 +158,7 @@ export default function Menu() {
       {/* Hero Header */}
       <section className="relative h-[50dvh] md:h-[60dvh] flex items-center justify-center overflow-hidden">
         <img
-          src={menuHero}
+          src={foodbeachImg}
           alt="Fresh Mexican cuisine with ocean views at Sempre Avanti"
           className="absolute inset-0 w-full h-full object-cover"
         />
@@ -243,22 +234,46 @@ export default function Menu() {
                     </div>
                   )}
 
-                  {/* Items */}
-                  <div className="space-y-1">
+                  {/* Items with zebra striping */}
+                  <div className="space-y-2">
                     {category.items.map((item, itemIdx) => (
-                      <div key={item.name}>
-                        <div className="text-center px-2 py-2">
-                          <h3 className="font-serif text-lg md:text-xl font-medium text-foreground leading-snug">
-                            {item.name}
-                          </h3>
-                          <p className="text-sm font-sans text-muted-foreground leading-relaxed mt-0.5 max-w-sm mx-auto">
-                            {item.description}
-                          </p>
-                        </div>
-                        {itemIdx < category.items.length - 1 && <ItemDivider />}
+                      <div
+                        key={item.name}
+                        className={`text-center px-3 py-2.5 rounded-lg ${
+                          itemIdx % 2 === 1 ? "bg-accent/5" : ""
+                        }`}
+                      >
+                        <h3 className="font-serif text-lg md:text-xl font-semibold text-foreground leading-snug">
+                          {item.name}
+                        </h3>
+                        <p className="text-sm font-sans text-muted-foreground leading-relaxed mt-0.5 max-w-sm mx-auto">
+                          {item.description}
+                        </p>
                       </div>
                     ))}
                   </div>
+
+                  {/* Pizza Night callout inside Desserts column */}
+                  {category.title === "Desserts" && (
+                    <div className="mt-6 border border-accent/30 bg-accent/5 rounded-xl p-5 flex flex-col items-center gap-3">
+                      <img
+                        src={chefPizzaImg}
+                        alt="Wood-fired pizza night"
+                        className="w-full h-36 object-cover rounded-lg"
+                      />
+                      <div className="text-center">
+                        <p className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-1">
+                          Guest Favorite
+                        </p>
+                        <h3 className="font-serif text-2xl font-light text-foreground mb-2">
+                          Pizza Night
+                        </h3>
+                        <p className="text-xs font-sans text-muted-foreground leading-relaxed">
+                          Pizza night can be arranged but we need to know the night before or first thing in the morning to make sure the oven can be heated for at least 5 hours and we have the necessary toppings for your specific pizza.
+                        </p>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Agave divider between categories on mobile */}
                   {catIdx < menuData.length - 1 && (
@@ -283,40 +298,10 @@ export default function Menu() {
         </div>
       </section>
 
-      {/* Pizza Night Banner */}
-      <section className="py-10 md:py-14">
-        <div className="container max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="relative flex flex-col md:flex-row items-center gap-6 md:gap-10 border border-accent/30 bg-accent/5 rounded-2xl p-8 md:p-10"
-          >
-            <img
-              src={chefPizzaImg}
-              alt="Wood-fired pizza night"
-              className="w-full md:w-48 h-48 object-cover rounded-xl"
-            />
-            <div className="text-center md:text-left flex-1">
-              <p className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-2">
-                Guest Favorite
-              </p>
-              <h3 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-3">
-                Pizza Night
-              </h3>
-              <p className="text-sm font-sans text-muted-foreground leading-relaxed max-w-lg">
-                Pizza night can be arranged but we need to know the night before or first thing in the morning to make sure the oven can be heated for at least 5 hours and we have the necessary toppings for your specific pizza.
-              </p>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
       {/* CTA with photo background */}
       <section className="relative h-[40dvh] md:h-[50dvh] flex items-center justify-center overflow-hidden">
         <img
-          src={foodImg}
+          src={foodbeachImg}
           alt="Fresh cuisine at Sempre Avanti"
           className="absolute inset-0 w-full h-full object-cover"
         />
