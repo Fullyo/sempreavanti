@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Layout from "@/components/layout/Layout";
+import boatSunset from "@/assets/boat-sunset.jpg";
 
 const mustDos = [
   {
@@ -432,7 +433,12 @@ export default function Pricing() {
 
       {/* Passive CTA footer */}
       <section className="relative h-[40dvh] md:h-[50dvh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-foreground" />
+        <img
+          src={boatSunset}
+          alt="Sunset boat cruise on Banderas Bay"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/40" />
         <div className="relative z-10 text-center text-white px-6 max-w-2xl mx-auto">
           <p className="font-serif text-2xl md:text-4xl lg:text-5xl font-light mb-4">
             Ready to book an experience?
