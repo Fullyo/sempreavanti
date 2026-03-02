@@ -1,36 +1,31 @@
 
 
-## Revamp /pricing → Experiences Page
+## Recommendation: Hero Photos & Bottom CTA
 
-### Understanding the "header" issue
-The current page has a simple title then you scroll through categories linearly. I believe you mean the category sections aren't scannable at a glance — you can't see what's available without scrolling through everything. I'll add a **sticky category bar** at the top (below the page intro) with anchor links to each section so guests can jump directly to Wellness, Surf, Boats, etc.
+### On the hero photo question
 
-### On photos
-I agree — **no photos**. This is a reference sheet shared via email. Keeping it text-only makes it load fast, print cleanly, and stay scannable. Photos would add clutter to what should feel like a polished menu/rate card.
+**My recommendation: skip the hero on /guide, and it was the right call to keep it on /menu.** Here's why:
 
-### Content structure (from your list)
+The two pages serve different purposes:
 
-**Categories with anchor navigation:**
-1. **Wellness** — Yoga, Sound Bath, Massage, Personal Training, Pilates
-2. **Food & Culinary** — Taco Tour, Cooking Class
-3. **Surf** — Sayulita lesson, La Lancha experience
-4. **Boats & Fishing** — Private boat, Fishing charter, Spearfishing inshore/deep
-5. **Polaris Rentals** — 2/4/6-seater with operating limits
-6. **Transportation** — Airport SUV only
+- **/menu** is an editorial experience — guests browse it leisurely. The hero photo (beach scene) sets the mood and signals "this is about dining at this property." It earns its space because the content below is a curated card layout that benefits from a visual opening.
 
-All prices in MXN. Each item gets: name, price, duration/capacity, and a short description — matching the content you provided exactly.
+- **/guide** is a reference sheet — guests land here from an email link looking for specific activities and prices. A hero image would push the actual content below the fold and add a scroll before they see anything useful. The current clean intro with the heading, description, and sticky nav lets them orient and jump to what they need immediately. This is the right pattern for a rate card / service menu.
 
-### Layout design
-- **Intro section**: "Make the Most of Your Stay" heading with your intro copy and the 24-hour notice line
-- **Sticky category tabs**: Horizontal scrollable bar that sticks below the navbar, showing all 6 categories as clickable anchors
-- **Category sections**: Each with a gold accent divider + category title, then items in a clean list format — item name bold on the left, price on the right, description and details below in muted text. Bullet lists for "Includes" where applicable
-- **Footer note**: "All experiences require a minimum of 24 hours' notice. Prices in MXN."
+**Verdict: keep /menu's hero, don't add one to /guide.**
 
-### Route
-Keep the route as `/pricing` (no need to change URL since it's shared via email — changing it would break existing links). The page title/heading will say "Experiences" though.
+### Bottom CTA with adventure photo
 
-### Technical changes
-1. **`src/pages/Pricing.tsx`** — Complete rewrite of content and layout with new data, sticky category nav, anchor scroll behavior
-2. **`src/App.tsx`** — No changes needed (route stays `/pricing`)
-3. **Navbar** — No changes (this page is shared via email link, not navigated to from the site nav)
+The current bottom CTA on /guide uses a solid dark background (`bg-foreground`). Per the site's established visual pattern (and the memory note about avoiding solid CTA backgrounds), this should use a **property photo with a dark gradient overlay** — exactly like the /menu page does with `diner.jpg`.
+
+**Photo recommendation:** Use `surf-sayulita-drone.png` or `boat-sunset.jpg` — both convey adventure and the coastal lifestyle, which matches the "experiences" theme perfectly. The drone surf shot is more energetic; the sunset boat is more aspirational. I'd lean toward **`boat-sunset.jpg`** since it's broadly appealing (not everyone surfs, but everyone loves a sunset on the water).
+
+### Implementation
+
+1. **`src/pages/Pricing.tsx`** — Update the bottom CTA section:
+   - Replace the solid `bg-foreground` div with an `<img>` tag using `boat-sunset.jpg` (same pattern as Menu's footer)
+   - Add a dark gradient overlay (`bg-gradient-to-t from-black/70 via-black/50 to-black/40`)
+   - Keep the existing copy ("Ready to book an experience?" + reply instructions)
+
+One small change, no new files needed.
 
