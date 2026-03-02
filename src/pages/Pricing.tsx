@@ -296,13 +296,13 @@ export default function Pricing() {
 
       {/* Sticky category nav */}
       <div className="sticky top-16 z-30 bg-background/95 backdrop-blur-sm border-b border-border">
-        <div className="container max-w-4xl">
-          <nav className="flex overflow-x-auto gap-1 py-2 no-scrollbar">
+        <div className="container max-w-5xl">
+          <nav className="flex overflow-x-auto gap-3 py-2 no-scrollbar justify-center">
             {allNavItems.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => scrollTo(cat.id)}
-                className={`whitespace-nowrap px-4 py-2 text-xs font-sans uppercase tracking-widest transition-colors rounded-full ${
+                className={`whitespace-nowrap px-6 py-2.5 text-xs font-sans uppercase tracking-widest transition-colors rounded-full ${
                   activeId === cat.id
                     ? "bg-accent text-accent-foreground"
                     : "text-muted-foreground hover:text-foreground"
