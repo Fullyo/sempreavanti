@@ -1,9 +1,7 @@
 import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 import menuHeroImg from "@/assets/menu-hero-beach.png";
-import menuHeroOldImg from "@/assets/menu-hero.jpg";
-import foodbeachImg from "@/assets/foodbeach.jpg";
+import dinerImg from "@/assets/diner.jpg";
 import chefPizzaImg from "@/assets/chef-pizza-new.png";
 
 interface MenuItem {
@@ -298,24 +296,21 @@ export default function Menu() {
         </div>
       </section>
 
-      {/* CTA with photo background */}
+      {/* Informative footer section */}
       <section className="relative h-[40dvh] md:h-[50dvh] flex items-center justify-center overflow-hidden">
         <img
-          src={menuHeroOldImg}
-          alt="Fresh cuisine at Sempre Avanti"
+          src={dinerImg}
+          alt="Dining at Sempre Avanti"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-black/30" />
-        <div className="relative z-10 text-center text-white px-4">
-          <p className="font-serif text-2xl md:text-4xl lg:text-5xl font-light mb-6">
-            Meet the team behind every meal
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/40" />
+        <div className="relative z-10 text-center text-white px-6 max-w-2xl mx-auto">
+          <p className="font-serif text-2xl md:text-4xl lg:text-5xl font-light mb-4">
+            Have dietary preferences or special requests?
           </p>
-          <Link
-            to="/chef"
-            className="inline-block px-10 py-4 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full"
-          >
-            The Chef Experience
-          </Link>
+          <p className="text-sm md:text-base font-sans font-light leading-relaxed opacity-80">
+            Simply reply to your booking confirmation and let us know — our chefs will take care of the rest.
+          </p>
         </div>
       </section>
     </Layout>
