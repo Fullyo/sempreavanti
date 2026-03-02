@@ -1,25 +1,47 @@
-## Create Landscape Screenshot Menu Page at `/menu2`
 
-### Approach
 
-Create a standalone page (no Layout/Navbar wrapper) with a fixed landscape aspect ratio (roughly 16:9), designed as a single self-contained image-like card. The page will use a 4-column grid (Breakfast | Appetizers | Lunch & Dinner | Desserts) similar to the WhatsApp screenshot reference, with a branded header and Pizza Night footer. No scrolling -- everything fits in one viewport-sized landscape frame.
+## Menu Page Updates
 
-### Design Decisions
+### Changes to `src/pages/Menu.tsx`
 
-- **No Layout wrapper** -- this is a screenshot tool, not a browsable page
-- **Fixed dimensions** -- use a container with `width: 1400px; aspect-ratio: 16/10` so the screenshot is always landscape regardless of browser window
-- **4-column grid** -- each menu category in its own column, item names bold with descriptions in smaller text below
-- **Dark navy/teal background with gold accents** -- inspired by the WhatsApp screenshot aesthetic, high contrast for readability at small sizes in a Google Form
-- **Compact typography** -- items need to be readable when the image is scaled down to ~50% of screen width on mobile
+#### 1. Generate a new hero image using AI
+Use the Lovable AI image generation (google/gemini-2.5-flash-image) via an edge function to generate a casual Mexican meal photo with ocean in the background -- a linear/horizontal composition showing a spread of colorful Mexican dishes on an outdoor table with ocean view. Store the generated image in Supabase storage and use it as the hero.
 
-### Route
+**However**, since AI-generated food photography may not match the quality expected, a simpler approach: use one of the existing food/chef assets that feels more casual and Mexican. Looking at available assets: `chef-ceviche.jpg`, `chef-mole.jpeg`, or `chef-margarita-sunset.png` could work. But the user specifically said "you can create it" and wants ocean behind it, so I'll generate it.
 
-- Add `/menu2` route in `App.tsx` -- no nav link needed (hidden)
+**Practical approach**: Create an edge function that generates the image, stores it in a storage bucket, and returns the URL. Then use that URL in the hero. But this adds complexity for a single static image. 
 
-### Files
+**Simplest path**: Generate the image via edge function, save to storage, and reference it. But actually, let me reconsider -- we can generate it once and save it as a static asset. The edge function approach is overkill for a one-time image.
 
-1. `**src/pages/MenuScreenshot.tsx**` -- New standalone page component
-2. `**src/App.tsx**` -- Add route for `/menu2`  
-  
-`no need for header and footer. all i want is a menu to take a screenshot of`
-  &nbsp;
+**Best approach**: Use an edge function to generate the image, store it in Supabase storage bucket, and reference the public URL from the Menu page. This way it's a real image that persists.
+
+#### 2. Change hero title from "Gourmet Dining" to something more appropriate
+Since it covers all meals of the day, change to something like "Our Kitchen" or "Daily Menu" -- more casual, less "gourmet."
+
+#### 3. Move breakfast footnotes to top of breakfast section
+Move the `*Fruit & yogurt bowls included` and `*Orange juice & coffee included` notes to appear **before** the first menu item (Chilaquiles), styled like a restaurant does it -- italic, at the top of the section.
+
+#### 4. Pizza Night as a full-width banner below the menu card
+Remove from inside the Desserts column. Place it as a standalone banner section below the menu card, spanning full width with a subtle background treatment.
+
+### Files Changed
+
+1. **`src/pages/Menu.tsx`** -- All four changes above:
+   - Update hero image source (use generated image from storage or a new local asset)
+   - Change hero title/copy to be less "gourmet"
+   - Move `footnotes` rendering to **before** the items list in the Breakfast category
+   - Extract Pizza Night from the Desserts column grid and render it as a full-width banner below the menu card
+   - Remove the downward zoom animation (no zoom)
+
+2. **`supabase/functions/generate-menu-hero/index.ts`** -- New edge function to generate the hero image using Lovable AI and store it in a Supabase storage bucket
+
+3. **Storage bucket** -- Create a `menu-assets` bucket via migration for storing the generated image
+
+### Implementation Details
+
+**Hero image generation**: The edge function will call the Lovable AI gateway with a prompt for a casual Mexican food spread photographed from a linear/straight-on angle with Pacific ocean visible behind, natural lighting, outdoor terrace setting. The result gets stored in a `menu-assets` public storage bucket. The Menu page will reference this public URL with a fallback to an existing food asset.
+
+**Footnotes placement**: Move rendering of footnotes from after the items list to before it, styled as an italic note block at the top of the Breakfast section (below the category header, above the first item).
+
+**Pizza Night banner**: Full-width section between the menu card and the CTA section. Styled as a horizontal banner with ornamental lines, not boxed inside a column.
+
