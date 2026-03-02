@@ -4,6 +4,8 @@ import { Menu, X, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import InquiryDialog from "@/components/InquiryDialog";
+import logoWhite from "@/assets/logo-white.png";
+import logoBlack from "@/assets/logo-black.png";
 
 interface DropdownGroup {
   label: string;
@@ -133,7 +135,7 @@ export default function Navbar() {
   const location = useLocation();
 
   // On /book page, always show solid navbar
-  const forceScrolled = location.pathname === "/book";
+  const forceScrolled = location.pathname === "/book" || location.pathname === "/guide";
 
   useEffect(() => {
     if (forceScrolled) {
@@ -155,13 +157,12 @@ export default function Navbar() {
       }`}
     >
       <div className="container flex items-center justify-between h-16 md:h-20">
-        <Link
-          to="/"
-          className={`font-serif text-xl md:text-2xl font-semibold tracking-wide transition-colors duration-300 ${
-            scrolled ? "text-foreground" : "text-white"
-          }`}
-        >
-          Villas Sempre Avanti
+        <Link to="/" className="transition-opacity duration-300 hover:opacity-80">
+          <img
+            src={scrolled ? logoBlack : logoWhite}
+            alt="Villas Sempre Avanti"
+            className="h-10 md:h-12 w-auto"
+          />
         </Link>
 
         {/* Desktop nav */}

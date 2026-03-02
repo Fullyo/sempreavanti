@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import InquiryDialog from "@/components/InquiryDialog";
 import { Facebook, Instagram } from "lucide-react";
+import logoWhite from "@/assets/logo-white.png";
 
 export default function Footer() {
   return (
@@ -8,7 +9,7 @@ export default function Footer() {
       <div className="container py-16 md:py-20">
         {/* Top: Brand + Tagline */}
         <div className="text-center mb-12">
-          <h3 className="font-serif text-3xl md:text-4xl mb-3">Villas Sempre Avanti</h3>
+          <img src={logoWhite} alt="Villas Sempre Avanti" className="h-14 md:h-16 w-auto mx-auto mb-3" />
           <p className="text-sm font-sans opacity-70 max-w-md mx-auto leading-relaxed">
             A private beachfront estate on Mexico's Riviera Nayarit. Villa Pietro & Villa Luisa — five bedrooms, fully hosted — always forward.
           </p>
