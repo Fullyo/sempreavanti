@@ -1,20 +1,36 @@
 
 
-## Fix Footer Section
+## Revamp /pricing → Experiences Page
 
-### 1. Replace footer image with uploaded `diner.jpg`
-Copy `user-uploads://diner.jpg` to `src/assets/diner.jpg` and use it as the background for the bottom section, replacing `menuHeroOldImg`.
+### Understanding the "header" issue
+The current page has a simple title then you scroll through categories linearly. I believe you mean the category sections aren't scannable at a glance — you can't see what's available without scrolling through everything. I'll add a **sticky category bar** at the top (below the page intro) with anchor links to each section so guests can jump directly to Wellness, Surf, Boats, etc.
 
-### 2. Change CTA content — no button, informative nudge
-Remove the "Meet the team behind every meal" heading and the "The Chef Experience" button link. Replace with:
-- A warm heading like *"Have dietary preferences or special requests?"*
-- A soft subtitle nudging them to email: *"Simply reply to your booking confirmation and let us know — our chefs will take care of the rest."*
-- No button, no link — purely informative text that reminds guests to use their email thread.
+### On photos
+I agree — **no photos**. This is a reference sheet shared via email. Keeping it text-only makes it load fast, print cleanly, and stay scannable. Photos would add clutter to what should feel like a polished menu/rate card.
 
-### 3. Remove unused import
-Remove the `Link` import from `react-router-dom` if no longer used elsewhere on the page (it isn't). Also remove the `menuHeroOldImg` import.
+### Content structure (from your list)
 
-### Files Changed
-- **`src/assets/diner.jpg`** — new asset copied from upload
-- **`src/pages/Menu.tsx`** — swap image, rewrite bottom section content, clean imports
+**Categories with anchor navigation:**
+1. **Wellness** — Yoga, Sound Bath, Massage, Personal Training, Pilates
+2. **Food & Culinary** — Taco Tour, Cooking Class
+3. **Surf** — Sayulita lesson, La Lancha experience
+4. **Boats & Fishing** — Private boat, Fishing charter, Spearfishing inshore/deep
+5. **Polaris Rentals** — 2/4/6-seater with operating limits
+6. **Transportation** — Airport SUV only
+
+All prices in MXN. Each item gets: name, price, duration/capacity, and a short description — matching the content you provided exactly.
+
+### Layout design
+- **Intro section**: "Make the Most of Your Stay" heading with your intro copy and the 24-hour notice line
+- **Sticky category tabs**: Horizontal scrollable bar that sticks below the navbar, showing all 6 categories as clickable anchors
+- **Category sections**: Each with a gold accent divider + category title, then items in a clean list format — item name bold on the left, price on the right, description and details below in muted text. Bullet lists for "Includes" where applicable
+- **Footer note**: "All experiences require a minimum of 24 hours' notice. Prices in MXN."
+
+### Route
+Keep the route as `/pricing` (no need to change URL since it's shared via email — changing it would break existing links). The page title/heading will say "Experiences" though.
+
+### Technical changes
+1. **`src/pages/Pricing.tsx`** — Complete rewrite of content and layout with new data, sticky category nav, anchor scroll behavior
+2. **`src/App.tsx`** — No changes needed (route stays `/pricing`)
+3. **Navbar** — No changes (this page is shared via email link, not navigated to from the site nav)
 
