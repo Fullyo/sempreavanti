@@ -1,8 +1,9 @@
 import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import foodHero from "@/assets/food1.jpeg";
+import menuHero from "@/assets/menu-hero.jpg";
 import foodImg from "@/assets/food3.jpeg";
+import chefPizzaImg from "@/assets/chef-pizza-new.png";
 
 interface MenuItem {
   name: string;
@@ -166,8 +167,8 @@ export default function Menu() {
       {/* Hero Header */}
       <section className="relative h-[50dvh] md:h-[60dvh] flex items-center justify-center overflow-hidden">
         <img
-          src={foodHero}
-          alt="Gourmet dining at Sempre Avanti"
+          src={menuHero}
+          alt="Fresh Mexican cuisine with ocean views at Sempre Avanti"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60" />
@@ -186,7 +187,7 @@ export default function Menu() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="font-serif text-5xl md:text-7xl lg:text-8xl font-light mb-4"
           >
-            Gourmet Dining
+            Our Kitchen
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
@@ -231,6 +232,17 @@ export default function Menu() {
                 >
                   <CategoryHeader title={category.title} subtitle={category.subtitle} />
 
+                  {/* Footnotes at top of section (before items) */}
+                  {category.footnotes && (
+                    <div className="mb-5 text-center border border-accent/20 bg-accent/5 rounded-lg px-4 py-3">
+                      {category.footnotes.map((note) => (
+                        <p key={note} className="text-xs font-sans italic text-muted-foreground">
+                          *{note}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+
                   {/* Items */}
                   <div className="space-y-1">
                     {category.items.map((item, itemIdx) => (
@@ -247,32 +259,6 @@ export default function Menu() {
                       </div>
                     ))}
                   </div>
-
-                  {/* Footnotes */}
-                  {category.footnotes && (
-                    <div className="mt-6 pt-4 border-t border-accent/15 text-center">
-                      {category.footnotes.map((note) => (
-                        <p key={note} className="text-xs font-sans italic text-muted-foreground/70">
-                          *{note}
-                        </p>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Pizza Night callout inside Desserts column */}
-                  {category.title === "Desserts" && (
-                    <div className="mt-8 border border-accent/30 bg-accent/5 rounded-xl p-6 text-center">
-                      <p className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-2">
-                        Guest Favorite
-                      </p>
-                      <h3 className="font-serif text-2xl font-light text-foreground mb-3">
-                        Pizza Night
-                      </h3>
-                      <p className="text-sm font-sans text-muted-foreground leading-relaxed max-w-sm mx-auto">
-                        Pizza night can be arranged but we need to know the night before or first thing in the morning to make sure the oven can be heated for at least 5 hours and we have the necessary toppings for your specific pizza.
-                      </p>
-                    </div>
-                  )}
 
                   {/* Agave divider between categories on mobile */}
                   {catIdx < menuData.length - 1 && (
@@ -292,6 +278,36 @@ export default function Menu() {
             {/* Bottom agave decoration */}
             <div className="flex justify-center mt-6">
               <AgaveAccent className="text-accent/40 rotate-180" />
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Pizza Night Banner */}
+      <section className="py-10 md:py-14">
+        <div className="container max-w-4xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative flex flex-col md:flex-row items-center gap-6 md:gap-10 border border-accent/30 bg-accent/5 rounded-2xl p-8 md:p-10"
+          >
+            <img
+              src={chefPizzaImg}
+              alt="Wood-fired pizza night"
+              className="w-full md:w-48 h-48 object-cover rounded-xl"
+            />
+            <div className="text-center md:text-left flex-1">
+              <p className="text-xs font-sans uppercase tracking-[0.3em] text-accent mb-2">
+                Guest Favorite
+              </p>
+              <h3 className="font-serif text-3xl md:text-4xl font-light text-foreground mb-3">
+                Pizza Night
+              </h3>
+              <p className="text-sm font-sans text-muted-foreground leading-relaxed max-w-lg">
+                Pizza night can be arranged but we need to know the night before or first thing in the morning to make sure the oven can be heated for at least 5 hours and we have the necessary toppings for your specific pizza.
+              </p>
             </div>
           </motion.div>
         </div>
