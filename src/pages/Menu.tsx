@@ -2,6 +2,7 @@ import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import menuHeroImg from "@/assets/menu-hero-beach.png";
+import menuHeroOldImg from "@/assets/menu-hero.jpg";
 import foodbeachImg from "@/assets/foodbeach.jpg";
 import chefPizzaImg from "@/assets/chef-pizza-new.png";
 
@@ -300,7 +301,7 @@ export default function Menu() {
       {/* CTA with photo background */}
       <section className="relative h-[40dvh] md:h-[50dvh] flex items-center justify-center overflow-hidden">
         <img
-          src={foodbeachImg}
+          src={menuHeroOldImg}
           alt="Fresh cuisine at Sempre Avanti"
           className="absolute inset-0 w-full h-full object-cover"
         />
