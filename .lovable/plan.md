@@ -1,23 +1,20 @@
 
 
-## Menu Page Updates
+## Fix Footer Section
 
-### 1. Use uploaded photo for hero and footer CTA
-Copy `foodbeach.jpg` to `src/assets/` and use it as both the hero image and the bottom CTA background (replacing `menu-hero.jpg` and `food3.jpeg`).
+### 1. Replace footer image with uploaded `diner.jpg`
+Copy `user-uploads://diner.jpg` to `src/assets/diner.jpg` and use it as the background for the bottom section, replacing `menuHeroOldImg`.
 
-### 2. Rebalance menu -- Pizza Night back into Desserts column
-Move Pizza Night back inside the Desserts category as a special callout at the bottom of that column (not as a regular menu item, but as a styled highlight box within the column). This balances the grid: Breakfast 13, Appetizers 10, Lunch & Dinner 11, Desserts 9 + Pizza Night callout. Remove the standalone Pizza Night banner section.
+### 2. Change CTA content — no button, informative nudge
+Remove the "Meet the team behind every meal" heading and the "The Chef Experience" button link. Replace with:
+- A warm heading like *"Have dietary preferences or special requests?"*
+- A soft subtitle nudging them to email: *"Simply reply to your booking confirmation and let us know — our chefs will take care of the rest."*
+- No button, no link — purely informative text that reminds guests to use their email thread.
 
-### 3. Readability improvements (subtle, not a revamp)
-These are targeted tweaks to make items easier to scan without changing the overall structure:
-
-- **Alternate subtle background on items** -- give every other menu item a very faint `bg-accent/5` background strip so the eye can track across name-to-description more easily (like a ledger/zebra stripe effect, very subtle)
-- **Bolder item names** -- bump item name weight from `font-medium` to `font-semibold` for stronger contrast against the lighter descriptions
-- **Slightly more vertical spacing** between items (increase `space-y-1` to `space-y-2`) so they don't feel cramped
-- **Add a thin gold underline accent** under each category header to give more visual separation between the header and the items
-- **Remove the tiny diamond ItemDivider SVGs** -- they add visual noise. The zebra striping and extra spacing will provide enough separation
+### 3. Remove unused import
+Remove the `Link` import from `react-router-dom` if no longer used elsewhere on the page (it isn't). Also remove the `menuHeroOldImg` import.
 
 ### Files Changed
-1. **`src/pages/Menu.tsx`** -- all changes above (hero/footer image swap, Pizza Night back in Desserts, readability tweaks)
-2. **Copy `foodbeach.jpg`** to `src/assets/foodbeach.jpg`
+- **`src/assets/diner.jpg`** — new asset copied from upload
+- **`src/pages/Menu.tsx`** — swap image, rewrite bottom section content, clean imports
 
