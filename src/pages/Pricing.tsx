@@ -1,6 +1,29 @@
 import { useEffect, useRef, useState } from "react";
 import Layout from "@/components/layout/Layout";
 
+const mustDos = [
+  {
+    name: "Ally Cat Sailing",
+    teaser: "The best way to experience the bay — snorkeling, open bar, ceviche, and unforgettable sunsets on the water.",
+  },
+  {
+    name: "Surf with Vary",
+    teaser: "Whether it's your first wave or your hundredth, a session with our local guide is pure magic.",
+  },
+  {
+    name: "Cachasol Farm Distillery",
+    teaser: "A 90-minute farm-to-glass tour at the coastal agave plantation just minutes from the house. Tastings, open-fire kitchen, and craft cocktails.",
+  },
+  {
+    name: "In-House Massage",
+    teaser: "Nothing beats a professional massage on the terrace with the sound of the ocean below.",
+  },
+  {
+    name: "UTV Coastal Cruise",
+    teaser: "Grab a Polaris and explore the coast at your own pace — from Punta de Mita to San Pancho.",
+  },
+];
+
 const categories = [
   {
     id: "wellness",
@@ -54,6 +77,18 @@ const categories = [
         note: "Additional food beyond included tastings is paid directly by the guest.",
       },
       {
+        name: "Cachasol Farm Distillery Tour",
+        price: "$1,500 MXN per person",
+        details: "90 minutes | Tuesday–Sunday at 1 PM & 5 PM",
+        desc: "A farm-to-glass experience at the coastal agave plantation just minutes from the house. Taste small-batch tequilas and coastal raicillas, explore six acres of agaves and gardens, and enjoy bites from the open-fire kitchen.",
+        includes: [
+          "Guided distillery walkthrough",
+          "Spirit tastings (tequila & raicilla)",
+          "Craft cocktail",
+          "Open-fire kitchen bites",
+        ],
+      },
+      {
         name: "Private Mexican Cooking Class (In-House)",
         price: "$1,200 MXN per person",
         desc: "Learn to prepare authentic Mexican dishes from scratch in your villa.",
@@ -68,7 +103,7 @@ const categories = [
         name: "Surf Lesson — Sayulita",
         price: "$1,200 MXN per person",
         details: "Minimum 2 people",
-        desc: "Perfect for beginners or those looking to refine their skills.",
+        desc: "Perfect for beginners or those looking to refine their skills. Board and rash guard included.",
       },
       {
         name: "Surf Experience — Punta de Mita (La Lancha)",
@@ -81,12 +116,58 @@ const categories = [
           "30 minutes of free surf",
         ],
       },
+      {
+        name: "Surf Guiding — Intermediate",
+        price: "$2,500 MXN per person",
+        details: "Half day | Minimum 2 people",
+        desc: "Already comfortable on a board? Vary takes you to the best break for the day's conditions — from La Lancha to Captain Pablo's and beyond.",
+        includes: [
+          "Local guide & coaching",
+          "Transportation",
+          "Board if needed",
+        ],
+      },
+      {
+        name: "Advanced Coaching & Guiding",
+        price: "$3,500 MXN per person",
+        details: "Half day | Experienced surfers only",
+        desc: "For surfers chasing bigger waves and sharper technique. Vary guides you to the advanced spots — Burros, El Anclote reef, and hidden points along the coast.",
+        includes: [
+          "Expert coaching & wave selection",
+          "Transportation to advanced breaks",
+          "Board if needed",
+        ],
+      },
+      {
+        name: "Boat Trip Surf Safari — Punta de Mita",
+        price: "$15,000 MXN (up to 4 surfers)",
+        details: "Full day | Departure from Punta de Mita | Intermediate to advanced",
+        desc: "Access the coast's most exclusive and uncrowded breaks by boat. A full-day surf adventure hitting multiple spots along the Punta de Mita coastline that you can't reach by land.",
+        includes: [
+          "Private boat & captain",
+          "Surf guide",
+          "Water, sodas, beer",
+          "Multiple break access",
+        ],
+      },
     ],
   },
   {
     id: "boats",
     title: "Boats & Fishing",
     items: [
+      {
+        name: "Ally Cat Sailing",
+        price: "$3,200 MXN per person",
+        details: "4 hours | Up to 12 guests",
+        desc: "Our top recommendation — an intimate sailing experience along Banderas Bay with snorkeling, paddleboarding, open bar, and fresh ceviche prepared onboard. Perfect for groups.",
+        includes: [
+          "Open bar",
+          "Fresh ceviche & snacks",
+          "Snorkeling & paddleboard gear",
+          "Sunset option available",
+        ],
+      },
       {
         name: "Private Boat Tour (3 Hours)",
         price: "$9,500 MXN",
@@ -152,7 +233,7 @@ const categories = [
 ];
 
 export default function Pricing() {
-  const [activeId, setActiveId] = useState(categories[0].id);
+  const [activeId, setActiveId] = useState("favorites");
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
   useEffect(() => {
@@ -181,6 +262,8 @@ export default function Pricing() {
       window.scrollTo({ top: y, behavior: "smooth" });
     }
   };
+
+  const allNavItems = [{ id: "favorites", title: "Guest Favorites" }, ...categories];
 
   return (
     <Layout>
@@ -215,7 +298,7 @@ export default function Pricing() {
       <div className="sticky top-16 z-30 bg-background/95 backdrop-blur-sm border-b border-border">
         <div className="container max-w-4xl">
           <nav className="flex overflow-x-auto gap-1 py-2 no-scrollbar">
-            {categories.map((cat) => (
+            {allNavItems.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => scrollTo(cat.id)}
@@ -232,6 +315,41 @@ export default function Pricing() {
         </div>
       </div>
 
+      {/* Guest Favorites */}
+      <section
+        id="favorites"
+        ref={(el) => { sectionRefs.current["favorites"] = el; }}
+        className="py-12 md:py-16"
+      >
+        <div className="container max-w-4xl">
+          <div className="flex items-center gap-4 mb-2">
+            <h2 className="font-serif text-2xl md:text-3xl text-foreground whitespace-nowrap">
+              5 Guest Favorites
+            </h2>
+            <div className="h-px flex-1 bg-border" />
+          </div>
+          <p className="text-sm font-sans text-muted-foreground mb-8">
+            The experiences our guests love most — and the ones we always recommend first.
+          </p>
+
+          <div className="space-y-6">
+            {mustDos.map((item, i) => (
+              <div key={item.name} className="flex gap-4 items-start">
+                <span className="text-2xl font-serif text-accent leading-none mt-0.5">{i + 1}</span>
+                <div>
+                  <h3 className="font-sans text-sm font-semibold text-foreground">
+                    {item.name}
+                  </h3>
+                  <p className="text-sm font-sans text-muted-foreground leading-relaxed mt-0.5">
+                    {item.teaser}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Category sections */}
       {categories.map((cat) => (
         <section
@@ -241,7 +359,6 @@ export default function Pricing() {
           className="py-12 md:py-16"
         >
           <div className="container max-w-4xl">
-            {/* Category header */}
             <div className="flex items-center gap-4 mb-8">
               <h2 className="font-serif text-2xl md:text-3xl text-foreground whitespace-nowrap">
                 {cat.title}
@@ -249,7 +366,6 @@ export default function Pricing() {
               <div className="h-px flex-1 bg-border" />
             </div>
 
-            {/* Items */}
             <div className="space-y-8">
               {cat.items.map((item) => (
                 <div key={item.name}>
