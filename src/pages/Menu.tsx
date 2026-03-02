@@ -1,6 +1,7 @@
 import Layout from "@/components/layout/Layout";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import menuHeroImg from "@/assets/menu-hero-beach.png";
 import foodbeachImg from "@/assets/foodbeach.jpg";
 import chefPizzaImg from "@/assets/chef-pizza-new.png";
 
@@ -158,11 +159,11 @@ export default function Menu() {
       {/* Hero Header */}
       <section className="relative h-[50dvh] md:h-[60dvh] flex items-center justify-center overflow-hidden">
         <img
-          src={foodbeachImg}
+          src={menuHeroImg}
           alt="Fresh Mexican cuisine with ocean views at Sempre Avanti"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
         <div className="relative z-10 text-center text-white px-4">
           <motion.p
             initial={{ opacity: 0 }}
@@ -239,9 +240,7 @@ export default function Menu() {
                     {category.items.map((item, itemIdx) => (
                       <div
                         key={item.name}
-                        className={`text-center px-3 py-2.5 rounded-lg ${
-                          itemIdx % 2 === 1 ? "bg-accent/5" : ""
-                        }`}
+                        className="text-center px-3 py-2"
                       >
                         <h3 className="font-serif text-lg md:text-xl font-semibold text-foreground leading-snug">
                           {item.name}
