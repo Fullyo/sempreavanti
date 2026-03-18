@@ -28,36 +28,43 @@ const mustDos = [
 const categories = [
   {
     id: "wellness",
-    title: "Wellness",
+    title: "Wellness Sessions",
     items: [
-      {
-        name: "Private Yoga",
-        price: "$2,500 MXN",
-        details: "Duration: 1 hr 15 min",
-        desc: "Enjoy a personalized yoga session in the comfort of your villa.",
-      },
-      {
-        name: "Sound Bath (Sound Bowls)",
-        price: "$2,500 MXN (up to 5 people)",
-        details: "Additional guests: $500 MXN per person",
-        desc: "Immerse yourself in a deeply relaxing sound healing experience.",
-      },
-      {
-        name: "In-House Massage",
-        price: "$1,500 MXN per person",
-        desc: "Relax and unwind with a professional massage in your villa.",
-      },
-      {
-        name: "Personal Training (Weights Included)",
-        price: "$2,000 MXN per person",
-        desc: "Private strength or conditioning session tailored to you.",
-      },
-      {
-        name: "Pilates",
-        price: "$1,000 MXN per person",
-        details: "Minimum 2 people",
-        desc: "A focused session designed to strengthen and energize.",
-      },
+      { name: "Yoga", price: "$2,500 MXN" },
+      { name: "Breathwork", price: "$2,500 MXN" },
+      { name: "Sound Bowl (Healing with Crystal Bowls)", price: "$3,000 MXN" },
+    ],
+  },
+  {
+    id: "massages",
+    title: "Massages",
+    items: [
+      { name: "Relaxation Massage", price: "$1,500 MXN" },
+      { name: "Therapeutic Massage", price: "$1,500 MXN" },
+      { name: "Deep Tissue Massage", price: "$1,500 MXN" },
+      { name: "4-Hands Massage", price: "$2,500 MXN" },
+      { name: "Prenatal Massage", price: "$1,700 MXN" },
+      { name: "Lymphatic Drainage", price: "$1,700 MXN" },
+      { name: "Hot Stone Massage", price: "$1,800 MXN" },
+      { name: "Cupping Therapy", price: "$1,800 MXN" },
+      { name: "Reflexology with Salts Treatment", price: "$1,100 MXN" },
+    ],
+  },
+  {
+    id: "spa",
+    title: "Spa Treatments",
+    items: [
+      { name: "Manicure", price: "$1,200 MXN" },
+      { name: "Pedicure", price: "$1,200 MXN" },
+      { name: "Body Scrub & Wrap", price: "$2,800 MXN", details: "Chocolate, agave, or oats — 90 min" },
+      { name: "Facial Cleansing", price: "$1,800 MXN" },
+    ],
+  },
+  {
+    id: "openbar",
+    title: "Open Bar",
+    items: [
+      { name: "Open Bar Service", price: "$900 MXN per person", details: "3 hours | Minimum 4 people" },
     ],
   },
   {
