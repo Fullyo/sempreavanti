@@ -62,9 +62,20 @@ const categories = [
   },
   {
     id: "openbar",
-    title: "Open Bar",
+    title: "Private Bartender",
     items: [
-      { name: "Open Bar Service", price: "$900 MXN per person", details: "3 hours | Minimum 4 people" },
+      {
+        name: "Sunset Margaritas & Private Bartender",
+        price: "$900 MXN per person",
+        details: "3 hours | Minimum 4 people",
+        desc: "Your own bartender sets up poolside or on the terrace and mixes craft cocktails, margaritas, micheladas, and more — all evening long. Just show up, sip, and enjoy the sunset.",
+        includes: [
+          "Dedicated bartender for 3 hours",
+          "Full cocktail menu — margaritas, palomas, mojitos & more",
+          "All spirits, mixers, and garnishes included",
+          "Ice, glassware, and full setup/cleanup",
+        ],
+      },
     ],
   },
   {
