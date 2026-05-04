@@ -23,6 +23,7 @@ import Cultural from "./pages/experiences/Cultural";
 import Pricing from "./pages/Pricing";
 import Book from "./pages/Book";
 import Menu from "./pages/Menu";
+import ConciergeGuide from "./pages/ConciergeGuide";
 
 
 const queryClient = new QueryClient();
