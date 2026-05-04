@@ -199,7 +199,7 @@ const HTML = `
       <div class="caption">Open Bar &amp; Deck Life</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/boat-sunset.jpg" alt="Pacific Sunset" class="square-image" />
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-sunset.jpg" alt="Ally Cat Pacific Sunset" class="square-image" />
       <div class="caption">Pacific Sunset Cruise</div>
     </div>
   </div>
