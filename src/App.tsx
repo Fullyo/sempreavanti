@@ -23,6 +23,7 @@ import Cultural from "./pages/experiences/Cultural";
 import Pricing from "./pages/Pricing";
 import Book from "./pages/Book";
 import Menu from "./pages/Menu";
+import ConciergeGuide from "./pages/ConciergeGuide";
 
 
 const queryClient = new QueryClient();
@@ -55,6 +56,7 @@ const App = () => (
           <Route path="/pricing" element={<Navigate to="/guide" replace />} />
           <Route path="/book" element={<Book />} />
           <Route path="/menu" element={<Menu />} />
+          <Route path="/concierge-guide" element={<ConciergeGuide />} />
           
           <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
