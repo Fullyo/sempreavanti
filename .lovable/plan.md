@@ -1,32 +1,39 @@
+## Goal
 
+Rebuild the AI-generated HTML guide (1,394 lines, 60 referenced images) as a hidden React page on the site, using photos pulled from your connected Google Drive (`Villas Sempre Avanti` folder).
 
-## Plan: Logo Replacement + Navbar Fix on /guide
+## Steps
 
-### 1. Add logo assets to the project
+### 1. Pull images from Google Drive
+- Recursively list every file under `Villas Sempre Avanti` and all subfolders (`Photos`, `Activities / Upsell`, `UTV Rental`, `Logo`, `Videos`, etc.) via the Drive connector gateway.
+- Build a name index: lowercased filename → Drive file ID.
+- For each of the 60 referenced images (e.g. `atv-sq1.jpg`, `monkey-coastal-sunset.jpg`, `og-cover.jpg`), match by filename (with/without extension, fuzzy on hyphens/underscores).
 
-Copy both uploaded logo images into `src/assets/`:
-- `src/assets/logo-white.png` (for transparent navbar state + dark footer)
-- `src/assets/logo-black.png` (for scrolled/solid navbar state)
+### 2. Upload matched images to `site-assets`
+- Download each match from Drive (`/files/{id}?alt=media`) and upload to the existing public `site-assets` Supabase bucket under a new prefix `concierge-guide/`.
+- Record the new public URL for each one.
 
-### 2. Update Navbar (`src/components/layout/Navbar.tsx`)
+### 3. Handle misses with a labeled placeholder
+- For any image not found in Drive, generate a single solid-color SVG placeholder (e.g. magenta `#FF00FF`) with the missing filename rendered on top, upload it as `concierge-guide/_missing/{filename}.svg`, and use that.
+- At the end, output a clear list of every missing filename so you know exactly what to drop into Drive later.
 
-**Logo swap:** Replace the text `<Link>` ("Villas Sempre Avanti") with an `<img>` tag. Use the white logo when `!scrolled` and the black logo when `scrolled`. Size it for impact — roughly `h-10 md:h-12` (tall enough to be prominent within the 64-80px header).
+### 4. Build the hidden page
+- Create `src/pages/ConciergeGuide.tsx` containing the converted HTML/CSS as JSX (Tailwind-friendly where trivial; otherwise inline `<style>` for fidelity to the original design).
+- Rewrite all `images/xxx.jpg` references to the new `site-assets` public URLs.
+- Add route `/concierge-guide` in `src/App.tsx`.
 
-**Fix /guide visibility:** Add `/guide` to the `forceScrolled` logic alongside `/book`. This forces the solid white navbar on pages that don't have a dark hero image behind the header, making all menu items immediately readable.
+### 5. Keep it hidden
+- Do **not** add it to `Navbar`, `Footer`, or `sitemap.xml`.
+- Add `<meta name="robots" content="noindex,nofollow">` via a `<Helmet>` block on the page.
+- Only reachable by typing the URL directly.
 
-```
-const forceScrolled = location.pathname === "/book" || location.pathname === "/guide";
-```
+### 6. Deliverables back to you
+- The hidden URL: `/concierge-guide`
+- A list of any filenames that didn't match in Drive (rendered as magenta placeholders so they're obvious on the page).
 
-### 3. Update Footer (`src/components/layout/Footer.tsx`)
+## Technical notes
+- Drive connector is already linked; uses gateway at `connector-gateway.lovable.dev/google_drive/drive/v3` with `LOVABLE_API_KEY` + `GOOGLE_DRIVE_API_KEY`.
+- Storage target: existing public `site-assets` bucket (same place as current site photos) — no new bucket, no schema changes, no auth required.
+- No DB tables, no edge functions needed for this task — purely static asset import + one new React route.
 
-Replace the text `<h3>Villas Sempre Avanti</h3>` with the white logo image. Size it large for visual impact — roughly `h-14 md:h-16` — centered, maintaining the existing `text-center mb-12` wrapper structure.
-
-### 4. Update mobile menu brand (Navbar)
-
-The mobile menu doesn't show the brand name separately, so no changes needed there. The top-left logo already handles it.
-
----
-
-**Summary of changes:** 3 files touched (2 logo copies + Navbar.tsx + Footer.tsx). No structural or routing changes.
-
+Approve and I'll execute.
