@@ -450,14 +450,14 @@ const HTML = `
     <span class="gold-badge">MiChula Tours</span>
   </div>
   <p class="description">Fly through the jungle canopy on 13 exhilarating zip lines at Rancho Mi Chula, just minutes from Sayulita. Suitable for all experience levels, with certified guides and full safety briefings.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/_missing/zipline-hero.jpg.svg" alt="Zipline" class="hero-image" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/zipline-hero.jpg" alt="Zipline" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/_missing/zipline-sq1.jpg.svg" alt="13 Lines Through the Jungle" class="square-image" />
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/zipline-sq1.jpg" alt="13 Lines Through the Jungle" class="square-image" />
       <div class="caption">13 Lines Through the Jungle</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/_missing/zipline-sq2.jpg.svg" alt="Certified Guides" class="square-image" />
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/zipline-sq2.jpg" alt="Certified Guides" class="square-image" />
       <div class="caption">Certified Guides &amp; Safety Equipment</div>
     </div>
   </div>
