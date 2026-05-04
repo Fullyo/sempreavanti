@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.guesty-availability]
 verify_jwt = false
+
+[functions.import-drive-assets]
+verify_jwt = false
