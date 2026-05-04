@@ -150,7 +150,7 @@ const HTML = `
 
   <div class="utv-grid">
     <div class="utv-card">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/canam-4seater.png" alt="Can-Am Defender at the villa" />
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/canam-4seater.jpg" alt="Can-Am Defender at the villa" />
       <div class="utv-card-info">
         <div class="utv-card-name">Can-Am Defender</div>
         <div class="utv-card-seats">⭐ Best for longer drives · 6 Passengers</div>
@@ -158,7 +158,7 @@ const HTML = `
       </div>
     </div>
     <div class="utv-card">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/polaris-6seater.png" alt="Polaris Ranger at the villa" />
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/polaris-6seater.jpg" alt="Polaris Ranger at the villa" />
       <div class="utv-card-info">
         <div class="utv-card-name">Polaris Ranger 570</div>
         <div class="utv-card-seats">⭐ Best for Sayulita · 6 Passengers</div>
