@@ -191,7 +191,7 @@ const HTML = `
     <span class="gold-badge">Up to 10 guests · from $20,000 MXN</span>
   </div>
   <p class="description">Sail Banderas Bay aboard the Ally Cat — a luxury 56 ft catamaran and the #1 guest favourite at Sempre Avanti. Open bar, fresh food prepared on board, snorkeling at Las Marietas Islands, boom netting and a breathtaking Pacific sunset. Choose your duration below.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-hero-v5.jpg" alt="Ally Cat Catamaran" class="hero-image no-crop" style="height:420px; object-position: center center;" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-hero-v5.jpg" alt="Ally Cat Catamaran" class="hero-image no-crop" />
   <div class="image-row">
     <div class="square-image-container">
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-deck.jpg" alt="Catamaran Deck Party" class="square-image" />
@@ -1076,7 +1076,7 @@ const STYLES = `
 
     /* ─── Images ────────────────────────────────────────────────── */
     .hero-image { width:100%; height:220px; object-fit:cover; border-radius:8px; margin:16px 0; display:block; }
-    .hero-image.no-crop { object-fit:contain; background:#0b1f33; }
+    .hero-image.no-crop { height:auto; object-fit:contain; background:transparent; }
     .hero-image.tall { height:500px; }
     .image-row { display:flex; gap:16px; margin-bottom:16px; }
     .square-image-container { width:calc(50% - 8px); }
@@ -1217,8 +1217,10 @@ const STYLES = `
       }
 
       .hero-image.no-crop {
+        height: auto !important;
+        max-height: none !important;
         object-fit: contain !important;
-        background: #0b1f33 !important;
+        background: transparent !important;
       }
 
       .hero-image.tall {
