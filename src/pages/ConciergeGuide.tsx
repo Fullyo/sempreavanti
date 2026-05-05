@@ -308,10 +308,10 @@ const HTML = `
     <span class="gold-badge">$10,000 MXN · 4 hours</span>
   </div>
   <p class="description">Head out onto the Pacific with an experienced captain and crew. The waters off Riviera Nayarit teem with mahi-mahi, tuna, snapper and more. Up to 4 guests, full equipment provided.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-charter-boat.jpg" alt="Fishing Charter Boat" class="hero-image" style="height:280px; object-position: center center;" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-deepsea-v2.jpg" alt="Fishing Charter Boat" class="hero-image" style="height:280px; object-position: center center;" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-deepsea-v2.jpg" alt="Deep Sea Fishing" class="square-image" />
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-charter-boat.jpg" alt="Charter Boat" class="square-image" />
       <div class="caption">Deep Sea Pacific Fishing</div>
     </div>
     <div class="square-image-container">
@@ -456,7 +456,7 @@ const HTML = `
       <div class="caption">13 Lines Through the Jungle</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/zipline-sq2.jpg" alt="Certified Guides" class="square-image" />
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/zipline-sq2-v2.jpg" alt="Certified Guides" class="square-image" />
       <div class="caption">Certified Guides &amp; Safety Equipment</div>
     </div>
   </div>
@@ -491,6 +491,10 @@ const HTML = `
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq2-v2.jpeg" alt="RZR 4-Seater" class="square-image" />
       <div class="caption">RZR — Up to 4 Passengers</div>
     </div>
+    <div class="square-image-container">
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq3-v2.jpg" alt="Mountain Trails" class="square-image" />
+      <div class="caption">Hidden Mountain Paths</div>
+    </div>
   </div>
   <ul class="inclusions-list">
     <li>ATV Single: $119 USD</li>
@@ -513,7 +517,7 @@ const HTML = `
     <span class="gold-badge">MiChula Tours · $76 USD/person</span>
   </div>
   <p class="description">Explore Sayulita on horseback through lush jungle trails and down to the beach at sunset. Suitable for all experience levels. Antonio, Jorge and Miguel lead unforgettable rides with a dedicated photography team.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-hero-v3.jpg" alt="Horseback Riding" class="hero-image" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-hero-v4.jpg" alt="Horseback Riding" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-sq1-v2.jpg" alt="Jungle Trails" class="square-image" />
@@ -611,15 +615,15 @@ const HTML = `
     <span class="gold-badge">from $1,200 MXN / session</span>
   </div>
   <p class="description">Begin your morning with a private yoga session on the terrace or pool deck, led by a certified instructor from Sayulita. All styles available — Vinyasa, Yin, Restorative, or a custom session tailored to your group.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-hero-v2.jpg" alt="Yoga" class="hero-image" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-villa-terrace.jpg" alt="Yoga" class="hero-image" />
   <div class="image-row">
+    <div class="square-image-container">
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-hero-v2.jpg" alt="Private Yoga Session" class="square-image" />
+      <div class="caption">Private Yoga Session</div>
+    </div>
     <div class="square-image-container">
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-beach-class.jpg" alt="Beach Yoga Class" class="square-image" />
       <div class="caption">Beach Yoga — Sayulita Cove</div>
-    </div>
-    <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-villa-terrace.jpg" alt="Yoga on Villa Terrace" class="square-image" />
-      <div class="caption">Yoga on the Villa Terrace</div>
     </div>
   </div>
   <ul class="inclusions-list">
@@ -644,11 +648,11 @@ const HTML = `
     <span class="gold-badge">from $1,500 MXN / treatment</span>
   </div>
   <p class="description">Indulge in a professional massage treatment on your private terrace or in the comfort of your villa. Our therapists bring everything needed for a world-class spa experience — without leaving the property.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/massage-villa-outdoor.jpg" alt="In-House Massage" class="hero-image" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/massage.jpg" alt="In-House Massage" class="hero-image" />
   <div class="image-row">
     <div class="image-frame">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/massage.jpg" alt="Massage Treatment" class="square-image" />
-      <div class="caption">Terrace Massage Treatments</div>
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/massage-villa-outdoor.jpg" alt="Outdoor Villa Massage" class="square-image" />
+      <div class="caption">Outdoor Villa Massage</div>
     </div>
     <div class="image-frame">
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/massage-hot-stone.jpg" alt="Hot Stone Therapy" class="square-image" />
