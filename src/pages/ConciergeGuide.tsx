@@ -823,7 +823,7 @@ const HTML = `
 ══════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">DINING IN SAYULITA</div>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/dining-sayulita.jpg" alt="Sayulita Dining" class="hero-image" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/dining-sayulita-vibrant.jpg" alt="Sayulita Dining" class="hero-image" />
 
   <div class="restaurant-card">
     <strong>La Rústica <span class="tag">Italian-Mexican · Upscale</span></strong>
