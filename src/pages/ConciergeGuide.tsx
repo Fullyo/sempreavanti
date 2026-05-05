@@ -513,7 +513,7 @@ const HTML = `
     <span class="gold-badge">MiChula Tours · $76 USD/person</span>
   </div>
   <p class="description">Explore Sayulita on horseback through lush jungle trails and down to the beach at sunset. Suitable for all experience levels. Antonio, Jorge and Miguel lead unforgettable rides with a dedicated photography team.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-hero-v2.jpg" alt="Horseback Riding" class="hero-image" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-hero-v3.jpg" alt="Horseback Riding" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-sq1-v2.jpg" alt="Jungle Trails" class="square-image" />
@@ -545,14 +545,13 @@ const HTML = `
     <span class="gold-badge">3.5 hrs · MiChula Tours</span>
   </div>
   <p class="description">Trek to the summit of Cerro del Mono (Monkey Mountain) for panoramic views of Banderas Bay from Punta Mita to Sayulita. An intermediate–advanced hike through dense tropical jungle with abundant wildlife.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-view-flowers.jpg" alt="Monkey Mountain View" class="hero-image" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-summit-girl.jpg" alt="Monkey Mountain Summit" class="hero-image" />
   <div class="image-row">
-    <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-summit-girl.jpg" alt="Summit View" class="square-image" />
-      <div class="caption">Panoramic Bay Views from the Summit</div>
-    </div>
-    <div class="square-image-container">
+    <div class="image-frame">
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-coastal-sunset.jpg" alt="Coastal Sunset" class="square-image" />
+    </div>
+    <div class="image-frame">
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-view-flowers.jpg" alt="Mountain View" class="square-image" />
       <div class="caption">Jungle Coast at Golden Hour</div>
     </div>
   </div>
