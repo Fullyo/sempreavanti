@@ -309,15 +309,15 @@ const HTML = `
     <span class="gold-badge">$10,000 MXN · 4 hours</span>
   </div>
   <p class="description">Head out onto the Pacific with an experienced captain and crew. The waters off Riviera Nayarit teem with mahi-mahi, tuna, snapper and more. Up to 4 guests, full equipment provided.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/seawolf-fishing.jpg" alt="Seawolf Fishing Charter" class="hero-image" style="height:280px; object-position: center center;" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-charter-boat.jpg" alt="Fishing Charter Boat" class="hero-image" style="height:280px; object-position: center center;" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/boat-fishing-charter.jpg" alt="Fishing Charter" class="square-image" />
-      <div class="caption">The Seawolf — Fully Rigged</div>
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-deepsea.jpg" alt="Deep Sea Fishing" class="square-image" />
+      <div class="caption">Deep Sea Pacific Fishing</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing.jpg" alt="Catch of the Day" class="square-image" />
-      <div class="caption">Pacific Sport Fishing</div>
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-catch.jpg" alt="Catch of the Day" class="square-image" />
+      <div class="caption">Catch of the Day</div>
     </div>
   </div>
   <ul class="inclusions-list">
