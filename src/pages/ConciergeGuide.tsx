@@ -14,8 +14,7 @@ const HTML = `
   <div class="cover-footer">villassempreavanti.com</div>
 </div>
 
-<!-- Hidden print button, revealed by clicking cover -->
-<button id="print-btn">🖨 Print / Save as PDF</button>
+<button id="print-btn" type="button">Print / Save as PDF</button>
 
 
 
@@ -1346,7 +1345,13 @@ const ConciergeGuide = () => {
     robots.name = "robots";
     robots.content = "noindex,nofollow";
     document.head.appendChild(robots);
+
+    const printButton = document.getElementById("print-btn");
+    const handlePrint = () => window.print();
+    printButton?.addEventListener("click", handlePrint);
+
     return () => {
+      printButton?.removeEventListener("click", handlePrint);
       robots.remove();
     };
   }, []);
