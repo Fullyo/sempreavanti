@@ -1314,7 +1314,7 @@ const STYLES = `
 
     /* Print button */
     #print-btn {
-      display: none;
+      display: block;
       position: fixed;
       bottom: 32px;
       right: 32px;
