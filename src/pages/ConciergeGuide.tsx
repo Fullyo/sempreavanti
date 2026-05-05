@@ -481,14 +481,14 @@ const HTML = `
     <span class="gold-badge">MiChula Tours</span>
   </div>
   <p class="description">Tear through jungle trails, sandy beaches and hidden mountain paths on an ATV or RZR. Choose solo or double, with departures at 9 AM, 12 PM and 3 PM daily. Maximum 7 vehicles per group.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/rzr-hero.jpg" alt="RZR Adventure" class="hero-image" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-hero-v2.jpeg" alt="RZR Adventure" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq1.jpg" alt="ATV Trails" class="square-image" />
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq1-v2.jpeg" alt="ATV Trails" class="square-image" />
       <div class="caption">Jungle &amp; Beach Trails</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq2.jpg" alt="RZR 4-Seater" class="square-image" />
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq2-v2.jpeg" alt="RZR 4-Seater" class="square-image" />
       <div class="caption">RZR — Up to 4 Passengers</div>
     </div>
   </div>
