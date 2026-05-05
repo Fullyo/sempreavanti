@@ -611,7 +611,7 @@ const HTML = `
     <span class="gold-badge">from $1,200 MXN / session</span>
   </div>
   <p class="description">Begin your morning with a private yoga session on the terrace or pool deck, led by a certified instructor from Sayulita. All styles available — Vinyasa, Yin, Restorative, or a custom session tailored to your group.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga.png" alt="Yoga" class="hero-image" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-hero-v2.jpg" alt="Yoga" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-beach-class.jpg" alt="Beach Yoga Class" class="square-image" />
