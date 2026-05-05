@@ -234,7 +234,7 @@ const HTML = `
     <span class="gold-badge">Up to 20 guests · from $32,500 MXN</span>
   </div>
   <p class="description">For larger groups, the Fat Cat is a two-deck party catamaran built for big celebrations — bachelorette parties, corporate groups, family reunions. Same open bar and fresh food experience as Ally Cat, with a water slide, floating mats, paddleboards and space for up to 20 guests. Also offers a dedicated Monday whale watching tour.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fatcat-party.jpg" alt="Fat Cat Party Catamaran" class="hero-image" style="height:220px; object-position: center top;" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fatcat-hero.jpg" alt="Fat Cat Party Catamaran" class="hero-image" style="height:220px; object-position: center center;" />
   <div class="image-row">
     <div class="square-image-container">
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fatcat-aerial.jpg" alt="Fat Cat Aerial" class="square-image" />
