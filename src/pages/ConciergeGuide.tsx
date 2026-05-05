@@ -819,10 +819,6 @@ const HTML = `
   <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/dining-sayulita-v2.jpg" alt="Sayulita Dining" class="hero-image" />
 
   <div class="restaurant-card">
-    <strong>La Rústica <span class="tag">Italian-Mexican · Upscale</span></strong>
-    <p>Modern eatery on Av. Revolución with Italian-inspired dishes, house-made pasta, wood-fired flavours and creative cocktails. One of Sayulita's most polished dining experiences.</p>
-  </div>
-  <div class="restaurant-card">
     <strong>El Itacate <span class="tag">Mexican · All Day</span></strong>
     <p>A Sayulita institution on Calle José Mariscal. Famous for tacos al pastor, huevos rancheros and chilaquiles. Busy from breakfast through lunch — arrive early or expect a wait.</p>
   </div>
@@ -847,10 +843,10 @@ const HTML = `
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
-     PAGE 25 · DINING — PUNTA MITA & SAN PANCHO
+     PAGE 25 · DINING — PUNTA MITA
 ══════════════════════════════════════════════════════════════ -->
 <div class="page">
-  <div class="section-header">DINING OUT — PUNTA MITA &amp; SAN PANCHO</div>
+  <div class="section-header">DINING OUT — PUNTA MITA</div>
   <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/diner.jpg" alt="Punta Mita Dining" class="hero-image" />
 
   <h3 style="color:#1a4a52;font-family:'Montserrat',sans-serif;font-size:.85rem;text-transform:uppercase;letter-spacing:1px;margin:8px 0 10px;padding-bottom:6px;border-bottom:2px solid #f0b429;">Punta Mita <span style="font-weight:300;color:#666">· 5 min from villa</span></h3>
@@ -860,25 +856,11 @@ const HTML = `
   </div>
   <div class="restaurant-card">
     <strong>Mita'z Pizza <span class="tag">Pizza · Casual</span></strong>
-    <p>A reliable, beloved pizza spot on Calle Marlín 122, Punta Mita. Thin-crust pies, cold drinks and a relaxed setting. The perfect easy dinner after a day on the water.</p>
+    <p>A reliable, beloved pizza spot in Punta de Mita. Thin-crust pies, cold drinks and a relaxed setting. The perfect easy dinner after a day on the water.</p>
   </div>
   <div class="restaurant-card">
     <strong>Four Seasons / St. Regis <span class="tag">Fine Dining · Reservation Required</span></strong>
     <p>World-class dining with dramatic Banderas Bay views. Smart-casual dress code; reservations essential. Worth every peso for a truly special evening out.</p>
-  </div>
-
-  <h3 style="color:#1a4a52;font-family:'Montserrat',sans-serif;font-size:.85rem;text-transform:uppercase;letter-spacing:1px;margin:16px 0 10px;padding-bottom:6px;border-bottom:2px solid #f0b429;">San Pancho <span style="font-weight:300;color:#666">· 15 min from villa</span></h3>
-  <div class="restaurant-card">
-    <strong>Bistro Orgánico <span class="tag">Organic · Garden Dining</span></strong>
-    <p>Beloved restaurant at Hotel Cielo Rojo serving creative, organic cuisine in a stunning jungle garden. Consistently rated one of the best dining experiences in all of Riviera Nayarit.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>San Pan Beach Bistro <span class="tag">Beachfront · Casual</span></strong>
-    <p>Laid-back beachfront spot on Av. Tercer Mundo 11A serving fresh Mexican bites, ceviche and cocktails with your feet in the sand. The ideal lazy San Pancho afternoon.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>Su Pancha Madre <span class="tag">Mexican · Tacos · Local Favourite</span></strong>
-    <p>A beloved San Pancho staple for authentic Mexican street food — standout tacos, tostadas and daily specials at honest prices. Unpretentious, delicious and always packed with locals.</p>
   </div>
 
   <div class="page-num">25</div>
