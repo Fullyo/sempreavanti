@@ -311,11 +311,11 @@ const HTML = `
   <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-charter-boat.jpg" alt="Fishing Charter Boat" class="hero-image" style="height:280px; object-position: center center;" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-deepsea.jpg" alt="Deep Sea Fishing" class="square-image" />
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-deepsea-v2.jpg" alt="Deep Sea Fishing" class="square-image" />
       <div class="caption">Deep Sea Pacific Fishing</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-catch.jpg" alt="Catch of the Day" class="square-image" />
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-catch-v2.jpg" alt="Catch of the Day" class="square-image" />
       <div class="caption">Catch of the Day</div>
     </div>
   </div>
