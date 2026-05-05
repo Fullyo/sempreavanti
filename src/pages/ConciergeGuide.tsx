@@ -277,15 +277,15 @@ const HTML = `
     <span class="gold-badge">3h · $9,500 MXN | 4h · $11,500 MXN</span>
   </div>
   <p class="description">Charter your own private vessel for a bespoke day on the water. Snorkel pristine reefs, spot dolphins and seasonal whales, or simply cruise the stunning Riviera Nayarit coastline. Up to 7 guests.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-marietas.jpg" alt="Private Boat Tour" class="hero-image" style="height:280px; object-position: center center;" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-hero.jpg" alt="Private Boat Tour" class="hero-image" style="height:280px; object-position: center center;" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/boat-aerial-wake.jpg" alt="Full Speed Ahead" class="square-image" />
-      <div class="caption">Full Speed on the Pacific</div>
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-marietas-islands.jpg" alt="Marietas Islands" class="square-image" />
+      <div class="caption">Marietas Islands — UNESCO Reserve</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/seawolf-fishing.jpg" alt="Charter Boat" class="square-image" />
-      <div class="caption">Your Private Charter Vessel</div>
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-snorkel.jpg" alt="Snorkeling" class="square-image" />
+      <div class="caption">Snorkel Playa de los Muertos</div>
     </div>
   </div>
   <ul class="inclusions-list">
