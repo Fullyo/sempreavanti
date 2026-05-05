@@ -648,17 +648,7 @@ const HTML = `
     <span class="gold-badge">from $1,500 MXN / treatment</span>
   </div>
   <p class="description">Indulge in a professional massage treatment on your private terrace or in the comfort of your villa. Our therapists bring everything needed for a world-class spa experience — without leaving the property.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/massage.jpg" alt="In-House Massage" class="hero-image" />
-  <div class="image-row">
-    <div class="image-frame">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/massage-villa-outdoor.jpg" alt="Outdoor Villa Massage" class="square-image" />
-      <div class="caption">Outdoor Villa Massage</div>
-    </div>
-    <div class="image-frame">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/massage-hot-stone.jpg" alt="Hot Stone Therapy" class="square-image" />
-      <div class="caption">Villa Terrace — Poolside Treatments</div>
-    </div>
-  </div>
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/massage-villa-outdoor.jpg" alt="Outdoor Villa Massage" class="hero-image" />
   <ul class="inclusions-list">
     <li>Swedish &amp; deep tissue</li>
     <li>Hot stone therapy</li>
