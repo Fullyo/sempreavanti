@@ -513,7 +513,7 @@ const HTML = `
     <span class="gold-badge">MiChula Tours · $76 USD/person</span>
   </div>
   <p class="description">Explore Sayulita on horseback through lush jungle trails and down to the beach at sunset. Suitable for all experience levels. Antonio, Jorge and Miguel lead unforgettable rides with a dedicated photography team.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-hero.jpg" alt="Horseback Riding" class="hero-image" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-hero-v2.jpg" alt="Horseback Riding" class="hero-image" />`}<div dangerouslySetInnerHTML={{__html:`
   <div class="image-row">
     <div class="square-image-container">
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-hero.jpg" alt="Jungle Trails" class="square-image" />
