@@ -692,7 +692,7 @@ const HTML = `
     <span class="gold-badge">from $2,500 MXN · 3 hours</span>
   </div>
   <p class="description">Elevate your evening with a private bartender who brings the party to you. Classic cocktails, margaritas, mezcal tastings and custom creations — served poolside or on the terrace as the Pacific sun sets. 3-hour experience.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/bartender-sunset-group.jpg" alt="Sunset Bartender" class="hero-image" />
+  
   <div class="image-row">
     <div class="square-image-container">
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/bartender-cocktail-pour.jpg" alt="Cocktail Pour" class="square-image" />
@@ -724,10 +724,10 @@ const HTML = `
     <span class="gold-badge">$1,200 MXN / person · Min 4</span>
   </div>
   <p class="description">Taste your way through Sayulita's best taco spots with a local guide who knows every hidden gem. Visit 5 hand-picked taco stands and restaurants, sampling authentic flavours from al pastor to Baja shrimp — washed down with cold mezcal shots.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/taco-stand.jpg" alt="Sayulita Taco Stand" class="hero-image" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/taco-board.jpg" alt="Taco Board" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/taco-board.jpg" alt="Taco Board" class="square-image" />
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/taco-stand.jpg" alt="Sayulita Taco Stand" class="square-image" />
       <div class="caption">Al Pastor, Baja Shrimp &amp; More</div>
     </div>
     <div class="square-image-container">
@@ -756,15 +756,15 @@ const HTML = `
     <span class="gold-badge">$1,500 MXN / person</span>
   </div>
   <p class="description">Step behind the scenes at Cachasol — Nayarit's most celebrated artisan tequila distillery set on a working agave farm just 10 minutes from the villa. A 90-minute farm-to-glass experience with a guided tasting of blanco, reposado and añejo.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cachasol-bar.jpg" alt="Cachasol Farm" class="hero-image" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cachasol-bottles.jpg" alt="Cachasol Tequila" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cachasol-dock.jpg" alt="Cachasol Farm Grounds" class="square-image" />
       <div class="caption">Cachasol Farm Grounds</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cachasol-bottles.jpg" alt="Cachasol Tequila" class="square-image" />
-      <div class="caption">Cachasol Blanco &amp; Epic Strength</div>
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cachasol-sq3-v2.jpg" alt="Cachasol Distillery" class="square-image" />
+      <div class="caption">Cachasol Distillery</div>
     </div>
   </div>
   <ul class="inclusions-list">
@@ -816,7 +816,7 @@ const HTML = `
 ══════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">DINING IN SAYULITA</div>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/dining-sayulita-vibrant.jpg" alt="Sayulita Dining" class="hero-image" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/dining-sayulita-v2.jpg" alt="Sayulita Dining" class="hero-image" />
 
   <div class="restaurant-card">
     <strong>La Rústica <span class="tag">Italian-Mexican · Upscale</span></strong>
