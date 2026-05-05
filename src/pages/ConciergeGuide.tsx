@@ -191,7 +191,7 @@ const HTML = `
     <span class="gold-badge">Up to 10 guests · from $20,000 MXN</span>
   </div>
   <p class="description">Sail Banderas Bay aboard the Ally Cat — a luxury 56 ft catamaran and the #1 guest favourite at Sempre Avanti. Open bar, fresh food prepared on board, snorkeling at Las Marietas Islands, boom netting and a breathtaking Pacific sunset. Choose your duration below.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-hero-v5.jpg" alt="Ally Cat Catamaran" class="hero-image" style="height:280px; object-fit: cover; object-position: center center;" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-hero-v5.jpg" alt="Ally Cat Catamaran" class="hero-image" style="height:420px; object-fit: contain; object-position: center center; background:#0b1f33;" />
   <div class="image-row">
     <div class="square-image-container">
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-deck.jpg" alt="Catamaran Deck Party" class="square-image" />
@@ -347,7 +347,7 @@ const HTML = `
       <div class="caption">Inshore Reef Spearfishing</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/spearfishing-deepwater-v2.jpg" alt="Deep Water Expedition" class="square-image" />
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/spearfishing-deepwater-v3.png" alt="Deep Water Expedition" class="square-image" />
       <div class="caption">Deep Water Expedition</div>
     </div>
   </div>
@@ -407,7 +407,7 @@ const HTML = `
   <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/surf-sayulita.jpg" alt="Victor Surf" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/surf-victor.jpg" alt="Sayulita Main Break" class="square-image" />
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/surf-victor-v4.jpeg" alt="Victor with surfboard on Sayulita Beach" class="square-image" />
       <div class="caption">Sayulita Main Break</div>
     </div>
     <div class="square-image-container">

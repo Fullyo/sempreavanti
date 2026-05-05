@@ -18,7 +18,7 @@ import surfChillo from "@/assets/surf-chillo.jpg";
 import surfPuntamita from "@/assets/surf-puntamita.jpeg";
 import surfVary1 from "@/assets/surf-vary1.jpeg";
 import surfVary2 from "@/assets/surf-vary2.jpeg";
-import surfVary3 from "@/assets/surf-vary3-3.jpeg";
+import surfVary3 from "@/assets/surf-vary3-4.jpeg";
 import surfVary4 from "@/assets/surf-vary4-2.jpeg";
 
 const { prev, next } = getPageNav(experiencePages, "/experiences/surfing");
