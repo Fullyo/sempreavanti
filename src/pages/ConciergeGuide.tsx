@@ -347,7 +347,7 @@ const HTML = `
       <div class="caption">Inshore Reef Spearfishing</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing.jpg" alt="Catch of the Day" class="square-image" />
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/spearfishing-deepwater-v2.jpg" alt="Deep Water Expedition" class="square-image" />
       <div class="caption">Deep Water Expedition</div>
     </div>
   </div>
