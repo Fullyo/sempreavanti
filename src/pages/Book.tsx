@@ -168,10 +168,12 @@ export default function Book() {
 
   const handleBookNow = () => {
     if (!checkIn || !checkOut) return;
+    // Always send minOccupancy=1 — Guesty's checkout breaks for higher values
+    // when no extra-guest rate is configured. Guest count is collected in our inquiry flow.
     const params = new URLSearchParams({
       checkIn: format(checkIn, "yyyy-MM-dd"),
       checkOut: format(checkOut, "yyyy-MM-dd"),
-      minOccupancy: String(guests),
+      minOccupancy: "1",
     });
     window.open(`${CHECKOUT_BASE}?${params.toString()}`, "_blank", "noopener,noreferrer");
   };
