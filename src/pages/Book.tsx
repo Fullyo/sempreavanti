@@ -312,33 +312,64 @@ export default function Book() {
                 </div>
               </div>
 
-              {/* Selected Dates */}
-              <div className="mb-6 space-y-3">
-                <div>
-                  <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-1 block">Check-in</label>
-                  <div className="flex items-center gap-2 font-sans">
-                    <CalendarDays className="w-4 h-4 text-golden" />
-                    <span className={checkIn ? "text-foreground" : "text-muted-foreground"}>
-                      {checkIn ? format(checkIn, "MMM d, yyyy") : "Select date"}
-                    </span>
+              {/* Selected Dates - clickable popover with calendar */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className="w-full mb-4 grid grid-cols-2 gap-2 text-left">
+                    <div className="border border-border rounded-lg p-3 hover:border-golden transition-colors">
+                      <label className="text-[10px] font-sans uppercase tracking-widest text-muted-foreground mb-1 block">Check-in</label>
+                      <div className="flex items-center gap-2 font-sans text-sm">
+                        <CalendarDays className="w-4 h-4 text-golden flex-shrink-0" />
+                        <span className={checkIn ? "text-foreground" : "text-muted-foreground"}>
+                          {checkIn ? format(checkIn, "MMM d, yyyy") : "Add date"}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="border border-border rounded-lg p-3 hover:border-golden transition-colors">
+                      <label className="text-[10px] font-sans uppercase tracking-widest text-muted-foreground mb-1 block">Check-out</label>
+                      <div className="flex items-center gap-2 font-sans text-sm">
+                        <CalendarDays className="w-4 h-4 text-golden flex-shrink-0" />
+                        <span className={checkOut ? "text-foreground" : "text-muted-foreground"}>
+                          {checkOut ? format(checkOut, "MMM d, yyyy") : "Add date"}
+                        </span>
+                      </div>
+                    </div>
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[340px] sm:w-[680px] p-4 bg-card z-50" align="end">
+                  <div className="flex items-center justify-between mb-4">
+                    <button onClick={prevMonth} disabled={isBefore(addMonths(baseMonth, -1), startOfMonth(today))} className="w-8 h-8 flex items-center justify-center rounded-full border border-border hover:bg-muted disabled:opacity-30" aria-label="Previous month">
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <div className="flex gap-8">
+                      <h3 className="font-serif text-base font-light">{format(baseMonth, "MMMM yyyy")}</h3>
+                      <h3 className="font-serif text-base font-light hidden sm:block">{format(addMonths(baseMonth, 1), "MMMM yyyy")}</h3>
+                    </div>
+                    <button onClick={nextMonth} className="w-8 h-8 flex items-center justify-center rounded-full border border-border hover:bg-muted" aria-label="Next month">
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
                   </div>
-                </div>
-                <div>
-                  <label className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-1 block">Check-out</label>
-                  <div className="flex items-center gap-2 font-sans">
-                    <CalendarDays className="w-4 h-4 text-golden" />
-                    <span className={checkOut ? "text-foreground" : "text-muted-foreground"}>
-                      {checkOut ? format(checkOut, "MMM d, yyyy") : "Select date"}
-                    </span>
-                  </div>
-                </div>
-                {nights > 0 && (
-                  <p className="text-sm font-sans text-muted-foreground">
-                    {nights} night{nights !== 1 ? "s" : ""}
-                    {nights < minNights && <span className="text-destructive ml-1">(minimum {minNights} nights from this date)</span>}
-                  </p>
-                )}
-              </div>
+                  {loadingCalendar ? (
+                    <div className="flex items-center justify-center py-12">
+                      <Loader2 className="w-6 h-6 animate-spin text-golden" />
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                      <MonthGrid month={baseMonth} blockedDates={blockedDates} today={today} checkIn={checkIn} checkOut={checkOut} isInRange={isInRange} onDayClick={handleDayClick} />
+                      <div className="hidden sm:block">
+                        <MonthGrid month={addMonths(baseMonth, 1)} blockedDates={blockedDates} today={today} checkIn={checkIn} checkOut={checkOut} isInRange={isInRange} onDayClick={handleDayClick} />
+                      </div>
+                    </div>
+                  )}
+                </PopoverContent>
+              </Popover>
+
+              {nights > 0 && (
+                <p className="text-sm font-sans text-muted-foreground mb-4">
+                  {nights} night{nights !== 1 ? "s" : ""}
+                  {nights < minNights && <span className="text-destructive ml-1">(minimum {minNights} nights from this date)</span>}
+                </p>
+              )}
 
               {loadingQuote && (
                 <div className="flex items-center justify-center gap-2 py-4 text-muted-foreground">
