@@ -10,6 +10,7 @@ import PropertyOverview from "@/components/book/PropertyOverview";
 import PropertyDescription from "@/components/book/PropertyDescription";
 import AmenitiesGrid from "@/components/book/AmenitiesGrid";
 import AvailableServices from "@/components/book/AvailableServices";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const LISTING_ID = "697bcfcf3f5e990014fbc4dd";
 const CHECKOUT_BASE = `https://villassempreavanti.guestybookings.com/en/properties/${LISTING_ID}/checkout`;
