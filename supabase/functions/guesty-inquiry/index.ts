@@ -289,6 +289,33 @@ serve(async (req) => {
       console.error("Guesty push failed (inquiry saved to database):", guestyErr);
     }
 
+    // Step 3: Send email notification to villa owner via Lovable Email
+    try {
+      const { error: emailErr } = await supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "inquiry-notification",
+          recipientEmail: "villassempreavanti@gmail.com",
+          idempotencyKey: `inquiry-notify-${inquiry.id}`,
+          templateData: {
+            inquiryType: "Villa Stay",
+            firstName,
+            lastName,
+            email,
+            phone,
+            checkIn,
+            checkOut,
+            groupSize,
+            selectedActivities,
+            message,
+            source: "villassempreavanti.com",
+          },
+        },
+      });
+      if (emailErr) console.error("Email notification failed:", emailErr);
+    } catch (emailErr) {
+      console.error("Email notification threw:", emailErr);
+    }
+
     return new Response(JSON.stringify({ success: true, inquiryId: inquiry.id, guestyReservationId }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
