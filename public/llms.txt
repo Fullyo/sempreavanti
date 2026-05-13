@@ -1,0 +1,25 @@
+# Villas Sempre Avanti
+
+> Luxury beachfront villas in Patzcuarito, Mexico, with chef, wellness, weddings, events, and curated coastal experiences.
+
+Villas Sempre Avanti is a private hospitality estate on a secluded beachfront near Sayulita, designed for villa stays, celebrations, wellness retreats, and elevated in-villa dining.
+
+## Pages
+
+- [Home](/): Overview of the estate, villas, service style, and beachfront setting.
+- [The Villas](/villas): Villa Luisa and Villa Pietro, bedrooms, amenities, and guest capacity.
+- [Private Chef](/chef): In-villa dining, signature rituals, and culinary service.
+- [Wellness](/wellness): Yoga, massage, fitness, and restorative beachfront experiences.
+- [Staff](/staff): The hospitality team supporting each stay.
+- [Surfing](/experiences/surfing): Surf lessons, breaks, and guided ocean time.
+- [Boats](/experiences/boats): Boat days, snorkeling, and coastal excursions.
+- [Golf](/experiences/golf): Golf access and nearby course information.
+- [Ocean Experiences](/experiences/ocean): Water-based activities and coastal adventures.
+- [Land Experiences](/experiences/land): UTVs, hiking, and local exploration.
+- [Cultural Experiences](/experiences/cultural): Art, markets, food, and regional culture.
+- [Weddings](/weddings): Beachfront wedding setting and celebration support.
+- [Private Events](/events): Milestone events, retreats, and hosted gatherings.
+- [Location](/location): Patzcuarito location, arrival logistics, nearby towns, and maps.
+- [Book](/book): Availability and booking inquiry flow.
+- [Guest Guide](/guide): Guest-facing guide to services, rates, and house details.
+- [Menu](/menu): Gourmet menu information for in-villa dining.
