@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 
 interface EventInquiryFormProps {
@@ -26,7 +27,28 @@ export default function EventInquiryForm({ type }: EventInquiryFormProps) {
     e.preventDefault();
     setLoading(true);
     try {
-      // TODO: Connect to inquiry API
+      const [firstName, ...rest] = form.name.trim().split(/\s+/);
+      const lastName = rest.join(" ");
+      const { error } = await supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "inquiry-notification",
+          recipientEmail: "villassempreavanti@gmail.com",
+          idempotencyKey: `${type}-${form.email}-${Date.now()}`,
+          templateData: {
+            inquiryType: type === "wedding" ? "Wedding" : "Private Event",
+            firstName,
+            lastName,
+            email: form.email,
+            phone: form.phone,
+            preferredDates: form.dates,
+            guestCount: form.guestCount,
+            eventType: form.eventType,
+            message: form.message,
+            source: type === "wedding" ? "Weddings page" : "Private Events page",
+          },
+        },
+      });
+      if (error) throw error;
       toast({
         title: "Inquiry Sent",
         description: "Thank you! Our events team will be in touch within 24 hours.",

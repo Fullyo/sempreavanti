@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function Contact() {
   const { toast } = useToast();
@@ -26,7 +27,26 @@ export default function Contact() {
     setLoading(true);
 
     try {
-      // TODO: Connect to Guesty inquiry API via edge function
+      const { error } = await supabase.functions.invoke("send-transactional-email", {
+        body: {
+          templateName: "inquiry-notification",
+          recipientEmail: "villassempreavanti@gmail.com",
+          idempotencyKey: `contact-${form.email}-${Date.now()}`,
+          templateData: {
+            inquiryType: "Contact",
+            firstName: form.firstName,
+            lastName: form.lastName,
+            email: form.email,
+            phone: form.phone,
+            preferredDates: form.dates,
+            groupSize: form.groupSize,
+            occasion: form.occasion,
+            message: form.message,
+            source: "Contact page",
+          },
+        },
+      });
+      if (error) throw error;
       toast({
         title: "Inquiry Sent",
         description: "Thank you! We'll be in touch shortly to begin planning your stay.",
