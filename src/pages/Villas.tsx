@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import SEO from "@/components/SEO";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArrows";
@@ -87,6 +88,7 @@ export default function Villas() {
 
   return (
     <Layout>
+      <SEO title="The Villas — Villa Luisa & Villa Pietro | Sempre Avanti" description="Two five-bedroom beachfront villas sleeping 14. Pool, ocean views, full staff, and direct access to a secluded beach." path="/villas" />
       {/* Hero */}
       <section className="relative h-[60dvh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <img src={villaHero} alt="The Villas" className="absolute inset-0 w-full h-full object-cover" />

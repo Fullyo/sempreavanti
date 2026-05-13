@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import SEO from "@/components/SEO";
 import InquiryDialog from "@/components/InquiryDialog";
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
@@ -88,6 +89,7 @@ export default function Index() {
 
   return (
     <Layout>
+      <SEO title="Villas Sempre Avanti — Beachfront Villas, Riviera Nayarit" description="Two luxury beachfront villas on Mexico's Riviera Nayarit. Five bedrooms, pool, private chef, and full concierge staff." path="/" />
       <HeroSection listings={listings} />
 
       {/* Estate Introduction — Casa Tara style two-column */}

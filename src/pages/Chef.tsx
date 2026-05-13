@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import SEO from "@/components/SEO";
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
@@ -84,6 +85,7 @@ const menuCategories = [
 export default function Chef() {
   return (
     <Layout>
+      <SEO title="Private Chef & In-Villa Dining | Villas Sempre Avanti" description="Daily breakfast, lunch, and dinner from your in-villa chef. Pizza nights, ceviche bars, and the Sunset Margarita Ritual." path="/chef" />
       {/* Hero */}
       <section className="relative h-[60dvh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <img src={heroImg} alt="Chef Experience" className="absolute inset-0 w-full h-full object-cover" />
