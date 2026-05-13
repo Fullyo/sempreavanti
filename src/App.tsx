@@ -24,6 +24,7 @@ import Pricing from "./pages/Pricing";
 import Book from "./pages/Book";
 import Menu from "./pages/Menu";
 import ConciergeGuide from "./pages/ConciergeGuide";
+import Unsubscribe from "./pages/Unsubscribe";
 
 
 const queryClient = new QueryClient();
@@ -59,6 +60,7 @@ const App = () => (
           <Route path="/concierge-guide" element={<ConciergeGuide />} />
           
           <Route path="/contact" element={<Contact />} />
+          <Route path="/unsubscribe" element={<Unsubscribe />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
