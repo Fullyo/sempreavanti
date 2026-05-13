@@ -6,21 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-
-export default function Contact() {
-  const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    dates: "",
-    groupSize: "",
-    occasion: "",
-    message: "",
-  });
-
 import { supabase } from "@/integrations/supabase/client";
 
 export default function Contact() {
