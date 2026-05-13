@@ -15,6 +15,10 @@ export default function HeroSection({ listings }: HeroSectionProps) {
         <img
           src={heroVilla}
           alt="Villas Sempre Avanti beachfront"
+          width={1920}
+          height={1080}
+          fetchPriority="high"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover object-[center_60%]"
         />
       ) : (

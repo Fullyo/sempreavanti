@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import SEO from "@/components/SEO";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PageNavArrows, { experiencePages, getPageNav } from "@/components/PageNavArrows";
 import { motion } from "framer-motion";
@@ -33,6 +34,7 @@ const sailingFleet = [
 export default function Boats() {
   return (
     <Layout>
+      <SEO title="Boats & Sailing Charters | Sempre Avanti" description="Sunset sails, snorkeling charters, and private day trips from the bay — curated by our concierge." path="/experiences/boats" />
       {/* Hero */}
       <section className="relative h-[60dvh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <img src={boatFishingCharter} alt="Deep sea fishing on the Pacific" className="absolute inset-0 w-full h-full object-cover" />

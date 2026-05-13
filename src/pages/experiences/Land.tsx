@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import SEO from "@/components/SEO";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import PageNavArrows, { experiencePages, getPageNav } from "@/components/PageNavArrows";
@@ -26,6 +27,7 @@ const activities = [
 export default function Land() {
   return (
     <Layout>
+      <SEO title="Land Adventures — UTV, ATV, Horseback | Sempre Avanti" description="Polaris UTV rides, horseback rides, and jungle adventures around Patzcuarito and Sayulita." path="/experiences/land" />
       {/* Hero */}
       <section className="relative h-[60dvh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <img src={atvImg} alt="ATV & RZR adventures in the mountains" className="absolute inset-0 w-full h-full object-cover" />

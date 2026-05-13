@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import SEO from "@/components/SEO";
 import Layout from "@/components/layout/Layout";
 import boatSunset from "@/assets/boat-sunset.jpg";
 
@@ -286,6 +287,7 @@ export default function Pricing() {
 
   return (
     <Layout>
+      <SEO title="Concierge Guide & Rates | Villas Sempre Avanti" description="Recommended experiences, transport options, and indicative rates to plan your stay on the Riviera Nayarit." path="/guide" />
       {/* Intro */}
       <section className="pt-28 pb-10 md:pt-36 md:pb-14">
         <div className="container max-w-3xl text-center">

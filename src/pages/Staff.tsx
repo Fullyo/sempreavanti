@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import SEO from "@/components/SEO";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArrows";
 import InquiryDialog from "@/components/InquiryDialog";
@@ -37,6 +38,7 @@ const includedServices = [
 export default function Staff() {
   return (
     <Layout>
+      <SEO title="Our Staff — Concierge & Hospitality | Sempre Avanti" description="Meet the team behind your stay: concierge, private chef, housekeeping, and hosts dedicated to a seamless beachfront experience." path="/staff" />
       {/* Hero */}
       <section className="relative h-[50dvh] min-h-[350px] flex items-center justify-center overflow-hidden">
         <img src={heroImg} alt="The estate" className="absolute inset-0 w-full h-full object-cover" />

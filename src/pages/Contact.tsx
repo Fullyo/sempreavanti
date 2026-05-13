@@ -1,4 +1,5 @@
 import { useState } from "react";
+import SEO from "@/components/SEO";
 import Layout from "@/components/layout/Layout";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
@@ -65,6 +66,7 @@ export default function Contact() {
 
   return (
     <Layout>
+      <SEO title="Contact — Villas Sempre Avanti" description="Inquire about availability, rates, weddings, and private events at Villas Sempre Avanti on the Riviera Nayarit." path="/contact" />
       <section className="relative h-[50dvh] min-h-[350px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 bg-primary" />
         <PhotoPlaceholder label="Villas Sempre Avanti" className="absolute inset-0 !aspect-auto opacity-30" />

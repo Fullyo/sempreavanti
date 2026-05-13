@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import SEO from "@/components/SEO";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { motion } from "framer-motion";
 import EventInquiryForm from "@/components/EventInquiryForm";
@@ -59,6 +60,7 @@ const galleryImages = [
 export default function Weddings() {
   return (
     <Layout>
+      <SEO title="Weddings on the Beach | Villas Sempre Avanti" description="Host an intimate beachfront wedding at our private estate on the Riviera Nayarit. Ceremony, reception, and full-service stay." path="/weddings" />
       {/* Hero */}
       <section className="relative h-[60dvh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <img src={weddingHero} alt="Beachfront wedding" className="absolute inset-0 w-full h-full object-cover" />

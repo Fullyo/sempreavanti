@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import SEO from "@/components/SEO";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PageNavArrows, { experiencePages, getPageNav } from "@/components/PageNavArrows";
 import { motion } from "framer-motion";
@@ -25,6 +26,7 @@ const activities = [
 export default function Ocean() {
   return (
     <Layout>
+      <SEO title="Ocean Experiences — Snorkeling, Diving, Whales | Sempre Avanti" description="Whale watching, snorkeling, and ocean adventures along the Riviera Nayarit coast." path="/experiences/ocean" />
       {/* Hero */}
       <section className="relative h-[60dvh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <img src={oceanSnorkelingImg} alt="Snorkeling in crystal-clear water" className="absolute inset-0 w-full h-full object-cover" />

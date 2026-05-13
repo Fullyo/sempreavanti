@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import SEO from "@/components/SEO";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PageNavArrows, { estatePages, getPageNav } from "@/components/PageNavArrows";
 import { motion } from "framer-motion";
@@ -32,6 +33,7 @@ const practiceSpaces = [
 export default function Wellness() {
   return (
     <Layout>
+      <SEO title="Wellness — Yoga, Massage & Soundbaths | Sempre Avanti" description="Beachfront yoga, in-villa massage, soundbaths, and personalized wellness practices in the privacy of your estate." path="/wellness" />
       <section className="relative h-[60dvh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <img src={wellnessHeroImg} alt="Wellness" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/40" />

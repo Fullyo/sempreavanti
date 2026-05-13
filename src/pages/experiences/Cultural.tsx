@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import SEO from "@/components/SEO";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
 import PageNavArrows, { experiencePages, getPageNav } from "@/components/PageNavArrows";
@@ -37,6 +38,7 @@ const diningHighlights = [
 export default function Cultural() {
   return (
     <Layout>
+      <SEO title="Cultural Experiences in Riviera Nayarit | Sempre Avanti" description="Sayulita village tours, agave farm visits, and cultural day trips curated by our concierge team." path="/experiences/cultural" />
       {/* Hero */}
       <section className="relative h-[60dvh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <img src={sayulitaTownImg} alt="Sayulita town street with colorful papel picado" className="absolute inset-0 w-full h-full object-cover" />

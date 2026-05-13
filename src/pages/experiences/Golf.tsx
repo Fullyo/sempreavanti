@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import SEO from "@/components/SEO";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PageNavArrows, { experiencePages, getPageNav } from "@/components/PageNavArrows";
 import { motion } from "framer-motion";
@@ -60,6 +61,7 @@ const courses = [
 export default function Golf() {
   return (
     <Layout>
+      <SEO title="Golf on the Riviera Nayarit | Sempre Avanti" description="Tee times at championship courses minutes from the estate. Tailored golf days arranged by our concierge." path="/experiences/golf" />
       {/* Hero */}
       <section className="relative h-[60dvh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <img src={golfHero} alt="Golf course on the Pacific coast" className="absolute inset-0 w-full h-full object-cover" />

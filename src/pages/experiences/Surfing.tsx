@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import SEO from "@/components/SEO";
 import SectionHeading from "@/components/ui/SectionHeading";
 import PageNavArrows, { experiencePages, getPageNav } from "@/components/PageNavArrows";
 import InquiryDialog from "@/components/InquiryDialog";
@@ -39,6 +40,7 @@ const galleryPhotos = [surfChillo, surfWalk, surfSayulitaAerial, surfSayulitaMai
 export default function Surfing() {
   return (
     <Layout>
+      <SEO title="Surfing in Sayulita & Patzcuarito | Sempre Avanti" description="Private surf lessons and guided sessions on the best breaks of the Riviera Nayarit, organized from your villa." path="/experiences/surfing" />
       {/* Hero */}
       <section className="relative h-[60dvh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <img src={surfAnclote} alt="Surfing at El Anclote, Riviera Nayarit" className="absolute inset-0 w-full h-full object-cover" />

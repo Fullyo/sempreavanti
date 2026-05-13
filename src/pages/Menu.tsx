@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
 import menuHeroImg from "@/assets/menu-hero-beach.png";
 import dinerImg from "@/assets/diner.jpg";
@@ -155,6 +156,7 @@ function CategoryHeader({ title, subtitle }: { title: string; subtitle: string }
 export default function Menu() {
   return (
     <Layout>
+      <SEO title="Sample Menu | Villas Sempre Avanti" description="A glimpse at the gourmet dishes prepared by our in-villa chef — coastal Mexican cuisine with seasonal ingredients." path="/menu" />
       {/* Hero Header */}
       <section className="relative h-[50dvh] md:h-[60dvh] flex items-center justify-center overflow-hidden">
         <img

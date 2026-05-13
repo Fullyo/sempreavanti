@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import SEO from "@/components/SEO";
 import SectionHeading from "@/components/ui/SectionHeading";
 
 import { motion } from "framer-motion";
@@ -121,6 +122,7 @@ function CollapsibleSection({ title, children }: { title: string; children: Reac
 export default function Location() {
   return (
     <Layout>
+      <SEO title="Location — Patzcuarito, Riviera Nayarit | Sempre Avanti" description="Secluded beachfront in Patzcuarito, minutes from Sayulita and 45 minutes from Puerto Vallarta airport. Arrival and transport details." path="/location" />
       {/* Hero */}
       <section className="relative h-[60dvh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <img src={patzcuaritoHero} alt="Aerial view of Patzcuarito coastline" className="absolute inset-0 w-full h-full object-cover" />

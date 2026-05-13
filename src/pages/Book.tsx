@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import SEO from "@/components/SEO";
 import { format, addMonths, startOfMonth, eachDayOfInterval, endOfMonth, isBefore, isAfter, isSameDay, startOfDay, differenceInDays } from "date-fns";
 import { ChevronLeft, ChevronRight, Users, Loader2, CalendarDays } from "lucide-react";
 import { motion } from "framer-motion";
@@ -196,6 +197,7 @@ export default function Book() {
 
   return (
     <Layout>
+      <SEO title="Book Your Stay | Villas Sempre Avanti" description="Check availability, view photos, and request a quote for the full beachfront estate. Sleeps up to 14 guests." path="/book" />
       {/* Header */}
       <div className="pt-24 pb-4">
         <div className="container max-w-6xl">

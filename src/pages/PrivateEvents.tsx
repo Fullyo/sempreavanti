@@ -1,4 +1,5 @@
 import Layout from "@/components/layout/Layout";
+import SEO from "@/components/SEO";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { motion } from "framer-motion";
 import EventInquiryForm from "@/components/EventInquiryForm";
@@ -35,6 +36,7 @@ const venueSpaces = [
 export default function PrivateEvents() {
   return (
     <Layout>
+      <SEO title="Private Events & Retreats | Villas Sempre Avanti" description="Retreats, milestone celebrations, and corporate offsites at a five-bedroom beachfront estate with private chef and full staff." path="/events" />
       {/* Hero */}
       <section className="relative h-[60dvh] min-h-[400px] flex items-center justify-center overflow-hidden">
         <img src={estate3} alt="Private estate venue" className="absolute inset-0 w-full h-full object-cover" />
