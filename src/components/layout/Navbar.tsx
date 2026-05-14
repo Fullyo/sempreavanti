@@ -135,7 +135,7 @@ export default function Navbar() {
   const location = useLocation();
 
   // On /book page, always show solid navbar
-  const forceScrolled = location.pathname === "/book" || location.pathname === "/guide";
+  const forceScrolled = location.pathname === "/book" || location.pathname === "/guide" || location.pathname === "/utv-contracts";
 
   useEffect(() => {
     if (forceScrolled) {
