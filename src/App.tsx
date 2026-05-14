@@ -25,6 +25,7 @@ import Book from "./pages/Book";
 import Menu from "./pages/Menu";
 import ConciergeGuide from "./pages/ConciergeGuide";
 import Unsubscribe from "./pages/Unsubscribe";
+import UtvContracts from "./pages/UtvContracts";
 
 
 const queryClient = new QueryClient();
@@ -61,6 +62,7 @@ const App = () => (
           
           <Route path="/contact" element={<Contact />} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
+          <Route path="/utv-contracts" element={<UtvContracts />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
