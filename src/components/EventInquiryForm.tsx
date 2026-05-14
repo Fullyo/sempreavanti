@@ -29,23 +29,19 @@ export default function EventInquiryForm({ type }: EventInquiryFormProps) {
     try {
       const [firstName, ...rest] = form.name.trim().split(/\s+/);
       const lastName = rest.join(" ");
-      const { error } = await supabase.functions.invoke("send-transactional-email", {
+      const { error } = await supabase.functions.invoke("guesty-inquiry", {
         body: {
-          templateName: "inquiry-notification",
-          recipientEmail: "villassempreavanti@gmail.com",
-          idempotencyKey: `${type}-${form.email}-${Date.now()}`,
-          templateData: {
-            inquiryType: type === "wedding" ? "Wedding" : "Private Event",
-            firstName,
-            lastName,
-            email: form.email,
-            phone: form.phone,
-            preferredDates: form.dates,
-            guestCount: form.guestCount,
-            eventType: form.eventType,
-            message: form.message,
-            source: type === "wedding" ? "Weddings page" : "Private Events page",
-          },
+          firstName,
+          lastName,
+          email: form.email,
+          phone: form.phone,
+          groupSize: form.guestCount,
+          message: [form.eventType ? `Event type: ${form.eventType}` : "", form.dates ? `Preferred dates: ${form.dates}` : "", form.message]
+            .filter(Boolean)
+            .join("\n"),
+          inquiryType: type === "wedding" ? "Wedding" : "Private Event",
+          occasion: form.eventType,
+          selectedActivities: [type === "wedding" ? "Wedding" : "Event"],
         },
       });
       if (error) throw error;

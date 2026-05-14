@@ -147,10 +147,11 @@ serve(async (req) => {
     const token = await getAccessToken(supabase);
 
     const { action, from, to, checkIn, checkOut, guests } = await req.json();
+    const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
 
     if (action === "calendar") {
-      if (!from || !to) {
-        return new Response(JSON.stringify({ error: "from and to dates required" }), {
+      if (!from || !to || !DATE_REGEX.test(from) || !DATE_REGEX.test(to)) {
+        return new Response(JSON.stringify({ error: "from and to must be YYYY-MM-DD dates" }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -174,8 +175,14 @@ serve(async (req) => {
     }
 
     if (action === "quote") {
-      if (!checkIn || !checkOut || !guests) {
-        return new Response(JSON.stringify({ error: "checkIn, checkOut, and guests required" }), {
+      if (!checkIn || !checkOut || !DATE_REGEX.test(checkIn) || !DATE_REGEX.test(checkOut)) {
+        return new Response(JSON.stringify({ error: "checkIn and checkOut must be YYYY-MM-DD dates" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (typeof guests !== "number" || !Number.isInteger(guests) || guests < 1 || guests > 30) {
+        return new Response(JSON.stringify({ error: "guests must be an integer between 1 and 30" }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
