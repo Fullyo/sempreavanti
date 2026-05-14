@@ -60,6 +60,8 @@ function validateInquiry(body: unknown): { valid: true; data: ValidatedInquiry }
   const checkOut = typeof b.checkOut === "string" && DATE_REGEX.test(b.checkOut) ? b.checkOut : undefined;
   const groupSize = typeof b.groupSize === "string" ? b.groupSize.trim().slice(0, 50) : undefined;
   const message = typeof b.message === "string" ? b.message.trim().slice(0, 2000) : undefined;
+  const inquiryType = typeof b.inquiryType === "string" ? b.inquiryType.trim().slice(0, 50) : undefined;
+  const occasion = typeof b.occasion === "string" ? b.occasion.trim().slice(0, 100) : undefined;
 
   let selectedActivities: string[] | undefined;
   if (Array.isArray(b.selectedActivities)) {
@@ -69,7 +71,7 @@ function validateInquiry(body: unknown): { valid: true; data: ValidatedInquiry }
     if (selectedActivities.length === 0) selectedActivities = undefined;
   }
 
-  return { valid: true, data: { firstName, lastName, email, phone, checkIn, checkOut, groupSize, message, selectedActivities } };
+  return { valid: true, data: { firstName, lastName, email, phone, checkIn, checkOut, groupSize, message, selectedActivities, inquiryType, occasion } };
 }
 
 interface ValidatedInquiry {
@@ -82,6 +84,8 @@ interface ValidatedInquiry {
   groupSize?: string;
   message?: string;
   selectedActivities?: string[];
+  inquiryType?: string;
+  occasion?: string;
 }
 
 function getSupabaseAdmin() {
