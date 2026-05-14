@@ -29,13 +29,13 @@ const HTML = `
       <div style="font-size:2rem; letter-spacing:.15em; font-weight:700; color:#f0b429; font-family:'Montserrat',sans-serif; margin-bottom:8px;">WiFi</div>
       <h3>Villa Sempre Avanti</h3>
       <div class="wifi-detail"><span>Network: </span>SempreAvanti</div>
-      <div class="wifi-detail"><span>Password: </span>Sayulita4ever</div>
+      <div class="wifi-detail"><span>Password: </span>Provided on arrival by your concierge</div>
     </div>
     <div class="wifi-box">
       <div style="font-size:2rem; letter-spacing:.15em; font-weight:700; color:#f0b429; font-family:'Montserrat',sans-serif; margin-bottom:8px;">WiFi</div>
       <h3>Casa Pietro</h3>
       <div class="wifi-detail"><span>Network: </span>CasaPietro</div>
-      <div class="wifi-detail"><span>Password: </span>CasaPietroSayulita</div>
+      <div class="wifi-detail"><span>Password: </span>Provided on arrival by your concierge</div>
     </div>
   </div>
 

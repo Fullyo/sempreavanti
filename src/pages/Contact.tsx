@@ -28,23 +28,18 @@ export default function Contact() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.functions.invoke("send-transactional-email", {
+      const { error } = await supabase.functions.invoke("guesty-inquiry", {
         body: {
-          templateName: "inquiry-notification",
-          recipientEmail: "villassempreavanti@gmail.com",
-          idempotencyKey: `contact-${form.email}-${Date.now()}`,
-          templateData: {
-            inquiryType: "Contact",
-            firstName: form.firstName,
-            lastName: form.lastName,
-            email: form.email,
-            phone: form.phone,
-            preferredDates: form.dates,
-            groupSize: form.groupSize,
-            occasion: form.occasion,
-            message: form.message,
-            source: "Contact page",
-          },
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          phone: form.phone,
+          groupSize: form.groupSize,
+          message: [form.dates ? `Preferred dates: ${form.dates}` : "", form.occasion ? `Occasion: ${form.occasion}` : "", form.message]
+            .filter(Boolean)
+            .join("\n"),
+          inquiryType: "Contact",
+          occasion: form.occasion,
         },
       });
       if (error) throw error;
