@@ -8,15 +8,17 @@ interface SEOProps {
   path: string;
   image?: string;
   type?: "website" | "article";
+  noindex?: boolean;
 }
 
-export const SEO = ({ title, description, path, image, type = "website" }: SEOProps) => {
+export const SEO = ({ title, description, path, image, type = "website", noindex = false }: SEOProps) => {
   const url = `${SITE}${path}`;
   const img = image || `${SITE}/hero-villa.png`;
   return (
     <Helmet>
       <title>{title}</title>
       <meta name="description" content={description} />
+      {noindex && <meta name="robots" content="noindex,nofollow" />}
       <link rel="canonical" href={url} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
