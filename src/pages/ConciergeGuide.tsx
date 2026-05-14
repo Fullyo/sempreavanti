@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import SEO from "@/components/SEO";
 
 const HTML = `
 
