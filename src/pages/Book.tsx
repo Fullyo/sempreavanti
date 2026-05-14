@@ -518,7 +518,7 @@ function MonthGrid({
               disabled={blocked}
               className={`
                 aspect-square flex items-center justify-center text-sm font-sans rounded-lg transition-all
-                ${blocked ? "text-muted-foreground/40 cursor-not-allowed bg-muted/50" : "hover:bg-golden/10 cursor-pointer"}
+                ${blocked ? "text-muted-foreground line-through cursor-not-allowed bg-muted/50" : "hover:bg-golden/10 cursor-pointer"}
                 ${isCheckIn || isCheckOut ? "bg-golden text-accent-foreground font-semibold" : ""}
                 ${inRange ? "bg-golden/20" : ""}
                 ${!blocked && !isCheckIn && !isCheckOut && !inRange ? "text-foreground" : ""}
