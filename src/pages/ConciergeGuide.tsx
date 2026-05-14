@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import SEO from "@/components/SEO";
 
 const HTML = `
 
@@ -1323,24 +1324,23 @@ const STYLES = `
 
 const ConciergeGuide = () => {
   useEffect(() => {
-    document.title = "Villas Sempre Avanti — Private Concierge Guide";
-    const robots = document.createElement("meta");
-    robots.name = "robots";
-    robots.content = "noindex,nofollow";
-    document.head.appendChild(robots);
-
     const printButton = document.getElementById("print-btn");
     const handlePrint = () => window.print();
     printButton?.addEventListener("click", handlePrint);
 
     return () => {
       printButton?.removeEventListener("click", handlePrint);
-      robots.remove();
     };
   }, []);
 
   return (
     <>
+      <SEO
+        title="Private Concierge Guide — Villas Sempre Avanti"
+        description="A private digital guide for guests of Villas Sempre Avanti — house essentials, services, local recommendations, and concierge contacts."
+        path="/concierge-guide"
+        noindex
+      />
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />
       <div dangerouslySetInnerHTML={{ __html: HTML }} />
     </>

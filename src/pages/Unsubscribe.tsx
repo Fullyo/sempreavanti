@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
+import SEO from "@/components/SEO";
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
 const SUPABASE_ANON = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
@@ -51,6 +52,12 @@ export default function Unsubscribe() {
 
   return (
     <Layout>
+      <SEO
+        title="Unsubscribe — Villas Sempre Avanti"
+        description="Manage your email preferences and unsubscribe from communications sent by Villas Sempre Avanti."
+        path="/unsubscribe"
+        noindex
+      />
       <section className="min-h-[70dvh] flex items-center justify-center px-6 py-24">
         <div className="max-w-lg w-full text-center bg-card border border-border rounded-2xl p-10">
           <h1 className="font-serif text-3xl font-light text-foreground mb-4">
