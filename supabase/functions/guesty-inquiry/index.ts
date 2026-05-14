@@ -186,7 +186,7 @@ serve(async (req) => {
       });
     }
 
-    const { firstName, lastName, email, phone, checkIn, checkOut, groupSize, message, selectedActivities } = validation.data;
+    const { firstName, lastName, email, phone, checkIn, checkOut, groupSize, message, selectedActivities, inquiryType, occasion } = validation.data;
     const supabase = getSupabaseAdmin();
 
     // Step 1: Save to database FIRST (guaranteed)
@@ -301,7 +301,7 @@ serve(async (req) => {
           recipientEmail: "villassempreavanti@gmail.com",
           idempotencyKey: `inquiry-notify-${inquiry.id}`,
           templateData: {
-            inquiryType: "Villa Stay",
+            inquiryType: inquiryType || "Villa Stay",
             firstName,
             lastName,
             email,
@@ -309,6 +309,7 @@ serve(async (req) => {
             checkIn,
             checkOut,
             groupSize,
+            occasion,
             selectedActivities,
             message,
             source: "villassempreavanti.com",
