@@ -52,6 +52,12 @@ export default function Unsubscribe() {
 
   return (
     <Layout>
+      <SEO
+        title="Unsubscribe — Villas Sempre Avanti"
+        description="Manage your email preferences and unsubscribe from communications sent by Villas Sempre Avanti."
+        path="/unsubscribe"
+        noindex
+      />
       <section className="min-h-[70dvh] flex items-center justify-center px-6 py-24">
         <div className="max-w-lg w-full text-center bg-card border border-border rounded-2xl p-10">
           <h1 className="font-serif text-3xl font-light text-foreground mb-4">
