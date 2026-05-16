@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import SEO from "@/components/SEO";
+import { supabase } from "@/integrations/supabase/client";
 import NewBooking from "./concierge/NewBooking";
 import AllBookings from "./concierge/AllBookings";
 import PriceList from "./concierge/PriceList";
 import ExportTab from "./concierge/Export";
 import SettingsTab from "./concierge/Settings";
 
-const PASSWORD = import.meta.env.VITE_CONCIERGE_PASSWORD as string | undefined;
-const SESSION_KEY = "concierge_auth";
+const TOKEN_KEY = "concierge_token";
 
 const TABS = [
   { id: "new", label: "New Booking" },
