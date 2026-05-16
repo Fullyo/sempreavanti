@@ -162,7 +162,7 @@ export default function Concierge() {
   if (!authed) {
     return (
       <>
-        <SEO title="Concierge — Internal" noindex />
+        <SEO title="Concierge — Internal" description="Internal tool" path="/concierge" noindex />
         <Gate onPass={() => setAuthed(true)} />
       </>
     );
