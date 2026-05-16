@@ -98,7 +98,7 @@ export default function AllBookings() {
         guest: edit.guest,
         checkin: edit.checkin,
         checkout: edit.checkout,
-        items,
+        items: items as any,
         cc_fee_on: edit.cc_fee_on,
         tip_mode: edit.tip_mode,
         tip_value: edit.tip_value,
