@@ -1,39 +1,80 @@
-## Goal
+## Concierge Booking Tool — Build Plan
 
-Rebuild the AI-generated HTML guide (1,394 lines, 60 referenced images) as a hidden React page on the site, using photos pulled from your connected Google Drive (`Villas Sempre Avanti` folder).
+A hidden, password-gated internal operations tool at `/concierge` for the team to log upsell bookings, calculate guest charges and profit splits, and generate guest invoices + owner statements. Backed by Lovable Cloud (Supabase).
 
-## Steps
+### Scope summary
 
-### 1. Pull images from Google Drive
-- Recursively list every file under `Villas Sempre Avanti` and all subfolders (`Photos`, `Activities / Upsell`, `UTV Rental`, `Logo`, `Videos`, etc.) via the Drive connector gateway.
-- Build a name index: lowercased filename → Drive file ID.
-- For each of the 60 referenced images (e.g. `atv-sq1.jpg`, `monkey-coastal-sunset.jpg`, `og-cover.jpg`), match by filename (with/without extension, fuzzy on hyphens/underscores).
+- New route `/concierge` (not linked in nav/footer), session-based password gate using `VITE_CONCIERGE_PASSWORD`
+- 2 new Supabase tables: `services` (catalogue) and `bookings` (history), seeded with 57 services
+- 5 tabs: New Booking, All Bookings, Price List, Export, Settings
+- PDF guest invoice via `@react-pdf/renderer`, HTML print-to-PDF for owner statements
+- Static April 2026 historical USD report
 
-### 2. Upload matched images to `site-assets`
-- Download each match from Drive (`/files/{id}?alt=media`) and upload to the existing public `site-assets` Supabase bucket under a new prefix `concierge-guide/`.
-- Record the new public URL for each one.
+### Build sequence (8 steps, matching user's prompts)
 
-### 3. Handle misses with a labeled placeholder
-- For any image not found in Drive, generate a single solid-color SVG placeholder (e.g. magenta `#FF00FF`) with the missing filename rendered on top, upload it as `concierge-guide/_missing/{filename}.svg`, and use that.
-- At the end, output a clear list of every missing filename so you know exactly what to drop into Drive later.
+**1. Foundation, auth, shell**
 
-### 4. Build the hidden page
-- Create `src/pages/ConciergeGuide.tsx` containing the converted HTML/CSS as JSX (Tailwind-friendly where trivial; otherwise inline `<style>` for fidelity to the original design).
-- Rewrite all `images/xxx.jpg` references to the new `site-assets` public URLs.
-- Add route `/concierge-guide` in `src/App.tsx`.
+- Add env var `VITE_CONCIERGE_PASSWORD` (user will set in Lovable settings — confirm before building)
+- Create `services` + `bookings` tables via migration with permissive RLS (`true`)
+- Build `/concierge` route, password gate (sessionStorage), header, 5-tab shell
+- Add Cormorant Garamond + Jost via Google Fonts; design tokens (cream/gold palette) as Tailwind/CSS vars
 
-### 5. Keep it hidden
-- Do **not** add it to `Navbar`, `Footer`, or `sitemap.xml`.
-- Add `<meta name="robots" content="noindex,nofollow">` via a `<Helmet>` block on the page.
-- Only reachable by typing the URL directly.
+**2. Seed catalogue + calc utilities**
 
-### 6. Deliverables back to you
-- The hidden URL: `/concierge-guide`
-- A list of any filenames that didn't match in Drive (rendered as magenta placeholders so they're obvious on the page).
+- Insert 57 services into `services` table
+- Create `src/lib/calculations.ts` with `calcGuestTotal`, `calcProfit`, `calcCost`, `calcTip`, `calcCCFee`, `formatMXN`, `CATEGORY_ORDER`
 
-## Technical notes
-- Drive connector is already linked; uses gateway at `connector-gateway.lovable.dev/google_drive/drive/v3` with `LOVABLE_API_KEY` + `GOOGLE_DRIVE_API_KEY`.
-- Storage target: existing public `site-assets` bucket (same place as current site photos) — no new bucket, no schema changes, no auth required.
-- No DB tables, no edge functions needed for this task — purely static asset import + one new React route.
+**3. New Booking tab**
 
-Approve and I'll execute.
+- Guest info + dynamic services table with searchable combobox grouped by category
+- Live calculations, tip ($/% toggle), 3% CC fee toggle
+- Dark summary panel; save to Supabase; validation + toast
+
+**4. All Bookings tab**
+
+- Read all, group by month, inline edit, delete with confirm
+- CSV "Download All", per-month "Owner Statement" trigger, JSON backup + restore
+- Historical Reports section with April 2026 button
+
+**5. Settings tab**
+
+- Editable price catalogue grouped by category
+- Add/edit/delete services, type dropdown, active toggle, commission preview
+- CSV export of price list
+
+**6. Price List + Export tabs**
+
+- Price List: printable internal reference with commission legend and per-category tables
+- Export: Copy-to-clipboard (TSV), CSV download, inline HTML preview
+
+**7. Guest invoice PDF**
+
+- Install `@react-pdf/renderer`; register fonts
+- Generate cream/gold letter-size PDF, guest-facing only (no costs/profits), instant download
+
+**8. Owner statement + April 2026 historical**
+
+- Owner statement: new tab HTML with summary cards, per-booking tables, 85/15 split, print button, CSV export
+- April 2026: static USD page, hardcoded 6 bookings as specified
+
+### Technical notes
+
+- All money formatting uses `formatMXN`; rounding via `Math.round` as specified
+- Combobox: use existing `@/components/ui/command` (cmdk) for search
+- Date handling: native `<input type="date">` + `date-fns` (already in project)
+- PDFs open via Blob URL + `<a download>` for instant save
+- Owner statement opens in `window.open()` with self-contained HTML+CSS
+- Navbar: add `/concierge` to `forceScrolled` paths so navbar is visible (consistent with utv-contracts pattern) — OR render `/concierge` outside `<Layout>` since the spec defines its own header. **Recommendation: render outside Layout** (matches "before anything else" auth requirement and avoids duplicate headers)
+- SEO: `<SEO noindex />` on `/concierge`
+
+### Clarifying questions before I start
+
+1. **Password storage**: The plan stores `VITE_CONCIERGE_PASSWORD` client-side (visible in the JS bundle to anyone who inspects it). This matches your spec but is not secure against a determined visitor. OK to proceed as-is, or do you want server-side auth (Supabase edge function check)? i take your recommendation. I though the ideas was to have a hidden page with a password to enter that page?
+2. **Public navbar on** `/concierge`: Should the site's main navbar appear, or only the tool's internal dark header (cleaner, recommended) only available to admins
+3. **Build all 8 prompts in one go**, or pause after each for you to test? (One-go is faster; staged is safer.) all in one go
+
+### Out of scope
+
+- No public links added anywhere
+- No changes to existing pages or SEO beyond noindex on `/concierge`
+- No auto-archive/deletion logic

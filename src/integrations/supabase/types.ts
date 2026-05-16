@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          cc_fee: number
+          cc_fee_on: boolean
+          checkin: string
+          checkout: string | null
+          created_at: string
+          guest: string
+          id: number
+          items: Json
+          saved_at: string
+          tip: number
+          tip_mode: string
+          tip_value: number
+          total_guest: number
+          total_profit: number
+        }
+        Insert: {
+          cc_fee?: number
+          cc_fee_on?: boolean
+          checkin: string
+          checkout?: string | null
+          created_at?: string
+          guest: string
+          id?: number
+          items?: Json
+          saved_at?: string
+          tip?: number
+          tip_mode?: string
+          tip_value?: number
+          total_guest?: number
+          total_profit?: number
+        }
+        Update: {
+          cc_fee?: number
+          cc_fee_on?: boolean
+          checkin?: string
+          checkout?: string | null
+          created_at?: string
+          guest?: string
+          id?: number
+          items?: Json
+          saved_at?: string
+          tip?: number
+          tip_mode?: string
+          tip_value?: number
+          total_guest?: number
+          total_profit?: number
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string
@@ -164,6 +215,45 @@ export type Database = {
           preferred_dates?: string | null
           selected_activities?: string[] | null
           status?: string | null
+        }
+        Relationships: []
+      }
+      services: {
+        Row: {
+          category: string
+          created_at: string
+          id: number
+          is_active: boolean
+          name: string
+          price: number
+          sort_order: number
+          sub_text: string | null
+          type: string
+          unit_cost: number | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: number
+          is_active?: boolean
+          name: string
+          price?: number
+          sort_order?: number
+          sub_text?: string | null
+          type: string
+          unit_cost?: number | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: number
+          is_active?: boolean
+          name?: string
+          price?: number
+          sort_order?: number
+          sub_text?: string | null
+          type?: string
+          unit_cost?: number | null
         }
         Relationships: []
       }
