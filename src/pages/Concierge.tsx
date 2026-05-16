@@ -177,7 +177,7 @@ export default function Concierge() {
 
   return (
     <div style={{ minHeight: "100dvh", background: "#F7F4EE", fontFamily: "'Jost', sans-serif" }}>
-      <SEO title="Concierge — Internal" noindex />
+      <SEO title="Concierge — Internal" description="Internal tool" path="/concierge" noindex />
       <header
         style={{
           background: "#1C1914",
