@@ -154,26 +154,49 @@ function Gate({ onPass }: { onPass: (token: string) => void }) {
 }
 
 export default function Concierge() {
-  const [authed, setAuthed] = useState(false);
+  const [authState, setAuthState] = useState<"checking" | "out" | "in">("checking");
   const [tab, setTab] = useState<TabId>("new");
 
   useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem(SESSION_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (parsed?.auth) setAuthed(true);
-      }
-    } catch {
-      // ignore
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    if (!token) {
+      setAuthState("out");
+      return;
     }
+    supabase.functions
+      .invoke("concierge-verify", { body: { token } })
+      .then(({ data, error }) => {
+        if (!error && data?.valid) {
+          setAuthState("in");
+        } else {
+          sessionStorage.removeItem(TOKEN_KEY);
+          setAuthState("out");
+        }
+      })
+      .catch(() => {
+        sessionStorage.removeItem(TOKEN_KEY);
+        setAuthState("out");
+      });
   }, []);
 
-  if (!authed) {
+  if (authState === "checking") {
+    return (
+      <div style={{ minHeight: "100dvh", background: "#F7F4EE" }}>
+        <SEO title="Concierge — Internal" description="Internal tool" path="/concierge" noindex />
+      </div>
+    );
+  }
+
+  if (authState === "out") {
     return (
       <>
         <SEO title="Concierge — Internal" description="Internal tool" path="/concierge" noindex />
-        <Gate onPass={() => setAuthed(true)} />
+        <Gate
+          onPass={(token) => {
+            sessionStorage.setItem(TOKEN_KEY, token);
+            setAuthState("in");
+          }}
+        />
       </>
     );
   }
