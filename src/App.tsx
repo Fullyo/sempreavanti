@@ -26,6 +26,7 @@ import Menu from "./pages/Menu";
 import ConciergeGuide from "./pages/ConciergeGuide";
 import Unsubscribe from "./pages/Unsubscribe";
 import UtvContracts from "./pages/UtvContracts";
+import Concierge from "./pages/Concierge";
 
 
 const queryClient = new QueryClient();
