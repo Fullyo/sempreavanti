@@ -1,80 +1,55 @@
-## Concierge Booking Tool — Build Plan
+## Goal
 
-A hidden, password-gated internal operations tool at `/concierge` for the team to log upsell bookings, calculate guest charges and profit splits, and generate guest invoices + owner statements. Backed by Lovable Cloud (Supabase).
+Move the `/concierge` password from a client-side env var (visible in JS bundle) to a server-side check via a Supabase edge function, so the password never ships to the browser.
 
-### Scope summary
+## Approach
 
-- New route `/concierge` (not linked in nav/footer), session-based password gate using `VITE_CONCIERGE_PASSWORD`
-- 2 new Supabase tables: `services` (catalogue) and `bookings` (history), seeded with 57 services
-- 5 tabs: New Booking, All Bookings, Price List, Export, Settings
-- PDF guest invoice via `@react-pdf/renderer`, HTML print-to-PDF for owner statements
-- Static April 2026 historical USD report
+**1. Store password as a server-side secret**
 
-### Build sequence (8 steps, matching user's prompts)
+- Add `CONCIERGE_PASSWORD` via the secrets tool (runtime secret, available only to edge functions).
+- Remove dependency on `VITE_CONCIERGE_PASSWORD` (build-time, leaks into bundle).
 
-**1. Foundation, auth, shell**
+**2. New edge function: `concierge-auth**`
 
-- Add env var `VITE_CONCIERGE_PASSWORD` (user will set in Lovable settings — confirm before building)
-- Create `services` + `bookings` tables via migration with permissive RLS (`true`)
-- Build `/concierge` route, password gate (sessionStorage), header, 5-tab shell
-- Add Cormorant Garamond + Jost via Google Fonts; design tokens (cream/gold palette) as Tailwind/CSS vars
+- `supabase/functions/concierge-auth/index.ts`
+- Accepts `{ password: string }` POST.
+- Compares against `Deno.env.get("CONCIERGE_PASSWORD")` using constant-time comparison.
+- On success: returns a signed session token (HMAC of `expiry|nonce` using a server secret) with ~12h expiry.
+- On failure: returns 401 with a small artificial delay (basic brute-force friction).
+- CORS enabled, `verify_jwt = false` in `supabase/config.toml`.
 
-**2. Seed catalogue + calc utilities**
+**3. New edge function: `concierge-verify**`
 
-- Insert 57 services into `services` table
-- Create `src/lib/calculations.ts` with `calcGuestTotal`, `calcProfit`, `calcCost`, `calcTip`, `calcCCFee`, `formatMXN`, `CATEGORY_ORDER`
+- Validates the session token from the client on page load / refresh.
+- Returns `{ valid: true }` or 401.
 
-**3. New Booking tab**
+**4. Update `src/pages/Concierge.tsx**`
 
-- Guest info + dynamic services table with searchable combobox grouped by category
-- Live calculations, tip ($/% toggle), 3% CC fee toggle
-- Dark summary panel; save to Supabase; validation + toast
+- Replace direct `import.meta.env.VITE_CONCIERGE_PASSWORD` comparison with `supabase.functions.invoke('concierge-auth', { body: { password } })`.
+- Store returned token in `sessionStorage` (key: `concierge_token`).
+- On mount, if token exists, call `concierge-verify`; if invalid/expired, clear it and show password gate.
+- Show loading state during auth check.
 
-**4. All Bookings tab**
+**5. Cleanup**
 
-- Read all, group by month, inline edit, delete with confirm
-- CSV "Download All", per-month "Owner Statement" trigger, JSON backup + restore
-- Historical Reports section with April 2026 button
+- Remove any reference to `VITE_CONCIERGE_PASSWORD` from the codebase.
+- User can delete the build-time env var from project settings afterward (optional, harmless if left).
 
-**5. Settings tab**
+## Technical notes
 
-- Editable price catalogue grouped by category
-- Add/edit/delete services, type dropdown, active toggle, commission preview
-- CSV export of price list
+- Token format: base64url(`expiry.nonce.hmac`) signed with a server-only secret (`CONCIERGE_SIGNING_KEY`, auto-generated and added as a secret).
+- No new database tables — stateless tokens keep it simple.
+- All existing concierge functionality (bookings, services, exports) stays unchanged; only the gate changes.
 
-**6. Price List + Export tabs**
+## Files
 
-- Price List: printable internal reference with commission legend and per-category tables
-- Export: Copy-to-clipboard (TSV), CSV download, inline HTML preview
+- new: `supabase/functions/concierge-auth/index.ts`
+- new: `supabase/functions/concierge-verify/index.ts`
+- edited: `src/pages/Concierge.tsx`
+- secrets: add `CONCIERGE_PASSWORD`, `CONCIERGE_SIGNING_KEY`
 
-**7. Guest invoice PDF**
+## Question
 
-- Install `@react-pdf/renderer`; register fonts
-- Generate cream/gold letter-size PDF, guest-facing only (no costs/profits), instant download
+What password should I set for `CONCIERGE_PASSWORD`? Keep `SempreAvanti2026`, or use a new one? (I'll prompt you via the secrets tool — you'll enter it in a secure form, I won't see it.) new one, send me the safe place to enter it
 
-**8. Owner statement + April 2026 historical**
-
-- Owner statement: new tab HTML with summary cards, per-booking tables, 85/15 split, print button, CSV export
-- April 2026: static USD page, hardcoded 6 bookings as specified
-
-### Technical notes
-
-- All money formatting uses `formatMXN`; rounding via `Math.round` as specified
-- Combobox: use existing `@/components/ui/command` (cmdk) for search
-- Date handling: native `<input type="date">` + `date-fns` (already in project)
-- PDFs open via Blob URL + `<a download>` for instant save
-- Owner statement opens in `window.open()` with self-contained HTML+CSS
-- Navbar: add `/concierge` to `forceScrolled` paths so navbar is visible (consistent with utv-contracts pattern) — OR render `/concierge` outside `<Layout>` since the spec defines its own header. **Recommendation: render outside Layout** (matches "before anything else" auth requirement and avoids duplicate headers)
-- SEO: `<SEO noindex />` on `/concierge`
-
-### Clarifying questions before I start
-
-1. **Password storage**: The plan stores `VITE_CONCIERGE_PASSWORD` client-side (visible in the JS bundle to anyone who inspects it). This matches your spec but is not secure against a determined visitor. OK to proceed as-is, or do you want server-side auth (Supabase edge function check)? i take your recommendation. I though the ideas was to have a hidden page with a password to enter that page?
-2. **Public navbar on** `/concierge`: Should the site's main navbar appear, or only the tool's internal dark header (cleaner, recommended) only available to admins
-3. **Build all 8 prompts in one go**, or pause after each for you to test? (One-go is faster; staged is safer.) all in one go
-
-### Out of scope
-
-- No public links added anywhere
-- No changes to existing pages or SEO beyond noindex on `/concierge`
-- No auto-archive/deletion logic
+&nbsp;
