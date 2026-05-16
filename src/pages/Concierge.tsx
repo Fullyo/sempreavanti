@@ -1,124 +1,260 @@
-import Layout from "@/components/layout/Layout";
-import SectionHeading from "@/components/ui/SectionHeading";
-import PhotoPlaceholder from "@/components/ui/PhotoPlaceholder";
-import { motion } from "framer-motion";
-import InquiryDialog from "@/components/InquiryDialog";
-import { Check } from "lucide-react";
+import { useEffect, useState } from "react";
+import SEO from "@/components/SEO";
+import NewBooking from "./concierge/NewBooking";
+import AllBookings from "./concierge/AllBookings";
+import PriceList from "./concierge/PriceList";
+import ExportTab from "./concierge/Export";
+import SettingsTab from "./concierge/Settings";
 
-const staff = [
-  {
-    name: "Your Concierge",
-    role: "Head Concierge",
-    language: "English & Spanish",
-    description: "Your dedicated concierge is born and raised in the region, knows everything and everyone. They personally greet every guest upon arrival and see them off at departure, while maintaining your privacy during the stay. Adventures, dining, wellness, transportation — they arrange it all.",
-  },
-  {
-    name: "Ricardo",
-    role: "Private Chef",
-    language: "English & Spanish",
-    description: "The lead chef and heart of the culinary experience. Ricardo crafts every meal from the freshest local ingredients — from morning juices to fire-lit dinners. He loves discussing menus, dietary needs, and creating surprise celebrations.",
-  },
-  {
-    name: "Crethell",
-    role: "Private Chef",
-    language: "Spanish (Google Translate works great)",
-    description: "Ricardo's partner in the kitchen. Crethell brings deep expertise in traditional Mexican coastal cuisine and ensures every detail — from presentation to timing — is perfect.",
-  },
-  {
-    name: "Angy",
-    role: "Daily Housekeeping",
-    language: "Spanish (Google Translate works great)",
-    description: "Angy ensures every space is impeccable — daily housekeeping, fresh linens, and the small details that make the villas feel like a five-star hotel.",
-  },
-  {
-    name: "Paco",
-    role: "Caretaker & Grounds",
-    language: "Spanish (Google Translate works great)",
-    description: "Paco maintains the property, pool, gardens, and beach setup. He handles beach chairs, umbrellas, bonfire preparation, and everything behind the scenes. The quiet force ensuring everything is always ready.",
-  },
-];
+const PASSWORD = import.meta.env.VITE_CONCIERGE_PASSWORD as string | undefined;
+const SESSION_KEY = "concierge_auth";
 
-const included = [
-  "Daily housekeeping",
-  "Dedicated house manager & concierge",
-  "Arrival coordination & personal greeting",
-  "Ongoing guest support throughout your stay",
-  "Event & experience coordination",
-  "Direct access to your team at all times",
-  "4×4 Polaris UTV transportation",
-  "Beach setup & maintenance",
-];
+const TABS = [
+  { id: "new", label: "New Booking" },
+  { id: "all", label: "All Bookings" },
+  { id: "pricelist", label: "Price List" },
+  { id: "export", label: "Export" },
+  { id: "settings", label: "Settings" },
+] as const;
+
+type TabId = (typeof TABS)[number]["id"];
+
+function Gate({ onPass }: { onPass: () => void }) {
+  const [val, setVal] = useState("");
+  const [err, setErr] = useState(false);
+
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!PASSWORD) {
+      setErr(true);
+      return;
+    }
+    if (val === PASSWORD) {
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify({ auth: true }));
+      onPass();
+    } else {
+      setErr(true);
+    }
+  };
+
+  return (
+    <div
+      style={{
+        minHeight: "100dvh",
+        background: "#F7F4EE",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 24,
+      }}
+    >
+      <form
+        onSubmit={submit}
+        style={{
+          background: "#FDFBF7",
+          border: "1px solid #DDD5C4",
+          borderRadius: 4,
+          padding: "48px 56px",
+          maxWidth: 460,
+          width: "100%",
+          textAlign: "center",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'Jost', sans-serif",
+            fontSize: 11,
+            textTransform: "uppercase",
+            letterSpacing: "0.2em",
+            color: "#B8924A",
+            marginBottom: 14,
+          }}
+        >
+          LUX Internal Access
+        </div>
+        <h1
+          style={{
+            fontFamily: "'Cormorant Garamond', serif",
+            fontWeight: 300,
+            fontSize: 36,
+            color: "#1C1914",
+            margin: 0,
+            marginBottom: 32,
+          }}
+        >
+          Villas Sempre Avanti
+        </h1>
+        <input
+          type="password"
+          autoFocus
+          value={val}
+          onChange={(e) => {
+            setVal(e.target.value);
+            setErr(false);
+          }}
+          placeholder="Password"
+          style={{
+            width: "100%",
+            padding: "12px 14px",
+            border: `1px solid ${err ? "#8B2E2E" : "#DDD5C4"}`,
+            background: "#fff",
+            fontFamily: "'Jost', sans-serif",
+            fontSize: 14,
+            outline: "none",
+            color: "#1C1914",
+            borderRadius: 2,
+          }}
+          onFocus={(e) => (e.currentTarget.style.borderColor = "#B8924A")}
+          onBlur={(e) => (e.currentTarget.style.borderColor = err ? "#8B2E2E" : "#DDD5C4")}
+        />
+        {err && (
+          <div
+            style={{
+              color: "#8B2E2E",
+              fontFamily: "'Jost', sans-serif",
+              fontSize: 12,
+              marginTop: 10,
+            }}
+          >
+            Incorrect password — try again
+          </div>
+        )}
+        <button
+          type="submit"
+          style={{
+            marginTop: 24,
+            width: "100%",
+            padding: "12px 18px",
+            background: "#B8924A",
+            color: "#fff",
+            border: "none",
+            fontFamily: "'Jost', sans-serif",
+            fontSize: 12,
+            textTransform: "uppercase",
+            letterSpacing: "0.16em",
+            cursor: "pointer",
+            borderRadius: 2,
+          }}
+        >
+          Enter
+        </button>
+      </form>
+    </div>
+  );
+}
 
 export default function Concierge() {
+  const [authed, setAuthed] = useState(false);
+  const [tab, setTab] = useState<TabId>("new");
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(SESSION_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed?.auth) setAuthed(true);
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  if (!authed) {
+    return (
+      <>
+        <SEO title="Concierge — Internal" noindex />
+        <Gate onPass={() => setAuthed(true)} />
+      </>
+    );
+  }
+
+  const today = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+
   return (
-    <Layout>
-      <section className="relative h-[60dvh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-primary" />
-        <PhotoPlaceholder label="Your Team" className="absolute inset-0 !aspect-auto opacity-30" />
-        <div className="relative z-10 text-center text-primary-foreground px-4">
-          <p className="text-xs font-sans uppercase tracking-[0.4em] mb-4 opacity-80">Your Team</p>
-          <h1 className="font-serif text-5xl md:text-7xl font-light">Concierge & Staff</h1>
-        </div>
-      </section>
-
-      <section className="py-20 md:py-28">
-        <div className="container max-w-4xl">
-          <SectionHeading
-            eyebrow="Hosted, Not Rented"
-            title="You're Not Checking In — You're Being Hosted"
-            description="At Sempre Avanti, every guest is personally received. Your dedicated team handles every detail — from arrival coordination to ongoing support throughout your stay. You have direct access at all times."
-          />
-        </div>
-      </section>
-
-      <section className="pb-20 md:pb-28">
-        <div className="container max-w-5xl">
-          <div className="space-y-16">
-            {staff.map((person, i) => (
-              <motion.div
-                key={person.name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className={`grid grid-cols-1 md:grid-cols-2 gap-8 items-center ${i % 2 === 1 ? "" : ""}`}
-              >
-                <PhotoPlaceholder
-                  label={person.name}
-                  aspectRatio="portrait"
-                  className={`rounded-tl-[40px] rounded-br-[40px] overflow-hidden ${i % 2 === 1 ? "md:order-2" : ""}`}
-                />
-                <div className={i % 2 === 1 ? "md:order-1" : ""}>
-                  <span className="text-xs font-sans uppercase tracking-widest text-accent mb-1 block">{person.role}</span>
-                  <h3 className="font-serif text-3xl md:text-4xl mb-2">{person.name}</h3>
-                  <span className="text-xs font-sans text-muted-foreground mb-4 block">{person.language}</span>
-                  <p className="text-base font-sans text-muted-foreground leading-relaxed">{person.description}</p>
-                </div>
-              </motion.div>
-            ))}
+    <div style={{ minHeight: "100dvh", background: "#F7F4EE", fontFamily: "'Jost', sans-serif" }}>
+      <SEO title="Concierge — Internal" noindex />
+      <header
+        style={{
+          background: "#1C1914",
+          padding: "18px 32px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <div>
+          <div
+            style={{
+              fontFamily: "'Cormorant Garamond', serif",
+              fontWeight: 300,
+              fontSize: 22,
+              color: "#F7F4EE",
+              lineHeight: 1.1,
+            }}
+          >
+            Villas Sempre Avanti
+          </div>
+          <div
+            style={{
+              fontSize: 11,
+              textTransform: "uppercase",
+              letterSpacing: "0.16em",
+              color: "rgba(247,244,238,0.4)",
+              marginTop: 4,
+            }}
+          >
+            Concierge Booking Tool
           </div>
         </div>
-      </section>
+        <div style={{ fontSize: 12, color: "rgba(247,244,238,0.4)" }}>{today}</div>
+      </header>
 
-      {/* What's Included */}
-      <section className="py-20 md:py-28 bg-primary text-primary-foreground">
-        <div className="container max-w-4xl text-center">
-          <SectionHeading eyebrow="Always Included" title="The Sempre Avanti Standard" light />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-12 text-left">
-            {included.map((item) => (
-              <div key={item} className="flex items-start gap-3">
-                <Check className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" strokeWidth={2} />
-                <span className="text-sm font-sans opacity-90">{item}</span>
-              </div>
-            ))}
-          </div>
-          <InquiryDialog>
-            <button className="inline-block mt-12 px-10 py-4 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full">
-              Get in Touch
+      <nav
+        style={{
+          background: "#fff",
+          borderBottom: "1px solid #DDD5C4",
+          paddingLeft: 32,
+          display: "flex",
+          gap: 28,
+        }}
+      >
+        {TABS.map((t) => {
+          const active = tab === t.id;
+          return (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              style={{
+                background: "none",
+                border: "none",
+                padding: "16px 0",
+                fontSize: 12,
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                color: active ? "#B8924A" : "#9E9080",
+                borderBottom: active ? "2px solid #B8924A" : "2px solid transparent",
+                cursor: "pointer",
+                fontFamily: "'Jost', sans-serif",
+              }}
+            >
+              {t.label}
             </button>
-          </InquiryDialog>
-        </div>
-      </section>
-    </Layout>
+          );
+        })}
+      </nav>
+
+      <main style={{ maxWidth: 1000, margin: "0 auto", padding: 32 }}>
+        {tab === "new" && <NewBooking onSaved={() => setTab("all")} />}
+        {tab === "all" && <AllBookings />}
+        {tab === "pricelist" && <PriceList />}
+        {tab === "export" && <ExportTab />}
+        {tab === "settings" && <SettingsTab />}
+      </main>
+    </div>
   );
 }
