@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import SEO from "@/components/SEO";
+import { supabase } from "@/integrations/supabase/client";
 import NewBooking from "./concierge/NewBooking";
 import AllBookings from "./concierge/AllBookings";
 import PriceList from "./concierge/PriceList";
 import ExportTab from "./concierge/Export";
 import SettingsTab from "./concierge/Settings";
 
-const PASSWORD = import.meta.env.VITE_CONCIERGE_PASSWORD as string | undefined;
-const SESSION_KEY = "concierge_auth";
+const TOKEN_KEY = "concierge_token";
 
 const TABS = [
   { id: "new", label: "New Booking" },
@@ -19,21 +19,28 @@ const TABS = [
 
 type TabId = (typeof TABS)[number]["id"];
 
-function Gate({ onPass }: { onPass: () => void }) {
+function Gate({ onPass }: { onPass: (token: string) => void }) {
   const [val, setVal] = useState("");
-  const [err, setErr] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!PASSWORD) {
-      setErr(true);
-      return;
-    }
-    if (val === PASSWORD) {
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify({ auth: true }));
-      onPass();
-    } else {
-      setErr(true);
+    setLoading(true);
+    setErr(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("concierge-auth", {
+        body: { password: val },
+      });
+      if (error || !data?.token) {
+        setErr("Incorrect password — try again");
+        return;
+      }
+      onPass(data.token as string);
+    } catch {
+      setErr("Network error — try again");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,9 +97,10 @@ function Gate({ onPass }: { onPass: () => void }) {
           value={val}
           onChange={(e) => {
             setVal(e.target.value);
-            setErr(false);
+            setErr(null);
           }}
           placeholder="Password"
+          disabled={loading}
           style={{
             width: "100%",
             padding: "12px 14px",
@@ -116,11 +124,12 @@ function Gate({ onPass }: { onPass: () => void }) {
               marginTop: 10,
             }}
           >
-            Incorrect password — try again
+            {err}
           </div>
         )}
         <button
           type="submit"
+          disabled={loading || !val}
           style={{
             marginTop: 24,
             width: "100%",
@@ -132,11 +141,12 @@ function Gate({ onPass }: { onPass: () => void }) {
             fontSize: 12,
             textTransform: "uppercase",
             letterSpacing: "0.16em",
-            cursor: "pointer",
+            cursor: loading ? "wait" : "pointer",
             borderRadius: 2,
+            opacity: loading || !val ? 0.6 : 1,
           }}
         >
-          Enter
+          {loading ? "Checking…" : "Enter"}
         </button>
       </form>
     </div>
@@ -144,26 +154,49 @@ function Gate({ onPass }: { onPass: () => void }) {
 }
 
 export default function Concierge() {
-  const [authed, setAuthed] = useState(false);
+  const [authState, setAuthState] = useState<"checking" | "out" | "in">("checking");
   const [tab, setTab] = useState<TabId>("new");
 
   useEffect(() => {
-    try {
-      const raw = sessionStorage.getItem(SESSION_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (parsed?.auth) setAuthed(true);
-      }
-    } catch {
-      // ignore
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    if (!token) {
+      setAuthState("out");
+      return;
     }
+    supabase.functions
+      .invoke("concierge-verify", { body: { token } })
+      .then(({ data, error }) => {
+        if (!error && data?.valid) {
+          setAuthState("in");
+        } else {
+          sessionStorage.removeItem(TOKEN_KEY);
+          setAuthState("out");
+        }
+      })
+      .catch(() => {
+        sessionStorage.removeItem(TOKEN_KEY);
+        setAuthState("out");
+      });
   }, []);
 
-  if (!authed) {
+  if (authState === "checking") {
+    return (
+      <div style={{ minHeight: "100dvh", background: "#F7F4EE" }}>
+        <SEO title="Concierge — Internal" description="Internal tool" path="/concierge" noindex />
+      </div>
+    );
+  }
+
+  if (authState === "out") {
     return (
       <>
         <SEO title="Concierge — Internal" description="Internal tool" path="/concierge" noindex />
-        <Gate onPass={() => setAuthed(true)} />
+        <Gate
+          onPass={(token) => {
+            sessionStorage.setItem(TOKEN_KEY, token);
+            setAuthState("in");
+          }}
+        />
       </>
     );
   }
