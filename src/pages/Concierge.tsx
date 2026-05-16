@@ -19,21 +19,28 @@ const TABS = [
 
 type TabId = (typeof TABS)[number]["id"];
 
-function Gate({ onPass }: { onPass: () => void }) {
+function Gate({ onPass }: { onPass: (token: string) => void }) {
   const [val, setVal] = useState("");
-  const [err, setErr] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!PASSWORD) {
-      setErr(true);
-      return;
-    }
-    if (val === PASSWORD) {
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify({ auth: true }));
-      onPass();
-    } else {
-      setErr(true);
+    setLoading(true);
+    setErr(null);
+    try {
+      const { data, error } = await supabase.functions.invoke("concierge-auth", {
+        body: { password: val },
+      });
+      if (error || !data?.token) {
+        setErr("Incorrect password — try again");
+        return;
+      }
+      onPass(data.token as string);
+    } catch {
+      setErr("Network error — try again");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,9 +97,10 @@ function Gate({ onPass }: { onPass: () => void }) {
           value={val}
           onChange={(e) => {
             setVal(e.target.value);
-            setErr(false);
+            setErr(null);
           }}
           placeholder="Password"
+          disabled={loading}
           style={{
             width: "100%",
             padding: "12px 14px",
@@ -116,11 +124,12 @@ function Gate({ onPass }: { onPass: () => void }) {
               marginTop: 10,
             }}
           >
-            Incorrect password — try again
+            {err}
           </div>
         )}
         <button
           type="submit"
+          disabled={loading || !val}
           style={{
             marginTop: 24,
             width: "100%",
@@ -132,11 +141,12 @@ function Gate({ onPass }: { onPass: () => void }) {
             fontSize: 12,
             textTransform: "uppercase",
             letterSpacing: "0.16em",
-            cursor: "pointer",
+            cursor: loading ? "wait" : "pointer",
             borderRadius: 2,
+            opacity: loading || !val ? 0.6 : 1,
           }}
         >
-          Enter
+          {loading ? "Checking…" : "Enter"}
         </button>
       </form>
     </div>
