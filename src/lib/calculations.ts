@@ -109,6 +109,7 @@ export const TYPE_LABEL: Record<string, string> = {
   margin: "Margin",
   fixedprofit: "Fixed",
   grocery: "35% markup",
+  minibar: "100% markup",
   beer: "Beer",
   flat: "Flat fee",
   villa: "Villa TBD",
