@@ -82,8 +82,19 @@ const styles = StyleSheet.create({
   },
   totalDueLabel: { fontFamily: "Cormorant", fontSize: 14, fontWeight: 400 },
   totalDueValue: { fontFamily: "Cormorant", fontSize: 16, fontWeight: 400 },
+  gratuityBox: {
+    marginTop: 28,
+    backgroundColor: "#FDF8EE",
+    borderWidth: 1,
+    borderColor: "#E5D8B5",
+    borderRadius: 3,
+    padding: 14,
+  },
+  gratuityLabel: { fontSize: 8, color: "#B8924A", letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 6 },
+  gratuityTitle: { fontFamily: "Cormorant", fontSize: 14, fontWeight: 400, color: "#1C1914", marginBottom: 6 },
+  gratuityBody: { fontSize: 9.5, color: "#5A5242", lineHeight: 1.55 },
   footer: {
-    marginTop: 50,
+    marginTop: 28,
     borderTopWidth: 1,
     borderTopColor: "#E5DDC9",
     paddingTop: 18,
@@ -194,6 +205,15 @@ function InvoiceDoc({ booking }: { booking: Booking }) {
             <Text style={styles.totalDueLabel}>TOTAL DUE (MXN)</Text>
             <Text style={styles.totalDueValue}>{formatMXN(booking.total_guest)}</Text>
           </View>
+        </View>
+
+        <View style={styles.gratuityBox}>
+          <Text style={styles.gratuityLabel}>A Note on Gratuity</Text>
+          <Text style={styles.gratuityTitle}>Service is already taken care of</Text>
+          <Text style={styles.gratuityBody}>
+            As part of our fully-serviced stay, a 10% service charge is already included in your accommodation rate and shared among the chefs, housekeeping and concierge team who looked after you this week.{"\n\n"}
+            If our team went above and beyond — and you felt the food, the service and the overall experience truly reflected the five-star stay we strive to deliver — additional gratuity is warmly appreciated but never expected. You can simply let your concierge know to add it to this invoice, or leave cash directly in the envelope provided in your villa.
+          </Text>
         </View>
 
         <View style={styles.footer}>
