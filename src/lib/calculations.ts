@@ -84,6 +84,7 @@ export const CATEGORY_ORDER = [
   "Spa Treatments",
   "Food & Culinary",
   "Groceries & Drinks",
+  "Mini Bar",
   "Villa Services",
   "Transportation",
 ];
