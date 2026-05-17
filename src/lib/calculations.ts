@@ -31,6 +31,7 @@ export function calcProfit(
   if (type === "margin") return (price - (unitCost ?? 0)) * qty;
   if (type === "flat") return 1000 * qty;
   if (type === "grocery") return Math.round(price * qty * 0.35);
+  if (type === "minibar") return Math.round(price * qty);
   return null; // villa = TBD
 }
 
