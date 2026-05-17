@@ -5,6 +5,7 @@ import { COLORS, btnPrimary, sectionTitle } from "./styles";
 
 const RULES: Record<string, string> = {
   tour: "20% of guest price",
+  tour10: "10% of guest price",
   mgmt: "15% of guest price",
   margin: "Guest price − cost",
   fixedprofit: "Fixed profit per session",
