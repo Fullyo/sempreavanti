@@ -10,6 +10,7 @@ const RULES: Record<string, string> = {
   margin: "Guest price − cost",
   fixedprofit: "Fixed profit per session",
   grocery: "35% markup on cost",
+  minibar: "100% markup on cost",
   beer: "$480/pack − wholesale − $140",
   flat: "$1,000 MXN flat",
   villa: "TBD",
