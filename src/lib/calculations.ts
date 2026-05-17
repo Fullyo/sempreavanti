@@ -96,6 +96,7 @@ export const TYPE_COLOR: Record<string, string> = {
   margin: "#7A5C1E",
   fixedprofit: "#7A5C1E",
   grocery: "#8B2E2E",
+  minibar: "#8B2E2E",
   beer: "#8B2E2E",
   flat: "#1E4477",
   villa: "#5A5242",
