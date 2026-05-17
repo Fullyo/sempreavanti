@@ -40,6 +40,7 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
   const [tipMode, setTipMode] = useState<"amount" | "percent">("amount");
   const [tipValue, setTipValue] = useState(0);
   const [ccFeeOn, setCcFeeOn] = useState(false);
+  const [cashCollected, setCashCollected] = useState(0);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -101,6 +102,7 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
     setTipMode("amount");
     setTipValue(0);
     setCcFeeOn(false);
+    setCashCollected(0);
   };
 
   const save = async () => {
@@ -133,6 +135,7 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
       cc_fee: ccFee,
       total_guest: totalGuest,
       total_profit: totalProfit,
+      cash_collected: cashCollected,
     });
 
     setSaving(false);
@@ -451,6 +454,42 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
           </div>
         </div>
 
+        {/* Cash collected row */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingTop: 14,
+            fontSize: 13,
+          }}
+        >
+          <div>
+            Paid in Cash{" "}
+            <span style={{ color: "rgba(247,244,238,0.5)" }}>(reconciliation only — doesn't affect profit)</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <input
+              type="number"
+              min={0}
+              value={cashCollected || ""}
+              onChange={(e) => setCashCollected(Number(e.target.value) || 0)}
+              style={{
+                width: 120,
+                padding: "6px 10px",
+                background: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(247,244,238,0.2)",
+                color: "#F7F4EE",
+                fontFamily: "'Jost', sans-serif",
+                fontSize: 13,
+                borderRadius: 2,
+                textAlign: "right",
+              }}
+            />
+            <span style={{ color: "rgba(247,244,238,0.6)", fontSize: 12, minWidth: 40 }}>MXN</span>
+          </div>
+        </div>
+
         {/* Totals */}
         <div
           style={{
@@ -497,6 +536,28 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
           </div>
           <div style={{ fontSize: 16, fontWeight: 500 }}>{formatMXN(totalProfit)}</div>
         </div>
+        {cashCollected > 0 && (
+          <div
+            style={{
+              marginTop: 10,
+              paddingTop: 10,
+              borderTop: "1px dashed rgba(247,244,238,0.15)",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "baseline",
+              color: "rgba(247,244,238,0.75)",
+              fontSize: 12,
+            }}
+          >
+            <div>
+              Charged on Card{" "}
+              <span style={{ color: "rgba(247,244,238,0.45)" }}>
+                (= total − cash)
+              </span>
+            </div>
+            <div>{formatMXN(totalGuest - cashCollected)}</div>
+          </div>
+        )}
       </div>
 
       <div style={{ display: "flex", gap: 10, marginTop: 22, justifyContent: "flex-end" }}>

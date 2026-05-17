@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       bookings: {
         Row: {
+          cash_collected: number
           cc_fee: number
           cc_fee_on: boolean
           checkin: string
@@ -32,6 +33,7 @@ export type Database = {
           total_profit: number
         }
         Insert: {
+          cash_collected?: number
           cc_fee?: number
           cc_fee_on?: boolean
           checkin: string
@@ -48,6 +50,7 @@ export type Database = {
           total_profit?: number
         }
         Update: {
+          cash_collected?: number
           cc_fee?: number
           cc_fee_on?: boolean
           checkin?: string

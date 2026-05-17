@@ -1,0 +1,1 @@
+ALTER TABLE public.bookings ADD COLUMN IF NOT EXISTS cash_collected numeric NOT NULL DEFAULT 0;
