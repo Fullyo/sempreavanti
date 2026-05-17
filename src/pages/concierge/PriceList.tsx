@@ -5,6 +5,7 @@ import { COLORS, btnPrimary, sectionTitle } from "./styles";
 
 const RULES: Record<string, string> = {
   tour: "20% of guest price",
+  tour10: "10% of guest price",
   mgmt: "15% of guest price",
   margin: "Guest price − cost",
   fixedprofit: "Fixed profit per session",
@@ -20,6 +21,8 @@ function rowDisplay(s: Service) {
   switch (s.type) {
     case "tour":
       return { price: formatMXN(price), cost: formatMXN(price * 0.8), profit: formatMXN(price * 0.2), italic: false };
+    case "tour10":
+      return { price: formatMXN(price), cost: formatMXN(price * 0.9), profit: formatMXN(price * 0.1), italic: false };
     case "mgmt":
       return { price: formatMXN(price), cost: formatMXN(price * 0.85), profit: formatMXN(price * 0.15), italic: false };
     case "margin":

@@ -29,7 +29,7 @@ function uid() {
   return Math.random().toString(36).slice(2);
 }
 
-const MANUAL_TYPES = ["tour", "mgmt", "margin", "fixedprofit", "grocery", "beer", "flat", "villa"];
+const MANUAL_TYPES = ["tour", "tour10", "mgmt", "margin", "fixedprofit", "grocery", "beer", "flat", "villa"];
 
 export default function NewBooking({ onSaved }: { onSaved: () => void }) {
   const [guest, setGuest] = useState("");

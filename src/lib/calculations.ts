@@ -23,6 +23,7 @@ export function calcProfit(
   unitCost: number | null,
 ): number | null {
   if (type === "tour") return Math.round(price * qty * 0.2);
+  if (type === "tour10") return Math.round(price * qty * 0.1);
   if (type === "beer") return Math.round((480 - price - 140) * qty);
   if (type === "fixedprofit") return (unitCost ?? 500) * qty;
   if (type === "mgmt") return Math.round(price * qty * 0.15);
@@ -43,6 +44,7 @@ export function calcCost(
   if (type === "flat") return 4000 * qty;
   if (type === "grocery") return price * qty;
   if (type === "tour") return Math.round(price * qty * 0.8);
+  if (type === "tour10") return Math.round(price * qty * 0.9);
   if (type === "mgmt") return Math.round(price * qty * 0.85);
   return null;
 }
@@ -85,6 +87,7 @@ export const CATEGORY_ORDER = [
 
 export const TYPE_COLOR: Record<string, string> = {
   tour: "#2D6A45",
+  tour10: "#2D6A45",
   mgmt: "#7A5C1E",
   margin: "#7A5C1E",
   fixedprofit: "#7A5C1E",
@@ -96,6 +99,7 @@ export const TYPE_COLOR: Record<string, string> = {
 
 export const TYPE_LABEL: Record<string, string> = {
   tour: "Tour 20%",
+  tour10: "Tour 10%",
   mgmt: "Mgmt 15%",
   margin: "Margin",
   fixedprofit: "Fixed",
@@ -150,6 +154,8 @@ export function commissionRule(type: string, price: number, unit_cost: number | 
   switch (type) {
     case "tour":
       return `20% = ${formatMXN(price * 0.2)}`;
+    case "tour10":
+      return `10% = ${formatMXN(price * 0.1)}`;
     case "mgmt":
       return `15% = ${formatMXN(price * 0.15)}`;
     case "margin":
