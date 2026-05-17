@@ -536,6 +536,28 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
           </div>
           <div style={{ fontSize: 16, fontWeight: 500 }}>{formatMXN(totalProfit)}</div>
         </div>
+        {cashCollected > 0 && (
+          <div
+            style={{
+              marginTop: 10,
+              paddingTop: 10,
+              borderTop: "1px dashed rgba(247,244,238,0.15)",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "baseline",
+              color: "rgba(247,244,238,0.75)",
+              fontSize: 12,
+            }}
+          >
+            <div>
+              Charged on Card{" "}
+              <span style={{ color: "rgba(247,244,238,0.45)" }}>
+                (= total − cash)
+              </span>
+            </div>
+            <div>{formatMXN(totalGuest - cashCollected)}</div>
+          </div>
+        )}
       </div>
 
       <div style={{ display: "flex", gap: 10, marginTop: 22, justifyContent: "flex-end" }}>
