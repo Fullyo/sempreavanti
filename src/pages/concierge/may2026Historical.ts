@@ -80,7 +80,9 @@ export function openMay2026Historical() {
           <tr><td>Credit Card Fee</td><td><span class="badge b-pass">Pass-through</span></td><td style="text-align:right">$196.32</td><td style="text-align:right">$196.32</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
         </tbody>
         <tfoot>
-          <tr><td colspan="2" style="text-align:right">Totals</td><td style="text-align:right">$9,090.32</td><td style="text-align:right">$968.51</td><td style="text-align:right">$3,321.81</td><td style="text-align:right;color:#2D6A45">$2,823.54</td><td style="text-align:right;color:#7A5C1E">$498.27</td></tr>
+          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$6,690.32</td><td style="text-align:right">$3,368.51</td><td style="text-align:right">$3,321.81</td><td style="text-align:right;color:#2D6A45">$2,823.54</td><td style="text-align:right;color:#7A5C1E">$498.27</td></tr>
+          <tr><td colspan="2" style="text-align:right;color:#9E9080;font-weight:400">Less: Cash paid on site (owner direct)</td><td style="text-align:right;color:#9E9080;font-weight:400">−$1,300.00</td><td colspan="4" style="text-align:right;color:#9E9080;font-style:italic;font-weight:400">Offset against CC charge · does not affect profit split</td></tr>
+          <tr><td colspan="2" style="text-align:right">Net charged to credit card</td><td style="text-align:right">$5,390.32</td><td colspan="4"></td></tr>
         </tfoot>
       </table>
       <div class="note">Note · $1,300 of the balance was paid in cash to the owner directly (offset against the CC charge). Recorded for transparency — does not affect profit split.</div>
