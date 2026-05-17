@@ -154,6 +154,8 @@ export function commissionRule(type: string, price: number, unit_cost: number | 
   switch (type) {
     case "tour":
       return `20% = ${formatMXN(price * 0.2)}`;
+    case "tour10":
+      return `10% = ${formatMXN(price * 0.1)}`;
     case "mgmt":
       return `15% = ${formatMXN(price * 0.15)}`;
     case "margin":
