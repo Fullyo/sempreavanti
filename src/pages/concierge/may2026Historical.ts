@@ -51,7 +51,7 @@ export function openMay2026Historical() {
     <div class="meta">1 booking · All figures in USD · Accommodation fare excluded · Split: 85% owner / 15% LUX</div>
 
     <div class="cards">
-      <div class="card"><div class="label">Total Upsell Revenue</div><div class="value">$6,690.32</div></div>
+      <div class="card"><div class="label">Total Upsell Revenue</div><div class="value">$9,090.32</div></div>
       <div class="card"><div class="label">Total Profit Pool</div><div class="value">$3,321.81</div></div>
       <div class="card owner"><div class="label">Owner's Share 85%</div><div class="value">$2,823.54</div></div>
       <div class="card lux"><div class="label">LUX's Cut 15%</div><div class="value">$498.27</div></div>
@@ -74,17 +74,17 @@ export function openMay2026Historical() {
           <tr><td>Airport SUV (Round Trip) <em style="color:#9E9080;font-size:11px">1,000 MXN profit per trip ≈ $60</em></td><td><span class="badge b-flat">Flat fee</span></td><td style="text-align:right">$395.00</td><td style="text-align:right">$335.00</td><td style="text-align:right">$60.00</td><td style="text-align:right;color:#2D6A45">$51.00</td><td style="text-align:right;color:#7A5C1E">$9.00</td></tr>
           <tr><td>Taxi <em style="color:#9E9080;font-size:11px">1,000 MXN profit per trip ≈ $60</em></td><td><span class="badge b-flat">Flat fee</span></td><td style="text-align:right">$290.00</td><td style="text-align:right">$230.00</td><td style="text-align:right">$60.00</td><td style="text-align:right;color:#2D6A45">$51.00</td><td style="text-align:right;color:#7A5C1E">$9.00</td></tr>
           <tr><td>Meal at the House <em style="color:#9E9080;font-size:11px">Chef after-hours · 4 plates × $50</em></td><td><span class="badge b-15">15%</span></td><td style="text-align:right">$200.00</td><td style="text-align:right">$170.00</td><td style="text-align:right">$30.00</td><td style="text-align:right;color:#2D6A45">$25.50</td><td style="text-align:right;color:#7A5C1E">$4.50</td></tr>
-          <tr><td>UTV Rental (Side-by-Side) <em style="color:#9E9080;font-size:11px">Owner-owned vehicles · 100% profit</em></td><td><span class="badge b-100">Owner asset</span></td><td style="text-align:right">$0.00</td><td style="text-align:right">$2,400.00</td><td style="text-align:right;color:#2D6A45">$2,040.00</td><td style="text-align:right;color:#7A5C1E">$360.00</td></tr>
+          <tr><td>UTV Rental (Side-by-Side) <em style="color:#9E9080;font-size:11px">Owner-owned vehicles · 100% profit pool</em></td><td><span class="badge b-100">Owner asset</span></td><td style="text-align:right">$2,400.00</td><td style="text-align:right">$0.00</td><td style="text-align:right">$2,400.00</td><td style="text-align:right;color:#2D6A45">$2,040.00</td><td style="text-align:right;color:#7A5C1E">$360.00</td></tr>
           <tr><td>Groceries <em style="color:#9E9080;font-size:11px">$2,206 + $771 combined · cost ≈ $2,205.19</em></td><td><span class="badge b-35">35% markup</span></td><td style="text-align:right">$2,977.00</td><td style="text-align:right">$2,205.19</td><td style="text-align:right">$771.81</td><td style="text-align:right;color:#2D6A45">$656.04</td><td style="text-align:right;color:#7A5C1E">$115.77</td></tr>
           <tr><td>Drinks &amp; Alcohol <em style="color:#9E9080;font-size:11px">Sold at cost — no margin charged this stay</em></td><td><span class="badge b-pass">Pass-through</span></td><td style="text-align:right">$232.00</td><td style="text-align:right">$232.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
           <tr><td>Credit Card Fee</td><td><span class="badge b-pass">Pass-through</span></td><td style="text-align:right">$196.32</td><td style="text-align:right">$196.32</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
         </tbody>
         <tfoot>
-          <tr><td colspan="2" style="text-align:right">Totals</td><td style="text-align:right">$6,690.32</td><td style="text-align:right">$3,368.51</td><td style="text-align:right">$3,321.81</td><td style="text-align:right;color:#2D6A45">$2,823.54</td><td style="text-align:right;color:#7A5C1E">$498.27</td></tr>
+          <tr><td colspan="2" style="text-align:right">Totals</td><td style="text-align:right">$9,090.32</td><td style="text-align:right">$968.51</td><td style="text-align:right">$3,321.81</td><td style="text-align:right;color:#2D6A45">$2,823.54</td><td style="text-align:right;color:#7A5C1E">$498.27</td></tr>
         </tfoot>
       </table>
       <div class="note">Note · $1,300 of the balance was paid in cash to the owner directly (offset against the CC charge). Recorded for transparency — does not affect profit split.</div>
-      <div class="note">Note · UTV vehicles are owner-owned, so the full $2,400 is profit. LUX takes the standard 15% management cut ($360); owner keeps $2,040.</div>
+      <div class="note">Note · UTV vehicles are owner-owned (our cost = $0). The full $2,400 guest charge is profit. LUX takes the standard 15% management cut ($360); owner keeps $2,040.</div>
       <div class="note">Note · Going forward, alcohol is charged at 100% profit margin. This stay was sold at cost (no margin) as a courtesy.</div>
     </section>
 
@@ -92,7 +92,7 @@ export function openMay2026Historical() {
       <h2>May 2026 — Grand Summary</h2>
       <div class="grand-grid">
         <div class="grand-cell"><div class="l">Bookings</div><div class="v">1</div></div>
-        <div class="grand-cell"><div class="l">Guest Paid Total</div><div class="v">$6,690.32</div></div>
+        <div class="grand-cell"><div class="l">Guest Paid Total</div><div class="v">$9,090.32</div></div>
         <div class="grand-cell"><div class="l">Profit Pool</div><div class="v">$3,321.81</div></div>
         <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share 85%</div><div class="v" style="color:#7DD89E">$2,823.54</div></div>
         <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX's Cut 15%</div><div class="v" style="color:#D4A96A">$498.27</div></div>
