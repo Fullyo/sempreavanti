@@ -91,18 +91,41 @@ export function openMay2026Historical() {
       <div class="note">Note · Going forward, alcohol is charged at 100% profit margin. This stay was sold at cost (no margin) as a courtesy.</div>
     </section>
 
+    <section class="booking">
+      <div class="booking-head">
+        <div>
+          <div class="guest">Jose Izquierdo</div>
+          <div class="dates">Apr 29 – May 4, 2026 · 5 nights</div>
+        </div>
+        <div class="ref">Villa Pietro<br/>Ref: HMJ3K93XXY</div>
+      </div>
+      <table>
+        <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
+        <tbody>
+          <tr><td>Groceries <em style="color:#9E9080;font-size:11px">$494 cost + 35% service markup</em></td><td><span class="badge b-35">35% markup</span></td><td style="text-align:right">$667.00</td><td style="text-align:right">$494.00</td><td style="text-align:right">$173.00</td><td style="text-align:right;color:#2D6A45">$147.05</td><td style="text-align:right;color:#7A5C1E">$25.95</td></tr>
+          <tr><td>UTV Rental <em style="color:#9E9080;font-size:11px">12,300 MXN for 3-day rental · actual folio amount</em></td><td><span class="badge b-100">Owner asset</span></td><td style="text-align:right">$230.00</td><td style="text-align:right">$0.00</td><td style="text-align:right">$230.00</td><td style="text-align:right;color:#2D6A45">$195.50</td><td style="text-align:right;color:#7A5C1E">$34.50</td></tr>
+          <tr><td>Credit Card Fee <em style="color:#9E9080;font-size:11px">5% on $1,186 base</em></td><td><span class="badge b-pass">Pass-through</span></td><td style="text-align:right">$60.00</td><td style="text-align:right">$60.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$957.00</td><td style="text-align:right">$554.00</td><td style="text-align:right">$403.00</td><td style="text-align:right;color:#2D6A45">$342.55</td><td style="text-align:right;color:#7A5C1E">$60.45</td></tr>
+        </tfoot>
+      </table>
+      <div class="note">Note · UTV charged at $230 for this stay (below the standard 2,500 MXN/day Can-Am or 2,200 MXN/day Polaris rate). We always use whatever amount is on the Guesty folio.</div>
+      <div class="note">Note · Standard UTV rates: Can-Am 4-seater 2,500 MXN/day · Polaris 6-seater 2,200 MXN/day · Gas refill penalty 1,500 MXN if guest fails to refill. UTVs are owner-owned (100% profit pool).</div>
+    </section>
+
     <div class="grand">
       <h2>May 2026 — Grand Summary</h2>
       <div class="grand-grid">
-        <div class="grand-cell"><div class="l">Bookings</div><div class="v">1</div></div>
-        <div class="grand-cell"><div class="l">Total Billed</div><div class="v">$6,690.32</div></div>
-        <div class="grand-cell"><div class="l">Profit Pool</div><div class="v">$3,321.81</div></div>
-        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share 85%</div><div class="v" style="color:#7DD89E">$2,823.54</div></div>
-        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX's Cut 15%</div><div class="v" style="color:#D4A96A">$498.27</div></div>
+        <div class="grand-cell"><div class="l">Bookings</div><div class="v">2</div></div>
+        <div class="grand-cell"><div class="l">Total Billed</div><div class="v">$7,647.32</div></div>
+        <div class="grand-cell"><div class="l">Profit Pool</div><div class="v">$3,724.81</div></div>
+        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share 85%</div><div class="v" style="color:#7DD89E">$3,166.09</div></div>
+        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX's Cut 15%</div><div class="v" style="color:#D4A96A">$558.72</div></div>
       </div>
       <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(247,244,238,0.15);font-size:12px">
         <span style="color:rgba(247,244,238,0.5)">Cash Collected (owner direct):</span> <span style="color:#B8924A">$1,300.00</span>
-        &nbsp;&nbsp;&nbsp;<span style="color:rgba(247,244,238,0.5)">CC Fees (pass-through):</span> <span style="color:rgba(247,244,238,0.7)">$196.32</span>
+        &nbsp;&nbsp;&nbsp;<span style="color:rgba(247,244,238,0.5)">CC Fees (pass-through):</span> <span style="color:rgba(247,244,238,0.7)">$256.32</span>
       </div>
       <div style="margin-top:12px;font-size:10px;color:rgba(247,244,238,0.4)">All figures in USD · FX ≈ 18 MXN/USD for peso-denominated profit items · Accommodation fare excluded</div>
     </div>
