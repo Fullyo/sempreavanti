@@ -170,6 +170,8 @@ export function commissionRule(type: string, price: number, unit_cost: number | 
       return `${formatMXN(unit_cost ?? 500)} fixed`;
     case "grocery":
       return "35% markup on cost";
+    case "minibar":
+      return "100% markup on cost";
     case "beer":
       return `${formatMXN(480 - (unit_cost ?? 0) - 140)} est.`;
     case "flat":
