@@ -933,6 +933,8 @@ const HTML = `
 
   <p style="font-size:.8rem;color:#c0392b;margin-top:12px;background:#fff8f8;padding:10px;border-radius:6px;border:1px solid #f5c0c0;">⚠️ Please confirm all add-on pricing directly with your concierge — rates are subject to change.</p>
 
+  <p style="font-size:.8rem;color:#1a4a52;margin-top:10px;background:#fdf8ee;padding:10px;border-radius:6px;border:1px solid #f0d8a8;"><strong>Chef's Day Off — Sunday:</strong> Our in-villa chefs are off on Sundays and no meals are prepared at the villa that day. Your concierge can recommend nearby restaurants or arrange delivery in advance.</p>
+
   <div style="margin-top:28px;">
     <h3 style="color:#2e7b8c;font-family:'Montserrat',sans-serif;font-size:.85rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #f0b429;">How to Request</h3>
     <div class="grid-list">
