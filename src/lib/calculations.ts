@@ -23,6 +23,7 @@ export function calcProfit(
   unitCost: number | null,
 ): number | null {
   if (type === "tour") return Math.round(price * qty * 0.2);
+  if (type === "tour10") return Math.round(price * qty * 0.1);
   if (type === "beer") return Math.round((480 - price - 140) * qty);
   if (type === "fixedprofit") return (unitCost ?? 500) * qty;
   if (type === "mgmt") return Math.round(price * qty * 0.15);
