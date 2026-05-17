@@ -15,6 +15,7 @@ import { COLORS, btnGhost, btnPrimary, btnDanger, fieldLabel, input, sectionTitl
 import { downloadInvoice } from "./GuestInvoicePDF";
 import { downloadOwnerStatementCSV, openOwnerStatement } from "./ownerStatement";
 import { openApril2026Historical } from "./april2026Historical";
+import { openMay2026Historical } from "./may2026Historical";
 
 function monthKey(d: string) {
   const dt = new Date(d);
