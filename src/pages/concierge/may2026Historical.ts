@@ -94,7 +94,7 @@ export function openMay2026Historical() {
       <h2>May 2026 — Grand Summary</h2>
       <div class="grand-grid">
         <div class="grand-cell"><div class="l">Bookings</div><div class="v">1</div></div>
-        <div class="grand-cell"><div class="l">Guest Paid Total</div><div class="v">$9,090.32</div></div>
+        <div class="grand-cell"><div class="l">Total Billed</div><div class="v">$6,690.32</div></div>
         <div class="grand-cell"><div class="l">Profit Pool</div><div class="v">$3,321.81</div></div>
         <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share 85%</div><div class="v" style="color:#7DD89E">$2,823.54</div></div>
         <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX's Cut 15%</div><div class="v" style="color:#D4A96A">$498.27</div></div>
