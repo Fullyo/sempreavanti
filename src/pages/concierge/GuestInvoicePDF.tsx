@@ -207,6 +207,15 @@ function InvoiceDoc({ booking }: { booking: Booking }) {
           </View>
         </View>
 
+        <View style={styles.gratuityBox}>
+          <Text style={styles.gratuityLabel}>A Note on Gratuity</Text>
+          <Text style={styles.gratuityTitle}>Service is already taken care of</Text>
+          <Text style={styles.gratuityBody}>
+            As part of our fully-serviced stay, a 10% service charge is already included in your accommodation rate and shared among the chefs, housekeeping and concierge team who looked after you this week.{"\n\n"}
+            If our team went above and beyond — and you felt the food, the service and the overall experience truly reflected the five-star stay we strive to deliver — additional gratuity is warmly appreciated but never expected. You can simply let your concierge know to add it to this invoice, or leave cash directly in the envelope provided in your villa.
+          </Text>
+        </View>
+
         <View style={styles.footer}>
           <Text style={styles.thanksES}>¡Gracias por su visita!</Text>
           <Text style={styles.thanksEN}>Thank you for choosing Villas Sempre Avanti.</Text>
