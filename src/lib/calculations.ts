@@ -87,6 +87,7 @@ export const CATEGORY_ORDER = [
 
 export const TYPE_COLOR: Record<string, string> = {
   tour: "#2D6A45",
+  tour10: "#2D6A45",
   mgmt: "#7A5C1E",
   margin: "#7A5C1E",
   fixedprofit: "#7A5C1E",
@@ -98,6 +99,7 @@ export const TYPE_COLOR: Record<string, string> = {
 
 export const TYPE_LABEL: Record<string, string> = {
   tour: "Tour 20%",
+  tour10: "Tour 10%",
   mgmt: "Mgmt 15%",
   margin: "Margin",
   fixedprofit: "Fixed",
