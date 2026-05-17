@@ -48,17 +48,18 @@ export function openMay2026Historical() {
     <div class="conf">Internal Report · Confidential</div>
     <h1>Villas Sempre Avanti</h1>
     <div class="sub">Upsell Revenue &amp; Profit Report — May 2026</div>
-    <div class="meta">1 booking · All figures in USD · Accommodation fare excluded · Split: 85% owner / 15% LUX</div>
+    <div class="meta">2 bookings · All figures in USD · Accommodation fare excluded · Split: 85% owner / 15% LUX</div>
 
     <div class="cards">
-      <div class="card"><div class="label">Total Billed to Guest</div><div class="value">$6,690.32</div></div>
-      <div class="card"><div class="label">Total Profit Pool</div><div class="value">$3,321.81</div></div>
-      <div class="card owner"><div class="label">Owner's Share 85%</div><div class="value">$2,823.54</div></div>
-      <div class="card lux"><div class="label">LUX's Cut 15%</div><div class="value">$498.27</div></div>
+      <div class="card"><div class="label">Total Billed to Guest</div><div class="value">$7,647.32</div></div>
+      <div class="card"><div class="label">Total Profit Pool</div><div class="value">$3,724.81</div></div>
+      <div class="card owner"><div class="label">Owner's Share 85%</div><div class="value">$3,166.09</div></div>
+      <div class="card lux"><div class="label">LUX's Cut 15%</div><div class="value">$558.72</div></div>
       <div class="card cash"><div class="label">Cash Collected On Site</div><div class="value">$1,300.00</div></div>
     </div>
 
-    <div class="fx">FX assumption · For peso-denominated profit items (transport flat fees), we use an agreed average of ≈18 MXN / 1 USD. The 1,000 MXN profit on Airport SUV and Taxi is recorded at ≈$60 USD each (rounded for simplicity, not derived from the guest-paid USD amount).</div>
+    <div class="fx">FX assumption · For peso-denominated profit items (transport flat fees), we use an agreed average of ≈18 MXN / 1 USD. The 1,000 MXN profit on Airport SUV and Taxi is recorded at ≈$60 USD each (rounded for simplicity, not derived from the guest-paid USD amount). UTV rates vary per booking — we always use the actual amount charged on the Guesty folio.</div>
+
 
     <section class="booking">
       <div class="booking-head">
