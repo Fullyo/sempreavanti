@@ -32,6 +32,8 @@ function rowDisplay(s: Service) {
       return { price: formatMXN(price), cost: formatMXN(price - (uc ?? 0)), profit: formatMXN(uc ?? 0), italic: false };
     case "grocery":
       return { price: "cost × 1.35", cost: "actual paid", profit: "35% of cost", italic: true };
+    case "minibar":
+      return { price: "cost × 2", cost: "actual consumed", profit: "100% of cost", italic: true };
     case "beer":
       return { price: "$480 /pack", cost: "wholesale + $140", profit: "$340 − wholesale", italic: true };
     case "flat":
