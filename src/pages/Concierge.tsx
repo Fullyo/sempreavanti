@@ -182,7 +182,7 @@ export default function Concierge() {
   if (authState === "checking") {
     return (
       <div style={{ minHeight: "100dvh", background: "#F7F4EE" }}>
-        <SEO title="Concierge — Internal" description="Internal tool" path="/concierge" noindex />
+        <SEO title="Concierge — Internal" description="Internal tool" path="/upsells" noindex />
       </div>
     );
   }
@@ -190,7 +190,7 @@ export default function Concierge() {
   if (authState === "out") {
     return (
       <>
-        <SEO title="Concierge — Internal" description="Internal tool" path="/concierge" noindex />
+        <SEO title="Concierge — Internal" description="Internal tool" path="/upsells" noindex />
         <Gate
           onPass={(token) => {
             sessionStorage.setItem(TOKEN_KEY, token);
@@ -210,7 +210,7 @@ export default function Concierge() {
 
   return (
     <div style={{ minHeight: "100dvh", background: "#F7F4EE", fontFamily: "'Jost', sans-serif" }}>
-      <SEO title="Concierge — Internal" description="Internal tool" path="/concierge" noindex />
+      <SEO title="Concierge — Internal" description="Internal tool" path="/upsells" noindex />
       <header
         style={{
           background: "#1C1914",
