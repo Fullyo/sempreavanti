@@ -211,8 +211,18 @@ export default function Menu() {
             </div>
 
             {/* Top ornamental line */}
-            <div className="max-w-xs mx-auto mb-10">
+            <div className="max-w-xs mx-auto mb-6">
               <OrnamentalLine />
+            </div>
+
+            {/* Chef's day off notice */}
+            <div className="max-w-2xl mx-auto mb-10 text-center border border-accent/30 bg-accent/5 rounded-xl px-5 py-4">
+              <p className="text-[10px] font-sans uppercase tracking-[0.3em] text-accent mb-1">
+                Please Note
+              </p>
+              <p className="text-sm font-sans text-muted-foreground leading-relaxed">
+                Our chefs take <span className="text-foreground font-medium">Sunday</span> off. No meals are prepared in the villa that day — your concierge will be happy to recommend nearby restaurants or arrange delivery.
+              </p>
             </div>
 
             {/* Menu Grid */}

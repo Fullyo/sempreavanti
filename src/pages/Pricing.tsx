@@ -312,6 +312,9 @@ export default function Pricing() {
           <p className="mt-6 text-xs font-sans uppercase tracking-widest text-accent">
             All experiences require a minimum of 24 hours' notice
           </p>
+          <p className="mt-3 text-xs font-sans text-muted-foreground italic">
+            Please note: our in-villa chefs are off on Sundays — no meals are prepared at the villa that day. Your concierge can recommend nearby restaurants or arrange delivery.
+          </p>
         </div>
       </section>
 
