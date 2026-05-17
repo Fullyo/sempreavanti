@@ -389,11 +389,16 @@ export default function AllBookings() {
         <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted, marginBottom: 10 }}>
           Historical Reports
         </div>
-        <button onClick={openApril2026Historical} style={btnGhost}>
-          View April 2026 Report (USD, pre-tool)
-        </button>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          <button onClick={openApril2026Historical} style={btnGhost}>
+            View April 2026 Report (USD, pre-tool)
+          </button>
+          <button onClick={openMay2026Historical} style={btnGhost}>
+            View May 2026 Report (USD, pre-tool)
+          </button>
+        </div>
         <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 8, fontStyle: "italic" }}>
-          Original USD report from Guesty invoices, before the tool was built.
+          Original USD reports from Guesty invoices, before the tool was built.
         </div>
       </div>
 
