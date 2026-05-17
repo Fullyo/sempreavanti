@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { CATEGORY_ORDER, Service, commissionRule, formatMXN } from "@/lib/calculations";
 import { COLORS, btnGhost, btnPrimary, input, sectionTitle } from "./styles";
 
-const TYPES = ["tour", "mgmt", "margin", "fixedprofit", "grocery", "beer", "flat", "villa"];
+const TYPES = ["tour", "tour10", "mgmt", "margin", "fixedprofit", "grocery", "minibar", "beer", "flat", "villa"];
 
 export default function Settings() {
   const [services, setServices] = useState<Service[]>([]);
@@ -135,7 +135,7 @@ export default function Settings() {
                 const cur = { ...s, ...e };
                 const dirty = !!edits[s.id];
                 const hasUnitCost = ["margin", "fixedprofit", "flat"].includes(cur.type);
-                const priceDisabled = ["grocery", "beer"].includes(cur.type);
+                const priceDisabled = ["grocery", "minibar", "beer"].includes(cur.type);
                 return (
                   <tr key={s.id} style={{ borderBottom: `1px solid ${COLORS.border}` }}>
                     <td style={{ padding: 6 }}>

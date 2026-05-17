@@ -12,6 +12,7 @@ export type ServiceType =
 
 export function calcGuestTotal(type: string, price: number, qty: number): number {
   if (type === "grocery") return Math.round(price * qty * 1.35);
+  if (type === "minibar") return Math.round(price * qty * 2);
   if (type === "beer") return 480 * qty;
   return price * qty;
 }
@@ -30,6 +31,7 @@ export function calcProfit(
   if (type === "margin") return (price - (unitCost ?? 0)) * qty;
   if (type === "flat") return 1000 * qty;
   if (type === "grocery") return Math.round(price * qty * 0.35);
+  if (type === "minibar") return Math.round(price * qty);
   return null; // villa = TBD
 }
 
@@ -43,6 +45,7 @@ export function calcCost(
   if (type === "beer") return (price + 140) * qty;
   if (type === "flat") return 4000 * qty;
   if (type === "grocery") return price * qty;
+  if (type === "minibar") return price * qty;
   if (type === "tour") return Math.round(price * qty * 0.8);
   if (type === "tour10") return Math.round(price * qty * 0.9);
   if (type === "mgmt") return Math.round(price * qty * 0.85);
@@ -81,6 +84,7 @@ export const CATEGORY_ORDER = [
   "Spa Treatments",
   "Food & Culinary",
   "Groceries & Drinks",
+  "Mini Bar",
   "Villa Services",
   "Transportation",
 ];
@@ -92,6 +96,7 @@ export const TYPE_COLOR: Record<string, string> = {
   margin: "#7A5C1E",
   fixedprofit: "#7A5C1E",
   grocery: "#8B2E2E",
+  minibar: "#8B2E2E",
   beer: "#8B2E2E",
   flat: "#1E4477",
   villa: "#5A5242",
@@ -104,6 +109,7 @@ export const TYPE_LABEL: Record<string, string> = {
   margin: "Margin",
   fixedprofit: "Fixed",
   grocery: "35% markup",
+  minibar: "100% markup",
   beer: "Beer",
   flat: "Flat fee",
   villa: "Villa TBD",
@@ -164,6 +170,8 @@ export function commissionRule(type: string, price: number, unit_cost: number | 
       return `${formatMXN(unit_cost ?? 500)} fixed`;
     case "grocery":
       return "35% markup on cost";
+    case "minibar":
+      return "100% markup on cost";
     case "beer":
       return `${formatMXN(480 - (unit_cost ?? 0) - 140)} est.`;
     case "flat":
