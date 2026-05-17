@@ -44,6 +44,7 @@ export function calcCost(
   if (type === "flat") return 4000 * qty;
   if (type === "grocery") return price * qty;
   if (type === "tour") return Math.round(price * qty * 0.8);
+  if (type === "tour10") return Math.round(price * qty * 0.9);
   if (type === "mgmt") return Math.round(price * qty * 0.85);
   return null;
 }
