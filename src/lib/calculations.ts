@@ -12,6 +12,7 @@ export type ServiceType =
 
 export function calcGuestTotal(type: string, price: number, qty: number): number {
   if (type === "grocery") return Math.round(price * qty * 1.35);
+  if (type === "minibar") return Math.round(price * qty * 2);
   if (type === "beer") return 480 * qty;
   return price * qty;
 }
