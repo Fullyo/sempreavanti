@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { CATEGORY_ORDER, Service, commissionRule, formatMXN } from "@/lib/calculations";
 import { COLORS, btnGhost, btnPrimary, input, sectionTitle } from "./styles";
 
-const TYPES = ["tour", "mgmt", "margin", "fixedprofit", "grocery", "beer", "flat", "villa"];
+const TYPES = ["tour", "tour10", "mgmt", "margin", "fixedprofit", "grocery", "minibar", "beer", "flat", "villa"];
 
 export default function Settings() {
   const [services, setServices] = useState<Service[]>([]);
