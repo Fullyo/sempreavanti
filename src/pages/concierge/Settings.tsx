@@ -135,7 +135,7 @@ export default function Settings() {
                 const cur = { ...s, ...e };
                 const dirty = !!edits[s.id];
                 const hasUnitCost = ["margin", "fixedprofit", "flat"].includes(cur.type);
-                const priceDisabled = ["grocery", "beer"].includes(cur.type);
+                const priceDisabled = ["grocery", "minibar", "beer"].includes(cur.type);
                 return (
                   <tr key={s.id} style={{ borderBottom: `1px solid ${COLORS.border}` }}>
                     <td style={{ padding: 6 }}>
