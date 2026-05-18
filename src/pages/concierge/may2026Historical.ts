@@ -114,14 +114,36 @@ export function openMay2026Historical() {
       <div class="note">Note · Standard UTV rates: Can-Am 4-seater 2,500 MXN/day · Polaris 6-seater 2,200 MXN/day · Gas refill penalty 1,500 MXN if guest fails to refill. UTVs are owner-owned (100% profit pool).</div>
     </section>
 
+    <section class="booking">
+      <div class="booking-head">
+        <div>
+          <div class="guest">Teresa</div>
+          <div class="dates">May 14–18, 2026 · 4 nights · 4 guests</div>
+        </div>
+        <div class="ref">Villa Pietro<br/>Ref: GY-GhQQwakD</div>
+      </div>
+      <table>
+        <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
+        <tbody>
+          <tr><td>UTV Rental <em style="color:#9E9080;font-size:11px">15th &amp; 16th · actual folio amount</em></td><td><span class="badge b-100">Owner asset</span></td><td style="text-align:right">$240.00</td><td style="text-align:right">$0.00</td><td style="text-align:right">$240.00</td><td style="text-align:right;color:#2D6A45">$204.00</td><td style="text-align:right;color:#7A5C1E">$36.00</td></tr>
+          <tr><td>Groceries <em style="color:#9E9080;font-size:11px">$247 cost + 35% service markup</em></td><td><span class="badge b-35">35% markup</span></td><td style="text-align:right">$333.00</td><td style="text-align:right">$247.00</td><td style="text-align:right">$86.00</td><td style="text-align:right;color:#2D6A45">$73.10</td><td style="text-align:right;color:#7A5C1E">$12.90</td></tr>
+          <tr><td>UTV Gas Tank Fill <em style="color:#9E9080;font-size:11px">Reimbursement for fuel — pass-through</em></td><td><span class="badge b-pass">Pass-through</span></td><td style="text-align:right">$50.00</td><td style="text-align:right">$50.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$623.00</td><td style="text-align:right">$297.00</td><td style="text-align:right">$326.00</td><td style="text-align:right;color:#2D6A45">$277.10</td><td style="text-align:right;color:#7A5C1E">$48.90</td></tr>
+        </tfoot>
+      </table>
+      <div class="note">Note · UTV vehicles are owner-owned (100% profit pool). Gas tank fill is reimbursement for fuel — billed at cost with no markup.</div>
+    </section>
+
     <div class="grand">
       <h2>May 2026 — Grand Summary</h2>
       <div class="grand-grid">
-        <div class="grand-cell"><div class="l">Bookings</div><div class="v">2</div></div>
-        <div class="grand-cell"><div class="l">Total Billed</div><div class="v">$7,647.32</div></div>
-        <div class="grand-cell"><div class="l">Profit Pool</div><div class="v">$3,724.81</div></div>
-        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share 85%</div><div class="v" style="color:#7DD89E">$3,166.09</div></div>
-        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX's Cut 15%</div><div class="v" style="color:#D4A96A">$558.72</div></div>
+        <div class="grand-cell"><div class="l">Bookings</div><div class="v">3</div></div>
+        <div class="grand-cell"><div class="l">Total Billed</div><div class="v">$8,270.32</div></div>
+        <div class="grand-cell"><div class="l">Profit Pool</div><div class="v">$4,050.81</div></div>
+        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share 85%</div><div class="v" style="color:#7DD89E">$3,443.19</div></div>
+        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX's Cut 15%</div><div class="v" style="color:#D4A96A">$607.62</div></div>
       </div>
       <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(247,244,238,0.15);font-size:12px">
         <span style="color:rgba(247,244,238,0.5)">Cash Collected (owner direct):</span> <span style="color:#B8924A">$1,300.00</span>
