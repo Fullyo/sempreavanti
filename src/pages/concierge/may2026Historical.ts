@@ -50,18 +50,20 @@ export function openMay2026Historical() {
     <button class="print-btn" onclick="window.print()">⬇ Print / Save as PDF</button>
     <div class="conf">Internal Report · Confidential</div>
     <h1>Villas Sempre Avanti</h1>
-    <div class="sub">Upsell Revenue &amp; Profit Report — May 2026</div>
-    <div class="meta">3 bookings · All figures in USD · Accommodation fare excluded · Split: 85% owner / 15% LUX</div>
+    <div class="sub">Revenue &amp; Profit Report — May 2026</div>
+    <div class="meta">3 bookings · All figures in USD · Includes 15% management commission on accommodation fare</div>
 
     <div class="cards">
-      <div class="card"><div class="label">Total Billed to Guest</div><div class="value">$8,270.32</div></div>
-      <div class="card"><div class="label">Total Profit Pool</div><div class="value">$4,040.81</div></div>
-      <div class="card owner"><div class="label">Owner's Share 85%</div><div class="value">$3,434.69</div></div>
-      <div class="card lux"><div class="label">LUX's Cut 15%</div><div class="value">$606.12</div></div>
+      <div class="card"><div class="label">Guest Billed (Upsells)</div><div class="value">$8,270.32</div></div>
+      <div class="card accom"><div class="label">Accommodation Fare</div><div class="value">$19,339.85</div></div>
+      <div class="card"><div class="label">Upsell Profit Pool</div><div class="value">$4,040.81</div></div>
+      <div class="card owner"><div class="label">Owner's Share (Upsells 85%)</div><div class="value">$3,434.69</div></div>
+      <div class="card lux"><div class="label">LUX Total Cut</div><div class="value">$3,507.10</div></div>
       <div class="card cash"><div class="label">Cash Collected On Site</div><div class="value">$1,300.00</div></div>
     </div>
 
-    <div class="fx">Transport flat fees are recorded at a fixed $55 USD profit per trip regardless of FX. UTV rates vary per booking — we always use the actual amount charged on the Guesty folio.</div>
+    <div class="fx">Transport flat fees are recorded at a fixed $55 USD profit per trip regardless of FX. UTV rates vary per booking — we always use the actual amount charged on the Guesty folio. Accommodation commission is calculated on the room fare only (cleaning fees, taxes, and other Guesty-side line items are excluded from the 15% basis).</div>
+
 
 
     <section class="booking">
