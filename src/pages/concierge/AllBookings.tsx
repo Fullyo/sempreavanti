@@ -129,9 +129,17 @@ export default function AllBookings() {
     const histK = computeHistoricalKpis(historicalInView);
     const liveProfit = viewFiltered.reduce((s, b) => s + Number(b.total_profit), 0);
     const liveBilled = viewFiltered.reduce((s, b) => s + Number(b.total_guest), 0);
+    // Only sum live MXN accommodation fares (we treat USD live entries separately if/when added).
+    const liveAccomFare = viewFiltered.reduce((s, b) => s + Number(b.accommodation_fare ?? 0), 0);
+    const liveAccomOwner = liveAccomFare * 0.85;
+    const liveAccomLux = liveAccomFare * 0.15;
     return {
       count: histK.count + viewFiltered.length,
-      accommodation: histK.accommodation, // only historical rows carry this for now
+      accommodation: {
+        fare: histK.accommodation.fare + liveAccomFare,
+        owner: histK.accommodation.owner + liveAccomOwner,
+        lux: histK.accommodation.lux + liveAccomLux,
+      },
       upsells: {
         billed: histK.upsells.billed + liveBilled,
         profit: histK.upsells.profit + liveProfit,
@@ -139,11 +147,12 @@ export default function AllBookings() {
         lux: histK.upsells.lux + liveProfit * 0.15,
       },
       combined: {
-        ownerTotal: histK.combined.ownerTotal + liveProfit * 0.85,
-        luxTotal: histK.combined.luxTotal + liveProfit * 0.15,
+        ownerTotal: histK.combined.ownerTotal + liveAccomOwner + liveProfit * 0.85,
+        luxTotal: histK.combined.luxTotal + liveAccomLux + liveProfit * 0.15,
       },
     };
   }, [historicalInView, viewFiltered]);
+
 
   const hasHistoricalUSD = historicalInView.length > 0;
   const hasLiveMXN = viewFiltered.length > 0;
