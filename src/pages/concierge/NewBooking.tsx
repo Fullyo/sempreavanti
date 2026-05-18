@@ -105,6 +105,8 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
     setTipValue(0);
     setCcFeeOn(false);
     setCashCollected(0);
+    setAccommodationFare(0);
+    setAccommodationCurrency("MXN");
   };
 
   const save = async () => {
