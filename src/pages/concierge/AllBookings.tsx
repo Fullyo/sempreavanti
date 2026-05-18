@@ -623,3 +623,40 @@ export default function AllBookings() {
     </div>
   );
 }
+
+type KpiCell = { label: string; value: string; color?: string };
+
+function KpiBlock({ title, tone, cells, note }: { title: string; tone: "accom" | "upsell" | "combined"; cells: KpiCell[]; note?: string }) {
+  const toneStyles: Record<string, { bg: string; border: string; accent: string }> = {
+    accom:    { bg: "#F4EFE3", border: "#E5D8B5", accent: "#7A5C1E" },
+    upsell:   { bg: "#FAF7F2", border: "#DDD5C4", accent: COLORS.textMid },
+    combined: { bg: "#1C1914", border: "#1C1914", accent: "#B8924A" },
+  };
+  const t = toneStyles[tone];
+  const dark = tone === "combined";
+  return (
+    <div style={{ background: t.bg, border: `1px solid ${t.border}`, borderRadius: 4, padding: "14px 16px", marginBottom: 10, color: dark ? "#F7F4EE" : undefined }}>
+      <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: dark ? "#B8924A" : t.accent, marginBottom: 10, fontWeight: 500 }}>{title}</div>
+      <div style={{ display: "grid", gridTemplateColumns: `repeat(${cells.length}, 1fr)`, gap: 12 }}>
+        {cells.map((c) => (
+          <div key={c.label}>
+            <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: dark ? "rgba(247,244,238,0.5)" : COLORS.textMuted }}>{c.label}</div>
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, marginTop: 4, color: c.color ?? (dark ? "#F7F4EE" : COLORS.textMid) }}>{c.value}</div>
+          </div>
+        ))}
+      </div>
+      {note && <div style={{ fontSize: 11, color: dark ? "rgba(247,244,238,0.6)" : COLORS.textMuted, fontStyle: "italic", marginTop: 10 }}>{note}</div>}
+    </div>
+  );
+}
+
+function HistCell({ label, value, sub, color }: { label: string; value: string; sub?: string; color?: string }) {
+  return (
+    <div style={{ background: "#fff", border: `1px solid #E5D8B5`, borderRadius: 3, padding: "10px 12px" }}>
+      <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>{label}</div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 19, fontWeight: 400, marginTop: 4, color: color ?? COLORS.textMid }}>{value}</div>
+      {sub && <div style={{ fontSize: 10, color: COLORS.textMuted, marginTop: 4 }}>{sub}</div>}
+    </div>
+  );
+}
+
