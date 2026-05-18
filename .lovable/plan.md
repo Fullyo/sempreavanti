@@ -1,53 +1,53 @@
-## Add 15% management commission on accommodation fare — May 2026 report
+## Fix the "All Bookings" page so Current Month is actually useful
 
-New revenue stream for LUX: 15% of each booking's accommodation fare. Owner keeps the other 85% (their net payout). This is **separate** from the upsell profit pool — accommodation commission is 100% LUX (no owner split inside this report, since the 85% already goes to the owner as their payout).
+Two real problems to fix, plus one clarification.
 
-### Inputs (confirmed)
+### Problem 1 — The Current Month tab shows the wrong month and no data
 
-| Booking | Accommodation Fare | LUX 15% Commission |
-|---|---|---|
-| Maxim (3,750 + 3,800 + 4,943) | $12,493.00 | **$1,873.95** |
-| Jose Izquierdo | $4,623.85 | **$693.58** |
-| Teresa | $2,223.00 | **$333.45** |
-| **Totals** | **$19,339.85** | **$2,900.98** |
+**Why it shows "April 2026":** the tab label is computed from your browser's date when the page loads. The screenshot you sent was likely captured from the published (older) version of the site, or before the May report work was deployed. The code already reads "the real current month" — but to remove all ambiguity I'll switch from `getUTCMonth()` to local-time `getMonth()` (UTC can drift a day in some timezones) and add a small line under the tab label confirming today's date.
 
-### Edits to `src/pages/concierge/may2026Historical.ts`
+**Why it shows `$0 MXN` and "No bookings yet":** the May figures (Maxim, Izquierdo, Teresa) exist **only inside the hardcoded HTML report** (`may2026Historical.ts`) — they were never written into the `bookings` table. So the Current Month tab has nothing to aggregate.
 
-**1. Meta line (top):** change "Accommodation fare excluded" → "Includes 15% management commission on accommodation fare".
+**Fix:** extract the May 2026 booking data out of the HTML file into a structured constant (`may2026Bookings.ts`) and merge it into the Current Month view *as read-only rows* — clearly tagged "Historical · USD" so they're visually distinct from live MXN bookings going forward. The "View May 2026 Report" button still opens the rich printable PDF view. Same approach will work for any future month that has pre-tool historical data.
 
-**2. Top summary cards** — restructure from 5 to 6 cards (one row, slightly tighter):
-- Total Billed to Guest: $8,270.32 (unchanged)
-- Accommodation Fare: **$19,339.85** (new)
-- Upsell Profit Pool: $4,040.81 (rename "Total Profit Pool")
-- Owner's Share 85% (upsells): $3,434.69 (unchanged)
-- LUX Total Cut: **$3,507.10** (new — was $606.12; now $606.12 upsells + $2,900.98 accommodation)
-- Cash Collected On Site: $1,300.00 (unchanged)
+### Problem 2 — KPI cards lump accommodation and upsells together
 
-**3. Per-booking — add one row beneath each table's tfoot** (before the existing notes), styled in the gold accommodation-commission language:
+Rebuild the top KPI strip so accommodation and upsells are **never mixed**. New layout (two grouped blocks side by side, each with its own sub-cards):
 
 ```
-Accommodation fare: $X · LUX 15% commission: $Y · Owner retains 85%: $Z
+┌─────────────────────────── ACCOMMODATION FARE ──────────────────────────┐
+│  Total Fare      $19,339.85  │  Owner 85%  $16,438.87  │  LUX 15%  $2,900.98 │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────── UPSELLS ─────────────────────────────────┐
+│  Guest Billed  $8,270  │  Profit Pool  $4,041  │  Owner 85%  $3,435  │  LUX 15%  $606 │
+└─────────────────────────────────────────────────────────────────────────┘
+
+┌────────────────────────── COMBINED TOTALS ──────────────────────────────┐
+│  Owner Total Earnings  $19,873.56  │  LUX Total Cut  $3,507.10  │  Bookings  3 │
+└─────────────────────────────────────────────────────────────────────────┘
 ```
 
-- Maxim: $12,493 · LUX $1,873.95 · Owner $10,619.05
-- Izquierdo: $4,623.85 · LUX $693.58 · Owner $3,930.27
-- Teresa: $2,223 · LUX $333.45 · Owner $1,889.55
+- Each accommodation/upsell value gets its own card so nothing is "lumped".
+- Owner total = Owner accommodation (85% of fare) + Owner upsells share.
+- LUX total = LUX accommodation (15% of fare) + LUX upsells share.
+- The same structure renders on the **Upcoming (60 days)** and **All Bookings** tabs (with values aggregated over the selected scope) — currently those tabs have no KPI strip at all, which is also why the page felt empty.
 
-**4. Grand summary (bottom black block)** — expand grid to 6 cells:
-- Bookings: 3
-- Guest Billed (upsells): $8,270.32
-- Accommodation Fare: **$19,339.85** (new)
-- Upsell Profit Pool: $4,040.81
-- Owner's Share (upsells 85%): $3,434.69
-- **LUX Total Cut: $3,507.10** (combined upsell 15% + accommodation 15%)
+**Currency note:** historical May figures are USD; live bookings going forward are MXN. The cards will show the dominant currency for the selected scope and a small note `"Historical USD figures shown in USD — live bookings recorded in MXN"` when both are present. (Long-term we should add an `accommodation_fare` numeric column + a `currency` column to the `bookings` table so this is unified — flagged as follow-up, not in this plan.)
 
-Add a sub-line under the grid breaking down LUX's total:
-> *LUX cut breakdown: $606.12 from upsells (15% of profit pool) + $2,900.98 from accommodation (15% of fare) = $3,507.10*
+### Problem 3 — Quick clarification
 
-**5. FX note (top)** — append: "Accommodation commission is calculated on the room fare only (cleaning fees, taxes, and other Guesty-side line items are excluded from the 15% basis)."
+The Current Month tab is meant to give you an **at-a-glance financial snapshot of the month in progress** (bookings checking in or out this month, plus their accommodation + upsell breakdown). It's not a duplicate of the printable historical report — that one stays available via the "View May 2026 Report" button for owner-facing PDFs. Confirm this matches your intent before I build it.
 
-No changes to `calculations.ts` or to the live `bookings` table — the May report is a hardcoded historical snapshot. The live booking flow already handles upsells correctly; accommodation commission is a separate report-level overlay that doesn't belong inside the per-line `items` array.
+### Files I will touch
 
-### Optional follow-up (not in this plan, flag only)
+- **New:** `src/pages/concierge/historicalData.ts` — exports `MAY_2026_BOOKINGS` (structured rows with accommodation fare per booking) and `APRIL_2026_BOOKINGS` if you want it too.
+- `src/pages/concierge/may2026Historical.ts` — read from the new constant instead of duplicating numbers in the HTML string. Output unchanged.
+- `src/pages/concierge/AllBookings.tsx` — merge historical rows into Current Month view, rebuild KPI strip with accommodation/upsells split, add the KPI strip to Upcoming and All Bookings tabs too, switch month detection to local time, mark historical rows read-only with a "Historical · USD" badge.
 
-If you want accommodation commission to be tracked **per booking going forward** in the live tool (not just the May historical), I'd add an `accommodation_fare` numeric column to the `bookings` table and surface a single input field in NewBooking + AllBookings edit panel. Say the word and I'll plan that separately.
+No backend/schema changes, no edits to `calculations.ts`. Live booking flow untouched.
+
+### Open questions before I build
+
+1. For the Current Month tab, do you want the May historical rows to appear **inside the bookings list** (with a "Historical · USD" badge, read-only), or only contribute to the KPI cards at the top with a link to the full report? your recommendation
+2. Going forward (June onward), do you want me to add an `accommodation_fare` field to the New Booking form so live bookings carry the same 15%-commission breakdown automatically? If yes I'll plan it separately. yes
