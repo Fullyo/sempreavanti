@@ -27,9 +27,12 @@ function monthLabel(key: string) {
   return new Date(Date.UTC(y, m - 1, 1)).toLocaleDateString("en-US", { month: "long", year: "numeric" });
 }
 
+type ViewTab = "current" | "upcoming" | "all";
+
 export default function AllBookings() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
+  const [view, setView] = useState<ViewTab>("current");
   const [monthFilter, setMonthFilter] = useState("all");
   const [editId, setEditId] = useState<number | null>(null);
   const [edit, setEdit] = useState<Booking | null>(null);
@@ -52,22 +55,56 @@ export default function AllBookings() {
     load();
   }, []);
 
+  const now = new Date();
+  const currentMonthKey = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}`;
+  const todayISO = now.toISOString().slice(0, 10);
+  const sixtyDaysOut = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+  const viewFiltered = useMemo(() => {
+    if (view === "current") {
+      return bookings.filter((b) => {
+        const inKey = monthKey(b.checkin) === currentMonthKey;
+        const outKey = b.checkout ? monthKey(b.checkout) === currentMonthKey : false;
+        return inKey || outKey;
+      });
+    }
+    if (view === "upcoming") {
+      return bookings.filter((b) => b.checkin >= todayISO && b.checkin <= sixtyDaysOut);
+    }
+    return bookings;
+  }, [bookings, view, currentMonthKey, todayISO, sixtyDaysOut]);
+
   const grouped = useMemo(() => {
     const groups: Record<string, Booking[]> = {};
-    bookings.forEach((b) => {
+    viewFiltered.forEach((b) => {
       const k = monthKey(b.checkin);
       (groups[k] ||= []).push(b);
     });
     Object.values(groups).forEach((arr) => arr.sort((a, b) => a.guest.localeCompare(b.guest)));
     return Object.entries(groups)
       .sort(([a], [b]) => a.localeCompare(b))
-      .filter(([k]) => monthFilter === "all" || k === monthFilter);
-  }, [bookings, monthFilter]);
+      .filter(([k]) => view !== "all" || monthFilter === "all" || k === monthFilter);
+  }, [viewFiltered, view, monthFilter]);
 
   const months = useMemo(() => {
     const set = new Set(bookings.map((b) => monthKey(b.checkin)));
     return Array.from(set).sort();
   }, [bookings]);
+
+  const currentMonthLabel = monthLabel(currentMonthKey);
+  const currentKpis = useMemo(() => {
+    const list = view === "current" ? viewFiltered : [];
+    const billed = list.reduce((s, b) => s + Number(b.total_guest), 0);
+    const profit = list.reduce((s, b) => s + Number(b.total_profit), 0);
+    return {
+      count: list.length,
+      billed,
+      profit,
+      owner: profit * 0.85,
+      lux: profit * 0.15,
+    };
+  }, [viewFiltered, view]);
+
 
   const startEdit = (b: Booking) => {
     setEditId(b.id);
