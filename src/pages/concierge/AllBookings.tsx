@@ -260,42 +260,35 @@ export default function AllBookings() {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18, flexWrap: "wrap", gap: 10 }}>
         <h1 style={sectionTitle}>Bookings</h1>
         <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-          {view === "all" && (
-            <>
-              <label style={{ fontSize: 11, color: COLORS.textMuted, textTransform: "uppercase", letterSpacing: "0.12em" }}>
-                Filter by month
-              </label>
-              <select
-                style={{ ...input, width: "auto", padding: "8px 10px" }}
-                value={monthFilter}
-                onChange={(e) => setMonthFilter(e.target.value)}
-              >
-                <option value="all">All months</option>
-                {months.map((m) => (
-                  <option key={m} value={m}>
-                    {monthLabel(m)}
-                  </option>
-                ))}
-              </select>
-            </>
-          )}
+          <label style={{ fontSize: 11, color: COLORS.textMuted, textTransform: "uppercase", letterSpacing: "0.12em" }}>
+            Month
+          </label>
+          <select
+            style={{ ...input, width: "auto", padding: "8px 10px" }}
+            value={monthFilter}
+            onChange={(e) => { setMonthFilter(e.target.value); setView("all"); }}
+          >
+            <option value="all">All months</option>
+            {months.map((m) => (
+              <option key={m} value={m}>{monthLabel(m)}</option>
+            ))}
+          </select>
           <button onClick={load} style={btnGhost}>↻ Refresh</button>
           <button onClick={downloadAllCSV} style={btnGhost}>Download All as CSV</button>
         </div>
       </div>
 
-      {/* Tabs */}
+      {/* View toggle: All vs Upcoming */}
       <div style={{ display: "flex", gap: 0, marginBottom: 18, borderBottom: `1px solid ${COLORS.border}` }}>
         {([
-          { id: "current", label: `Current Month · ${currentMonthLabel}` },
-          { id: "upcoming", label: "Upcoming (60 days)" },
           { id: "all", label: "All Bookings" },
+          { id: "upcoming", label: "Upcoming (60 days)" },
         ] as { id: ViewTab; label: string }[]).map((t) => {
           const active = view === t.id;
           return (
             <button
               key={t.id}
-              onClick={() => setView(t.id)}
+              onClick={() => { setView(t.id); if (t.id === "upcoming") setMonthFilter("all"); }}
               style={{
                 background: "transparent",
                 border: "none",
@@ -317,127 +310,119 @@ export default function AllBookings() {
         })}
       </div>
 
-      {/* KPI strip — accommodation and upsells are tracked separately */}
-      {!loading && (kpis.count > 0) && (
-        <div style={{ marginBottom: 22 }}>
-          {/* Accommodation block */}
-          <KpiBlock
-            title="Accommodation Fare"
-            tone="accom"
-            cells={[
-              { label: "Total Fare", value: formatUSD(kpis.accommodation.fare) },
-              { label: "Owner's Share 85%", value: formatUSD(kpis.accommodation.owner), color: COLORS.green },
-              { label: "LUX's Cut 15%", value: formatUSD(kpis.accommodation.lux), color: COLORS.amber },
-            ]}
-            note={kpis.accommodation.fare === 0
-              ? "No accommodation fare recorded for this scope yet. Live bookings don't capture room fare — add it on the New Booking form going forward."
-              : undefined}
-          />
-          {/* Upsells block */}
-          <KpiBlock
-            title="Upsells (Transport, UTV, Groceries, etc.)"
-            tone="upsell"
-            cells={[
-              { label: "Guest Billed", value: mixedCurrency ? `${formatUSD(kpis.upsells.billed)} eq.` : (hasHistoricalUSD ? formatUSD(kpis.upsells.billed) : formatMXN(kpis.upsells.billed)) },
-              { label: "Profit Pool", value: hasHistoricalUSD ? formatUSD(kpis.upsells.profit) : formatMXN(kpis.upsells.profit) },
-              { label: "Owner's Share 85%", value: hasHistoricalUSD ? formatUSD(kpis.upsells.owner) : formatMXN(kpis.upsells.owner), color: COLORS.green },
-              { label: "LUX's Cut 15%", value: hasHistoricalUSD ? formatUSD(kpis.upsells.lux) : formatMXN(kpis.upsells.lux), color: COLORS.amber },
-            ]}
-          />
-          {/* Combined */}
-          <KpiBlock
-            title="Combined Totals"
-            tone="combined"
-            cells={[
-              { label: "Bookings", value: String(kpis.count) },
-              { label: "Owner Total Earnings", value: hasHistoricalUSD ? formatUSD(kpis.combined.ownerTotal) : formatMXN(kpis.combined.ownerTotal), color: COLORS.green },
-              { label: "LUX Total Cut", value: hasHistoricalUSD ? formatUSD(kpis.combined.luxTotal) : formatMXN(kpis.combined.luxTotal), color: COLORS.amber },
-            ]}
-          />
-          {mixedCurrency && (
-            <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 8 }}>
-              Note · Historical figures shown in USD (pre-tool Guesty data). Live bookings going forward are recorded in MXN. Totals above are not FX-converted.
-            </div>
-          )}
-        </div>
-      )}
-
-      <div style={{ fontStyle: "italic", color: COLORS.textMuted, fontSize: 12, marginBottom: 14 }}>
-        Click Download Invoice on a booking for a guest PDF, or Owner Statement on a month for the owner's report.
+      <div style={{ fontStyle: "italic", color: COLORS.textMuted, fontSize: 12, marginBottom: 18 }}>
+        Latest month appears first. Each month has its own Accommodation / Upsells / Combined summary at the top.
       </div>
 
-      {/* Historical (USD, pre-tool) rows — read-only */}
-      {!loading && historicalInView.length > 0 && (
-        <div style={{ marginBottom: 28 }}>
-          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 10, paddingBottom: 8, borderBottom: `1px solid ${COLORS.border}` }}>
-            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 300 }}>
-              Historical · USD <span style={{ fontSize: 11, color: COLORS.textMuted, letterSpacing: "0.1em", textTransform: "uppercase", marginLeft: 8 }}>Pre-tool Guesty data</span>
-            </div>
-            <button onClick={openMay2026Historical} style={btnGhost}>Open Full May 2026 Report</button>
-          </div>
-          {historicalInView.map((h) => (
-            <div key={h.id} style={{ background: "#FDF9F1", border: `1px solid #E5D8B5`, borderRadius: 4, padding: "16px 20px", marginBottom: 12 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
-                <div>
-                  <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 19, fontWeight: 400 }}>
-                    {h.guest}
-                    <span style={{ fontSize: 9, background: "#7A5C1E1a", color: "#7A5C1E", padding: "2px 8px", borderRadius: 10, marginLeft: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>Historical · USD</span>
-                  </div>
-                  <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 3 }}>
-                    {h.checkin} → {h.checkout} · {h.villa}
-                  </div>
-                  {h.notes && <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 4, fontStyle: "italic" }}>{h.notes}</div>}
-                </div>
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginTop: 12 }}>
-                <HistCell label="Accommodation Fare" value={formatUSD(h.accommodationFare)} sub={`Owner 85%: ${formatUSD(h.accommodationFare * 0.85)} · LUX 15%: ${formatUSD(h.accommodationFare * 0.15)}`} />
-                <HistCell label="Upsells Billed" value={formatUSD(h.upsellsBilled)} sub={`Profit pool: ${formatUSD(h.upsellsProfit)}`} />
-                <HistCell label="LUX Cut (Total)" value={formatUSD(h.accommodationFare * 0.15 + h.upsellsProfit * 0.15)} sub={`Owner: ${formatUSD(h.accommodationFare * 0.85 + h.upsellsProfit * 0.85)}`} color={COLORS.amber} />
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
       {loading && <div style={{ color: COLORS.textMuted }}>Loading…</div>}
-      {!loading && bookings.length === 0 && historicalInView.length === 0 && <div style={{ color: COLORS.textMuted }}>No bookings yet.</div>}
-      {!loading && grouped.length === 0 && historicalInView.length === 0 && bookings.length > 0 && (
+      {!loading && monthSections.length === 0 && (
         <div style={{ background: "#fff", border: `1px dashed ${COLORS.border}`, borderRadius: 4, padding: "32px 22px", textAlign: "center", color: COLORS.textMuted }}>
-          {view === "current" && <>No live bookings for {currentMonthLabel} yet — use New Booking to add one.</>}
-          {view === "upcoming" && <>No upcoming check-ins in the next 60 days.</>}
-          {view === "all" && <>No bookings match this filter.</>}
+          {view === "upcoming" ? "No upcoming check-ins in the next 60 days." : "No bookings match this filter."}
         </div>
       )}
 
-
-      {grouped.map(([key, list]) => {
-        const charged = list.reduce((s, b) => s + Number(b.total_guest), 0);
-        const profit = list.reduce((s, b) => s + Number(b.total_profit), 0);
+      {monthSections.map(([key, group]) => {
+        const kpis = computeMonthKpis(group.live, group.hist);
         const label = monthLabel(key);
         const [yStr, mStr] = key.split("-");
         const monthName = new Date(Date.UTC(Number(yStr), Number(mStr) - 1, 1)).toLocaleDateString("en-US", { month: "long" });
+        const hasHist = group.hist.length > 0;
+        const hasLive = group.live.length > 0;
+        const mixed = hasHist && hasLive;
+        const histReportBtn = key === "2026-05"
+          ? <button onClick={openMay2026Historical} style={btnGhost}>Open Full May 2026 Report</button>
+          : key === "2026-04"
+          ? <button onClick={openApril2026Historical} style={btnGhost}>Open Full April 2026 Report</button>
+          : null;
+
         return (
-          <div key={key} style={{ marginBottom: 30 }}>
+          <div key={key} style={{ marginBottom: 40 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 14, paddingBottom: 8, borderBottom: `1px solid ${COLORS.border}` }}>
               <div>
-                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, fontWeight: 300 }}>
+                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 300 }}>
                   {label}
                 </div>
                 <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 4 }}>
-                  {list.length} bookings · Charged: {formatMXN(charged)} · Profit: {formatMXN(profit)}
+                  {kpis.count} bookings
+                  {hasHist && ` · ${group.hist.length} historical (USD)`}
+                  {hasLive && ` · ${group.live.length} live (MXN)`}
                 </div>
               </div>
-              <button
-                onClick={() => openOwnerStatement(monthName, Number(yStr), list)}
-                style={btnPrimary}
-              >
-                ⬇ Owner Statement
-              </button>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                {histReportBtn}
+                {hasLive && (
+                  <button onClick={() => openOwnerStatement(monthName, Number(yStr), group.live)} style={btnPrimary}>
+                    ⬇ Owner Statement
+                  </button>
+                )}
+              </div>
             </div>
 
-            {list.map((b) => {
+            {/* Per-month KPI summary */}
+            <div style={{ marginBottom: 18 }}>
+              <KpiBlock
+                title="Accommodation Fare"
+                tone="accom"
+                cells={[
+                  { label: "Total Fare", value: hasHist ? formatUSD(kpis.accommodation.fare) : formatMXN(kpis.accommodation.fare) },
+                  { label: "Owner's Share 85%", value: hasHist ? formatUSD(kpis.accommodation.owner) : formatMXN(kpis.accommodation.owner), color: COLORS.green },
+                  { label: "LUX's Cut 15%", value: hasHist ? formatUSD(kpis.accommodation.lux) : formatMXN(kpis.accommodation.lux), color: COLORS.amber },
+                ]}
+                note={kpis.accommodation.fare === 0 ? "No accommodation fare recorded for this month." : undefined}
+              />
+              <KpiBlock
+                title="Upsells (Transport, UTV, Groceries, etc.)"
+                tone="upsell"
+                cells={[
+                  { label: "Guest Billed", value: hasHist ? formatUSD(kpis.upsells.billed) : formatMXN(kpis.upsells.billed) },
+                  { label: "Profit Pool", value: hasHist ? formatUSD(kpis.upsells.profit) : formatMXN(kpis.upsells.profit) },
+                  { label: "Owner's Share 85%", value: hasHist ? formatUSD(kpis.upsells.owner) : formatMXN(kpis.upsells.owner), color: COLORS.green },
+                  { label: "LUX's Cut 15%", value: hasHist ? formatUSD(kpis.upsells.lux) : formatMXN(kpis.upsells.lux), color: COLORS.amber },
+                ]}
+              />
+              <KpiBlock
+                title="Combined Totals (Accommodation + Upsells)"
+                tone="combined"
+                cells={[
+                  { label: "Bookings", value: String(kpis.count) },
+                  { label: "Owner Total Earnings", value: hasHist ? formatUSD(kpis.combined.ownerTotal) : formatMXN(kpis.combined.ownerTotal), color: COLORS.green },
+                  { label: "LUX Total Cut", value: hasHist ? formatUSD(kpis.combined.luxTotal) : formatMXN(kpis.combined.luxTotal), color: COLORS.amber },
+                ]}
+              />
+              {mixed && (
+                <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 8 }}>
+                  Note · This month contains both historical (USD) and live (MXN) bookings. Totals above are not FX-converted — treat each currency block separately.
+                </div>
+              )}
+            </div>
+
+            {/* Historical (USD) rows — read-only */}
+            {group.hist.map((h) => (
+              <div key={h.id} style={{ background: "#FDF9F1", border: `1px solid #E5D8B5`, borderRadius: 4, padding: "16px 20px", marginBottom: 12 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
+                  <div>
+                    <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 19, fontWeight: 400 }}>
+                      {h.guest}
+                      <span style={{ fontSize: 9, background: "#7A5C1E1a", color: "#7A5C1E", padding: "2px 8px", borderRadius: 10, marginLeft: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>Historical · USD</span>
+                    </div>
+                    <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 3 }}>
+                      {h.checkin} → {h.checkout} · {h.villa}
+                    </div>
+                    {h.notes && <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 4, fontStyle: "italic" }}>{h.notes}</div>}
+                  </div>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginTop: 12 }}>
+                  <HistCell label="Accommodation Fare" value={formatUSD(h.accommodationFare)} sub={h.accommodationFare > 0 ? `Owner 85%: ${formatUSD(h.accommodationFare * 0.85)} · LUX 15%: ${formatUSD(h.accommodationFare * 0.15)}` : "Not captured for this booking"} />
+                  <HistCell label="Upsells Billed" value={formatUSD(h.upsellsBilled)} sub={`Profit pool: ${formatUSD(h.upsellsProfit)}`} />
+                  <HistCell label="LUX Cut (Total)" value={formatUSD(h.accommodationFare * 0.15 + h.upsellsProfit * 0.15)} sub={`Owner: ${formatUSD(h.accommodationFare * 0.85 + h.upsellsProfit * 0.85)}`} color={COLORS.amber} />
+                </div>
+              </div>
+            ))}
+
+            {/* Live (MXN) rows */}
+            {group.live.map((b) => {
               const isEdit = editId === b.id && edit;
-              const view = (isEdit ? edit! : b);
+              const v = (isEdit ? edit! : b);
               return (
                 <div key={b.id} style={{ background: "#fff", border: `1px solid ${isEdit ? COLORS.gold : COLORS.border}`, borderRadius: 4, padding: "18px 22px", marginBottom: 14 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
@@ -445,30 +430,30 @@ export default function AllBookings() {
                       {isEdit ? (
                         <input
                           style={{ ...input, fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 300 }}
-                          value={view.guest}
+                          value={v.guest}
                           onChange={(e) => setEdit({ ...edit!, guest: e.target.value })}
                         />
                       ) : (
                         <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 300 }}>
-                          {view.guest}
+                          {v.guest}
                         </div>
                       )}
                       <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 4, display: "flex", gap: 10, alignItems: "center" }}>
                         {isEdit ? (
                           <>
-                            <input type="date" style={{ ...input, width: "auto" }} value={view.checkin} onChange={(e) => setEdit({ ...edit!, checkin: e.target.value })} />
-                            <input type="date" style={{ ...input, width: "auto" }} value={view.checkout ?? ""} onChange={(e) => setEdit({ ...edit!, checkout: e.target.value || null })} />
+                            <input type="date" style={{ ...input, width: "auto" }} value={v.checkin} onChange={(e) => setEdit({ ...edit!, checkin: e.target.value })} />
+                            <input type="date" style={{ ...input, width: "auto" }} value={v.checkout ?? ""} onChange={(e) => setEdit({ ...edit!, checkout: e.target.value || null })} />
                           </>
                         ) : (
                           <span>
-                            Check-in: {view.checkin}{view.checkout ? ` · Check-out: ${view.checkout}` : ""}
+                            Check-in: {v.checkin}{v.checkout ? ` · Check-out: ${v.checkout}` : ""}
                           </span>
                         )}
                       </div>
                     </div>
                     <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: 18, fontWeight: 500 }}>{formatMXN(view.total_guest)}</div>
-                      <div style={{ fontSize: 12, color: COLORS.green, marginTop: 2 }}>Profit: {formatMXN(view.total_profit)}</div>
+                      <div style={{ fontSize: 18, fontWeight: 500 }}>{formatMXN(v.total_guest)}</div>
+                      <div style={{ fontSize: 12, color: COLORS.green, marginTop: 2 }}>Profit: {formatMXN(v.total_profit)}</div>
                     </div>
                   </div>
 
@@ -484,7 +469,7 @@ export default function AllBookings() {
                       </tr>
                     </thead>
                     <tbody>
-                      {view.items.map((i, idx) => {
+                      {v.items.map((i, idx) => {
                         const gt = isEdit ? calcGuestTotal(i.type, i.price, i.qty) : i.guest_total;
                         const c = isEdit ? calcCost(i.type, i.price, i.qty, i.unit_cost) : i.cost;
                         const p = isEdit ? calcProfit(i.type, i.price, i.qty, i.unit_cost) : i.profit;
@@ -517,22 +502,22 @@ export default function AllBookings() {
                           </tr>
                         );
                       })}
-                      {Number(view.tip) > 0 && (
+                      {Number(v.tip) > 0 && (
                         <tr>
                           <td style={{ padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>
-                            {view.tip_mode === "percent" ? `Staff Tip (${view.tip_value}%)` : "Staff Tip"}
+                            {v.tip_mode === "percent" ? `Staff Tip (${v.tip_value}%)` : "Staff Tip"}
                           </td>
                           {isEdit && <td colSpan={2} />}
-                          <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>{formatMXN(view.tip)}</td>
+                          <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>{formatMXN(v.tip)}</td>
                           <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}`, color: COLORS.textMuted }}>—</td>
                           <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}`, color: COLORS.blue, fontStyle: "italic", fontSize: 11 }}>pass-through</td>
                         </tr>
                       )}
-                      {Number(view.cc_fee) > 0 && (
+                      {Number(v.cc_fee) > 0 && (
                         <tr>
                           <td style={{ padding: "8px 6px" }}>3% Credit Card Fee</td>
                           {isEdit && <td colSpan={2} />}
-                          <td style={{ textAlign: "right", padding: "8px 6px" }}>{formatMXN(view.cc_fee)}</td>
+                          <td style={{ textAlign: "right", padding: "8px 6px" }}>{formatMXN(v.cc_fee)}</td>
                           <td style={{ textAlign: "right", padding: "8px 6px", color: COLORS.textMuted }}>—</td>
                           <td style={{ textAlign: "right", padding: "8px 6px", color: COLORS.textMuted }}>—</td>
                         </tr>
@@ -587,6 +572,7 @@ export default function AllBookings() {
           </div>
         );
       })}
+
 
       <div style={{ marginTop: 40, paddingTop: 24, borderTop: `1px solid ${COLORS.border}` }}>
         <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted, marginBottom: 10 }}>
