@@ -40,7 +40,7 @@ export function openMay2026Historical() {
     .b-pass { background: #9E90801a; color: #9E9080; }
     .grand { background: #1C1914; color: #F7F4EE; padding: 24px; border-radius: 4px; margin-top: 28px; }
     .grand h2 { font-family: 'Cormorant Garamond', serif; font-weight: 300; color: #B8924A; margin: 0 0 18px; font-size: 22px; }
-    .grand-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    .grand-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
     .grand-cell .l { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(247,244,238,0.5); }
     .grand-cell .v { font-size: 16px; margin-top: 4px; font-weight: 500; }
     .fx { background: #FDF4E3; border: 1px solid #E5D8B5; border-radius: 4px; padding: 10px 14px; font-size: 11px; color: #7A5C1E; margin-bottom: 18px; }
