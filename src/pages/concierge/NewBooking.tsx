@@ -140,6 +140,8 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
       total_guest: totalGuest,
       total_profit: totalProfit,
       cash_collected: cashCollected,
+      accommodation_fare: accommodationFare,
+      accommodation_currency: accommodationCurrency,
     });
 
     setSaving(false);
