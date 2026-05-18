@@ -16,6 +16,14 @@ import { downloadInvoice } from "./GuestInvoicePDF";
 import { downloadOwnerStatementCSV, openOwnerStatement } from "./ownerStatement";
 import { openApril2026Historical } from "./april2026Historical";
 import { openMay2026Historical } from "./may2026Historical";
+import {
+  ALL_HISTORICAL,
+  HistoricalBooking,
+  KpiBreakdown,
+  computeHistoricalKpis,
+  formatUSD,
+  historicalMonthKey,
+} from "./historicalData";
 
 function monthKey(d: string) {
   const dt = new Date(d);
@@ -56,8 +64,9 @@ export default function AllBookings() {
   }, []);
 
   const now = new Date();
-  const currentMonthKey = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}`;
-  const todayISO = now.toISOString().slice(0, 10);
+  // Use local time (not UTC) so the month label matches the user's calendar day.
+  const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   const sixtyDaysOut = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
   const viewFiltered = useMemo(() => {
@@ -74,6 +83,24 @@ export default function AllBookings() {
     return bookings;
   }, [bookings, view, currentMonthKey, todayISO, sixtyDaysOut]);
 
+  // Historical (pre-tool, USD) rows visible in the current view scope.
+  const historicalInView = useMemo<HistoricalBooking[]>(() => {
+    if (view === "current") {
+      return ALL_HISTORICAL.filter((h) => {
+        const inKey = historicalMonthKey(h) === currentMonthKey;
+        const outKey = h.checkout.slice(0, 7) === currentMonthKey;
+        return inKey || outKey;
+      });
+    }
+    if (view === "upcoming") {
+      return ALL_HISTORICAL.filter((h) => h.checkin >= todayISO && h.checkin <= sixtyDaysOut);
+    }
+    if (monthFilter !== "all") {
+      return ALL_HISTORICAL.filter((h) => historicalMonthKey(h) === monthFilter);
+    }
+    return ALL_HISTORICAL;
+  }, [view, monthFilter, currentMonthKey, todayISO, sixtyDaysOut]);
+
   const grouped = useMemo(() => {
     const groups: Record<string, Booking[]> = {};
     viewFiltered.forEach((b) => {
@@ -87,23 +114,41 @@ export default function AllBookings() {
   }, [viewFiltered, view, monthFilter]);
 
   const months = useMemo(() => {
-    const set = new Set(bookings.map((b) => monthKey(b.checkin)));
+    const set = new Set([
+      ...bookings.map((b) => monthKey(b.checkin)),
+      ...ALL_HISTORICAL.map((h) => historicalMonthKey(h)),
+    ]);
     return Array.from(set).sort();
   }, [bookings]);
 
   const currentMonthLabel = monthLabel(currentMonthKey);
-  const currentKpis = useMemo(() => {
-    const list = view === "current" ? viewFiltered : [];
-    const billed = list.reduce((s, b) => s + Number(b.total_guest), 0);
-    const profit = list.reduce((s, b) => s + Number(b.total_profit), 0);
+
+  // KPI breakdown: combines live MXN bookings (profit-pool only — no accommodation
+  // fare captured yet) with historical USD rows that have accommodation data.
+  const kpis = useMemo<KpiBreakdown>(() => {
+    const histK = computeHistoricalKpis(historicalInView);
+    const liveProfit = viewFiltered.reduce((s, b) => s + Number(b.total_profit), 0);
+    const liveBilled = viewFiltered.reduce((s, b) => s + Number(b.total_guest), 0);
     return {
-      count: list.length,
-      billed,
-      profit,
-      owner: profit * 0.85,
-      lux: profit * 0.15,
+      count: histK.count + viewFiltered.length,
+      accommodation: histK.accommodation, // only historical rows carry this for now
+      upsells: {
+        billed: histK.upsells.billed + liveBilled,
+        profit: histK.upsells.profit + liveProfit,
+        owner: histK.upsells.owner + liveProfit * 0.85,
+        lux: histK.upsells.lux + liveProfit * 0.15,
+      },
+      combined: {
+        ownerTotal: histK.combined.ownerTotal + liveProfit * 0.85,
+        luxTotal: histK.combined.luxTotal + liveProfit * 0.15,
+      },
     };
-  }, [viewFiltered, view]);
+  }, [historicalInView, viewFiltered]);
+
+  const hasHistoricalUSD = historicalInView.length > 0;
+  const hasLiveMXN = viewFiltered.length > 0;
+  const mixedCurrency = hasHistoricalUSD && hasLiveMXN;
+
 
 
   const startEdit = (b: Booking) => {
@@ -275,21 +320,48 @@ export default function AllBookings() {
         })}
       </div>
 
-      {/* KPI strip on Current Month */}
-      {view === "current" && !loading && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10, marginBottom: 22 }}>
-          {[
-            { label: "Bookings This Month", value: String(currentKpis.count), color: COLORS.textMid },
-            { label: "Total Billed", value: formatMXN(currentKpis.billed), color: COLORS.textMid },
-            { label: "Profit Pool", value: formatMXN(currentKpis.profit), color: COLORS.textMid },
-            { label: "Owner's Share 85%", value: formatMXN(currentKpis.owner), color: COLORS.green },
-            { label: "LUX's Cut 15%", value: formatMXN(currentKpis.lux), color: COLORS.amber },
-          ].map((k) => (
-            <div key={k.label} style={{ background: "#fff", border: `1px solid ${COLORS.border}`, borderRadius: 4, padding: "12px 14px" }}>
-              <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>{k.label}</div>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, marginTop: 6, color: k.color }}>{k.value}</div>
+      {/* KPI strip — accommodation and upsells are tracked separately */}
+      {!loading && (kpis.count > 0) && (
+        <div style={{ marginBottom: 22 }}>
+          {/* Accommodation block */}
+          <KpiBlock
+            title="Accommodation Fare"
+            tone="accom"
+            cells={[
+              { label: "Total Fare", value: formatUSD(kpis.accommodation.fare) },
+              { label: "Owner's Share 85%", value: formatUSD(kpis.accommodation.owner), color: COLORS.green },
+              { label: "LUX's Cut 15%", value: formatUSD(kpis.accommodation.lux), color: COLORS.amber },
+            ]}
+            note={kpis.accommodation.fare === 0
+              ? "No accommodation fare recorded for this scope yet. Live bookings don't capture room fare — add it on the New Booking form going forward."
+              : undefined}
+          />
+          {/* Upsells block */}
+          <KpiBlock
+            title="Upsells (Transport, UTV, Groceries, etc.)"
+            tone="upsell"
+            cells={[
+              { label: "Guest Billed", value: mixedCurrency ? `${formatUSD(kpis.upsells.billed)} eq.` : (hasHistoricalUSD ? formatUSD(kpis.upsells.billed) : formatMXN(kpis.upsells.billed)) },
+              { label: "Profit Pool", value: hasHistoricalUSD ? formatUSD(kpis.upsells.profit) : formatMXN(kpis.upsells.profit) },
+              { label: "Owner's Share 85%", value: hasHistoricalUSD ? formatUSD(kpis.upsells.owner) : formatMXN(kpis.upsells.owner), color: COLORS.green },
+              { label: "LUX's Cut 15%", value: hasHistoricalUSD ? formatUSD(kpis.upsells.lux) : formatMXN(kpis.upsells.lux), color: COLORS.amber },
+            ]}
+          />
+          {/* Combined */}
+          <KpiBlock
+            title="Combined Totals"
+            tone="combined"
+            cells={[
+              { label: "Bookings", value: String(kpis.count) },
+              { label: "Owner Total Earnings", value: hasHistoricalUSD ? formatUSD(kpis.combined.ownerTotal) : formatMXN(kpis.combined.ownerTotal), color: COLORS.green },
+              { label: "LUX Total Cut", value: hasHistoricalUSD ? formatUSD(kpis.combined.luxTotal) : formatMXN(kpis.combined.luxTotal), color: COLORS.amber },
+            ]}
+          />
+          {mixedCurrency && (
+            <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 8 }}>
+              Note · Historical figures shown in USD (pre-tool Guesty data). Live bookings going forward are recorded in MXN. Totals above are not FX-converted.
             </div>
-          ))}
+          )}
         </div>
       )}
 
@@ -297,15 +369,49 @@ export default function AllBookings() {
         Click Download Invoice on a booking for a guest PDF, or Owner Statement on a month for the owner's report.
       </div>
 
+      {/* Historical (USD, pre-tool) rows — read-only */}
+      {!loading && historicalInView.length > 0 && (
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 10, paddingBottom: 8, borderBottom: `1px solid ${COLORS.border}` }}>
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 300 }}>
+              Historical · USD <span style={{ fontSize: 11, color: COLORS.textMuted, letterSpacing: "0.1em", textTransform: "uppercase", marginLeft: 8 }}>Pre-tool Guesty data</span>
+            </div>
+            <button onClick={openMay2026Historical} style={btnGhost}>Open Full May 2026 Report</button>
+          </div>
+          {historicalInView.map((h) => (
+            <div key={h.id} style={{ background: "#FDF9F1", border: `1px solid #E5D8B5`, borderRadius: 4, padding: "16px 20px", marginBottom: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
+                <div>
+                  <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 19, fontWeight: 400 }}>
+                    {h.guest}
+                    <span style={{ fontSize: 9, background: "#7A5C1E1a", color: "#7A5C1E", padding: "2px 8px", borderRadius: 10, marginLeft: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>Historical · USD</span>
+                  </div>
+                  <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 3 }}>
+                    {h.checkin} → {h.checkout} · {h.villa}
+                  </div>
+                  {h.notes && <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 4, fontStyle: "italic" }}>{h.notes}</div>}
+                </div>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginTop: 12 }}>
+                <HistCell label="Accommodation Fare" value={formatUSD(h.accommodationFare)} sub={`Owner 85%: ${formatUSD(h.accommodationFare * 0.85)} · LUX 15%: ${formatUSD(h.accommodationFare * 0.15)}`} />
+                <HistCell label="Upsells Billed" value={formatUSD(h.upsellsBilled)} sub={`Profit pool: ${formatUSD(h.upsellsProfit)}`} />
+                <HistCell label="LUX Cut (Total)" value={formatUSD(h.accommodationFare * 0.15 + h.upsellsProfit * 0.15)} sub={`Owner: ${formatUSD(h.accommodationFare * 0.85 + h.upsellsProfit * 0.85)}`} color={COLORS.amber} />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {loading && <div style={{ color: COLORS.textMuted }}>Loading…</div>}
-      {!loading && bookings.length === 0 && <div style={{ color: COLORS.textMuted }}>No bookings yet.</div>}
-      {!loading && bookings.length > 0 && grouped.length === 0 && (
+      {!loading && bookings.length === 0 && historicalInView.length === 0 && <div style={{ color: COLORS.textMuted }}>No bookings yet.</div>}
+      {!loading && grouped.length === 0 && historicalInView.length === 0 && bookings.length > 0 && (
         <div style={{ background: "#fff", border: `1px dashed ${COLORS.border}`, borderRadius: 4, padding: "32px 22px", textAlign: "center", color: COLORS.textMuted }}>
-          {view === "current" && <>No bookings for {currentMonthLabel} yet.</>}
+          {view === "current" && <>No live bookings for {currentMonthLabel} yet — use New Booking to add one.</>}
           {view === "upcoming" && <>No upcoming check-ins in the next 60 days.</>}
           {view === "all" && <>No bookings match this filter.</>}
         </div>
       )}
+
 
       {grouped.map(([key, list]) => {
         const charged = list.reduce((s, b) => s + Number(b.total_guest), 0);
@@ -517,3 +623,40 @@ export default function AllBookings() {
     </div>
   );
 }
+
+type KpiCell = { label: string; value: string; color?: string };
+
+function KpiBlock({ title, tone, cells, note }: { title: string; tone: "accom" | "upsell" | "combined"; cells: KpiCell[]; note?: string }) {
+  const toneStyles: Record<string, { bg: string; border: string; accent: string }> = {
+    accom:    { bg: "#F4EFE3", border: "#E5D8B5", accent: "#7A5C1E" },
+    upsell:   { bg: "#FAF7F2", border: "#DDD5C4", accent: COLORS.textMid },
+    combined: { bg: "#1C1914", border: "#1C1914", accent: "#B8924A" },
+  };
+  const t = toneStyles[tone];
+  const dark = tone === "combined";
+  return (
+    <div style={{ background: t.bg, border: `1px solid ${t.border}`, borderRadius: 4, padding: "14px 16px", marginBottom: 10, color: dark ? "#F7F4EE" : undefined }}>
+      <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: dark ? "#B8924A" : t.accent, marginBottom: 10, fontWeight: 500 }}>{title}</div>
+      <div style={{ display: "grid", gridTemplateColumns: `repeat(${cells.length}, 1fr)`, gap: 12 }}>
+        {cells.map((c) => (
+          <div key={c.label}>
+            <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: dark ? "rgba(247,244,238,0.5)" : COLORS.textMuted }}>{c.label}</div>
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, marginTop: 4, color: c.color ?? (dark ? "#F7F4EE" : COLORS.textMid) }}>{c.value}</div>
+          </div>
+        ))}
+      </div>
+      {note && <div style={{ fontSize: 11, color: dark ? "rgba(247,244,238,0.6)" : COLORS.textMuted, fontStyle: "italic", marginTop: 10 }}>{note}</div>}
+    </div>
+  );
+}
+
+function HistCell({ label, value, sub, color }: { label: string; value: string; sub?: string; color?: string }) {
+  return (
+    <div style={{ background: "#fff", border: `1px solid #E5D8B5`, borderRadius: 3, padding: "10px 12px" }}>
+      <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>{label}</div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 19, fontWeight: 400, marginTop: 4, color: color ?? COLORS.textMid }}>{value}</div>
+      {sub && <div style={{ fontSize: 10, color: COLORS.textMuted, marginTop: 4 }}>{sub}</div>}
+    </div>
+  );
+}
+
