@@ -148,16 +148,21 @@ export function openMay2026Historical() {
       <h2>May 2026 — Grand Summary</h2>
       <div class="grand-grid">
         <div class="grand-cell"><div class="l">Bookings</div><div class="v">3</div></div>
-        <div class="grand-cell"><div class="l">Total Billed</div><div class="v">$8,270.32</div></div>
-        <div class="grand-cell"><div class="l">Profit Pool</div><div class="v">$4,040.81</div></div>
-        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share 85%</div><div class="v" style="color:#7DD89E">$3,434.69</div></div>
-        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX's Cut 15%</div><div class="v" style="color:#D4A96A">$606.12</div></div>
+        <div class="grand-cell"><div class="l">Guest Billed (Upsells)</div><div class="v">$8,270.32</div></div>
+        <div class="grand-cell"><div class="l">Accommodation Fare</div><div class="v">$19,339.85</div></div>
+        <div class="grand-cell"><div class="l">Upsell Profit Pool</div><div class="v">$4,040.81</div></div>
+        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share (Upsells 85%)</div><div class="v" style="color:#7DD89E">$3,434.69</div></div>
+        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX Total Cut</div><div class="v" style="color:#D4A96A">$3,507.10</div></div>
+      </div>
+      <div style="margin-top:14px;padding:12px 14px;background:rgba(212,169,106,0.08);border-left:2px solid #D4A96A;font-size:11px;color:rgba(247,244,238,0.85)">
+        <span style="color:#D4A96A;text-transform:uppercase;letter-spacing:0.1em;font-size:10px">LUX cut breakdown</span><br/>
+        $606.12 from upsells (15% of profit pool) + $2,900.98 from accommodation (15% of fare) = <strong style="color:#D4A96A">$3,507.10</strong>
       </div>
       <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(247,244,238,0.15);font-size:12px">
         <span style="color:rgba(247,244,238,0.5)">Cash Collected (owner direct):</span> <span style="color:#B8924A">$1,300.00</span>
         &nbsp;&nbsp;&nbsp;<span style="color:rgba(247,244,238,0.5)">CC Fees (pass-through):</span> <span style="color:rgba(247,244,238,0.7)">$256.32</span>
       </div>
-      <div style="margin-top:12px;font-size:10px;color:rgba(247,244,238,0.4)">All figures in USD · FX ≈ 18 MXN/USD for peso-denominated profit items · Accommodation fare excluded</div>
+      <div style="margin-top:12px;font-size:10px;color:rgba(247,244,238,0.4)">All figures in USD · Transport flat fees at $55/trip · Accommodation commission on room fare only</div>
     </div>
   </div></body></html>`;
 
