@@ -52,13 +52,13 @@ export function openMay2026Historical() {
 
     <div class="cards">
       <div class="card"><div class="label">Total Billed to Guest</div><div class="value">$8,270.32</div></div>
-      <div class="card"><div class="label">Total Profit Pool</div><div class="value">$4,050.81</div></div>
-      <div class="card owner"><div class="label">Owner's Share 85%</div><div class="value">$3,443.19</div></div>
-      <div class="card lux"><div class="label">LUX's Cut 15%</div><div class="value">$607.62</div></div>
+      <div class="card"><div class="label">Total Profit Pool</div><div class="value">$4,040.81</div></div>
+      <div class="card owner"><div class="label">Owner's Share 85%</div><div class="value">$3,434.69</div></div>
+      <div class="card lux"><div class="label">LUX's Cut 15%</div><div class="value">$606.12</div></div>
       <div class="card cash"><div class="label">Cash Collected On Site</div><div class="value">$1,300.00</div></div>
     </div>
 
-    <div class="fx">FX assumption · For peso-denominated profit items (transport flat fees), we use an agreed average of ≈18 MXN / 1 USD. The 1,000 MXN profit on Airport SUV and Taxi is recorded at ≈$60 USD each (rounded for simplicity, not derived from the guest-paid USD amount). UTV rates vary per booking — we always use the actual amount charged on the Guesty folio.</div>
+    <div class="fx">Transport flat fees are recorded at a fixed $55 USD profit per trip regardless of FX. UTV rates vary per booking — we always use the actual amount charged on the Guesty folio.</div>
 
 
     <section class="booking">
@@ -72,8 +72,8 @@ export function openMay2026Historical() {
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
-          <tr><td>Airport SUV (Round Trip) <em style="color:#9E9080;font-size:11px">1,000 MXN profit per trip ≈ $60</em></td><td><span class="badge b-flat">Flat fee</span></td><td style="text-align:right">$395.00</td><td style="text-align:right">$335.00</td><td style="text-align:right">$60.00</td><td style="text-align:right;color:#2D6A45">$51.00</td><td style="text-align:right;color:#7A5C1E">$9.00</td></tr>
-          <tr><td>Taxi <em style="color:#9E9080;font-size:11px">1,000 MXN profit per trip ≈ $60</em></td><td><span class="badge b-flat">Flat fee</span></td><td style="text-align:right">$290.00</td><td style="text-align:right">$230.00</td><td style="text-align:right">$60.00</td><td style="text-align:right;color:#2D6A45">$51.00</td><td style="text-align:right;color:#7A5C1E">$9.00</td></tr>
+          <tr><td>Airport SUV (Round Trip) <em style="color:#9E9080;font-size:11px">Flat $55 USD profit per trip</em></td><td><span class="badge b-flat">Flat fee</span></td><td style="text-align:right">$395.00</td><td style="text-align:right">$340.00</td><td style="text-align:right">$55.00</td><td style="text-align:right;color:#2D6A45">$46.75</td><td style="text-align:right;color:#7A5C1E">$8.25</td></tr>
+          <tr><td>Taxi <em style="color:#9E9080;font-size:11px">Flat $55 USD profit per trip</em></td><td><span class="badge b-flat">Flat fee</span></td><td style="text-align:right">$290.00</td><td style="text-align:right">$235.00</td><td style="text-align:right">$55.00</td><td style="text-align:right;color:#2D6A45">$46.75</td><td style="text-align:right;color:#7A5C1E">$8.25</td></tr>
           <tr><td>Meal at the House <em style="color:#9E9080;font-size:11px">Chef after-hours · 4 plates × $50</em></td><td><span class="badge b-15">15%</span></td><td style="text-align:right">$200.00</td><td style="text-align:right">$170.00</td><td style="text-align:right">$30.00</td><td style="text-align:right;color:#2D6A45">$25.50</td><td style="text-align:right;color:#7A5C1E">$4.50</td></tr>
           <tr><td>UTV Rental (Side-by-Side) <em style="color:#9E9080;font-size:11px">Owner-owned vehicles · 100% profit pool</em></td><td><span class="badge b-100">Owner asset</span></td><td style="text-align:right">$2,400.00</td><td style="text-align:right">$0.00</td><td style="text-align:right">$2,400.00</td><td style="text-align:right;color:#2D6A45">$2,040.00</td><td style="text-align:right;color:#7A5C1E">$360.00</td></tr>
           <tr><td>Groceries <em style="color:#9E9080;font-size:11px">$2,206 + $771 combined · cost ≈ $2,205.19</em></td><td><span class="badge b-35">35% markup</span></td><td style="text-align:right">$2,977.00</td><td style="text-align:right">$2,205.19</td><td style="text-align:right">$771.81</td><td style="text-align:right;color:#2D6A45">$656.04</td><td style="text-align:right;color:#7A5C1E">$115.77</td></tr>
@@ -81,7 +81,7 @@ export function openMay2026Historical() {
           <tr><td>Credit Card Fee</td><td><span class="badge b-pass">Pass-through</span></td><td style="text-align:right">$196.32</td><td style="text-align:right">$196.32</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
         </tbody>
         <tfoot>
-          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$6,690.32</td><td style="text-align:right">$3,368.51</td><td style="text-align:right">$3,321.81</td><td style="text-align:right;color:#2D6A45">$2,823.54</td><td style="text-align:right;color:#7A5C1E">$498.27</td></tr>
+          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$6,690.32</td><td style="text-align:right">$3,378.51</td><td style="text-align:right">$3,311.81</td><td style="text-align:right;color:#2D6A45">$2,815.04</td><td style="text-align:right;color:#7A5C1E">$496.77</td></tr>
           <tr><td colspan="2" style="text-align:right;color:#9E9080;font-weight:400">Less: Cash paid on site (owner direct)</td><td style="text-align:right;color:#9E9080;font-weight:400">−$1,300.00</td><td colspan="4" style="text-align:right;color:#9E9080;font-style:italic;font-weight:400">Offset against CC charge · does not affect profit split</td></tr>
           <tr><td colspan="2" style="text-align:right">Net charged to credit card</td><td style="text-align:right">$5,390.32</td><td colspan="4"></td></tr>
         </tfoot>
@@ -141,9 +141,9 @@ export function openMay2026Historical() {
       <div class="grand-grid">
         <div class="grand-cell"><div class="l">Bookings</div><div class="v">3</div></div>
         <div class="grand-cell"><div class="l">Total Billed</div><div class="v">$8,270.32</div></div>
-        <div class="grand-cell"><div class="l">Profit Pool</div><div class="v">$4,050.81</div></div>
-        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share 85%</div><div class="v" style="color:#7DD89E">$3,443.19</div></div>
-        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX's Cut 15%</div><div class="v" style="color:#D4A96A">$607.62</div></div>
+        <div class="grand-cell"><div class="l">Profit Pool</div><div class="v">$4,040.81</div></div>
+        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share 85%</div><div class="v" style="color:#7DD89E">$3,434.69</div></div>
+        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX's Cut 15%</div><div class="v" style="color:#D4A96A">$606.12</div></div>
       </div>
       <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(247,244,238,0.15);font-size:12px">
         <span style="color:rgba(247,244,238,0.5)">Cash Collected (owner direct):</span> <span style="color:#B8924A">$1,300.00</span>
