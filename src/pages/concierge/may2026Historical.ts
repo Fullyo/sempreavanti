@@ -91,6 +91,7 @@ export function openMay2026Historical() {
           <tr><td colspan="2" style="text-align:right">Net charged to credit card</td><td style="text-align:right">$5,390.32</td><td colspan="4"></td></tr>
         </tfoot>
       </table>
+      <div class="accom-bar"><span>Accommodation fare: <strong>$12,493.00</strong> <em style="color:#9E9080;font-style:normal">(3,750 + 3,800 + 4,943)</em></span><span>LUX 15% commission: <strong>$1,873.95</strong></span><span>Owner retains 85%: <strong>$10,619.05</strong></span></div>
       <div class="note">Note · $1,300 of the balance was paid in cash to the owner directly (offset against the CC charge). Recorded for transparency — does not affect profit split.</div>
       <div class="note">Note · UTV vehicles are owner-owned (our cost = $0). The full $2,400 guest charge is profit. LUX takes the standard 15% management cut ($360); owner keeps $2,040.</div>
       <div class="note">Note · Going forward, alcohol is charged at 100% profit margin. This stay was sold at cost (no margin) as a courtesy.</div>
