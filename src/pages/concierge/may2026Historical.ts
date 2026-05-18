@@ -19,6 +19,9 @@ export function openMay2026Historical() {
     .card.lux { background: #FDF4E3; } .card.lux .value { color: #7A5C1E; }
     .card.cash { background: #1C1914; color: #F7F4EE; }
     .card.cash .label { color: rgba(247,244,238,0.5); } .card.cash .value { color: #B8924A; }
+    .card.accom { background: #F4EFE3; } .card.accom .value { color: #7A5C1E; }
+    .accom-bar { background: #FDF4E3; border: 1px solid #E5D8B5; border-radius: 4px; padding: 10px 14px; font-size: 12px; color: #7A5C1E; margin-top: 12px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .accom-bar strong { color: #1C1914; font-weight: 500; }
     .booking { background: #fff; border: 1px solid #DDD5C4; border-radius: 4px; padding: 20px; margin-bottom: 18px; }
     .booking-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
     .guest { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; }
