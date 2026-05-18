@@ -180,7 +180,43 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
           <label style={fieldLabel}>Check-out</label>
           <input style={input} type="date" value={checkout} onChange={(e) => setCheckout(e.target.value)} />
         </div>
+        <div style={{ gridColumn: "1 / -1", borderTop: `1px dashed ${COLORS.border}`, paddingTop: 16, display: "grid", gridTemplateColumns: "2fr 1fr 2fr", gap: 18, alignItems: "end" }}>
+          <div>
+            <label style={fieldLabel}>Accommodation Fare (room only)</label>
+            <input
+              style={input}
+              type="number"
+              min={0}
+              step="0.01"
+              value={accommodationFare || ""}
+              placeholder="0.00"
+              onChange={(e) => setAccommodationFare(Number(e.target.value) || 0)}
+            />
+          </div>
+          <div>
+            <label style={fieldLabel}>Currency</label>
+            <select
+              style={input}
+              value={accommodationCurrency}
+              onChange={(e) => setAccommodationCurrency(e.target.value as "MXN" | "USD")}
+            >
+              <option value="MXN">MXN</option>
+              <option value="USD">USD</option>
+            </select>
+          </div>
+          <div style={{ fontSize: 11, color: COLORS.textMuted, lineHeight: 1.5, paddingBottom: 8 }}>
+            {accommodationFare > 0 ? (
+              <>
+                LUX 15% commission: <strong style={{ color: COLORS.amber }}>{accommodationCurrency} {(accommodationFare * 0.15).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+                {" · "}Owner 85%: <strong style={{ color: COLORS.green }}>{accommodationCurrency} {(accommodationFare * 0.85).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+              </>
+            ) : (
+              <em>Room fare only (excludes cleaning, taxes, Guesty fees). LUX takes 15% management commission.</em>
+            )}
+          </div>
+        </div>
       </div>
+
 
       {/* Services table */}
       <div
