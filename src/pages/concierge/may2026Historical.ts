@@ -11,7 +11,7 @@ export function openMay2026Historical() {
     h1 { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 38px; margin: 6px 0 4px; text-align: center; }
     .sub { text-align: center; color: #5A5242; font-size: 14px; }
     .meta { text-align: center; color: #9E9080; font-size: 11px; margin-top: 6px; margin-bottom: 28px; }
-    .cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 32px; }
+    .cards { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 32px; }
     .card { background: #fff; border: 1px solid #DDD5C4; border-radius: 4px; padding: 14px; }
     .card .label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: #9E9080; }
     .card .value { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; margin-top: 6px; }
@@ -19,6 +19,9 @@ export function openMay2026Historical() {
     .card.lux { background: #FDF4E3; } .card.lux .value { color: #7A5C1E; }
     .card.cash { background: #1C1914; color: #F7F4EE; }
     .card.cash .label { color: rgba(247,244,238,0.5); } .card.cash .value { color: #B8924A; }
+    .card.accom { background: #F4EFE3; } .card.accom .value { color: #7A5C1E; }
+    .accom-bar { background: #FDF4E3; border: 1px solid #E5D8B5; border-radius: 4px; padding: 10px 14px; font-size: 12px; color: #7A5C1E; margin-top: 12px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .accom-bar strong { color: #1C1914; font-weight: 500; }
     .booking { background: #fff; border: 1px solid #DDD5C4; border-radius: 4px; padding: 20px; margin-bottom: 18px; }
     .booking-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
     .guest { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; }
@@ -37,7 +40,7 @@ export function openMay2026Historical() {
     .b-pass { background: #9E90801a; color: #9E9080; }
     .grand { background: #1C1914; color: #F7F4EE; padding: 24px; border-radius: 4px; margin-top: 28px; }
     .grand h2 { font-family: 'Cormorant Garamond', serif; font-weight: 300; color: #B8924A; margin: 0 0 18px; font-size: 22px; }
-    .grand-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    .grand-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
     .grand-cell .l { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(247,244,238,0.5); }
     .grand-cell .v { font-size: 16px; margin-top: 4px; font-weight: 500; }
     .fx { background: #FDF4E3; border: 1px solid #E5D8B5; border-radius: 4px; padding: 10px 14px; font-size: 11px; color: #7A5C1E; margin-bottom: 18px; }
@@ -47,18 +50,20 @@ export function openMay2026Historical() {
     <button class="print-btn" onclick="window.print()">⬇ Print / Save as PDF</button>
     <div class="conf">Internal Report · Confidential</div>
     <h1>Villas Sempre Avanti</h1>
-    <div class="sub">Upsell Revenue &amp; Profit Report — May 2026</div>
-    <div class="meta">3 bookings · All figures in USD · Accommodation fare excluded · Split: 85% owner / 15% LUX</div>
+    <div class="sub">Revenue &amp; Profit Report — May 2026</div>
+    <div class="meta">3 bookings · All figures in USD · Includes 15% management commission on accommodation fare</div>
 
     <div class="cards">
-      <div class="card"><div class="label">Total Billed to Guest</div><div class="value">$8,270.32</div></div>
-      <div class="card"><div class="label">Total Profit Pool</div><div class="value">$4,040.81</div></div>
-      <div class="card owner"><div class="label">Owner's Share 85%</div><div class="value">$3,434.69</div></div>
-      <div class="card lux"><div class="label">LUX's Cut 15%</div><div class="value">$606.12</div></div>
+      <div class="card"><div class="label">Guest Billed (Upsells)</div><div class="value">$8,270.32</div></div>
+      <div class="card accom"><div class="label">Accommodation Fare</div><div class="value">$19,339.85</div></div>
+      <div class="card"><div class="label">Upsell Profit Pool</div><div class="value">$4,040.81</div></div>
+      <div class="card owner"><div class="label">Owner's Share (Upsells 85%)</div><div class="value">$3,434.69</div></div>
+      <div class="card lux"><div class="label">LUX Total Cut</div><div class="value">$3,507.10</div></div>
       <div class="card cash"><div class="label">Cash Collected On Site</div><div class="value">$1,300.00</div></div>
     </div>
 
-    <div class="fx">Transport flat fees are recorded at a fixed $55 USD profit per trip regardless of FX. UTV rates vary per booking — we always use the actual amount charged on the Guesty folio.</div>
+    <div class="fx">Transport flat fees are recorded at a fixed $55 USD profit per trip regardless of FX. UTV rates vary per booking — we always use the actual amount charged on the Guesty folio. Accommodation commission is calculated on the room fare only (cleaning fees, taxes, and other Guesty-side line items are excluded from the 15% basis).</div>
+
 
 
     <section class="booking">
@@ -86,6 +91,7 @@ export function openMay2026Historical() {
           <tr><td colspan="2" style="text-align:right">Net charged to credit card</td><td style="text-align:right">$5,390.32</td><td colspan="4"></td></tr>
         </tfoot>
       </table>
+      <div class="accom-bar"><span>Accommodation fare: <strong>$12,493.00</strong> <em style="color:#9E9080;font-style:normal">(3,750 + 3,800 + 4,943)</em></span><span>LUX 15% commission: <strong>$1,873.95</strong></span><span>Owner retains 85%: <strong>$10,619.05</strong></span></div>
       <div class="note">Note · $1,300 of the balance was paid in cash to the owner directly (offset against the CC charge). Recorded for transparency — does not affect profit split.</div>
       <div class="note">Note · UTV vehicles are owner-owned (our cost = $0). The full $2,400 guest charge is profit. LUX takes the standard 15% management cut ($360); owner keeps $2,040.</div>
       <div class="note">Note · Going forward, alcohol is charged at 100% profit margin. This stay was sold at cost (no margin) as a courtesy.</div>
@@ -110,6 +116,7 @@ export function openMay2026Historical() {
           <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$957.00</td><td style="text-align:right">$554.00</td><td style="text-align:right">$403.00</td><td style="text-align:right;color:#2D6A45">$342.55</td><td style="text-align:right;color:#7A5C1E">$60.45</td></tr>
         </tfoot>
       </table>
+      <div class="accom-bar"><span>Accommodation fare: <strong>$4,623.85</strong></span><span>LUX 15% commission: <strong>$693.58</strong></span><span>Owner retains 85%: <strong>$3,930.27</strong></span></div>
       <div class="note">Note · UTV charged at $230 for this stay (below the standard 2,500 MXN/day Can-Am or 2,200 MXN/day Polaris rate). We always use whatever amount is on the Guesty folio.</div>
       <div class="note">Note · Standard UTV rates: Can-Am 4-seater 2,500 MXN/day · Polaris 6-seater 2,200 MXN/day · Gas refill penalty 1,500 MXN if guest fails to refill. UTVs are owner-owned (100% profit pool).</div>
     </section>
@@ -133,6 +140,7 @@ export function openMay2026Historical() {
           <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$623.00</td><td style="text-align:right">$297.00</td><td style="text-align:right">$326.00</td><td style="text-align:right;color:#2D6A45">$277.10</td><td style="text-align:right;color:#7A5C1E">$48.90</td></tr>
         </tfoot>
       </table>
+      <div class="accom-bar"><span>Accommodation fare: <strong>$2,223.00</strong></span><span>LUX 15% commission: <strong>$333.45</strong></span><span>Owner retains 85%: <strong>$1,889.55</strong></span></div>
       <div class="note">Note · UTV vehicles are owner-owned (100% profit pool). Gas tank fill is reimbursement for fuel — billed at cost with no markup.</div>
     </section>
 
@@ -140,16 +148,21 @@ export function openMay2026Historical() {
       <h2>May 2026 — Grand Summary</h2>
       <div class="grand-grid">
         <div class="grand-cell"><div class="l">Bookings</div><div class="v">3</div></div>
-        <div class="grand-cell"><div class="l">Total Billed</div><div class="v">$8,270.32</div></div>
-        <div class="grand-cell"><div class="l">Profit Pool</div><div class="v">$4,040.81</div></div>
-        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share 85%</div><div class="v" style="color:#7DD89E">$3,434.69</div></div>
-        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX's Cut 15%</div><div class="v" style="color:#D4A96A">$606.12</div></div>
+        <div class="grand-cell"><div class="l">Guest Billed (Upsells)</div><div class="v">$8,270.32</div></div>
+        <div class="grand-cell"><div class="l">Accommodation Fare</div><div class="v">$19,339.85</div></div>
+        <div class="grand-cell"><div class="l">Upsell Profit Pool</div><div class="v">$4,040.81</div></div>
+        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share (Upsells 85%)</div><div class="v" style="color:#7DD89E">$3,434.69</div></div>
+        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX Total Cut</div><div class="v" style="color:#D4A96A">$3,507.10</div></div>
+      </div>
+      <div style="margin-top:14px;padding:12px 14px;background:rgba(212,169,106,0.08);border-left:2px solid #D4A96A;font-size:11px;color:rgba(247,244,238,0.85)">
+        <span style="color:#D4A96A;text-transform:uppercase;letter-spacing:0.1em;font-size:10px">LUX cut breakdown</span><br/>
+        $606.12 from upsells (15% of profit pool) + $2,900.98 from accommodation (15% of fare) = <strong style="color:#D4A96A">$3,507.10</strong>
       </div>
       <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(247,244,238,0.15);font-size:12px">
         <span style="color:rgba(247,244,238,0.5)">Cash Collected (owner direct):</span> <span style="color:#B8924A">$1,300.00</span>
         &nbsp;&nbsp;&nbsp;<span style="color:rgba(247,244,238,0.5)">CC Fees (pass-through):</span> <span style="color:rgba(247,244,238,0.7)">$256.32</span>
       </div>
-      <div style="margin-top:12px;font-size:10px;color:rgba(247,244,238,0.4)">All figures in USD · FX ≈ 18 MXN/USD for peso-denominated profit items · Accommodation fare excluded</div>
+      <div style="margin-top:12px;font-size:10px;color:rgba(247,244,238,0.4)">All figures in USD · Transport flat fees at $55/trip · Accommodation commission on room fare only</div>
     </div>
   </div></body></html>`;
 
