@@ -216,33 +216,96 @@ export default function AllBookings() {
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18, flexWrap: "wrap", gap: 10 }}>
-        <h1 style={sectionTitle}>All Bookings</h1>
+        <h1 style={sectionTitle}>Bookings</h1>
         <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-          <label style={{ fontSize: 11, color: COLORS.textMuted, textTransform: "uppercase", letterSpacing: "0.12em" }}>
-            Filter by month
-          </label>
-          <select
-            style={{ ...input, width: "auto", padding: "8px 10px" }}
-            value={monthFilter}
-            onChange={(e) => setMonthFilter(e.target.value)}
-          >
-            <option value="all">All months</option>
-            {months.map((m) => (
-              <option key={m} value={m}>
-                {monthLabel(m)}
-              </option>
-            ))}
-          </select>
+          {view === "all" && (
+            <>
+              <label style={{ fontSize: 11, color: COLORS.textMuted, textTransform: "uppercase", letterSpacing: "0.12em" }}>
+                Filter by month
+              </label>
+              <select
+                style={{ ...input, width: "auto", padding: "8px 10px" }}
+                value={monthFilter}
+                onChange={(e) => setMonthFilter(e.target.value)}
+              >
+                <option value="all">All months</option>
+                {months.map((m) => (
+                  <option key={m} value={m}>
+                    {monthLabel(m)}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
           <button onClick={load} style={btnGhost}>↻ Refresh</button>
           <button onClick={downloadAllCSV} style={btnGhost}>Download All as CSV</button>
         </div>
       </div>
+
+      {/* Tabs */}
+      <div style={{ display: "flex", gap: 0, marginBottom: 18, borderBottom: `1px solid ${COLORS.border}` }}>
+        {([
+          { id: "current", label: `Current Month · ${currentMonthLabel}` },
+          { id: "upcoming", label: "Upcoming (60 days)" },
+          { id: "all", label: "All Bookings" },
+        ] as { id: ViewTab; label: string }[]).map((t) => {
+          const active = view === t.id;
+          return (
+            <button
+              key={t.id}
+              onClick={() => setView(t.id)}
+              style={{
+                background: "transparent",
+                border: "none",
+                padding: "10px 18px",
+                fontFamily: "inherit",
+                fontSize: 12,
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+                cursor: "pointer",
+                color: active ? COLORS.gold : COLORS.textMuted,
+                borderBottom: active ? `2px solid ${COLORS.gold}` : "2px solid transparent",
+                marginBottom: -1,
+                fontWeight: active ? 500 : 400,
+              }}
+            >
+              {t.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* KPI strip on Current Month */}
+      {view === "current" && !loading && (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10, marginBottom: 22 }}>
+          {[
+            { label: "Bookings This Month", value: String(currentKpis.count), color: COLORS.textMid },
+            { label: "Total Billed", value: formatMXN(currentKpis.billed), color: COLORS.textMid },
+            { label: "Profit Pool", value: formatMXN(currentKpis.profit), color: COLORS.textMid },
+            { label: "Owner's Share 85%", value: formatMXN(currentKpis.owner), color: COLORS.green },
+            { label: "LUX's Cut 15%", value: formatMXN(currentKpis.lux), color: COLORS.amber },
+          ].map((k) => (
+            <div key={k.label} style={{ background: "#fff", border: `1px solid ${COLORS.border}`, borderRadius: 4, padding: "12px 14px" }}>
+              <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>{k.label}</div>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, marginTop: 6, color: k.color }}>{k.value}</div>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div style={{ fontStyle: "italic", color: COLORS.textMuted, fontSize: 12, marginBottom: 14 }}>
         Click Download Invoice on a booking for a guest PDF, or Owner Statement on a month for the owner's report.
       </div>
 
       {loading && <div style={{ color: COLORS.textMuted }}>Loading…</div>}
       {!loading && bookings.length === 0 && <div style={{ color: COLORS.textMuted }}>No bookings yet.</div>}
+      {!loading && bookings.length > 0 && grouped.length === 0 && (
+        <div style={{ background: "#fff", border: `1px dashed ${COLORS.border}`, borderRadius: 4, padding: "32px 22px", textAlign: "center", color: COLORS.textMuted }}>
+          {view === "current" && <>No bookings for {currentMonthLabel} yet.</>}
+          {view === "upcoming" && <>No upcoming check-ins in the next 60 days.</>}
+          {view === "all" && <>No bookings match this filter.</>}
+        </div>
+      )}
 
       {grouped.map(([key, list]) => {
         const charged = list.reduce((s, b) => s + Number(b.total_guest), 0);
