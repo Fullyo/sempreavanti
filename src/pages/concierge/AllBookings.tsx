@@ -64,8 +64,9 @@ export default function AllBookings() {
   }, []);
 
   const now = new Date();
-  const currentMonthKey = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}`;
-  const todayISO = now.toISOString().slice(0, 10);
+  // Use local time (not UTC) so the month label matches the user's calendar day.
+  const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   const sixtyDaysOut = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
   const viewFiltered = useMemo(() => {
@@ -82,6 +83,24 @@ export default function AllBookings() {
     return bookings;
   }, [bookings, view, currentMonthKey, todayISO, sixtyDaysOut]);
 
+  // Historical (pre-tool, USD) rows visible in the current view scope.
+  const historicalInView = useMemo<HistoricalBooking[]>(() => {
+    if (view === "current") {
+      return ALL_HISTORICAL.filter((h) => {
+        const inKey = historicalMonthKey(h) === currentMonthKey;
+        const outKey = h.checkout.slice(0, 7) === currentMonthKey;
+        return inKey || outKey;
+      });
+    }
+    if (view === "upcoming") {
+      return ALL_HISTORICAL.filter((h) => h.checkin >= todayISO && h.checkin <= sixtyDaysOut);
+    }
+    if (monthFilter !== "all") {
+      return ALL_HISTORICAL.filter((h) => historicalMonthKey(h) === monthFilter);
+    }
+    return ALL_HISTORICAL;
+  }, [view, monthFilter, currentMonthKey, todayISO, sixtyDaysOut]);
+
   const grouped = useMemo(() => {
     const groups: Record<string, Booking[]> = {};
     viewFiltered.forEach((b) => {
@@ -95,23 +114,41 @@ export default function AllBookings() {
   }, [viewFiltered, view, monthFilter]);
 
   const months = useMemo(() => {
-    const set = new Set(bookings.map((b) => monthKey(b.checkin)));
+    const set = new Set([
+      ...bookings.map((b) => monthKey(b.checkin)),
+      ...ALL_HISTORICAL.map((h) => historicalMonthKey(h)),
+    ]);
     return Array.from(set).sort();
   }, [bookings]);
 
   const currentMonthLabel = monthLabel(currentMonthKey);
-  const currentKpis = useMemo(() => {
-    const list = view === "current" ? viewFiltered : [];
-    const billed = list.reduce((s, b) => s + Number(b.total_guest), 0);
-    const profit = list.reduce((s, b) => s + Number(b.total_profit), 0);
+
+  // KPI breakdown: combines live MXN bookings (profit-pool only — no accommodation
+  // fare captured yet) with historical USD rows that have accommodation data.
+  const kpis = useMemo<KpiBreakdown>(() => {
+    const histK = computeHistoricalKpis(historicalInView);
+    const liveProfit = viewFiltered.reduce((s, b) => s + Number(b.total_profit), 0);
+    const liveBilled = viewFiltered.reduce((s, b) => s + Number(b.total_guest), 0);
     return {
-      count: list.length,
-      billed,
-      profit,
-      owner: profit * 0.85,
-      lux: profit * 0.15,
+      count: histK.count + viewFiltered.length,
+      accommodation: histK.accommodation, // only historical rows carry this for now
+      upsells: {
+        billed: histK.upsells.billed + liveBilled,
+        profit: histK.upsells.profit + liveProfit,
+        owner: histK.upsells.owner + liveProfit * 0.85,
+        lux: histK.upsells.lux + liveProfit * 0.15,
+      },
+      combined: {
+        ownerTotal: histK.combined.ownerTotal + liveProfit * 0.85,
+        luxTotal: histK.combined.luxTotal + liveProfit * 0.15,
+      },
     };
-  }, [viewFiltered, view]);
+  }, [historicalInView, viewFiltered]);
+
+  const hasHistoricalUSD = historicalInView.length > 0;
+  const hasLiveMXN = viewFiltered.length > 0;
+  const mixedCurrency = hasHistoricalUSD && hasLiveMXN;
+
 
 
   const startEdit = (b: Booking) => {
