@@ -152,6 +152,9 @@ export interface Booking {
   cc_fee: number;
   total_guest: number;
   total_profit: number;
+  cash_collected?: number;
+  accommodation_fare?: number;
+  accommodation_currency?: string;
   saved_at: string;
   created_at: string;
 }
