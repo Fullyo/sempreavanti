@@ -70,28 +70,17 @@ export default function AllBookings() {
   const sixtyDaysOut = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
   const viewFiltered = useMemo(() => {
-    if (view === "current") {
-      return bookings.filter((b) => {
-        const inKey = monthKey(b.checkin) === currentMonthKey;
-        const outKey = b.checkout ? monthKey(b.checkout) === currentMonthKey : false;
-        return inKey || outKey;
-      });
-    }
     if (view === "upcoming") {
       return bookings.filter((b) => b.checkin >= todayISO && b.checkin <= sixtyDaysOut);
     }
+    if (monthFilter !== "all") {
+      return bookings.filter((b) => monthKey(b.checkin) === monthFilter);
+    }
     return bookings;
-  }, [bookings, view, currentMonthKey, todayISO, sixtyDaysOut]);
+  }, [bookings, view, monthFilter, todayISO, sixtyDaysOut]);
 
   // Historical (pre-tool, USD) rows visible in the current view scope.
   const historicalInView = useMemo<HistoricalBooking[]>(() => {
-    if (view === "current") {
-      return ALL_HISTORICAL.filter((h) => {
-        const inKey = historicalMonthKey(h) === currentMonthKey;
-        const outKey = h.checkout.slice(0, 7) === currentMonthKey;
-        return inKey || outKey;
-      });
-    }
     if (view === "upcoming") {
       return ALL_HISTORICAL.filter((h) => h.checkin >= todayISO && h.checkin <= sixtyDaysOut);
     }
@@ -99,42 +88,44 @@ export default function AllBookings() {
       return ALL_HISTORICAL.filter((h) => historicalMonthKey(h) === monthFilter);
     }
     return ALL_HISTORICAL;
-  }, [view, monthFilter, currentMonthKey, todayISO, sixtyDaysOut]);
+  }, [view, monthFilter, todayISO, sixtyDaysOut]);
 
-  const grouped = useMemo(() => {
-    const groups: Record<string, Booking[]> = {};
+  // Group live and historical by month, latest month first.
+  const monthSections = useMemo(() => {
+    const groups: Record<string, { live: Booking[]; hist: HistoricalBooking[] }> = {};
     viewFiltered.forEach((b) => {
       const k = monthKey(b.checkin);
-      (groups[k] ||= []).push(b);
+      (groups[k] ||= { live: [], hist: [] }).live.push(b);
     });
-    Object.values(groups).forEach((arr) => arr.sort((a, b) => a.guest.localeCompare(b.guest)));
-    return Object.entries(groups)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .filter(([k]) => view !== "all" || monthFilter === "all" || k === monthFilter);
-  }, [viewFiltered, view, monthFilter]);
+    historicalInView.forEach((h) => {
+      const k = historicalMonthKey(h);
+      (groups[k] ||= { live: [], hist: [] }).hist.push(h);
+    });
+    Object.values(groups).forEach((g) => {
+      g.live.sort((a, b) => a.checkin.localeCompare(b.checkin));
+      g.hist.sort((a, b) => a.checkin.localeCompare(b.checkin));
+    });
+    return Object.entries(groups).sort(([a], [b]) => b.localeCompare(a)); // newest first
+  }, [viewFiltered, historicalInView]);
 
   const months = useMemo(() => {
     const set = new Set([
       ...bookings.map((b) => monthKey(b.checkin)),
       ...ALL_HISTORICAL.map((h) => historicalMonthKey(h)),
     ]);
-    return Array.from(set).sort();
+    return Array.from(set).sort((a, b) => b.localeCompare(a));
   }, [bookings]);
 
-  const currentMonthLabel = monthLabel(currentMonthKey);
-
-  // KPI breakdown: combines live MXN bookings (profit-pool only — no accommodation
-  // fare captured yet) with historical USD rows that have accommodation data.
-  const kpis = useMemo<KpiBreakdown>(() => {
-    const histK = computeHistoricalKpis(historicalInView);
-    const liveProfit = viewFiltered.reduce((s, b) => s + Number(b.total_profit), 0);
-    const liveBilled = viewFiltered.reduce((s, b) => s + Number(b.total_guest), 0);
-    // Only sum live MXN accommodation fares (we treat USD live entries separately if/when added).
-    const liveAccomFare = viewFiltered.reduce((s, b) => s + Number(b.accommodation_fare ?? 0), 0);
+  // Per-month KPI breakdown.
+  function computeMonthKpis(live: Booking[], hist: HistoricalBooking[]): KpiBreakdown {
+    const histK = computeHistoricalKpis(hist);
+    const liveProfit = live.reduce((s, b) => s + Number(b.total_profit), 0);
+    const liveBilled = live.reduce((s, b) => s + Number(b.total_guest), 0);
+    const liveAccomFare = live.reduce((s, b) => s + Number(b.accommodation_fare ?? 0), 0);
     const liveAccomOwner = liveAccomFare * 0.85;
     const liveAccomLux = liveAccomFare * 0.15;
     return {
-      count: histK.count + viewFiltered.length,
+      count: histK.count + live.length,
       accommodation: {
         fare: histK.accommodation.fare + liveAccomFare,
         owner: histK.accommodation.owner + liveAccomOwner,
@@ -151,12 +142,9 @@ export default function AllBookings() {
         luxTotal: histK.combined.luxTotal + liveAccomLux + liveProfit * 0.15,
       },
     };
-  }, [historicalInView, viewFiltered]);
+  }
 
 
-  const hasHistoricalUSD = historicalInView.length > 0;
-  const hasLiveMXN = viewFiltered.length > 0;
-  const mixedCurrency = hasHistoricalUSD && hasLiveMXN;
 
 
 
