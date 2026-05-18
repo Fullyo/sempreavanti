@@ -141,9 +141,9 @@ export function openMay2026Historical() {
       <div class="grand-grid">
         <div class="grand-cell"><div class="l">Bookings</div><div class="v">3</div></div>
         <div class="grand-cell"><div class="l">Total Billed</div><div class="v">$8,270.32</div></div>
-        <div class="grand-cell"><div class="l">Profit Pool</div><div class="v">$4,050.81</div></div>
-        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share 85%</div><div class="v" style="color:#7DD89E">$3,443.19</div></div>
-        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX's Cut 15%</div><div class="v" style="color:#D4A96A">$607.62</div></div>
+        <div class="grand-cell"><div class="l">Profit Pool</div><div class="v">$4,040.81</div></div>
+        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share 85%</div><div class="v" style="color:#7DD89E">$3,434.69</div></div>
+        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX's Cut 15%</div><div class="v" style="color:#D4A96A">$606.12</div></div>
       </div>
       <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(247,244,238,0.15);font-size:12px">
         <span style="color:rgba(247,244,238,0.5)">Cash Collected (owner direct):</span> <span style="color:#B8924A">$1,300.00</span>
