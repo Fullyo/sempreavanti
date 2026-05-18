@@ -320,21 +320,48 @@ export default function AllBookings() {
         })}
       </div>
 
-      {/* KPI strip on Current Month */}
-      {view === "current" && !loading && (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10, marginBottom: 22 }}>
-          {[
-            { label: "Bookings This Month", value: String(currentKpis.count), color: COLORS.textMid },
-            { label: "Total Billed", value: formatMXN(currentKpis.billed), color: COLORS.textMid },
-            { label: "Profit Pool", value: formatMXN(currentKpis.profit), color: COLORS.textMid },
-            { label: "Owner's Share 85%", value: formatMXN(currentKpis.owner), color: COLORS.green },
-            { label: "LUX's Cut 15%", value: formatMXN(currentKpis.lux), color: COLORS.amber },
-          ].map((k) => (
-            <div key={k.label} style={{ background: "#fff", border: `1px solid ${COLORS.border}`, borderRadius: 4, padding: "12px 14px" }}>
-              <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>{k.label}</div>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, marginTop: 6, color: k.color }}>{k.value}</div>
+      {/* KPI strip — accommodation and upsells are tracked separately */}
+      {!loading && (kpis.count > 0) && (
+        <div style={{ marginBottom: 22 }}>
+          {/* Accommodation block */}
+          <KpiBlock
+            title="Accommodation Fare"
+            tone="accom"
+            cells={[
+              { label: "Total Fare", value: formatUSD(kpis.accommodation.fare) },
+              { label: "Owner's Share 85%", value: formatUSD(kpis.accommodation.owner), color: COLORS.green },
+              { label: "LUX's Cut 15%", value: formatUSD(kpis.accommodation.lux), color: COLORS.amber },
+            ]}
+            note={kpis.accommodation.fare === 0
+              ? "No accommodation fare recorded for this scope yet. Live bookings don't capture room fare — add it on the New Booking form going forward."
+              : undefined}
+          />
+          {/* Upsells block */}
+          <KpiBlock
+            title="Upsells (Transport, UTV, Groceries, etc.)"
+            tone="upsell"
+            cells={[
+              { label: "Guest Billed", value: mixedCurrency ? `${formatUSD(kpis.upsells.billed)} eq.` : (hasHistoricalUSD ? formatUSD(kpis.upsells.billed) : formatMXN(kpis.upsells.billed)) },
+              { label: "Profit Pool", value: hasHistoricalUSD ? formatUSD(kpis.upsells.profit) : formatMXN(kpis.upsells.profit) },
+              { label: "Owner's Share 85%", value: hasHistoricalUSD ? formatUSD(kpis.upsells.owner) : formatMXN(kpis.upsells.owner), color: COLORS.green },
+              { label: "LUX's Cut 15%", value: hasHistoricalUSD ? formatUSD(kpis.upsells.lux) : formatMXN(kpis.upsells.lux), color: COLORS.amber },
+            ]}
+          />
+          {/* Combined */}
+          <KpiBlock
+            title="Combined Totals"
+            tone="combined"
+            cells={[
+              { label: "Bookings", value: String(kpis.count) },
+              { label: "Owner Total Earnings", value: hasHistoricalUSD ? formatUSD(kpis.combined.ownerTotal) : formatMXN(kpis.combined.ownerTotal), color: COLORS.green },
+              { label: "LUX Total Cut", value: hasHistoricalUSD ? formatUSD(kpis.combined.luxTotal) : formatMXN(kpis.combined.luxTotal), color: COLORS.amber },
+            ]}
+          />
+          {mixedCurrency && (
+            <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 8 }}>
+              Note · Historical figures shown in USD (pre-tool Guesty data). Live bookings going forward are recorded in MXN. Totals above are not FX-converted.
             </div>
-          ))}
+          )}
         </div>
       )}
 
@@ -342,15 +369,49 @@ export default function AllBookings() {
         Click Download Invoice on a booking for a guest PDF, or Owner Statement on a month for the owner's report.
       </div>
 
+      {/* Historical (USD, pre-tool) rows — read-only */}
+      {!loading && historicalInView.length > 0 && (
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 10, paddingBottom: 8, borderBottom: `1px solid ${COLORS.border}` }}>
+            <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 300 }}>
+              Historical · USD <span style={{ fontSize: 11, color: COLORS.textMuted, letterSpacing: "0.1em", textTransform: "uppercase", marginLeft: 8 }}>Pre-tool Guesty data</span>
+            </div>
+            <button onClick={openMay2026Historical} style={btnGhost}>Open Full May 2026 Report</button>
+          </div>
+          {historicalInView.map((h) => (
+            <div key={h.id} style={{ background: "#FDF9F1", border: `1px solid #E5D8B5`, borderRadius: 4, padding: "16px 20px", marginBottom: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
+                <div>
+                  <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 19, fontWeight: 400 }}>
+                    {h.guest}
+                    <span style={{ fontSize: 9, background: "#7A5C1E1a", color: "#7A5C1E", padding: "2px 8px", borderRadius: 10, marginLeft: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>Historical · USD</span>
+                  </div>
+                  <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 3 }}>
+                    {h.checkin} → {h.checkout} · {h.villa}
+                  </div>
+                  {h.notes && <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 4, fontStyle: "italic" }}>{h.notes}</div>}
+                </div>
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginTop: 12 }}>
+                <HistCell label="Accommodation Fare" value={formatUSD(h.accommodationFare)} sub={`Owner 85%: ${formatUSD(h.accommodationFare * 0.85)} · LUX 15%: ${formatUSD(h.accommodationFare * 0.15)}`} />
+                <HistCell label="Upsells Billed" value={formatUSD(h.upsellsBilled)} sub={`Profit pool: ${formatUSD(h.upsellsProfit)}`} />
+                <HistCell label="LUX Cut (Total)" value={formatUSD(h.accommodationFare * 0.15 + h.upsellsProfit * 0.15)} sub={`Owner: ${formatUSD(h.accommodationFare * 0.85 + h.upsellsProfit * 0.85)}`} color={COLORS.amber} />
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
       {loading && <div style={{ color: COLORS.textMuted }}>Loading…</div>}
-      {!loading && bookings.length === 0 && <div style={{ color: COLORS.textMuted }}>No bookings yet.</div>}
-      {!loading && bookings.length > 0 && grouped.length === 0 && (
+      {!loading && bookings.length === 0 && historicalInView.length === 0 && <div style={{ color: COLORS.textMuted }}>No bookings yet.</div>}
+      {!loading && grouped.length === 0 && historicalInView.length === 0 && bookings.length > 0 && (
         <div style={{ background: "#fff", border: `1px dashed ${COLORS.border}`, borderRadius: 4, padding: "32px 22px", textAlign: "center", color: COLORS.textMuted }}>
-          {view === "current" && <>No bookings for {currentMonthLabel} yet.</>}
+          {view === "current" && <>No live bookings for {currentMonthLabel} yet — use New Booking to add one.</>}
           {view === "upcoming" && <>No upcoming check-ins in the next 60 days.</>}
           {view === "all" && <>No bookings match this filter.</>}
         </div>
       )}
+
 
       {grouped.map(([key, list]) => {
         const charged = list.reduce((s, b) => s + Number(b.total_guest), 0);
