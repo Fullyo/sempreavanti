@@ -48,13 +48,13 @@ export function openMay2026Historical() {
     <div class="conf">Internal Report · Confidential</div>
     <h1>Villas Sempre Avanti</h1>
     <div class="sub">Upsell Revenue &amp; Profit Report — May 2026</div>
-    <div class="meta">2 bookings · All figures in USD · Accommodation fare excluded · Split: 85% owner / 15% LUX</div>
+    <div class="meta">3 bookings · All figures in USD · Accommodation fare excluded · Split: 85% owner / 15% LUX</div>
 
     <div class="cards">
-      <div class="card"><div class="label">Total Billed to Guest</div><div class="value">$7,647.32</div></div>
-      <div class="card"><div class="label">Total Profit Pool</div><div class="value">$3,724.81</div></div>
-      <div class="card owner"><div class="label">Owner's Share 85%</div><div class="value">$3,166.09</div></div>
-      <div class="card lux"><div class="label">LUX's Cut 15%</div><div class="value">$558.72</div></div>
+      <div class="card"><div class="label">Total Billed to Guest</div><div class="value">$8,270.32</div></div>
+      <div class="card"><div class="label">Total Profit Pool</div><div class="value">$4,050.81</div></div>
+      <div class="card owner"><div class="label">Owner's Share 85%</div><div class="value">$3,443.19</div></div>
+      <div class="card lux"><div class="label">LUX's Cut 15%</div><div class="value">$607.62</div></div>
       <div class="card cash"><div class="label">Cash Collected On Site</div><div class="value">$1,300.00</div></div>
     </div>
 
