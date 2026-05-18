@@ -16,6 +16,14 @@ import { downloadInvoice } from "./GuestInvoicePDF";
 import { downloadOwnerStatementCSV, openOwnerStatement } from "./ownerStatement";
 import { openApril2026Historical } from "./april2026Historical";
 import { openMay2026Historical } from "./may2026Historical";
+import {
+  ALL_HISTORICAL,
+  HistoricalBooking,
+  KpiBreakdown,
+  computeHistoricalKpis,
+  formatUSD,
+  historicalMonthKey,
+} from "./historicalData";
 
 function monthKey(d: string) {
   const dt = new Date(d);
