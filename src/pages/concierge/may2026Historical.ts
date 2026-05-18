@@ -140,6 +140,7 @@ export function openMay2026Historical() {
           <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$623.00</td><td style="text-align:right">$297.00</td><td style="text-align:right">$326.00</td><td style="text-align:right;color:#2D6A45">$277.10</td><td style="text-align:right;color:#7A5C1E">$48.90</td></tr>
         </tfoot>
       </table>
+      <div class="accom-bar"><span>Accommodation fare: <strong>$2,223.00</strong></span><span>LUX 15% commission: <strong>$333.45</strong></span><span>Owner retains 85%: <strong>$1,889.55</strong></span></div>
       <div class="note">Note · UTV vehicles are owner-owned (100% profit pool). Gas tank fill is reimbursement for fuel — billed at cost with no markup.</div>
     </section>
 
