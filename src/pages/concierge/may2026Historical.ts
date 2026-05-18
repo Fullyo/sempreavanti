@@ -58,7 +58,7 @@ export function openMay2026Historical() {
       <div class="card cash"><div class="label">Cash Collected On Site</div><div class="value">$1,300.00</div></div>
     </div>
 
-    <div class="fx">FX assumption · For peso-denominated profit items (transport flat fees), we use an agreed average of ≈18 MXN / 1 USD. The 1,000 MXN profit on Airport SUV and Taxi is recorded at ≈$60 USD each (rounded for simplicity, not derived from the guest-paid USD amount). UTV rates vary per booking — we always use the actual amount charged on the Guesty folio.</div>
+    <div class="fx">Transport flat fees are recorded at a fixed $55 USD profit per trip regardless of FX. UTV rates vary per booking — we always use the actual amount charged on the Guesty folio.</div>
 
 
     <section class="booking">
