@@ -35,12 +35,12 @@ function monthLabel(key: string) {
   return new Date(Date.UTC(y, m - 1, 1)).toLocaleDateString("en-US", { month: "long", year: "numeric" });
 }
 
-type ViewTab = "current" | "upcoming" | "all";
+type ViewTab = "upcoming" | "all";
 
 export default function AllBookings() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState<ViewTab>("current");
+  const [view, setView] = useState<ViewTab>("all");
   const [monthFilter, setMonthFilter] = useState("all");
   const [editId, setEditId] = useState<number | null>(null);
   const [edit, setEdit] = useState<Booking | null>(null);
