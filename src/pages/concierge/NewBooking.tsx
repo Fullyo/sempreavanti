@@ -41,6 +41,8 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
   const [tipValue, setTipValue] = useState(0);
   const [ccFeeOn, setCcFeeOn] = useState(false);
   const [cashCollected, setCashCollected] = useState(0);
+  const [accommodationFare, setAccommodationFare] = useState(0);
+  const [accommodationCurrency, setAccommodationCurrency] = useState<"MXN" | "USD">("MXN");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
