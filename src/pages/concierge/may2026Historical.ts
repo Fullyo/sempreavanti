@@ -116,6 +116,7 @@ export function openMay2026Historical() {
           <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$957.00</td><td style="text-align:right">$554.00</td><td style="text-align:right">$403.00</td><td style="text-align:right;color:#2D6A45">$342.55</td><td style="text-align:right;color:#7A5C1E">$60.45</td></tr>
         </tfoot>
       </table>
+      <div class="accom-bar"><span>Accommodation fare: <strong>$4,623.85</strong></span><span>LUX 15% commission: <strong>$693.58</strong></span><span>Owner retains 85%: <strong>$3,930.27</strong></span></div>
       <div class="note">Note · UTV charged at $230 for this stay (below the standard 2,500 MXN/day Can-Am or 2,200 MXN/day Polaris rate). We always use whatever amount is on the Guesty folio.</div>
       <div class="note">Note · Standard UTV rates: Can-Am 4-seater 2,500 MXN/day · Polaris 6-seater 2,200 MXN/day · Gas refill penalty 1,500 MXN if guest fails to refill. UTVs are owner-owned (100% profit pool).</div>
     </section>
