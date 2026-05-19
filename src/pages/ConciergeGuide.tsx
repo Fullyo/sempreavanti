@@ -98,7 +98,7 @@ const HTML = `
     <div class="top-five-num">1</div>
     <div class="top-five-content">
       <span class="top-five-title">Ally Cat Sailing</span>
-      <span class="top-five-detail">Open bar, ceviche, snorkeling &amp; sunset · $3,200 MXN/person</span>
+      <span class="top-five-detail">Open bar, ceviche, snorkeling &amp; sunset · $2,000 MXN/person (min 10)</span>
     </div>
   </div>
   <div class="top-five-item">
@@ -613,7 +613,7 @@ const HTML = `
 <div class="page">
   <div class="section-header">
     <span>YOGA &amp; MOVEMENT</span>
-    <span class="gold-badge">from $1,200 MXN / session</span>
+    <span class="gold-badge">$2,000 MXN up to 5 · +$500/extra adult</span>
   </div>
   <p class="description">Begin your morning with a private yoga session on the terrace or pool deck, led by a certified instructor from Sayulita. All styles available — Vinyasa, Yin, Restorative, or a custom session tailored to your group.</p>
   <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-villa-terrace.jpg" alt="Yoga" class="hero-image" />
@@ -634,7 +634,8 @@ const HTML = `
     <li>Group &amp; couples sessions</li>
     <li>Mats &amp; props provided</li>
     <li>1–1.5 hour sessions</li>
-    <li>From $1,200 MXN/session</li>
+    <li>$2,000 MXN for up to 5 guests · +$500 MXN per extra adult</li>
+    <li>🌟 Kids under 13 free (with parent present)</li>
   </ul>
   <div class="tip-box">💡 <strong>Concierge Tip:</strong> Schedule your session for 7–8 AM on the pool terrace — the early morning light over the jungle canopy and the sound of birds creates an atmosphere you simply can't replicate at home. The beach option puts you on the sand at the cove below Sayulita's main break, with the sound of waves as a natural soundtrack. Perfect for beginners and experienced practitioners alike.</div>
   <div class="page-num">17</div>
@@ -668,17 +669,19 @@ const HTML = `
 <div class="page">
   <div class="section-header">
     <span>SOUND BATH &amp; HEALING</span>
-    <span class="gold-badge">$3,000 MXN / session</span>
+    <span class="gold-badge">$3,000 MXN up to 5 · +$600/extra adult</span>
   </div>
-  <p class="description">A restorative sound healing session using Tibetan singing bowls, crystal bowls and percussion instruments. Lie back, breathe deeply and let the vibrations dissolve stress and tension. Ideal for groups of 4–10.</p>
+  <p class="description">A restorative sound healing session with two sound therapists using Tibetan singing bowls, crystal bowls and percussion instruments. Lie back, breathe deeply and let the vibrations dissolve stress and tension. Ideal for groups of 4–10.</p>
   <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/soundbath.jpg" alt="Sound Bath" class="hero-image" />
   <ul class="inclusions-list">
-    <li>Private certified sound healer</li>
+    <li>Two certified sound therapists</li>
     <li>Tibetan &amp; crystal bowls</li>
     <li>Gong &amp; percussion instruments</li>
     <li>60–75 minute session</li>
     <li>Up to 10 participants</li>
     <li>Mats &amp; blankets provided</li>
+    <li>$3,000 MXN for up to 5 guests · +$600 MXN per extra adult</li>
+    <li>🌟 Kids under 13 free (with parent present)</li>
   </ul>
   <div class="tip-box">💡 <strong>Concierge Tip:</strong> Sound baths work best in the evening when the mind is ready to slow down. The session is held right here at the villa — on the open terrace or in the sala — with the healer arranging bowls around each participant for an immersive 360° sound experience. Guests consistently describe it as the most deeply relaxing thing they do during their stay. No experience or prior knowledge needed — simply lie down and breathe.</div>
   <div class="page-num">19</div>

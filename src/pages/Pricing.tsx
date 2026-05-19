@@ -31,9 +31,9 @@ const categories = [
     id: "wellness",
     title: "Wellness Sessions",
     items: [
-      { name: "Yoga", price: "$2,500 MXN" },
+      { name: "Yoga", price: "$2,000 MXN", details: "Up to 5 guests · +$500 MXN per extra adult · Kids under 13 free (with parent present)" },
       { name: "Breathwork", price: "$2,500 MXN" },
-      { name: "Sound Bowl (Healing with Crystal Bowls)", price: "$3,000 MXN" },
+      { name: "Sound Bowl (Healing with Crystal Bowls)", price: "$3,000 MXN", details: "Up to 5 guests · +$600 MXN per extra adult · Kids under 13 free (with parent present)" },
     ],
   },
   {
@@ -178,8 +178,8 @@ const categories = [
     items: [
       {
         name: "Ally Cat Sailing",
-        price: "$3,200 MXN per person",
-        details: "4 hours | Up to 12 guests",
+        price: "$2,000 MXN per person",
+        details: "4 hours | Minimum 10 guests | Up to 12 guests",
         desc: "Our top recommendation — an intimate sailing experience along Banderas Bay with snorkeling, paddleboarding, open bar, and fresh ceviche prepared onboard. Perfect for groups.",
         includes: [
           "Open bar",
