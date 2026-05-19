@@ -37,6 +37,12 @@ function monthLabel(key: string) {
 
 type ViewTab = "upcoming" | "all";
 
+function getCurrentMonthKey(date = new Date()) {
+  // Local time keeps the concierge view aligned with the calendar users see;
+  // on the 1st of each month this automatically rolls to the new month.
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
 export default function AllBookings() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -64,8 +70,7 @@ export default function AllBookings() {
   }, []);
 
   const now = new Date();
-  // Use local time (not UTC) so the month label matches the user's calendar day.
-  const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const currentMonthLabel = monthLabel(getCurrentMonthKey(now));
   const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   const sixtyDaysOut = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
@@ -311,7 +316,7 @@ export default function AllBookings() {
       </div>
 
       <div style={{ fontStyle: "italic", color: COLORS.textMuted, fontSize: 12, marginBottom: 18 }}>
-        Latest month appears first. Each month has its own Accommodation / Upsells / Combined summary at the top.
+        Current month is {currentMonthLabel}. Latest available month appears first, and each month has its own Accommodation / Upsells / Combined summary at the top.
       </div>
 
       {loading && <div style={{ color: COLORS.textMuted }}>Loading…</div>}
