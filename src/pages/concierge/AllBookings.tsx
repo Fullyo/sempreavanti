@@ -627,23 +627,6 @@ export default function AllBookings() {
 
       <div style={{ marginTop: 40, paddingTop: 24, borderTop: `1px solid ${COLORS.border}` }}>
         <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted, marginBottom: 10 }}>
-          Historical Reports
-        </div>
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-          <button onClick={openApril2026Historical} style={btnGhost}>
-            View April 2026 Report (USD, pre-tool)
-          </button>
-          <button onClick={openMay2026Historical} style={btnGhost}>
-            View May 2026 Report (USD, pre-tool)
-          </button>
-        </div>
-        <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 8, fontStyle: "italic" }}>
-          Original USD reports from Guesty invoices, before the tool was built.
-        </div>
-      </div>
-
-      <div style={{ marginTop: 40, paddingTop: 24, borderTop: `1px solid ${COLORS.border}` }}>
-        <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted, marginBottom: 10 }}>
           Advanced — Data Safety
         </div>
         <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
