@@ -48,6 +48,7 @@ export default function AllBookings() {
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<ViewTab>("all");
   const [monthFilter, setMonthFilter] = useState("all");
+  const [openMonthKey, setOpenMonthKey] = useState<string | null>(null);
   const [editId, setEditId] = useState<number | null>(null);
   const [edit, setEdit] = useState<Booking | null>(null);
 
@@ -70,7 +71,6 @@ export default function AllBookings() {
   }, []);
 
   const now = new Date();
-  const currentMonthLabel = monthLabel(getCurrentMonthKey(now));
   const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   const sixtyDaysOut = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
@@ -112,6 +112,18 @@ export default function AllBookings() {
     });
     return Object.entries(groups).sort(([a], [b]) => b.localeCompare(a)); // newest first
   }, [viewFiltered, historicalInView]);
+
+  // Auto-open the latest month section whenever the list changes.
+  useEffect(() => {
+    if (monthSections.length === 0) {
+      setOpenMonthKey(null);
+      return;
+    }
+    setOpenMonthKey((prev) => {
+      if (prev && monthSections.some(([k]) => k === prev)) return prev;
+      return monthSections[0][0];
+    });
+  }, [monthSections]);
 
   const months = useMemo(() => {
     const set = new Set([
@@ -316,7 +328,7 @@ export default function AllBookings() {
       </div>
 
       <div style={{ fontStyle: "italic", color: COLORS.textMuted, fontSize: 12, marginBottom: 18 }}>
-        Current month is {currentMonthLabel}. Latest available month appears first, and each month has its own Accommodation / Upsells / Combined summary at the top.
+        Click a month to view its bookings and summary. Latest month appears first.
       </div>
 
       {loading && <div style={{ color: COLORS.textMuted }}>Loading…</div>}
@@ -340,29 +352,39 @@ export default function AllBookings() {
           ? <button onClick={openApril2026Historical} style={btnGhost}>Open Full April 2026 Report</button>
           : null;
 
+        const isOpen = openMonthKey === key;
         return (
-          <div key={key} style={{ marginBottom: 40 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 14, paddingBottom: 8, borderBottom: `1px solid ${COLORS.border}` }}>
-              <div>
-                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 300 }}>
-                  {label}
-                </div>
-                <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 4 }}>
-                  {kpis.count} bookings
-                  {hasHist && ` · ${group.hist.length} historical (USD)`}
-                  {hasLive && ` · ${group.live.length} live (MXN)`}
+          <div key={key} style={{ marginBottom: isOpen ? 40 : 10 }}>
+            <div
+              onClick={() => setOpenMonthKey(isOpen ? null : key)}
+              style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: isOpen ? 14 : 0, padding: "12px 14px", background: isOpen ? "transparent" : "#fff", border: isOpen ? "none" : `1px solid ${COLORS.border}`, borderRadius: 4, borderBottom: isOpen ? `1px solid ${COLORS.border}` : `1px solid ${COLORS.border}`, cursor: "pointer", gap: 12, flexWrap: "wrap" }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <span style={{ fontSize: 14, color: COLORS.gold, width: 14, display: "inline-block" }}>{isOpen ? "▾" : "▸"}</span>
+                <div>
+                  <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 300, lineHeight: 1 }}>
+                    {label}
+                  </div>
+                  <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 4 }}>
+                    {kpis.count} bookings
+                    {hasHist && ` · ${group.hist.length} historical (USD)`}
+                    {hasLive && ` · ${group.live.length} live (MXN)`}
+                  </div>
                 </div>
               </div>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {histReportBtn}
-                {hasLive && (
-                  <button onClick={() => openOwnerStatement(monthName, Number(yStr), group.live)} style={btnPrimary}>
-                    ⬇ Owner Statement
-                  </button>
-                )}
-              </div>
+              {isOpen && (
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }} onClick={(e) => e.stopPropagation()}>
+                  {histReportBtn}
+                  {hasLive && (
+                    <button onClick={() => openOwnerStatement(monthName, Number(yStr), group.live)} style={btnPrimary}>
+                      ⬇ Owner Statement
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
 
+            {isOpen && (<>
             {/* Per-month KPI summary */}
             <div style={{ marginBottom: 18 }}>
               <KpiBlock
@@ -574,6 +596,7 @@ export default function AllBookings() {
                 </div>
               );
             })}
+            </>)}
           </div>
         );
       })}
