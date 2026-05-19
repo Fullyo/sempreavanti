@@ -178,8 +178,8 @@ const categories = [
     items: [
       {
         name: "Ally Cat Sailing",
-        price: "$3,200 MXN per person",
-        details: "4 hours | Up to 12 guests",
+        price: "$2,000 MXN per person",
+        details: "4 hours | Minimum 10 guests | Up to 12 guests",
         desc: "Our top recommendation — an intimate sailing experience along Banderas Bay with snorkeling, paddleboarding, open bar, and fresh ceviche prepared onboard. Perfect for groups.",
         includes: [
           "Open bar",
