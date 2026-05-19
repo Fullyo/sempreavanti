@@ -596,6 +596,7 @@ export default function AllBookings() {
                 </div>
               );
             })}
+            </>)}
           </div>
         );
       })}
