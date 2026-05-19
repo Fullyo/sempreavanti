@@ -669,17 +669,19 @@ const HTML = `
 <div class="page">
   <div class="section-header">
     <span>SOUND BATH &amp; HEALING</span>
-    <span class="gold-badge">$3,000 MXN / session</span>
+    <span class="gold-badge">$3,000 MXN up to 5 · +$600/extra adult</span>
   </div>
-  <p class="description">A restorative sound healing session using Tibetan singing bowls, crystal bowls and percussion instruments. Lie back, breathe deeply and let the vibrations dissolve stress and tension. Ideal for groups of 4–10.</p>
+  <p class="description">A restorative sound healing session with two sound therapists using Tibetan singing bowls, crystal bowls and percussion instruments. Lie back, breathe deeply and let the vibrations dissolve stress and tension. Ideal for groups of 4–10.</p>
   <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/soundbath.jpg" alt="Sound Bath" class="hero-image" />
   <ul class="inclusions-list">
-    <li>Private certified sound healer</li>
+    <li>Two certified sound therapists</li>
     <li>Tibetan &amp; crystal bowls</li>
     <li>Gong &amp; percussion instruments</li>
     <li>60–75 minute session</li>
     <li>Up to 10 participants</li>
     <li>Mats &amp; blankets provided</li>
+    <li>$3,000 MXN for up to 5 guests · +$600 MXN per extra adult</li>
+    <li>🌟 Kids under 13 free (with parent present)</li>
   </ul>
   <div class="tip-box">💡 <strong>Concierge Tip:</strong> Sound baths work best in the evening when the mind is ready to slow down. The session is held right here at the villa — on the open terrace or in the sala — with the healer arranging bowls around each participant for an immersive 360° sound experience. Guests consistently describe it as the most deeply relaxing thing they do during their stay. No experience or prior knowledge needed — simply lie down and breathe.</div>
   <div class="page-num">19</div>
