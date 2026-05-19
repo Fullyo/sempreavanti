@@ -439,7 +439,7 @@ export default function AllBookings() {
                   { label: "LUX Total Cut", value: hasHist ? formatUSD(kpis.combined.luxTotal) : formatMXN(kpis.combined.luxTotal), color: COLORS.amber },
                 ]}
               />
-              {mixed && (
+              {hasHist && hasLive && (
                 <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 8 }}>
                   Note · This month contains both historical (USD) and live (MXN) bookings. Totals above are not FX-converted — treat each currency block separately.
                 </div>
