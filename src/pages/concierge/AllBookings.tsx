@@ -113,6 +113,18 @@ export default function AllBookings() {
     return Object.entries(groups).sort(([a], [b]) => b.localeCompare(a)); // newest first
   }, [viewFiltered, historicalInView]);
 
+  // Auto-open the latest month section whenever the list changes.
+  useEffect(() => {
+    if (monthSections.length === 0) {
+      setOpenMonthKey(null);
+      return;
+    }
+    setOpenMonthKey((prev) => {
+      if (prev && monthSections.some(([k]) => k === prev)) return prev;
+      return monthSections[0][0];
+    });
+  }, [monthSections]);
+
   const months = useMemo(() => {
     const set = new Set([
       ...bookings.map((b) => monthKey(b.checkin)),
