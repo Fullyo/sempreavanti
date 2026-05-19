@@ -352,29 +352,39 @@ export default function AllBookings() {
           ? <button onClick={openApril2026Historical} style={btnGhost}>Open Full April 2026 Report</button>
           : null;
 
+        const isOpen = openMonthKey === key;
         return (
-          <div key={key} style={{ marginBottom: 40 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 14, paddingBottom: 8, borderBottom: `1px solid ${COLORS.border}` }}>
-              <div>
-                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 300 }}>
-                  {label}
-                </div>
-                <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 4 }}>
-                  {kpis.count} bookings
-                  {hasHist && ` · ${group.hist.length} historical (USD)`}
-                  {hasLive && ` · ${group.live.length} live (MXN)`}
+          <div key={key} style={{ marginBottom: isOpen ? 40 : 10 }}>
+            <div
+              onClick={() => setOpenMonthKey(isOpen ? null : key)}
+              style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: isOpen ? 14 : 0, padding: "12px 14px", background: isOpen ? "transparent" : "#fff", border: isOpen ? "none" : `1px solid ${COLORS.border}`, borderRadius: 4, borderBottom: isOpen ? `1px solid ${COLORS.border}` : `1px solid ${COLORS.border}`, cursor: "pointer", gap: 12, flexWrap: "wrap" }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                <span style={{ fontSize: 14, color: COLORS.gold, width: 14, display: "inline-block" }}>{isOpen ? "▾" : "▸"}</span>
+                <div>
+                  <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 28, fontWeight: 300, lineHeight: 1 }}>
+                    {label}
+                  </div>
+                  <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 4 }}>
+                    {kpis.count} bookings
+                    {hasHist && ` · ${group.hist.length} historical (USD)`}
+                    {hasLive && ` · ${group.live.length} live (MXN)`}
+                  </div>
                 </div>
               </div>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                {histReportBtn}
-                {hasLive && (
-                  <button onClick={() => openOwnerStatement(monthName, Number(yStr), group.live)} style={btnPrimary}>
-                    ⬇ Owner Statement
-                  </button>
-                )}
-              </div>
+              {isOpen && (
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }} onClick={(e) => e.stopPropagation()}>
+                  {histReportBtn}
+                  {hasLive && (
+                    <button onClick={() => openOwnerStatement(monthName, Number(yStr), group.live)} style={btnPrimary}>
+                      ⬇ Owner Statement
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
 
+            {isOpen && (<>
             {/* Per-month KPI summary */}
             <div style={{ marginBottom: 18 }}>
               <KpiBlock
