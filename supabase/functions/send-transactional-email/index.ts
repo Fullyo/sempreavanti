@@ -36,34 +36,21 @@ Deno.serve(async (req) => {
   }
 
   // Authorization: only service-role callers may invoke this function.
-  // verify_jwt is disabled at the gateway because Lovable Cloud uses non-JWT
-  // secret keys (sb_secret_*) which the gateway's JWT validator rejects.
-  // We enforce service-role access in code by direct-comparing the bearer
-  // token to SUPABASE_SERVICE_ROLE_KEY. This also supports legacy JWT keys
-  // and JWT service-role tokens (via role-claim fallback below).
+  // verify_jwt is disabled at the gateway, so we enforce service-role access
+  // in code by direct-comparing the bearer token to SUPABASE_SERVICE_ROLE_KEY.
+  // NOTE: Do NOT add a JWT role-claim fallback here — without signature
+  // verification, attackers could forge a token with role='service_role'.
   const authHeader = req.headers.get('Authorization') || ''
   const token = authHeader.replace(/^Bearer\s+/i, '')
   const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || ''
-  let authorized = serviceKey.length > 0 && token === serviceKey
-  if (!authorized && token.includes('.')) {
-    try {
-      const payload = token.split('.')[1]
-      if (payload) {
-        const json = JSON.parse(
-          atob(payload.replace(/-/g, '+').replace(/_/g, '/'))
-        )
-        authorized = json.role === 'service_role'
-      }
-    } catch {
-      // ignore
-    }
-  }
+  const authorized = serviceKey.length > 0 && token === serviceKey
   if (!authorized) {
     return new Response(
       JSON.stringify({ error: 'Unauthorized' }),
       { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
+
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL')
   const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
