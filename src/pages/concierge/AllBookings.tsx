@@ -48,6 +48,7 @@ export default function AllBookings() {
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<ViewTab>("all");
   const [monthFilter, setMonthFilter] = useState("all");
+  const [openMonthKey, setOpenMonthKey] = useState<string | null>(null);
   const [editId, setEditId] = useState<number | null>(null);
   const [edit, setEdit] = useState<Booking | null>(null);
 
@@ -70,7 +71,6 @@ export default function AllBookings() {
   }, []);
 
   const now = new Date();
-  const currentMonthLabel = monthLabel(getCurrentMonthKey(now));
   const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
   const sixtyDaysOut = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
