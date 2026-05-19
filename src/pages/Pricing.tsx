@@ -31,9 +31,9 @@ const categories = [
     id: "wellness",
     title: "Wellness Sessions",
     items: [
-      { name: "Yoga", price: "$2,500 MXN" },
+      { name: "Yoga", price: "$2,000 MXN", details: "Up to 5 guests · +$500 MXN per extra adult · Kids under 13 free (with parent present)" },
       { name: "Breathwork", price: "$2,500 MXN" },
-      { name: "Sound Bowl (Healing with Crystal Bowls)", price: "$3,000 MXN" },
+      { name: "Sound Bowl (Healing with Crystal Bowls)", price: "$3,000 MXN", details: "Up to 5 guests · +$600 MXN per extra adult · Kids under 13 free (with parent present)" },
     ],
   },
   {
