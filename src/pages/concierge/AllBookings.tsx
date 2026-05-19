@@ -328,7 +328,7 @@ export default function AllBookings() {
       </div>
 
       <div style={{ fontStyle: "italic", color: COLORS.textMuted, fontSize: 12, marginBottom: 18 }}>
-        Current month is {currentMonthLabel}. Latest available month appears first, and each month has its own Accommodation / Upsells / Combined summary at the top.
+        Click a month to view its bookings and summary. Latest month appears first.
       </div>
 
       {loading && <div style={{ color: COLORS.textMuted }}>Loading…</div>}
