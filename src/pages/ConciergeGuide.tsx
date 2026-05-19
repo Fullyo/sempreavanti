@@ -613,7 +613,7 @@ const HTML = `
 <div class="page">
   <div class="section-header">
     <span>YOGA &amp; MOVEMENT</span>
-    <span class="gold-badge">from $1,200 MXN / session</span>
+    <span class="gold-badge">$2,000 MXN up to 5 · +$500/extra adult</span>
   </div>
   <p class="description">Begin your morning with a private yoga session on the terrace or pool deck, led by a certified instructor from Sayulita. All styles available — Vinyasa, Yin, Restorative, or a custom session tailored to your group.</p>
   <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-villa-terrace.jpg" alt="Yoga" class="hero-image" />
@@ -634,7 +634,8 @@ const HTML = `
     <li>Group &amp; couples sessions</li>
     <li>Mats &amp; props provided</li>
     <li>1–1.5 hour sessions</li>
-    <li>From $1,200 MXN/session</li>
+    <li>$2,000 MXN for up to 5 guests · +$500 MXN per extra adult</li>
+    <li>🌟 Kids under 13 free (with parent present)</li>
   </ul>
   <div class="tip-box">💡 <strong>Concierge Tip:</strong> Schedule your session for 7–8 AM on the pool terrace — the early morning light over the jungle canopy and the sound of birds creates an atmosphere you simply can't replicate at home. The beach option puts you on the sand at the cove below Sayulita's main break, with the sound of waves as a natural soundtrack. Perfect for beginners and experienced practitioners alike.</div>
   <div class="page-num">17</div>
