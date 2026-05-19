@@ -98,7 +98,7 @@ const HTML = `
     <div class="top-five-num">1</div>
     <div class="top-five-content">
       <span class="top-five-title">Ally Cat Sailing</span>
-      <span class="top-five-detail">Open bar, ceviche, snorkeling &amp; sunset · $3,200 MXN/person</span>
+      <span class="top-five-detail">Open bar, ceviche, snorkeling &amp; sunset · $2,000 MXN/person (min 10)</span>
     </div>
   </div>
   <div class="top-five-item">
