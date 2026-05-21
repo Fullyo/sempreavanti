@@ -51,7 +51,7 @@ const HTML = `
     </div>
     <div class="grid-item">
       <strong>Laundry &amp; Linens</strong>
-      <p>Bath towels changed daily. Bed linens changed every 3 days. Personal laundry service available — ask Angy or housekeeping.</p>
+      <p>Bath towels changed daily. Bed linens changed every 3 days. Personal laundry service available — ask housekeeping.</p>
     </div>
     <div class="grid-item">
       <strong>Pool &amp; Beach</strong>
