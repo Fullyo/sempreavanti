@@ -112,7 +112,7 @@ const HTML = `
     <div class="top-five-num">3</div>
     <div class="top-five-content">
       <span class="top-five-title">Cachasol Farm Distillery</span>
-      <span class="top-five-detail">90-min farm-to-glass tequila tour · $1,500 MXN/person</span>
+      <span class="top-five-detail">Full tour, two cocktails &amp; dinner · $1,700 MXN/person</span>
     </div>
   </div>
   <div class="top-five-item">
