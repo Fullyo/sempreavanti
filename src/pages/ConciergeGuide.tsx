@@ -777,86 +777,108 @@ const HTML = `
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
-     PAGE 24 · DINING IN SAYULITA
+     PAGE 24 · DINING IN SAYULITA — BREAKFAST, LUNCH & CAFÉS
 ══════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">DINING IN SAYULITA</div>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/dining-sayulita-v2.jpg" alt="Sayulita Dining" class="hero-image" />
+  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/dining-sayulita-v2.jpg" alt="Sayulita Dining" class="hero-image" style="height:150px; object-position: center center;" />
 
-  <div class="restaurant-card">
-    <strong>El Itacate <span class="tag">Mexican · All Day</span></strong>
-    <p>A Sayulita institution on Calle José Mariscal. Famous for tacos al pastor, huevos rancheros and chilaquiles. Busy from breakfast through lunch — arrive early or expect a wait.</p>
+  <h3 style="color:#1a4a52;font-family:'Montserrat',sans-serif;font-size:.8rem;text-transform:uppercase;letter-spacing:1px;margin:10px 0 8px;padding-bottom:6px;border-bottom:2px solid #f0b429;">Breakfast, Lunch &amp; Cafés</h3>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px;">
+    <div class="restaurant-card">
+      <strong>El Itacate <span class="tag">Mexican · All Day</span></strong>
+      <p>A Sayulita institution on Calle José Mariscal. Famous for tacos al pastor, huevos rancheros and chilaquiles. Arrive early or expect a wait.</p>
+    </div>
+    <div class="restaurant-card">
+      <strong>Orgánica <span class="tag">Health · Juices</span></strong>
+      <p>Smoothie bowls, cold-pressed juices and organic plates on Av. Revolución. Go-to for a light breakfast or post-surf lunch.</p>
+    </div>
+    <div class="restaurant-card">
+      <strong>Mary's <span class="tag">Comida Corrida</span></strong>
+      <p>No-frills home-style Mexican on Av. Revolución 36. Ask for the daily comida corrida — exceptional value, true local favourite.</p>
+    </div>
+    <div class="restaurant-card">
+      <strong>Pákeke Sayulita <span class="tag">Breakfast</span></strong>
+      <p>Bright, easy breakfast spot — great coffee, pastries and morning plates to start the day right.</p>
+    </div>
+    <div class="restaurant-card">
+      <strong>Miscelánea Sayulita <span class="tag">Breakfast</span></strong>
+      <p>Charming spot for a slow breakfast — coffee, eggs, and well-plated morning classics.</p>
+    </div>
+    <div class="restaurant-card">
+      <strong>Don Bonito Café <span class="tag">Breakfast</span></strong>
+      <p>Easygoing breakfast café — strong coffee, fresh juices and a relaxed start to the day.</p>
+    </div>
+    <div class="restaurant-card">
+      <strong>Naty's Cocina <span class="tag">Breakfast</span></strong>
+      <p>Also known as Naty's Kitchen — home-style Mexican breakfasts in a friendly, no-frills setting.</p>
+    </div>
+    <div class="restaurant-card">
+      <strong>Matiz Sayulita <span class="tag">Lunch</span></strong>
+      <p>Light, fresh lunches in a stylish setting — perfect mid-day stop between the beach and the villa.</p>
+    </div>
+    <div class="restaurant-card">
+      <strong>Northswell <span class="tag">Vegan</span></strong>
+      <p>Plant-friendly menu with bowls, juices and lighter plates. Great for a healthy break from richer meals.</p>
+    </div>
+    <div class="restaurant-card">
+      <strong>Northside Café <span class="tag">Vegan</span></strong>
+      <p>Cozy café with vegan and plant-forward options — good coffee, smoothies and light all-day plates.</p>
+    </div>
   </div>
-  <div class="restaurant-card">
-    <strong>Orgánica <span class="tag">Health Food · Juices</span></strong>
-    <p>Smoothie bowls, cold-pressed juices, avocado toast and organic plates on Av. Revolución. The go-to for a light, nourishing breakfast or post-surf lunch.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>Mary's <span class="tag">Mexican · Comida Corrida</span></strong>
-    <p>No-frills, home-style Mexican on Av. Revolución 36. Ask for the daily comida corrida — exceptional value and always delicious. A true local favourite since forever.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>Yambak <span class="tag">Bar · Cocktails · Bites</span></strong>
-    <p>Lively bar on Calle Marlín 12 with creative cocktails and casual bites. Great energy for sundowners with a group. More of a drinks-first spot than a full-dinner destination.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>Don Pedro's <span class="tag">Seafood · Beachfront · Since 1994</span></strong>
-    <p>Sayulita's most iconic beachfront restaurant. Fresh seafood, grilled fish tacos and cold beers right on the sand since 1994. Book ahead for sunset — tables go fast.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>Pákeke Sayulita <span class="tag">Breakfast</span></strong>
-    <p>Bright, easy breakfast spot — great coffee, pastries and morning plates to start the day right.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>Sur 38 Wine &amp; Dine <span class="tag">Dinner · Wine</span></strong>
-    <p>Refined dinner spot with a strong wine program. Good for a slower, more grown-up evening out.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>Santas Iguanas <span class="tag">Dinner · Vegan &amp; Plant-Friendly</span></strong>
-    <p>Inventive plant-forward dinners with thoughtful vegan options. A standout for groups with mixed dietary preferences.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>Baby's Burgers <span class="tag">Dinner · Smash Burgers &amp; Beer</span></strong>
-    <p>Smash burgers and cold beer — casual, fast and exactly what you want after a long beach day.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>La Rústica <span class="tag">Dinner</span></strong>
-    <p>Sayulita favourite for a relaxed, well-executed dinner. Wood-fired flavours and a buzzy atmosphere.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>Matiz Sayulita <span class="tag">Lunch</span></strong>
-    <p>Light, fresh lunches in a stylish setting — perfect mid-day stop between the beach and the villa.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>Miscelánea Sayulita <span class="tag">Breakfast</span></strong>
-    <p>Charming spot for a slow breakfast — coffee, eggs, and well-plated morning classics.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>Casa Lvnae <span class="tag">Dinner</span></strong>
-    <p>Polished evening dining with attentive service. A go-to when you want a more elevated dinner in town.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>Zíngaro <span class="tag">Dinner · Italian</span></strong>
-    <p>Italian classics done well — handmade pastas, hearty mains and a warm room. Reliable for a satisfying dinner.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>Don Bonito Café <span class="tag">Breakfast</span></strong>
-    <p>Easygoing breakfast café — strong coffee, fresh juices and a relaxed start to the day.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>Northswell <span class="tag">Vegan &amp; Plant-Friendly</span></strong>
-    <p>Plant-friendly menu with bowls, juices and lighter plates. Great for a healthy break from richer meals.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>Naty's Cocina <span class="tag">Breakfast</span></strong>
-    <p>Also known as Naty's Kitchen — home-style Mexican breakfasts in a friendly, no-frills setting.</p>
-  </div>
-  <div class="restaurant-card">
-    <strong>Northside Café <span class="tag">Vegan &amp; Plant-Friendly</span></strong>
-    <p>Cozy café with vegan and plant-forward options — good coffee, smoothies and light all-day plates.</p>
 
   <div class="page-num">24</div>
 </div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     PAGE 25 · DINING IN SAYULITA — DINNER & DRINKS
+══════════════════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="section-header">DINING IN SAYULITA — DINNER &amp; DRINKS</div>
+
+  <h3 style="color:#1a4a52;font-family:'Montserrat',sans-serif;font-size:.8rem;text-transform:uppercase;letter-spacing:1px;margin:6px 0 10px;padding-bottom:6px;border-bottom:2px solid #f0b429;">Dinner &amp; Beachfront</h3>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px;">
+    <div class="restaurant-card">
+      <strong>Don Pedro's <span class="tag">Seafood · Beachfront</span></strong>
+      <p>Sayulita's most iconic beachfront restaurant. Fresh seafood and grilled fish tacos on the sand since 1994. Book ahead for sunset.</p>
+    </div>
+    <div class="restaurant-card">
+      <strong>Sur 38 Wine &amp; Dine <span class="tag">Dinner · Wine</span></strong>
+      <p>Refined dinner spot with a strong wine program. Good for a slower, more grown-up evening out.</p>
+    </div>
+    <div class="restaurant-card">
+      <strong>Santas Iguanas <span class="tag">Vegan-Friendly</span></strong>
+      <p>Inventive plant-forward dinners with thoughtful vegan options. A standout for groups with mixed dietary preferences.</p>
+    </div>
+    <div class="restaurant-card">
+      <strong>Baby's Burgers <span class="tag">Smash Burgers</span></strong>
+      <p>Smash burgers and cold beer — casual, fast and exactly what you want after a long beach day.</p>
+    </div>
+    <div class="restaurant-card">
+      <strong>La Rústica <span class="tag">Dinner</span></strong>
+      <p>Sayulita favourite for a relaxed, well-executed dinner. Wood-fired flavours and a buzzy atmosphere.</p>
+    </div>
+    <div class="restaurant-card">
+      <strong>Casa Lvnae <span class="tag">Dinner · Elevated</span></strong>
+      <p>Polished evening dining with attentive service. A go-to when you want a more elevated dinner in town.</p>
+    </div>
+    <div class="restaurant-card">
+      <strong>Zíngaro <span class="tag">Italian</span></strong>
+      <p>Italian classics done well — handmade pastas, hearty mains and a warm room. Reliable for a satisfying dinner.</p>
+    </div>
+    <div class="restaurant-card">
+      <strong>Yambak <span class="tag">Bar · Cocktails</span></strong>
+      <p>Lively bar on Calle Marlín 12 with creative cocktails and casual bites. Great energy for sundowners with a group.</p>
+    </div>
+  </div>
+
+  <div class="tip-box" style="margin-top:18px;">💡 <strong>Concierge Tip:</strong> Sayulita books up fast in high season. Tell your concierge the night before and we'll secure your table — especially for Don Pedro's at sunset, Casa Lvnae and Sur 38.</div>
+
+  <div class="page-num">25</div>
+</div>
+
 
 <!-- ══════════════════════════════════════════════════════════════
      PAGE 25 · DINING — PUNTA MITA
