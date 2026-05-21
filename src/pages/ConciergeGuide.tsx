@@ -713,46 +713,14 @@ const HTML = `
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
-     PAGE 21 · SAYULITA TACO TOUR
-══════════════════════════════════════════════════════════════ -->
-<div class="page">
-  <div class="section-header">
-    <span>SAYULITA TACO TOUR</span>
-    <span class="gold-badge">$1,200 MXN / person · Min 4</span>
-  </div>
-  <p class="description">Taste your way through Sayulita's best taco spots with a local guide who knows every hidden gem. Visit 5 hand-picked taco stands and restaurants, sampling authentic flavours from al pastor to Baja shrimp — washed down with cold mezcal shots.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/taco-board.jpg" alt="Taco Board" class="hero-image" />
-  <div class="image-row">
-    <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/taco-stand.jpg" alt="Sayulita Taco Stand" class="square-image" />
-      <div class="caption">Al Pastor, Baja Shrimp &amp; More</div>
-    </div>
-    <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/taco-salsas.jpg" alt="Fresh Salsas" class="square-image" />
-      <div class="caption">Fresh House Salsas</div>
-    </div>
-  </div>
-  <ul class="inclusions-list">
-    <li>5 taco stops</li>
-    <li>Local guide included</li>
-    <li>Al pastor, Baja shrimp, mole &amp; more</li>
-    <li>Mezcal tasting included</li>
-    <li>Min 4 guests</li>
-    <li>Dietary accommodations available</li>
-  </ul>
-  <div class="tip-box">💡 <strong>Concierge Tip:</strong> Go hungry — each stop serves 1–2 tacos plus salsas and sides, so by the fifth stop you will have sampled the full spectrum of Mexican street food culture. The guide brings context to each vendor: family histories, regional techniques and the stories behind the recipes. Best experienced in the evening when the stands are at their liveliest and the mezcal flows.</div>
-  <div class="page-num">21</div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════════
-     PAGE 22 · CACHASOL TEQUILA DISTILLERY
+     PAGE 21 · CACHASOL TEQUILA DISTILLERY
 ══════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">
     <span>CACHASOL DISTILLERY TOUR</span>
-    <span class="gold-badge">$1,500 MXN / person</span>
+    <span class="gold-badge">$1,700 MXN / person</span>
   </div>
-  <p class="description">Step behind the scenes at Cachasol — Nayarit's most celebrated artisan tequila distillery set on a working agave farm just 10 minutes from the villa. A 90-minute farm-to-glass experience with a guided tasting of blanco, reposado and añejo.</p>
+  <p class="description">Step behind the scenes at Cachasol — Nayarit's most celebrated artisan tequila distillery set on a working agave farm just 10 minutes from the villa. A full farm-to-glass experience that includes two cocktails, the complete guided tour, and dinner on-site.</p>
   <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cachasol-bottles.jpg" alt="Cachasol Tequila" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
@@ -765,26 +733,26 @@ const HTML = `
     </div>
   </div>
   <ul class="inclusions-list">
-    <li>90-minute guided tour</li>
+    <li>Full guided distillery tour</li>
+    <li>Two cocktails included</li>
+    <li>Dinner on-site</li>
     <li>Agave farm walk</li>
-    <li>Distillery process explained</li>
-    <li>Tasting: Blanco, Reposado &amp; Añejo</li>
-    <li>$1,500 MXN/person</li>
+    <li>$1,700 MXN/person — all in</li>
     <li>cachasol.com for info</li>
   </ul>
-  <div class="tip-box">💡 <strong>Concierge Tip:</strong> Cachasol produces small-batch tequila from blue agave grown right on the property — a true farm-to-glass experience that larger commercial distilleries simply can't offer. The tasting finishes with their Epic Strength expression (above 50% ABV), which is not available for retail export. Pair this with the Private Cooking Class held at Cachasol (Tue–Sun, 2:30 PM) for an unforgettable full afternoon.</div>
-  <div class="page-num">22</div>
+  <div class="tip-box">💡 <strong>Concierge Tip:</strong> Cachasol produces small-batch tequila from blue agave grown right on the property — a true farm-to-glass experience. The $1,700 ticket is all-inclusive: full tour, two cocktails and dinner, making it one of the best-value evenings on the Riviera Nayarit.</div>
+  <div class="page-num">21</div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
-     PAGE 23 · PRIVATE COOKING CLASS
+     PAGE 22 · PRIVATE COOKING CLASS
 ══════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">
     <span>PRIVATE COOKING CLASS</span>
-    <span class="gold-badge">$1,200 MXN / person</span>
+    <span class="gold-badge">$600 MXN / person · Before 5 PM</span>
   </div>
-  <p class="description">Learn the secrets of authentic Mexican cuisine with a private chef. From fresh salsas and ceviche to hand-pressed tortillas and complex moles — a fun, hands-on experience that brings the flavours of Mexico straight to your table.</p>
+  <p class="description">Hosted at the villa by Chef Ricardo — learn the secrets of authentic Mexican cuisine with a fun, hands-on session right in our kitchen. From fresh salsas and ceviche to hand-pressed tortillas and complex moles. Sessions must start before 5 PM.</p>
   <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cooking-class-group.jpg" alt="Cooking Class" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
@@ -797,15 +765,15 @@ const HTML = `
     </div>
   </div>
   <ul class="inclusions-list">
-    <li>Private chef instructor</li>
+    <li>Hosted by Chef Ricardo</li>
+    <li>Held at the villa</li>
     <li>All ingredients included</li>
     <li>Hands-on cooking session</li>
-    <li>2–3 hours duration</li>
-    <li>Arrangeable at the villa or Cachasol</li>
-    <li>Cachasol sessions: Tue–Sun at 2:30 PM</li>
+    <li>$600 MXN per person</li>
+    <li>Must start before 5 PM</li>
   </ul>
-  <div class="tip-box">💡 <strong>Concierge Tip:</strong> The class typically covers 4–5 dishes: a fresh salsa, guacamole, ceviche, hand-pressed corn tortillas and a main such as mole chicken or grilled fish. Everything is prepared from scratch using local market ingredients. The Cachasol setting adds an outdoor kitchen ambience under the trees — book the 2:30 PM slot and combine it with a tequila tasting immediately after.</div>
-  <div class="page-num">23</div>
+  <div class="tip-box">💡 <strong>Concierge Tip:</strong> Chef Ricardo typically covers 4–5 dishes: a fresh salsa, guacamole, ceviche, hand-pressed corn tortillas and a main such as mole chicken or grilled fish. Everything is prepared from scratch in the villa kitchen. Book an early-afternoon slot so you can transition straight from cooking class to a sunset dinner on the terrace.</div>
+  <div class="page-num">22</div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
