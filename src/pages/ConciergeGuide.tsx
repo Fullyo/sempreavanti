@@ -882,47 +882,6 @@ const HTML = `
   <div class="page-num">25</div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     PAGE 26 · LOCAL MARKETS
-══════════════════════════════════════════════════════════════ -->
-<div class="page">
-  <div class="section-header">LOCAL MARKETS</div>
-
-  <div class="image-row" style="margin-top:16px">
-    <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/market-sayulita.jpg" alt="Sayulita Market" class="square-image" />
-      <div class="caption">Sayulita Artisan Market — Every Friday</div>
-    </div>
-    <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/market-la-cruz.jpg" alt="La Cruz Sunday Market" class="square-image" />
-      <div class="caption">La Cruz Sunday Market</div>
-    </div>
-  </div>
-
-  <h3 style="color:#2e7b8c;font-family:'Montserrat',sans-serif;font-size:.85rem;text-transform:uppercase;margin:16px 0 10px;letter-spacing:1px;">Sayulita Artisan Market</h3>
-  <p class="description" style="margin-bottom:10px">Every <strong>Friday</strong> from 10 AM – 4 PM on the main plaza. Fresh produce, handmade crafts, jewellery, textiles, and incredible street food. Best visited in the morning for the freshest selection.</p>
-
-  <h3 style="color:#2e7b8c;font-family:'Montserrat',sans-serif;font-size:.85rem;text-transform:uppercase;margin:16px 0 10px;letter-spacing:1px;">La Cruz Sunday Market</h3>
-  <p class="description" style="margin-bottom:10px">Every <strong>Sunday</strong> from 9 AM – 2 PM at the La Cruz de Huanacaxtle marina (25 min from villa). One of the best markets on the Riviera Nayarit — gourmet food stalls, ceramics, clothing, live music and ocean views.</p>
-
-  <div class="grid-list" style="margin-top:10px">
-    <div class="grid-item">
-      <strong>Nearby Towns</strong>
-      <span>San Pancho · 15 min · Artsy village, great dining</span><br>
-      <span>La Cruz de Huanacaxtle · 25 min · Marina, Sunday market</span><br>
-      <span>Punta Mita · 5 min · Beaches, golf, fine dining</span>
-    </div>
-    <div class="grid-item">
-      <strong>Natural Highlights</strong>
-      <span>Marietas Islands (UNESCO protected)</span><br>
-      <span>Whale migration Dec–Mar</span><br>
-      <span>Mangrove kayaking</span><br>
-      <span>Jungle hikes &amp; waterfalls</span>
-    </div>
-  </div>
-
-  <div class="page-num">26</div>
-</div>
 
 <!-- ══════════════════════════════════════════════════════════════
      PAGE 27 · ADD-ON SERVICES
