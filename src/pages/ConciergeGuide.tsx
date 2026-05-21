@@ -686,9 +686,9 @@ const HTML = `
 <div class="page">
   <div class="section-header">
     <span>SUNSET PRIVATE BARTENDER</span>
-    <span class="gold-badge">from $2,500 MXN · 3 hours</span>
+    <span class="gold-badge">Flat fee · 3 hours</span>
   </div>
-  <p class="description">Elevate your evening with a private bartender who brings the party to you. Classic cocktails, margaritas, mezcal tastings and custom creations — served poolside or on the terrace as the Pacific sun sets. 3-hour experience.</p>
+  <p class="description">Elevate your evening with a private bartender who brings the party to you. Classic cocktails, margaritas, mezcal tastings and custom creations — served poolside or on the terrace as the Pacific sun sets. 3-hour experience, flat fee with no minimum guest count.</p>
   
   <div class="image-row">
     <div class="square-image-container">
@@ -704,7 +704,7 @@ const HTML = `
     <li>Private bartender</li>
     <li>3-hour service</li>
     <li>Classic &amp; signature cocktails</li>
-    <li>Minimum 4 guests</li>
+    <li>Flat fee — no guest minimum</li>
     <li>All equipment provided</li>
     <li>Margarita Pitcher add-on: $1,000</li>
   </ul>
