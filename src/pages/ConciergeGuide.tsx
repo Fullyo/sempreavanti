@@ -67,7 +67,7 @@ const HTML = `
     </div>
     <div class="grid-item" style="grid-column:1/-1">
       <strong>✈️ Airport Transportation</strong>
-      <p>Round-trip transfer between Puerto Vallarta Airport (PVR) and the villa is available for <strong>$5,000 MXN</strong>. Payment must be made <strong>in cash directly to the driver</strong> upon arrival. Please have pesos ready — USD accepted but change may be limited. Your concierge will arrange pickup details 24 hours before your flight.</p>
+      <p>Round-trip transfer between Puerto Vallarta Airport (PVR) and the villa is available for <strong>$5,000 MXN</strong>. Payment can be made <strong>in cash or by card at the end of your stay</strong>, or <strong>paid directly to the driver</strong>. Your concierge will arrange pickup details 24 hours before your flight.</p>
     </div>
     <div class="grid-item" style="grid-column:1/-1">
       <strong>Quiet Hours</strong>
@@ -112,7 +112,7 @@ const HTML = `
     <div class="top-five-num">3</div>
     <div class="top-five-content">
       <span class="top-five-title">Cachasol Farm Distillery</span>
-      <span class="top-five-detail">90-min farm-to-glass tequila tour · $1,500 MXN/person</span>
+      <span class="top-five-detail">Full tour, two cocktails &amp; dinner · $1,700 MXN/person</span>
     </div>
   </div>
   <div class="top-five-item">
@@ -306,14 +306,14 @@ const HTML = `
 <div class="page">
   <div class="section-header">
     <span>FISHING CHARTER</span>
-    <span class="gold-badge">$10,000 MXN · 4 hours</span>
+    <span class="gold-badge">$11,000 MXN · 3 hours</span>
   </div>
-  <p class="description">Head out onto the Pacific with an experienced captain and crew. The waters off Riviera Nayarit teem with mahi-mahi, tuna, snapper and more. Up to 4 guests, full equipment provided.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-deepsea-v2.jpg" alt="Fishing Charter Boat" class="hero-image" style="height:280px; object-position: center center;" />
+  <p class="description">Head out onto the Pacific aboard a traditional panga with an experienced local captain. The waters off Riviera Nayarit teem with mahi-mahi, tuna, snapper and more. Up to 4 guests, full equipment provided.</p>
+  <img src="/concierge-guide/panga.jpeg" alt="Panga Fishing Charter" class="hero-image" style="height:280px; object-position: center center;" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-charter-boat.jpg" alt="Charter Boat" class="square-image" />
-      <div class="caption">Deep Sea Pacific Fishing</div>
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-charter-boat.jpg" alt="Charter Boat" class="square-image" style="object-position: center 60%;" />
+      <div class="caption">Pacific Panga Fishing</div>
     </div>
     <div class="square-image-container">
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-catch-v2.jpg" alt="Catch of the Day" class="square-image" />
@@ -323,12 +323,12 @@ const HTML = `
   <ul class="inclusions-list">
     <li>Experienced captain &amp; mate</li>
     <li>All fishing gear &amp; bait</li>
-    <li>4-hour charter</li>
+    <li>3-hour panga charter</li>
     <li>Up to 4 guests</li>
     <li>Fish cleaning on board</li>
     <li>Departs from Sayulita</li>
   </ul>
-  <div class="tip-box">💡 <strong>Concierge Tip:</strong> Mahi-mahi (dorado) season peaks May–October, while yellowfin tuna runs strong year-round in Banderas Bay. Ask your captain about catching your own dinner — many local restaurants will cook your fresh catch the same evening. Bring sunscreen and a hat; shade on the water is limited.</div>
+  <div class="tip-box">💡 <strong>Concierge Tip:</strong> Mahi-mahi (dorado) season peaks May–October, while yellowfin tuna runs strong year-round in Banderas Bay. Ask your captain about catching your own dinner — many local restaurants will cook your fresh catch the same evening. Bring sunscreen and a hat; shade on the panga is limited.</div>
   <div class="page-num">8</div>
 </div>
 
@@ -478,30 +478,23 @@ const HTML = `
 ══════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">
-    <span>ATV / RZR ADVENTURE</span>
+    <span>ATV ADVENTURE</span>
     <span class="gold-badge">MiChula Tours</span>
   </div>
-  <p class="description">Tear through jungle trails, sandy beaches and hidden mountain paths on an ATV or RZR. Choose solo or double, with departures at 9 AM, 12 PM and 3 PM daily. Maximum 7 vehicles per group.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-hero-v2.jpeg" alt="RZR Adventure" class="hero-image" />
+  <p class="description">Tear through jungle trails, sandy beaches and hidden mountain paths on a quad. Choose solo or double, with departures at 9 AM, 12 PM and 3 PM daily. Maximum 7 quads per group.</p>
   <div class="image-row">
     <div class="square-image-container">
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq1-v2.jpeg" alt="ATV Trails" class="square-image" />
       <div class="caption">Jungle &amp; Beach Trails</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq2-v2.jpeg" alt="RZR 4-Seater" class="square-image" />
-      <div class="caption">RZR — Up to 4 Passengers</div>
-    </div>
-    <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq3-v2.jpg" alt="Mountain Trails" class="square-image" />
-      <div class="caption">Hidden Mountain Paths</div>
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq2-v2.jpeg" alt="ATV Quad" class="square-image" />
+      <div class="caption">Solo &amp; Double Quads</div>
     </div>
   </div>
   <ul class="inclusions-list">
     <li>ATV Single: $119 USD</li>
     <li>ATV Double: $147 USD</li>
-    <li>RZR (2-pax): $324 USD</li>
-    <li>RZR (4-pax): contact concierge</li>
     <li>Driver min. 16 years</li>
     <li>2-hour duration</li>
     <li>Departs Rancho Mi Chula</li>
@@ -693,9 +686,9 @@ const HTML = `
 <div class="page">
   <div class="section-header">
     <span>SUNSET PRIVATE BARTENDER</span>
-    <span class="gold-badge">from $2,500 MXN · 3 hours</span>
+    <span class="gold-badge">Flat fee · 3 hours</span>
   </div>
-  <p class="description">Elevate your evening with a private bartender who brings the party to you. Classic cocktails, margaritas, mezcal tastings and custom creations — served poolside or on the terrace as the Pacific sun sets. 3-hour experience.</p>
+  <p class="description">Elevate your evening with a private bartender who brings the party to you. Classic cocktails, margaritas, mezcal tastings and custom creations — served poolside or on the terrace as the Pacific sun sets. 3-hour experience, flat fee with no minimum guest count.</p>
   
   <div class="image-row">
     <div class="square-image-container">
@@ -711,7 +704,7 @@ const HTML = `
     <li>Private bartender</li>
     <li>3-hour service</li>
     <li>Classic &amp; signature cocktails</li>
-    <li>Minimum 4 guests</li>
+    <li>Flat fee — no guest minimum</li>
     <li>All equipment provided</li>
     <li>Margarita Pitcher add-on: $1,000</li>
   </ul>
@@ -720,46 +713,14 @@ const HTML = `
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
-     PAGE 21 · SAYULITA TACO TOUR
-══════════════════════════════════════════════════════════════ -->
-<div class="page">
-  <div class="section-header">
-    <span>SAYULITA TACO TOUR</span>
-    <span class="gold-badge">$1,200 MXN / person · Min 4</span>
-  </div>
-  <p class="description">Taste your way through Sayulita's best taco spots with a local guide who knows every hidden gem. Visit 5 hand-picked taco stands and restaurants, sampling authentic flavours from al pastor to Baja shrimp — washed down with cold mezcal shots.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/taco-board.jpg" alt="Taco Board" class="hero-image" />
-  <div class="image-row">
-    <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/taco-stand.jpg" alt="Sayulita Taco Stand" class="square-image" />
-      <div class="caption">Al Pastor, Baja Shrimp &amp; More</div>
-    </div>
-    <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/taco-salsas.jpg" alt="Fresh Salsas" class="square-image" />
-      <div class="caption">Fresh House Salsas</div>
-    </div>
-  </div>
-  <ul class="inclusions-list">
-    <li>5 taco stops</li>
-    <li>Local guide included</li>
-    <li>Al pastor, Baja shrimp, mole &amp; more</li>
-    <li>Mezcal tasting included</li>
-    <li>Min 4 guests</li>
-    <li>Dietary accommodations available</li>
-  </ul>
-  <div class="tip-box">💡 <strong>Concierge Tip:</strong> Go hungry — each stop serves 1–2 tacos plus salsas and sides, so by the fifth stop you will have sampled the full spectrum of Mexican street food culture. The guide brings context to each vendor: family histories, regional techniques and the stories behind the recipes. Best experienced in the evening when the stands are at their liveliest and the mezcal flows.</div>
-  <div class="page-num">21</div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════════
-     PAGE 22 · CACHASOL TEQUILA DISTILLERY
+     PAGE 21 · CACHASOL TEQUILA DISTILLERY
 ══════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">
     <span>CACHASOL DISTILLERY TOUR</span>
-    <span class="gold-badge">$1,500 MXN / person</span>
+    <span class="gold-badge">$1,700 MXN / person</span>
   </div>
-  <p class="description">Step behind the scenes at Cachasol — Nayarit's most celebrated artisan tequila distillery set on a working agave farm just 10 minutes from the villa. A 90-minute farm-to-glass experience with a guided tasting of blanco, reposado and añejo.</p>
+  <p class="description">Step behind the scenes at Cachasol — Nayarit's most celebrated artisan tequila distillery set on a working agave farm just 10 minutes from the villa. A full farm-to-glass experience that includes two cocktails, the complete guided tour, and dinner on-site.</p>
   <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cachasol-bottles.jpg" alt="Cachasol Tequila" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
@@ -772,26 +733,26 @@ const HTML = `
     </div>
   </div>
   <ul class="inclusions-list">
-    <li>90-minute guided tour</li>
+    <li>Full guided distillery tour</li>
+    <li>Two cocktails included</li>
+    <li>Dinner on-site</li>
     <li>Agave farm walk</li>
-    <li>Distillery process explained</li>
-    <li>Tasting: Blanco, Reposado &amp; Añejo</li>
-    <li>$1,500 MXN/person</li>
+    <li>$1,700 MXN/person — all in</li>
     <li>cachasol.com for info</li>
   </ul>
-  <div class="tip-box">💡 <strong>Concierge Tip:</strong> Cachasol produces small-batch tequila from blue agave grown right on the property — a true farm-to-glass experience that larger commercial distilleries simply can't offer. The tasting finishes with their Epic Strength expression (above 50% ABV), which is not available for retail export. Pair this with the Private Cooking Class held at Cachasol (Tue–Sun, 2:30 PM) for an unforgettable full afternoon.</div>
-  <div class="page-num">22</div>
+  <div class="tip-box">💡 <strong>Concierge Tip:</strong> Cachasol produces small-batch tequila from blue agave grown right on the property — a true farm-to-glass experience. The $1,700 ticket is all-inclusive: full tour, two cocktails and dinner, making it one of the best-value evenings on the Riviera Nayarit.</div>
+  <div class="page-num">21</div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
-     PAGE 23 · PRIVATE COOKING CLASS
+     PAGE 22 · PRIVATE COOKING CLASS
 ══════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">
     <span>PRIVATE COOKING CLASS</span>
-    <span class="gold-badge">$1,200 MXN / person</span>
+    <span class="gold-badge">$600 MXN / person · Before 5 PM</span>
   </div>
-  <p class="description">Learn the secrets of authentic Mexican cuisine with a private chef. From fresh salsas and ceviche to hand-pressed tortillas and complex moles — a fun, hands-on experience that brings the flavours of Mexico straight to your table.</p>
+  <p class="description">Hosted at the villa by Chef Ricardo — learn the secrets of authentic Mexican cuisine with a fun, hands-on session right in our kitchen. From fresh salsas and ceviche to hand-pressed tortillas and complex moles. Sessions must start before 5 PM.</p>
   <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cooking-class-group.jpg" alt="Cooking Class" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
@@ -804,15 +765,15 @@ const HTML = `
     </div>
   </div>
   <ul class="inclusions-list">
-    <li>Private chef instructor</li>
+    <li>Hosted by Chef Ricardo</li>
+    <li>Held at the villa</li>
     <li>All ingredients included</li>
     <li>Hands-on cooking session</li>
-    <li>2–3 hours duration</li>
-    <li>Arrangeable at the villa or Cachasol</li>
-    <li>Cachasol sessions: Tue–Sun at 2:30 PM</li>
+    <li>$600 MXN per person</li>
+    <li>Must start before 5 PM</li>
   </ul>
-  <div class="tip-box">💡 <strong>Concierge Tip:</strong> The class typically covers 4–5 dishes: a fresh salsa, guacamole, ceviche, hand-pressed corn tortillas and a main such as mole chicken or grilled fish. Everything is prepared from scratch using local market ingredients. The Cachasol setting adds an outdoor kitchen ambience under the trees — book the 2:30 PM slot and combine it with a tequila tasting immediately after.</div>
-  <div class="page-num">23</div>
+  <div class="tip-box">💡 <strong>Concierge Tip:</strong> Chef Ricardo typically covers 4–5 dishes: a fresh salsa, guacamole, ceviche, hand-pressed corn tortillas and a main such as mole chicken or grilled fish. Everything is prepared from scratch in the villa kitchen. Book an early-afternoon slot so you can transition straight from cooking class to a sunset dinner on the terrace.</div>
+  <div class="page-num">22</div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
@@ -842,6 +803,57 @@ const HTML = `
     <strong>Don Pedro's <span class="tag">Seafood · Beachfront · Since 1994</span></strong>
     <p>Sayulita's most iconic beachfront restaurant. Fresh seafood, grilled fish tacos and cold beers right on the sand since 1994. Book ahead for sunset — tables go fast.</p>
   </div>
+  <div class="restaurant-card">
+    <strong>Pákeke Sayulita <span class="tag">Breakfast</span></strong>
+    <p>Bright, easy breakfast spot — great coffee, pastries and morning plates to start the day right.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Sur 38 Wine &amp; Dine <span class="tag">Dinner · Wine</span></strong>
+    <p>Refined dinner spot with a strong wine program. Good for a slower, more grown-up evening out.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Santas Iguanas <span class="tag">Dinner · Vegan &amp; Plant-Friendly</span></strong>
+    <p>Inventive plant-forward dinners with thoughtful vegan options. A standout for groups with mixed dietary preferences.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Baby's Burgers <span class="tag">Dinner · Smash Burgers &amp; Beer</span></strong>
+    <p>Smash burgers and cold beer — casual, fast and exactly what you want after a long beach day.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>La Rústica <span class="tag">Dinner</span></strong>
+    <p>Sayulita favourite for a relaxed, well-executed dinner. Wood-fired flavours and a buzzy atmosphere.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Matiz Sayulita <span class="tag">Lunch</span></strong>
+    <p>Light, fresh lunches in a stylish setting — perfect mid-day stop between the beach and the villa.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Miscelánea Sayulita <span class="tag">Breakfast</span></strong>
+    <p>Charming spot for a slow breakfast — coffee, eggs, and well-plated morning classics.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Casa Lvnae <span class="tag">Dinner</span></strong>
+    <p>Polished evening dining with attentive service. A go-to when you want a more elevated dinner in town.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Zíngaro <span class="tag">Dinner · Italian</span></strong>
+    <p>Italian classics done well — handmade pastas, hearty mains and a warm room. Reliable for a satisfying dinner.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Don Bonito Café <span class="tag">Breakfast</span></strong>
+    <p>Easygoing breakfast café — strong coffee, fresh juices and a relaxed start to the day.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Northswell <span class="tag">Vegan &amp; Plant-Friendly</span></strong>
+    <p>Plant-friendly menu with bowls, juices and lighter plates. Great for a healthy break from richer meals.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Naty's Cocina <span class="tag">Breakfast</span></strong>
+    <p>Also known as Naty's Kitchen — home-style Mexican breakfasts in a friendly, no-frills setting.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Northside Café <span class="tag">Vegan &amp; Plant-Friendly</span></strong>
+    <p>Cozy café with vegan and plant-forward options — good coffee, smoothies and light all-day plates.</p>
 
   <div class="page-num">24</div>
 </div>
@@ -870,47 +882,6 @@ const HTML = `
   <div class="page-num">25</div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     PAGE 26 · LOCAL MARKETS
-══════════════════════════════════════════════════════════════ -->
-<div class="page">
-  <div class="section-header">LOCAL MARKETS</div>
-
-  <div class="image-row" style="margin-top:16px">
-    <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/market-sayulita.jpg" alt="Sayulita Market" class="square-image" />
-      <div class="caption">Sayulita Artisan Market — Every Friday</div>
-    </div>
-    <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/market-la-cruz.jpg" alt="La Cruz Sunday Market" class="square-image" />
-      <div class="caption">La Cruz Sunday Market</div>
-    </div>
-  </div>
-
-  <h3 style="color:#2e7b8c;font-family:'Montserrat',sans-serif;font-size:.85rem;text-transform:uppercase;margin:16px 0 10px;letter-spacing:1px;">Sayulita Artisan Market</h3>
-  <p class="description" style="margin-bottom:10px">Every <strong>Friday</strong> from 10 AM – 4 PM on the main plaza. Fresh produce, handmade crafts, jewellery, textiles, and incredible street food. Best visited in the morning for the freshest selection.</p>
-
-  <h3 style="color:#2e7b8c;font-family:'Montserrat',sans-serif;font-size:.85rem;text-transform:uppercase;margin:16px 0 10px;letter-spacing:1px;">La Cruz Sunday Market</h3>
-  <p class="description" style="margin-bottom:10px">Every <strong>Sunday</strong> from 9 AM – 2 PM at the La Cruz de Huanacaxtle marina (25 min from villa). One of the best markets on the Riviera Nayarit — gourmet food stalls, ceramics, clothing, live music and ocean views.</p>
-
-  <div class="grid-list" style="margin-top:10px">
-    <div class="grid-item">
-      <strong>Nearby Towns</strong>
-      <span>San Pancho · 15 min · Artsy village, great dining</span><br>
-      <span>La Cruz de Huanacaxtle · 25 min · Marina, Sunday market</span><br>
-      <span>Punta Mita · 5 min · Beaches, golf, fine dining</span>
-    </div>
-    <div class="grid-item">
-      <strong>Natural Highlights</strong>
-      <span>Marietas Islands (UNESCO protected)</span><br>
-      <span>Whale migration Dec–Mar</span><br>
-      <span>Mangrove kayaking</span><br>
-      <span>Jungle hikes &amp; waterfalls</span>
-    </div>
-  </div>
-
-  <div class="page-num">26</div>
-</div>
 
 <!-- ══════════════════════════════════════════════════════════════
      PAGE 27 · ADD-ON SERVICES
