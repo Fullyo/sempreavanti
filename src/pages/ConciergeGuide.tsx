@@ -55,7 +55,7 @@ const HTML = `
     </div>
     <div class="grid-item">
       <strong>Pool &amp; Beach</strong>
-      <p>Beach chairs and umbrellas are available. Paco can assist with setup. Swim with caution — ocean currents can be strong.</p>
+      <p>Beach chairs and umbrellas are available. Our team can assist with setup. Swim with caution — ocean currents can be strong.</p>
     </div>
     <div class="grid-item">
       <strong>Security</strong>
@@ -1017,6 +1017,12 @@ const HTML = `
     <h4>👮 Police — Sayulita</h4>
     <p>Local police station — Sayulita, Nayarit.</p>
     <div class="number">060 · (329) 291-3200</div>
+  </div>
+
+  <div class="emergency-card">
+    <h4>👮 Police Martinez</h4>
+    <p>Local police contact for the Patzcuarito area.</p>
+    <div class="number">+52 311 374 7876</div>
   </div>
 
   <div class="emergency-card">
