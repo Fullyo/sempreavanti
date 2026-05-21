@@ -67,7 +67,7 @@ const HTML = `
     </div>
     <div class="grid-item" style="grid-column:1/-1">
       <strong>✈️ Airport Transportation</strong>
-      <p>Round-trip transfer between Puerto Vallarta Airport (PVR) and the villa is available for <strong>$5,000 MXN</strong>. Payment must be made <strong>in cash directly to the driver</strong> upon arrival. Please have pesos ready — USD accepted but change may be limited. Your concierge will arrange pickup details 24 hours before your flight.</p>
+      <p>Round-trip transfer between Puerto Vallarta Airport (PVR) and the villa is available for <strong>$5,000 MXN</strong>. Payment can be made <strong>in cash or by card at the end of your stay</strong>, or <strong>paid directly to the driver</strong>. Your concierge will arrange pickup details 24 hours before your flight.</p>
     </div>
     <div class="grid-item" style="grid-column:1/-1">
       <strong>Quiet Hours</strong>
