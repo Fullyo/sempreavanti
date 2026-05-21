@@ -306,14 +306,14 @@ const HTML = `
 <div class="page">
   <div class="section-header">
     <span>FISHING CHARTER</span>
-    <span class="gold-badge">$10,000 MXN · 4 hours</span>
+    <span class="gold-badge">$11,000 MXN · 3 hours</span>
   </div>
-  <p class="description">Head out onto the Pacific with an experienced captain and crew. The waters off Riviera Nayarit teem with mahi-mahi, tuna, snapper and more. Up to 4 guests, full equipment provided.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-deepsea-v2.jpg" alt="Fishing Charter Boat" class="hero-image" style="height:280px; object-position: center center;" />
+  <p class="description">Head out onto the Pacific aboard a traditional panga with an experienced local captain. The waters off Riviera Nayarit teem with mahi-mahi, tuna, snapper and more. Up to 4 guests, full equipment provided.</p>
+  <img src="/concierge-guide/panga.jpeg" alt="Panga Fishing Charter" class="hero-image" style="height:280px; object-position: center center;" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-charter-boat.jpg" alt="Charter Boat" class="square-image" />
-      <div class="caption">Deep Sea Pacific Fishing</div>
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-charter-boat.jpg" alt="Charter Boat" class="square-image" style="object-position: center 60%;" />
+      <div class="caption">Pacific Panga Fishing</div>
     </div>
     <div class="square-image-container">
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-catch-v2.jpg" alt="Catch of the Day" class="square-image" />
@@ -323,12 +323,12 @@ const HTML = `
   <ul class="inclusions-list">
     <li>Experienced captain &amp; mate</li>
     <li>All fishing gear &amp; bait</li>
-    <li>4-hour charter</li>
+    <li>3-hour panga charter</li>
     <li>Up to 4 guests</li>
     <li>Fish cleaning on board</li>
     <li>Departs from Sayulita</li>
   </ul>
-  <div class="tip-box">💡 <strong>Concierge Tip:</strong> Mahi-mahi (dorado) season peaks May–October, while yellowfin tuna runs strong year-round in Banderas Bay. Ask your captain about catching your own dinner — many local restaurants will cook your fresh catch the same evening. Bring sunscreen and a hat; shade on the water is limited.</div>
+  <div class="tip-box">💡 <strong>Concierge Tip:</strong> Mahi-mahi (dorado) season peaks May–October, while yellowfin tuna runs strong year-round in Banderas Bay. Ask your captain about catching your own dinner — many local restaurants will cook your fresh catch the same evening. Bring sunscreen and a hat; shade on the panga is limited.</div>
   <div class="page-num">8</div>
 </div>
 
