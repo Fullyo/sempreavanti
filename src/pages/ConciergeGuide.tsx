@@ -478,30 +478,23 @@ const HTML = `
 ══════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">
-    <span>ATV / RZR ADVENTURE</span>
+    <span>ATV ADVENTURE</span>
     <span class="gold-badge">MiChula Tours</span>
   </div>
-  <p class="description">Tear through jungle trails, sandy beaches and hidden mountain paths on an ATV or RZR. Choose solo or double, with departures at 9 AM, 12 PM and 3 PM daily. Maximum 7 vehicles per group.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-hero-v2.jpeg" alt="RZR Adventure" class="hero-image" />
+  <p class="description">Tear through jungle trails, sandy beaches and hidden mountain paths on a quad. Choose solo or double, with departures at 9 AM, 12 PM and 3 PM daily. Maximum 7 quads per group.</p>
   <div class="image-row">
     <div class="square-image-container">
       <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq1-v2.jpeg" alt="ATV Trails" class="square-image" />
       <div class="caption">Jungle &amp; Beach Trails</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq2-v2.jpeg" alt="RZR 4-Seater" class="square-image" />
-      <div class="caption">RZR — Up to 4 Passengers</div>
-    </div>
-    <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq3-v2.jpg" alt="Mountain Trails" class="square-image" />
-      <div class="caption">Hidden Mountain Paths</div>
+      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq2-v2.jpeg" alt="ATV Quad" class="square-image" />
+      <div class="caption">Solo &amp; Double Quads</div>
     </div>
   </div>
   <ul class="inclusions-list">
     <li>ATV Single: $119 USD</li>
     <li>ATV Double: $147 USD</li>
-    <li>RZR (2-pax): $324 USD</li>
-    <li>RZR (4-pax): contact concierge</li>
     <li>Driver min. 16 years</li>
     <li>2-hour duration</li>
     <li>Departs Rancho Mi Chula</li>
