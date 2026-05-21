@@ -803,6 +803,57 @@ const HTML = `
     <strong>Don Pedro's <span class="tag">Seafood · Beachfront · Since 1994</span></strong>
     <p>Sayulita's most iconic beachfront restaurant. Fresh seafood, grilled fish tacos and cold beers right on the sand since 1994. Book ahead for sunset — tables go fast.</p>
   </div>
+  <div class="restaurant-card">
+    <strong>Pákeke Sayulita <span class="tag">Breakfast</span></strong>
+    <p>Bright, easy breakfast spot — great coffee, pastries and morning plates to start the day right.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Sur 38 Wine &amp; Dine <span class="tag">Dinner · Wine</span></strong>
+    <p>Refined dinner spot with a strong wine program. Good for a slower, more grown-up evening out.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Santas Iguanas <span class="tag">Dinner · Vegan &amp; Plant-Friendly</span></strong>
+    <p>Inventive plant-forward dinners with thoughtful vegan options. A standout for groups with mixed dietary preferences.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Baby's Burgers <span class="tag">Dinner · Smash Burgers &amp; Beer</span></strong>
+    <p>Smash burgers and cold beer — casual, fast and exactly what you want after a long beach day.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>La Rústica <span class="tag">Dinner</span></strong>
+    <p>Sayulita favourite for a relaxed, well-executed dinner. Wood-fired flavours and a buzzy atmosphere.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Matiz Sayulita <span class="tag">Lunch</span></strong>
+    <p>Light, fresh lunches in a stylish setting — perfect mid-day stop between the beach and the villa.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Miscelánea Sayulita <span class="tag">Breakfast</span></strong>
+    <p>Charming spot for a slow breakfast — coffee, eggs, and well-plated morning classics.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Casa Lvnae <span class="tag">Dinner</span></strong>
+    <p>Polished evening dining with attentive service. A go-to when you want a more elevated dinner in town.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Zíngaro <span class="tag">Dinner · Italian</span></strong>
+    <p>Italian classics done well — handmade pastas, hearty mains and a warm room. Reliable for a satisfying dinner.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Don Bonito Café <span class="tag">Breakfast</span></strong>
+    <p>Easygoing breakfast café — strong coffee, fresh juices and a relaxed start to the day.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Northswell <span class="tag">Vegan &amp; Plant-Friendly</span></strong>
+    <p>Plant-friendly menu with bowls, juices and lighter plates. Great for a healthy break from richer meals.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Naty's Cocina <span class="tag">Breakfast</span></strong>
+    <p>Also known as Naty's Kitchen — home-style Mexican breakfasts in a friendly, no-frills setting.</p>
+  </div>
+  <div class="restaurant-card">
+    <strong>Northside Café <span class="tag">Vegan &amp; Plant-Friendly</span></strong>
+    <p>Cozy café with vegan and plant-forward options — good coffee, smoothies and light all-day plates.</p>
 
   <div class="page-num">24</div>
 </div>
