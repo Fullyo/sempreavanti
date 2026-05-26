@@ -1184,11 +1184,11 @@ const STYLES = `
         width: 210mm;
       }
 
-      /* Each .page = exactly one printed A4 page. Keep web sizing intact. */
+      /* Each .page = exactly one printed A4 page. Keep close to web sizing. */
       .page {
         box-shadow: none !important;
         margin: 0 !important;
-        padding: 48px !important;
+        padding: 14mm 12mm !important;
         width: 210mm !important;
         height: 297mm !important;
         min-height: 297mm !important;
@@ -1211,6 +1211,18 @@ const STYLES = `
         break-before: auto !important;
       }
 
+      /* Slightly trim large images so content fits A4 while staying close to web look */
+      .hero-image { height: 180px !important; max-height: 180px !important; margin: 12px 0 !important; }
+      .hero-image.no-crop { height: auto !important; max-height: none !important; object-fit: contain !important; }
+      .hero-image.tall { height: 200px !important; max-height: 200px !important; }
+      .square-image { height: 220px !important; max-height: 220px !important; }
+      .utv-card img { height: 170px !important; max-height: 170px !important; }
+
+      /* Tighten vertical rhythm a touch */
+      .section-header { margin-bottom: 16px !important; }
+      p.description { margin-bottom: 12px !important; }
+      .image-row { margin-bottom: 12px !important; }
+
       /* Hide the print button when printing */
       #print-btn { display: none !important; }
 
@@ -1218,6 +1230,7 @@ const STYLES = `
       .page.cover { justify-content: center !important; align-items: center !important; }
 
     }
+
 
     /* Print button */
     #print-btn {
