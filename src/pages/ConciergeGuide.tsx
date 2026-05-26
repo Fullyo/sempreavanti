@@ -1211,17 +1211,27 @@ const STYLES = `
         break-before: auto !important;
       }
 
-      /* Slightly trim large images so content fits A4 while staying close to web look */
-      .hero-image { height: 180px !important; max-height: 180px !important; margin: 12px 0 !important; }
-      .hero-image.no-crop { height: auto !important; max-height: none !important; object-fit: contain !important; }
-      .hero-image.tall { height: 200px !important; max-height: 200px !important; }
-      .square-image { height: 220px !important; max-height: 220px !important; }
-      .utv-card img { height: 170px !important; max-height: 170px !important; }
+      /* Cap images tightly so dense pages fit A4 without clipping */
+      .hero-image { height: 160px !important; max-height: 160px !important; margin: 10px 0 !important; object-fit: cover !important; }
+      .hero-image.no-crop { height: auto !important; max-height: 160px !important; object-fit: contain !important; }
+      .hero-image.tall { height: 180px !important; max-height: 180px !important; }
+      .square-image { height: 195px !important; max-height: 195px !important; }
+      .utv-card img { height: 160px !important; max-height: 160px !important; }
 
-      /* Tighten vertical rhythm a touch */
-      .section-header { margin-bottom: 16px !important; }
-      p.description { margin-bottom: 12px !important; }
-      .image-row { margin-bottom: 12px !important; }
+      /* Tighten vertical rhythm */
+      .section-header { margin-bottom: 12px !important; padding: 10px 16px !important; font-size: 1.2rem !important; }
+      p.description { margin-bottom: 10px !important; font-size: .85rem !important; }
+      .image-row { margin-bottom: 10px !important; gap: 12px !important; }
+      .top-five-item { padding: 10px 14px !important; margin-bottom: 8px !important; }
+      .pricing-table { margin: 12px 0 !important; }
+      .pricing-table th, .pricing-table td { padding: 8px 10px !important; font-size: .82rem !important; }
+      .tip-box { padding: 10px 14px !important; font-size: .78rem !important; }
+      .inclusions-list { margin: 10px 0 !important; }
+      .inclusions-list li { font-size: .8rem !important; }
+      .utv-grid { margin: 12px 0 !important; }
+      .grid-list { gap: 12px 16px !important; }
+      .grid-item p { font-size: .78rem !important; }
+
 
       /* Hide the print button when printing */
       #print-btn { display: none !important; }
