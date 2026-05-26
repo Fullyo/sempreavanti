@@ -1206,11 +1206,98 @@ const STYLES = `
 const ConciergeGuide = () => {
   useEffect(() => {
     const printButton = document.getElementById("print-btn");
+    const downloadButton = document.getElementById("download-pdf-btn") as HTMLButtonElement | null;
+
     const handlePrint = () => window.print();
+
+    const handleDownload = async () => {
+      if (!downloadButton) return;
+      const originalLabel = downloadButton.textContent;
+      downloadButton.disabled = true;
+      downloadButton.textContent = "Preparing PDF…";
+
+      try {
+        // Wait for fonts and images
+        if ((document as any).fonts?.ready) {
+          await (document as any).fonts.ready;
+        }
+        const imgs = Array.from(document.querySelectorAll<HTMLImageElement>(".page img"));
+        await Promise.all(
+          imgs.map((img) =>
+            img.complete && img.naturalWidth > 0
+              ? Promise.resolve()
+              : new Promise<void>((res) => {
+                  img.addEventListener("load", () => res(), { once: true });
+                  img.addEventListener("error", () => res(), { once: true });
+                })
+          )
+        );
+
+        const pages = Array.from(document.querySelectorAll<HTMLElement>(".page"));
+        if (!pages.length) return;
+
+        // A4 in mm
+        const A4_W = 210;
+        const A4_H = 297;
+        const MARGIN = 12; // outer binder margin
+        const BIND_OFFSET = 6; // extra clearance on binding edge
+
+        const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4", compress: true });
+
+        for (let i = 0; i < pages.length; i++) {
+          downloadButton.textContent = `Rendering ${i + 1}/${pages.length}…`;
+          const el = pages[i];
+          const canvas = await html2canvas(el, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: false,
+            backgroundColor: "#ffffff",
+            logging: false,
+            windowWidth: el.scrollWidth,
+            windowHeight: el.scrollHeight,
+          });
+
+          // Fit captured image into A4 minus margins, preserving aspect ratio
+          const isOdd = (i + 1) % 2 === 1;
+          const leftMargin = MARGIN + (isOdd ? BIND_OFFSET : 0);
+          const rightMargin = MARGIN + (isOdd ? 0 : BIND_OFFSET);
+          const maxW = A4_W - leftMargin - rightMargin;
+          const maxH = A4_H - MARGIN * 2;
+
+          const imgAspect = canvas.width / canvas.height;
+          const boxAspect = maxW / maxH;
+          let drawW: number, drawH: number;
+          if (imgAspect > boxAspect) {
+            drawW = maxW;
+            drawH = maxW / imgAspect;
+          } else {
+            drawH = maxH;
+            drawW = maxH * imgAspect;
+          }
+          const x = leftMargin + (maxW - drawW) / 2;
+          const y = MARGIN + (maxH - drawH) / 2;
+
+          const imgData = canvas.toDataURL("image/jpeg", 0.92);
+          if (i > 0) pdf.addPage();
+          pdf.addImage(imgData, "JPEG", x, y, drawW, drawH, undefined, "FAST");
+        }
+
+        pdf.save("Villas-Sempre-Avanti-Concierge-Guide.pdf");
+      } catch (err) {
+        console.error("PDF generation failed:", err);
+        alert("PDF generation failed. Please try again or use the Print fallback.");
+      } finally {
+        downloadButton.disabled = false;
+        downloadButton.textContent = originalLabel ?? "Download PDF";
+      }
+    };
+
     printButton?.addEventListener("click", handlePrint);
+    downloadButton?.addEventListener("click", handleDownload);
 
     return () => {
       printButton?.removeEventListener("click", handlePrint);
+      downloadButton?.removeEventListener("click", handleDownload);
     };
   }, []);
 
