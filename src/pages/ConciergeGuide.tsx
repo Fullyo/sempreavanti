@@ -1173,58 +1173,31 @@ const STYLES = `
     .emergency-card p { font-size:.85rem; color:#333; }
     .emergency-card .number { font-size:1.1rem; font-weight:700; color:#c0392b; }
 
-    /* ─── Print ──────────────────────────────────────────────────── */
+    /* ─── Print (browser fallback only) ──────────────────────────── */
     @page { size: A4 portrait; margin: 0; }
-
     @media print {
-      html, body {
-        margin: 0 !important;
-        padding: 0 !important;
-        background: #fff !important;
-      }
-
-      /* One web .page == one A4 sheet, untouched. 794px × 1123px ≡ A4 at 96dpi. */
-      .page {
-        box-shadow: none !important;
-        margin: 0 !important;
-        border-radius: 0 !important;
-        page-break-after: always;
-        break-after: page;
-        page-break-inside: avoid;
-        break-inside: avoid;
-      }
-      .page:last-of-type {
-        page-break-after: auto;
-        break-after: auto;
-      }
-
-      #print-btn { display: none !important; }
+      html, body { margin:0 !important; padding:0 !important; background:#fff !important; }
+      .page { box-shadow:none !important; margin:0 !important; border-radius:0 !important; page-break-after: always; break-after: page; page-break-inside: avoid; break-inside: avoid; }
+      .page:last-of-type { page-break-after: auto; break-after: auto; }
+      #pdf-btn-group { display:none !important; }
     }
 
-
-    /* Print button */
-    #print-btn {
-      display: block;
-      position: fixed;
-      bottom: 32px;
-      right: 32px;
-      background: #1a4a52;
-      color: #f0b429;
-      border: 2px solid #f0b429;
-      border-radius: 50px;
-      padding: 14px 28px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: .85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      cursor: pointer;
+    /* PDF / Print button group */
+    #pdf-btn-group {
+      position: fixed; bottom: 32px; right: 32px; z-index: 9999;
+      display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
+    }
+    #download-pdf-btn, #print-btn {
+      font-family: 'Montserrat', sans-serif; font-size: .8rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em; cursor: pointer;
+      border-radius: 50px; padding: 14px 28px; transition: all .2s ease;
       box-shadow: 0 4px 20px rgba(0,0,0,.3);
-      z-index: 9999;
-      transition: all .2s ease;
     }
-    #print-btn:hover { background:#f0b429; color:#1a4a52; transform:scale(1.05); }
-    #print-btn.visible { display:block; animation: fadeIn .3s ease; }
+    #download-pdf-btn { background:#1a4a52; color:#f0b429; border:2px solid #f0b429; }
+    #download-pdf-btn:hover { background:#f0b429; color:#1a4a52; transform:scale(1.05); }
+    #download-pdf-btn:disabled { opacity:.6; cursor:wait; transform:none; }
+    #print-btn { background:#fff; color:#1a4a52; border:1px solid #1a4a52; padding:10px 20px; font-size:.7rem; }
+    #print-btn:hover { background:#1a4a52; color:#fff; }
     @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
   `;
 
