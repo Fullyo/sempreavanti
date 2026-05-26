@@ -1171,74 +1171,31 @@ const STYLES = `
     .emergency-card .number { font-size:1.1rem; font-weight:700; color:#c0392b; }
 
     /* ─── Print ──────────────────────────────────────────────────── */
-    @page {
-      size: A4 portrait;
-      margin: 0;
-    }
+    @page { size: A4 portrait; margin: 0; }
 
     @media print {
       html, body {
         margin: 0 !important;
         padding: 0 !important;
         background: #fff !important;
-        width: 210mm;
       }
 
-      /* Each .page = exactly one printed A4 page. Keep close to web sizing. */
+      /* One web .page == one A4 sheet, untouched. 794px × 1123px ≡ A4 at 96dpi. */
       .page {
         box-shadow: none !important;
         margin: 0 !important;
-        padding: 14mm 12mm !important;
-        width: 210mm !important;
-        height: 297mm !important;
-        min-height: 297mm !important;
-        max-height: 297mm !important;
-        overflow: hidden !important;
-        page-break-before: always !important;
-        page-break-after: avoid !important;
-        page-break-inside: avoid !important;
-        break-before: page !important;
-        break-after: avoid !important;
-        break-inside: avoid !important;
-        display: flex !important;
-        flex-direction: column !important;
         border-radius: 0 !important;
-        position: relative !important;
+        page-break-after: always;
+        break-after: page;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+      .page:last-of-type {
+        page-break-after: auto;
+        break-after: auto;
       }
 
-      .page:first-of-type {
-        page-break-before: auto !important;
-        break-before: auto !important;
-      }
-
-      /* Cap images tightly so dense pages fit A4 without clipping */
-      .hero-image { height: 160px !important; max-height: 160px !important; margin: 10px 0 !important; object-fit: cover !important; }
-      .hero-image.no-crop { height: auto !important; max-height: 160px !important; object-fit: contain !important; }
-      .hero-image.tall { height: 180px !important; max-height: 180px !important; }
-      .square-image { height: 195px !important; max-height: 195px !important; }
-      .utv-card img { height: 160px !important; max-height: 160px !important; }
-
-      /* Tighten vertical rhythm */
-      .section-header { margin-bottom: 12px !important; padding: 10px 16px !important; font-size: 1.2rem !important; }
-      p.description { margin-bottom: 10px !important; font-size: .85rem !important; }
-      .image-row { margin-bottom: 10px !important; gap: 12px !important; }
-      .top-five-item { padding: 10px 14px !important; margin-bottom: 8px !important; }
-      .pricing-table { margin: 12px 0 !important; }
-      .pricing-table th, .pricing-table td { padding: 8px 10px !important; font-size: .82rem !important; }
-      .tip-box { padding: 10px 14px !important; font-size: .78rem !important; }
-      .inclusions-list { margin: 10px 0 !important; }
-      .inclusions-list li { font-size: .8rem !important; }
-      .utv-grid { margin: 12px 0 !important; }
-      .grid-list { gap: 12px 16px !important; }
-      .grid-item p { font-size: .78rem !important; }
-
-
-      /* Hide the print button when printing */
       #print-btn { display: none !important; }
-
-      /* Cover: keep centered content */
-      .page.cover { justify-content: center !important; align-items: center !important; }
-
     }
 
 
