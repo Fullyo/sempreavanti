@@ -1180,18 +1180,18 @@ const STYLES = `
       html, body {
         margin: 0 !important;
         padding: 0 !important;
-        background: none !important;
+        background: #fff !important;
         width: 210mm;
       }
 
-      /* Each .page = exactly one printed A4 page */
+      /* Each .page = exactly one printed A4 page. Keep web sizing intact. */
       .page {
         box-shadow: none !important;
         margin: 0 !important;
-        padding: 18mm 16mm !important;
+        padding: 48px !important;
         width: 210mm !important;
         height: 297mm !important;
-        min-height: unset !important;
+        min-height: 297mm !important;
         max-height: 297mm !important;
         overflow: hidden !important;
         page-break-before: always !important;
@@ -1206,98 +1206,17 @@ const STYLES = `
         position: relative !important;
       }
 
-      /* Remove page-break-before from the very first page to avoid a leading blank page */
       .page:first-of-type {
         page-break-before: auto !important;
         break-before: auto !important;
       }
 
-      /* Scale down hero images so they don't blow out the page */
-      .hero-image {
-        height: 130px !important;
-        max-height: 130px !important;
-        width: 100% !important;
-        object-fit: cover !important;
-        margin: 8px 0 !important;
-      }
-
-      .hero-image.no-crop {
-        height: auto !important;
-        max-height: none !important;
-        object-fit: contain !important;
-        background: transparent !important;
-      }
-
-      .hero-image.tall {
-        height: 130px !important;
-        max-height: 130px !important;
-      }
-
-      /* Square images – tighten up */
-      .square-image {
-        height: 150px !important;
-        max-height: 150px !important;
-      }
-
-      /* Reduce gaps so content fits within 297mm */
-      .image-row { gap: 10px !important; margin-bottom: 8px !important; }
-      .square-image-container { width: calc(50% - 5px) !important; }
-
-      /* Section header */
-      .section-header {
-        padding: 8px 14px !important;
-        margin-bottom: 10px !important;
-        font-size: 1.1rem !important;
-      }
-
-      /* Paragraphs */
-      p.description { margin-bottom: 8px !important; font-size: .8rem !important; }
-
-      /* Inclusions list */
-      .inclusions-list { margin: 8px 0 !important; gap: 4px 12px !important; }
-      .inclusions-list li { font-size: .75rem !important; }
-
-      /* Top-five items */
-      .top-five-item { padding: 10px !important; margin-bottom: 8px !important; }
-      .top-five-detail { font-size: .78rem !important; }
-
-      /* Grid lists */
-      .grid-list { gap: 10px !important; }
-      .grid-item { margin-bottom: 6px !important; }
-      .grid-item span { font-size: .72rem !important; }
-
-      /* Restaurant cards */
-      .restaurant-card { padding: 6px 0 !important; }
-      .restaurant-card p { font-size: .75rem !important; }
-
-      /* WiFi boxes */
-      .wifi-container { gap: 12px !important; margin-bottom: 16px !important; }
-      .wifi-box { padding: 14px !important; }
-      .wifi-detail { font-size: .78rem !important; }
-
-      /* CTA bar */
-      .cta-bar { padding: 8px 14px !important; font-size: .8rem !important; margin-top: auto !important; }
-
-      /* Page number */
-      .page-num { bottom: 14px !important; right: 16mm !important; }
-
-      /* Emergency cards */
-      .emergency-card { padding: 10px 14px !important; margin-bottom: 8px !important; }
-      .emergency-card p { font-size: .78rem !important; }
-      .emergency-card .number { font-size: .95rem !important; }
-
-      /* Pricing table */
-      .pricing-table th, .pricing-table td { padding: 8px !important; font-size: .8rem !important; }
-
-      /* Tip box */
-      .tip-box { padding: 8px 12px !important; font-size: .72rem !important; margin-top: auto !important; border-left-width: 3px !important; }
-
-      /* Hide print button */
+      /* Hide the print button when printing */
       #print-btn { display: none !important; }
 
       /* Cover: keep centered content */
       .page.cover { justify-content: center !important; align-items: center !important; }
-      .cover-title { font-size: 2.8rem !important; }
+
     }
 
     /* Print button */
