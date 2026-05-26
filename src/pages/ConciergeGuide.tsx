@@ -15,7 +15,10 @@ const HTML = `
   <div class="cover-footer">villassempreavanti.com</div>
 </div>
 
-<button id="print-btn" type="button">Print / Save as PDF</button>
+<div id="pdf-btn-group">
+  <button id="download-pdf-btn" type="button">Download PDF</button>
+  <button id="print-btn" type="button">Print</button>
+</div>
 
 
 
