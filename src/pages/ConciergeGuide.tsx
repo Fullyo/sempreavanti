@@ -1,4 +1,6 @@
 import { useEffect } from "react";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 import SEO from "@/components/SEO";
 
 const HTML = `
@@ -15,7 +17,10 @@ const HTML = `
   <div class="cover-footer">villassempreavanti.com</div>
 </div>
 
-<button id="print-btn" type="button">Print / Save as PDF</button>
+<div id="pdf-btn-group">
+  <button id="download-pdf-btn" type="button">Download PDF</button>
+  <button id="print-btn" type="button">Print</button>
+</div>
 
 
 
@@ -1170,69 +1175,129 @@ const STYLES = `
     .emergency-card p { font-size:.85rem; color:#333; }
     .emergency-card .number { font-size:1.1rem; font-weight:700; color:#c0392b; }
 
-    /* ─── Print ──────────────────────────────────────────────────── */
+    /* ─── Print (browser fallback only) ──────────────────────────── */
     @page { size: A4 portrait; margin: 0; }
-
     @media print {
-      html, body {
-        margin: 0 !important;
-        padding: 0 !important;
-        background: #fff !important;
-      }
-
-      /* One web .page == one A4 sheet, untouched. 794px × 1123px ≡ A4 at 96dpi. */
-      .page {
-        box-shadow: none !important;
-        margin: 0 !important;
-        border-radius: 0 !important;
-        page-break-after: always;
-        break-after: page;
-        page-break-inside: avoid;
-        break-inside: avoid;
-      }
-      .page:last-of-type {
-        page-break-after: auto;
-        break-after: auto;
-      }
-
-      #print-btn { display: none !important; }
+      html, body { margin:0 !important; padding:0 !important; background:#fff !important; }
+      .page { box-shadow:none !important; margin:0 !important; border-radius:0 !important; page-break-after: always; break-after: page; page-break-inside: avoid; break-inside: avoid; }
+      .page:last-of-type { page-break-after: auto; break-after: auto; }
+      #pdf-btn-group { display:none !important; }
     }
 
-
-    /* Print button */
-    #print-btn {
-      display: block;
-      position: fixed;
-      bottom: 32px;
-      right: 32px;
-      background: #1a4a52;
-      color: #f0b429;
-      border: 2px solid #f0b429;
-      border-radius: 50px;
-      padding: 14px 28px;
-      font-family: 'Montserrat', sans-serif;
-      font-size: .85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      cursor: pointer;
+    /* PDF / Print button group */
+    #pdf-btn-group {
+      position: fixed; bottom: 32px; right: 32px; z-index: 9999;
+      display: flex; flex-direction: column; gap: 10px; align-items: flex-end;
+    }
+    #download-pdf-btn, #print-btn {
+      font-family: 'Montserrat', sans-serif; font-size: .8rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em; cursor: pointer;
+      border-radius: 50px; padding: 14px 28px; transition: all .2s ease;
       box-shadow: 0 4px 20px rgba(0,0,0,.3);
-      z-index: 9999;
-      transition: all .2s ease;
     }
-    #print-btn:hover { background:#f0b429; color:#1a4a52; transform:scale(1.05); }
-    #print-btn.visible { display:block; animation: fadeIn .3s ease; }
+    #download-pdf-btn { background:#1a4a52; color:#f0b429; border:2px solid #f0b429; }
+    #download-pdf-btn:hover { background:#f0b429; color:#1a4a52; transform:scale(1.05); }
+    #download-pdf-btn:disabled { opacity:.6; cursor:wait; transform:none; }
+    #print-btn { background:#fff; color:#1a4a52; border:1px solid #1a4a52; padding:10px 20px; font-size:.7rem; }
+    #print-btn:hover { background:#1a4a52; color:#fff; }
     @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
   `;
 
 const ConciergeGuide = () => {
   useEffect(() => {
     const printButton = document.getElementById("print-btn");
+    const downloadButton = document.getElementById("download-pdf-btn") as HTMLButtonElement | null;
+
     const handlePrint = () => window.print();
+
+    const handleDownload = async () => {
+      if (!downloadButton) return;
+      const originalLabel = downloadButton.textContent;
+      downloadButton.disabled = true;
+      downloadButton.textContent = "Preparing PDF…";
+
+      try {
+        // Wait for fonts and images
+        if ((document as any).fonts?.ready) {
+          await (document as any).fonts.ready;
+        }
+        const imgs = Array.from(document.querySelectorAll<HTMLImageElement>(".page img"));
+        await Promise.all(
+          imgs.map((img) =>
+            img.complete && img.naturalWidth > 0
+              ? Promise.resolve()
+              : new Promise<void>((res) => {
+                  img.addEventListener("load", () => res(), { once: true });
+                  img.addEventListener("error", () => res(), { once: true });
+                })
+          )
+        );
+
+        const pages = Array.from(document.querySelectorAll<HTMLElement>(".page"));
+        if (!pages.length) return;
+
+        // A4 in mm
+        const A4_W = 210;
+        const A4_H = 297;
+        const MARGIN = 12; // outer binder margin
+        const BIND_OFFSET = 6; // extra clearance on binding edge
+
+        const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4", compress: true });
+
+        for (let i = 0; i < pages.length; i++) {
+          downloadButton.textContent = `Rendering ${i + 1}/${pages.length}…`;
+          const el = pages[i];
+          const canvas = await html2canvas(el, {
+            scale: 2,
+            useCORS: true,
+            allowTaint: false,
+            backgroundColor: "#ffffff",
+            logging: false,
+            windowWidth: el.scrollWidth,
+            windowHeight: el.scrollHeight,
+          });
+
+          // Fit captured image into A4 minus margins, preserving aspect ratio
+          const isOdd = (i + 1) % 2 === 1;
+          const leftMargin = MARGIN + (isOdd ? BIND_OFFSET : 0);
+          const rightMargin = MARGIN + (isOdd ? 0 : BIND_OFFSET);
+          const maxW = A4_W - leftMargin - rightMargin;
+          const maxH = A4_H - MARGIN * 2;
+
+          const imgAspect = canvas.width / canvas.height;
+          const boxAspect = maxW / maxH;
+          let drawW: number, drawH: number;
+          if (imgAspect > boxAspect) {
+            drawW = maxW;
+            drawH = maxW / imgAspect;
+          } else {
+            drawH = maxH;
+            drawW = maxH * imgAspect;
+          }
+          const x = leftMargin + (maxW - drawW) / 2;
+          const y = MARGIN + (maxH - drawH) / 2;
+
+          const imgData = canvas.toDataURL("image/jpeg", 0.92);
+          if (i > 0) pdf.addPage();
+          pdf.addImage(imgData, "JPEG", x, y, drawW, drawH, undefined, "FAST");
+        }
+
+        pdf.save("Villas-Sempre-Avanti-Concierge-Guide.pdf");
+      } catch (err) {
+        console.error("PDF generation failed:", err);
+        alert("PDF generation failed. Please try again or use the Print fallback.");
+      } finally {
+        downloadButton.disabled = false;
+        downloadButton.textContent = originalLabel ?? "Download PDF";
+      }
+    };
+
     printButton?.addEventListener("click", handlePrint);
+    downloadButton?.addEventListener("click", handleDownload);
 
     return () => {
       printButton?.removeEventListener("click", handlePrint);
+      downloadButton?.removeEventListener("click", handleDownload);
     };
   }, []);
 

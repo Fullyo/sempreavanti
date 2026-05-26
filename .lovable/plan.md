@@ -1,64 +1,60 @@
-## Problem
+## Why the current approach keeps failing
 
-The web layout for the concierge guide is sized to exact A4 dimensions already: `.page` is `794px × 1123px` with `48px` padding, which equals 210×297mm at the browser's standard 96dpi. So if we print the web layout as‑is, it lands 1:1 on A4.
+Browser "Save as PDF" re-flows the page using the browser's print engine. Even though our `.page` divs are sized to A4 at 96dpi (794×1123px), the print engine:
 
-The current `@media print` block fights this by:
-- Rewriting `.page` to `210mm × 297mm` with `14mm 12mm` padding (a narrower content box than the web).
-- Forcing `hero-image` down from 220px → **160px**, `square-image` from 270px → **195px**, `utv-card img` from 200px → **160px**, `hero-image.tall` from 500px → **180px**, `hero-image.no-crop` to `max-height 160px`.
-- Shrinking font sizes (`.description .85rem`, `.tip-box .78rem`, table cells `.82rem`, etc.) and tightening margins.
+- Rounds px→mm differently across Chrome versions, pushing 1–3px of content onto a second sheet (this is exactly what your screenshots show — the gratuity box header is on page 2, its body bleeds to page 3; the Ally Cat pricing table is split from its hero photo).
+- Honours/ignores `@page margin: 0` inconsistently when the user leaves "Margins: Default" in the print dialog (your screenshots show "Margins: Default", which adds ~10mm and guarantees overflow).
+- Re-rasterises images and fonts, so any CSS tweak we make to fight overflow distorts the design we want to preserve.
 
-Result: in print every photo is dramatically smaller than on the web, leaving the empty space the user is seeing (e.g. Monkey Mountain hero, Ally Cat hero), and the proportions no longer match the curated web design.
+No amount of `@media print` tuning will make this reliable. We need to stop relying on the browser's print engine.
 
-## Fix
+## New approach: rasterise each page to an image, assemble a PDF
 
-Replace the print block with a minimal one that keeps web sizing intact and only does what print actually needs.
+We keep the web layout exactly as it is today (the version you called "beautiful and perfectly curated") and add a dedicated **Download PDF** button that:
 
-### New `@media print` rules
+1. Iterates over each `.page` div in `ConciergeGuide.tsx`.
+2. Uses `html2canvas` to capture that div at 2× scale (sharp, print-quality).
+3. Uses `jsPDF` to drop each capture onto its own A4 sheet, centred, with a configurable binder margin (default **12mm** all sides, extra **6mm** on the inside edge for hole-punching).
+4. Saves `Villas-Sempre-Avanti-Concierge-Guide.pdf`.
 
-```css
-@page { size: A4 portrait; margin: 0; }
+Because each web page is captured as a single image and placed on a single A4 sheet, **content cannot spill across pages**. What you see on screen is exactly what lands in the PDF. No browser print dialog involved.
 
-@media print {
-  html, body {
-    margin: 0 !important;
-    padding: 0 !important;
-    background: #fff !important;
-  }
+The existing "Print / Save as PDF" button stays as a fallback but the new button becomes the default, labelled **Download PDF (Print-Ready)**.
 
-  /* One web .page == one A4 sheet, untouched. 794px × 1123px ≡ A4 at 96dpi. */
-  .page {
-    box-shadow: none !important;
-    margin: 0 !important;
-    border-radius: 0 !important;
-    page-break-after: always;
-    break-after: page;
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-  .page:last-of-type {
-    page-break-after: auto;
-    break-after: auto;
-  }
+## Binder-friendly margins
 
-  #print-btn { display: none !important; }
-}
-```
+A4 = 210×297mm. Each captured page image is scaled to fit inside 186×273mm (12mm margin all sides) and shifted 6mm right on odd pages / 6mm left on even pages so the binding edge always has extra clearance. Backgrounds inside the captured image stay full-bleed visually because the surrounding A4 margin is white.
 
-That's it. Remove every `!important` override on `.hero-image`, `.hero-image.no-crop`, `.hero-image.tall`, `.square-image`, `.utv-card img`, `.section-header`, `p.description`, `.image-row`, `.top-five-item`, `.pricing-table`, `.tip-box`, `.inclusions-list`, `.utv-grid`, `.grid-list`, `.grid-item p`, `.page.cover`. The base (web) CSS already handles all of those correctly at A4 scale.
+If you want zero margins instead (full-bleed), it's a one-line constant change.
 
-### Why this resolves every reported symptom
+## Web layout adjustments
 
-- **Photos shrunk / empty space on PDF**: gone — images render at their web heights (220 / 270 / 500 / 200 px), matching the screenshots the user calls "perfect".
-- **Inconsistencies page‑to‑page**: gone — there is no longer a separate print sizing system to drift from web sizing.
-- **Bottom‑of‑page cutoffs from earlier iterations**: the previous cutoffs were caused by `max-height: 297mm; overflow: hidden` combined with content laid out for `1123px` (which is *slightly* taller than 297mm in some browsers' print rasterization). Removing the forced `mm` height lets the natural `min-height: 1123px` + `page-break-after: always` give each section its own sheet, with no clipping. The web content has been authored to fit, so as long as we don't change its sizing, it fits.
+To guarantee each `.page` div fits inside the captured frame with no internal scrolling:
 
-## Files
+- Add `overflow: hidden` to `.page` (web view unaffected — content already fits).
+- Remove the existing aggressive `@media print` overrides — they are no longer needed because we no longer use browser print.
+- Keep `.page` at its current 794×1123px size.
 
-- `src/pages/ConciergeGuide.tsx` — replace lines ~1173–1242 (the `@page` block and the entire `@media print { … }` block) with the minimal version above. No other changes.
+No visual redesign. No font shrinking. No image resizing.
+
+## Files to change
+
+- `src/pages/ConciergeGuide.tsx`
+  - Add `html2canvas` + `jspdf` imports.
+  - Add `handleDownloadPDF()` that loops `.page` divs and builds the PDF.
+  - Replace the print button with two buttons: **Download PDF (Print-Ready)** (primary) and **Print** (secondary fallback).
+  - Strip the `@media print` block down to the minimum (`#print-btn { display:none }`).
+  - Add `overflow: hidden` to `.page`.
+
+- `package.json` — add `html2canvas` and `jspdf` (installed via `bun add`).
 
 ## Verification
 
-After editing:
-1. Reload `/concierge-guide` in the preview.
-2. Use the in‑page "Print / Save as PDF" button → Save as PDF (A4, margins: None, background graphics: on).
-3. Spot‑check the pages the user flagged: Welcome (gratuity box), Ally Cat (page 5), Fat Cat (page 6), Monkey Mountain (page 15) — hero/square photos should match the web exactly and no content should be clipped at the bottom.
+1. Open `/concierge-guide`, click **Download PDF (Print-Ready)**.
+2. Confirm the resulting PDF is exactly 32 single A4 pages, each one a 1:1 visual match of the corresponding web `.page`.
+3. Spot-check Welcome (gratuity box intact on one page), Ally Cat (hero + pricing table on one page), Fat Cat, Monkey Mountain.
+4. Confirm 12mm binder margin on all sides and extra clearance on the binding edge.
+
+## Why this will work where previous attempts didn't
+
+Previous fixes all tried to make the browser print engine cooperate. This approach removes the browser print engine from the equation entirely — each PDF page is a flat image of the web page, so PDF fidelity becomes a property of the web render, which we already control.
