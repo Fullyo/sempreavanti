@@ -1074,19 +1074,20 @@ const STYLES = `
       padding: 12px 20px; border-radius: 6px;
       font-family:'Cormorant Garamond',serif; font-size:1.4rem;
       display:flex; justify-content:space-between; align-items:center;
+      gap:12px;
       margin-bottom:24px;
     }
     .gold-badge {
       background:#f0b429; color:#2c2c2c;
-      padding:4px 12px; border-radius:20px;
-      font-family:'Montserrat',sans-serif; font-size:.75rem; font-weight:700;
-      text-transform:uppercase; white-space:nowrap;
+      padding:4px 12px; border-radius:14px;
+      font-family:'Montserrat',sans-serif; font-size:.7rem; font-weight:700;
+      text-transform:uppercase; white-space:normal; text-align:right;
+      max-width:55%; line-height:1.25; flex-shrink:0;
     }
 
     /* ─── Images ────────────────────────────────────────────────── */
-    .hero-image { width:100%; height:180px; object-fit:cover; border-radius:8px; margin:12px 0; display:block; }
-    .hero-image.no-crop { height:auto; max-height:200px; object-fit:contain; background:transparent; }
-    .hero-image.tall { height:380px; }
+    .hero-image { width:100%; height:180px; object-fit:cover; object-position:center 40%; border-radius:8px; margin:12px 0; display:block; }
+    .hero-image.tall { height:220px; }
     .image-row { display:flex; gap:14px; margin-bottom:12px; }
     .square-image-container { width:calc(50% - 7px); }
     .square-image { width:100%; height:200px; object-fit:cover; border-radius:8px; display:block; }
