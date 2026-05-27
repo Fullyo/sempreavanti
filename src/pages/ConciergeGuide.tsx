@@ -1174,13 +1174,13 @@ const STYLES = `
     .emergency-card p { font-size:.85rem; color:#333; }
     .emergency-card .number { font-size:1.1rem; font-weight:700; color:#c0392b; }
 
-    /* ─── Print (browser fallback only) ──────────────────────────── */
-    @page { size: A4 portrait; margin: 0; }
+    /* ─── Print disabled — use Download PDF button instead ──────── */
     @media print {
-      html, body { margin:0 !important; padding:0 !important; background:#fff !important; }
-      .page { box-shadow:none !important; margin:0 !important; border-radius:0 !important; page-break-after: always; break-after: page; page-break-inside: avoid; break-inside: avoid; }
-      .page:last-of-type { page-break-after: auto; break-after: auto; }
-      #pdf-btn-group { display:none !important; }
+      body::before {
+        content: "Please close this dialog and use the 'Download Guide (PDF)' button at the bottom-right for a perfectly formatted PDF.";
+        display:block; padding:40px; font-family:'Montserrat',sans-serif; font-size:14px; color:#1a4a52;
+      }
+      .page, #pdf-btn-group { display:none !important; }
     }
 
     /* ─── PDF capture mode (applied during html2canvas) ──────────── */
