@@ -1251,17 +1251,21 @@ const ConciergeGuide = () => {
         );
 
         const heroFrames = Array.from(document.querySelectorAll<HTMLElement>(".hero-image[data-bg-src]"));
+        const originalHeroBackgrounds = new Map<HTMLElement, string>();
         await Promise.all(
           heroFrames.map(
             (frame) =>
               new Promise<void>((resolve) => {
                 const src = frame.dataset.bgSrc;
                 if (!src) return resolve();
+                const captureSrc = src.includes("?") ? src : src + "?cors=1";
+                originalHeroBackgrounds.set(frame, frame.style.backgroundImage);
+                frame.style.backgroundImage = `url("${captureSrc}")`;
                 const preloader = new Image();
                 preloader.crossOrigin = "anonymous";
                 preloader.onload = () => resolve();
                 preloader.onerror = () => resolve();
-                preloader.src = src;
+                preloader.src = captureSrc;
               })
           )
         );
@@ -1299,6 +1303,9 @@ const ConciergeGuide = () => {
           }
         } finally {
           document.body.classList.remove("pdf-capturing");
+          originalHeroBackgrounds.forEach((backgroundImage, frame) => {
+            frame.style.backgroundImage = backgroundImage;
+          });
         }
 
         pdf.save("Villas-Sempre-Avanti-Concierge-Guide.pdf");
