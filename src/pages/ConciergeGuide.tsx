@@ -1184,6 +1184,10 @@ const STYLES = `
       #pdf-btn-group { display:none !important; }
     }
 
+    /* ─── PDF capture mode (applied during html2canvas) ──────────── */
+    body.pdf-capturing #pdf-btn-group { display:none !important; }
+    body.pdf-capturing .page { box-shadow:none !important; margin:0 !important; border-radius:0 !important; transform:none !important; }
+
     /* PDF / Print button group */
     #pdf-btn-group {
       position: fixed; bottom: 32px; right: 32px; z-index: 9999;
@@ -1236,50 +1240,39 @@ const ConciergeGuide = () => {
         const pages = Array.from(document.querySelectorAll<HTMLElement>(".page"));
         if (!pages.length) return;
 
-        // A4 in mm
+        // A4 in mm — full bleed, no margins
         const A4_W = 210;
         const A4_H = 297;
-        const MARGIN = 12; // outer binder margin
-        const BIND_OFFSET = 6; // extra clearance on binding edge
+        // A4 @ 96dpi in CSS pixels (matches .page size, ratio 1:1.4142)
+        const PAGE_W_PX = 794;
+        const PAGE_H_PX = 1123;
 
         const pdf = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4", compress: true });
 
-        for (let i = 0; i < pages.length; i++) {
-          downloadButton.textContent = `Rendering ${i + 1}/${pages.length}…`;
-          const el = pages[i];
-          const canvas = await html2canvas(el, {
-            scale: 2,
-            useCORS: true,
-            allowTaint: false,
-            backgroundColor: "#ffffff",
-            logging: false,
-            windowWidth: el.scrollWidth,
-            windowHeight: el.scrollHeight,
-          });
+        document.body.classList.add("pdf-capturing");
+        try {
+          for (let i = 0; i < pages.length; i++) {
+            downloadButton.textContent = `Rendering ${i + 1}/${pages.length}…`;
+            const el = pages[i];
+            const canvas = await html2canvas(el, {
+              scale: 2,
+              useCORS: true,
+              allowTaint: false,
+              backgroundColor: "#ffffff",
+              logging: false,
+              width: PAGE_W_PX,
+              height: PAGE_H_PX,
+              windowWidth: PAGE_W_PX,
+              windowHeight: PAGE_H_PX,
+            });
 
-          // Fit captured image into A4 minus margins, preserving aspect ratio
-          const isOdd = (i + 1) % 2 === 1;
-          const leftMargin = MARGIN + (isOdd ? BIND_OFFSET : 0);
-          const rightMargin = MARGIN + (isOdd ? 0 : BIND_OFFSET);
-          const maxW = A4_W - leftMargin - rightMargin;
-          const maxH = A4_H - MARGIN * 2;
-
-          const imgAspect = canvas.width / canvas.height;
-          const boxAspect = maxW / maxH;
-          let drawW: number, drawH: number;
-          if (imgAspect > boxAspect) {
-            drawW = maxW;
-            drawH = maxW / imgAspect;
-          } else {
-            drawH = maxH;
-            drawW = maxH * imgAspect;
+            const imgData = canvas.toDataURL("image/jpeg", 0.92);
+            if (i > 0) pdf.addPage();
+            // Full bleed — bitmap aspect (1:1.4142) matches A4 exactly, no distortion
+            pdf.addImage(imgData, "JPEG", 0, 0, A4_W, A4_H, undefined, "FAST");
           }
-          const x = leftMargin + (maxW - drawW) / 2;
-          const y = MARGIN + (maxH - drawH) / 2;
-
-          const imgData = canvas.toDataURL("image/jpeg", 0.92);
-          if (i > 0) pdf.addPage();
-          pdf.addImage(imgData, "JPEG", x, y, drawW, drawH, undefined, "FAST");
+        } finally {
+          document.body.classList.remove("pdf-capturing");
         }
 
         pdf.save("Villas-Sempre-Avanti-Concierge-Guide.pdf");
