@@ -79,10 +79,10 @@ const HTML = `
     </div>
   </div>
 
-  <div style="background:linear-gradient(135deg,#1a4a52 0%,#2e7b8c 100%);border-radius:10px;padding:18px 22px;margin-top:16px;color:#fff;">
-    <div style="font-size:.85rem;font-family:'Montserrat',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#f0b429;margin-bottom:8px;">🙏 Gratuity & Villa Team</div>
-    <p style="font-size:.82rem;line-height:1.65;margin:0;">Villas Sempre Avanti is a fully staffed property. A <strong style="color:#f0b429;">10% gratuity is included</strong> as a baseline in your stay and is shared equally among the entire team dedicated to making your experience exceptional — from housekeeping and maintenance to your concierge and cook.</p>
-    <p style="font-size:.82rem;line-height:1.65;margin:10px 0 0;">If you feel the team has gone above and beyond, simply let your concierge know — any additional gratuity is warmly welcomed and will be added to your final checkout.</p>
+  <div style="background:linear-gradient(135deg,#1a4a52 0%,#2e7b8c 100%);border-radius:10px;padding:12px 18px;margin-top:12px;color:#fff;">
+    <div style="font-size:.8rem;font-family:'Montserrat',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#f0b429;margin-bottom:6px;">Gratuity & Villa Team</div>
+    <p style="font-size:.78rem;line-height:1.55;margin:0;">Villas Sempre Avanti is a fully staffed property. A <strong style="color:#f0b429;">10% gratuity is included</strong> as a baseline in your stay and shared equally among the team — from housekeeping and maintenance to your concierge and cook.</p>
+    <p style="font-size:.78rem;line-height:1.55;margin:6px 0 0;">If the team has gone above and beyond, let your concierge know — any additional gratuity is warmly welcomed and added to your final checkout.</p>
   </div>
 
   <div class="page-num">2</div>
