@@ -1250,6 +1250,22 @@ const ConciergeGuide = () => {
           )
         );
 
+        const heroFrames = Array.from(document.querySelectorAll<HTMLElement>(".hero-image[data-bg-src]"));
+        await Promise.all(
+          heroFrames.map(
+            (frame) =>
+              new Promise<void>((resolve) => {
+                const src = frame.dataset.bgSrc;
+                if (!src) return resolve();
+                const preloader = new Image();
+                preloader.crossOrigin = "anonymous";
+                preloader.onload = () => resolve();
+                preloader.onerror = () => resolve();
+                preloader.src = src;
+              })
+          )
+        );
+
         const pages = Array.from(document.querySelectorAll<HTMLElement>(".page"));
         if (!pages.length) return;
 
