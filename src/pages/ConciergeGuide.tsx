@@ -498,8 +498,8 @@ const HTML = `
     </div>
   </div>
   <ul class="inclusions-list">
-    <li>ATV Single: $2,200 MXN</li>
-    <li>ATV Double: $2,700 MXN</li>
+    <li>ATV Single &amp; Double options</li>
+    <li>Ask Concierge for MXN rates</li>
     <li>2-hour guided tour</li>
     <li>Departures 9 AM · 12 PM · 3 PM</li>
     <li>Driver min. 16 years (valid ID)</li>
