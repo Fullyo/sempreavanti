@@ -196,7 +196,7 @@ const HTML = `
     <span class="gold-badge">Up to 10 guests · from $20,000 MXN</span>
   </div>
   <p class="description">Sail Banderas Bay aboard the Ally Cat — a luxury 56 ft catamaran and the #1 guest favourite at Sempre Avanti. Open bar, fresh food prepared on board, snorkeling at Las Marietas Islands, boom netting and a breathtaking Pacific sunset. Choose your duration below.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-hero-v5.jpg" alt="Ally Cat Catamaran" class="hero-image no-crop" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-hero-v5.jpg" alt="Ally Cat Catamaran" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-deck.jpg" alt="Catamaran Deck Party" class="square-image" />
@@ -238,7 +238,7 @@ const HTML = `
     <span class="gold-badge">Up to 20 guests · from $32,500 MXN</span>
   </div>
   <p class="description" style="font-size:.82rem;">For larger groups, the Fat Cat is a two-deck party catamaran built for big celebrations — bachelorette parties, corporate groups, family reunions. Same open bar and fresh food as Ally Cat, plus a water slide, floating mats, paddleboards and space for up to 20 guests. Also offers a dedicated Monday whale watching tour.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fatcat-hero.jpg" alt="Fat Cat Party Catamaran" class="hero-image" style="height:150px; object-position: center center;" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fatcat-hero.jpg" alt="Fat Cat Party Catamaran" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fatcat-aerial.jpg" alt="Fat Cat Aerial" class="square-image" />
@@ -281,7 +281,7 @@ const HTML = `
     <span class="gold-badge">3h · $9,500 MXN | 4h · $11,500 MXN</span>
   </div>
   <p class="description">Charter your own private vessel for a bespoke day on the water. Snorkel pristine reefs, spot dolphins and seasonal whales, or simply cruise the stunning Riviera Nayarit coastline. Up to 7 guests.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-hero.jpg" alt="Private Boat Tour" class="hero-image" style="height:280px; object-position: center center;" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-hero.jpg" alt="Private Boat Tour" class="hero-image tall" />
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-square-v2.jpg" alt="Private Boat Tour" class="square-image" />
@@ -313,7 +313,7 @@ const HTML = `
     <span class="gold-badge">$11,000 MXN · 3 hours</span>
   </div>
   <p class="description">Head out onto the Pacific aboard a traditional panga with an experienced local captain. The waters off Riviera Nayarit teem with mahi-mahi, tuna, snapper and more. Up to 4 guests, full equipment provided.</p>
-  <img crossorigin="anonymous" src="/concierge-guide/panga.jpeg" alt="Panga Fishing Charter" class="hero-image" style="height:280px; object-position: center center;" />
+  <img crossorigin="anonymous" src="/concierge-guide/panga.jpeg" alt="Panga Fishing Charter" class="hero-image tall" />
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-charter-boat.jpg" alt="Charter Boat" class="square-image" style="object-position: center 60%;" />
@@ -785,7 +785,7 @@ const HTML = `
 ══════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">DINING IN SAYULITA</div>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/dining-sayulita-v2.jpg" alt="Sayulita Dining" class="hero-image" style="height:150px; object-position: center center;" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/dining-sayulita-v2.jpg" alt="Sayulita Dining" class="hero-image" />
 
   <h3 style="color:#1a4a52;font-family:'Montserrat',sans-serif;font-size:.8rem;text-transform:uppercase;letter-spacing:1px;margin:10px 0 8px;padding-bottom:6px;border-bottom:2px solid #f0b429;">Breakfast, Lunch &amp; Cafés</h3>
 
