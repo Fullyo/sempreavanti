@@ -1330,6 +1330,9 @@ const ConciergeGuide = () => {
           originalHeroBackgrounds.forEach((backgroundImage, frame) => {
             frame.style.backgroundImage = backgroundImage;
           });
+          imgSwaps.forEach(({ placeholder, original }) => {
+            placeholder.parentNode?.replaceChild(original, placeholder);
+          });
         }
 
         pdf.save("Villas-Sempre-Avanti-Concierge-Guide.pdf");
