@@ -18,8 +18,7 @@ const HTML = `
 </div>
 
 <div id="pdf-btn-group">
-  <button id="download-pdf-btn" type="button">Download PDF</button>
-  <button id="print-btn" type="button">Print</button>
+  <button id="download-pdf-btn" type="button">Download Guide (PDF)</button>
 </div>
 
 
@@ -80,10 +79,10 @@ const HTML = `
     </div>
   </div>
 
-  <div style="background:linear-gradient(135deg,#1a4a52 0%,#2e7b8c 100%);border-radius:10px;padding:18px 22px;margin-top:16px;color:#fff;">
-    <div style="font-size:.85rem;font-family:'Montserrat',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#f0b429;margin-bottom:8px;">🙏 Gratuity & Villa Team</div>
-    <p style="font-size:.82rem;line-height:1.65;margin:0;">Villas Sempre Avanti is a fully staffed property. A <strong style="color:#f0b429;">10% gratuity is included</strong> as a baseline in your stay and is shared equally among the entire team dedicated to making your experience exceptional — from housekeeping and maintenance to your concierge and cook.</p>
-    <p style="font-size:.82rem;line-height:1.65;margin:10px 0 0;">If you feel the team has gone above and beyond, simply let your concierge know — any additional gratuity is warmly welcomed and will be added to your final checkout.</p>
+  <div style="background:linear-gradient(135deg,#1a4a52 0%,#2e7b8c 100%);border-radius:10px;padding:12px 18px;margin-top:12px;color:#fff;">
+    <div style="font-size:.8rem;font-family:'Montserrat',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#f0b429;margin-bottom:6px;">Gratuity & Villa Team</div>
+    <p style="font-size:.78rem;line-height:1.55;margin:0;">Villas Sempre Avanti is a fully staffed property. A <strong style="color:#f0b429;">10% gratuity is included</strong> as a baseline in your stay and shared equally among the team — from housekeeping and maintenance to your concierge and cook.</p>
+    <p style="font-size:.78rem;line-height:1.55;margin:6px 0 0;">If the team has gone above and beyond, let your concierge know — any additional gratuity is warmly welcomed and added to your final checkout.</p>
   </div>
 
   <div class="page-num">2</div>
@@ -155,7 +154,7 @@ const HTML = `
 
   <div class="utv-grid">
     <div class="utv-card">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/canam-4seater.jpg" alt="Can-Am Defender at the villa" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/canam-4seater.jpg" alt="Can-Am Defender at the villa" />
       <div class="utv-card-info">
         <div class="utv-card-name">Can-Am Defender</div>
         <div class="utv-card-seats">⭐ Best for longer drives · 6 Passengers</div>
@@ -163,7 +162,7 @@ const HTML = `
       </div>
     </div>
     <div class="utv-card">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/polaris-6seater.jpg" alt="Polaris Ranger at the villa" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/polaris-6seater.jpg" alt="Polaris Ranger at the villa" />
       <div class="utv-card-info">
         <div class="utv-card-name">Polaris Ranger 570</div>
         <div class="utv-card-seats">⭐ Best for Sayulita · 6 Passengers</div>
@@ -197,14 +196,14 @@ const HTML = `
     <span class="gold-badge">Up to 10 guests · from $20,000 MXN</span>
   </div>
   <p class="description">Sail Banderas Bay aboard the Ally Cat — a luxury 56 ft catamaran and the #1 guest favourite at Sempre Avanti. Open bar, fresh food prepared on board, snorkeling at Las Marietas Islands, boom netting and a breathtaking Pacific sunset. Choose your duration below.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-hero-v5.jpg" alt="Ally Cat Catamaran" class="hero-image no-crop" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-hero-v5.jpg" alt="Ally Cat Catamaran" class="hero-image no-crop" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-deck.jpg" alt="Catamaran Deck Party" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-deck.jpg" alt="Catamaran Deck Party" class="square-image" />
       <div class="caption">Open Bar &amp; Deck Life</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-sunset.jpg" alt="Ally Cat Pacific Sunset" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-sunset.jpg" alt="Ally Cat Pacific Sunset" class="square-image" />
       <div class="caption">Pacific Sunset Cruise</div>
     </div>
   </div>
@@ -238,15 +237,15 @@ const HTML = `
     <span>FAT CAT SAILING</span>
     <span class="gold-badge">Up to 20 guests · from $32,500 MXN</span>
   </div>
-  <p class="description">For larger groups, the Fat Cat is a two-deck party catamaran built for big celebrations — bachelorette parties, corporate groups, family reunions. Same open bar and fresh food experience as Ally Cat, with a water slide, floating mats, paddleboards and space for up to 20 guests. Also offers a dedicated Monday whale watching tour.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fatcat-hero.jpg" alt="Fat Cat Party Catamaran" class="hero-image" style="height:220px; object-position: center center;" />
+  <p class="description" style="font-size:.82rem;">For larger groups, the Fat Cat is a two-deck party catamaran built for big celebrations — bachelorette parties, corporate groups, family reunions. Same open bar and fresh food as Ally Cat, plus a water slide, floating mats, paddleboards and space for up to 20 guests. Also offers a dedicated Monday whale watching tour.</p>
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fatcat-hero.jpg" alt="Fat Cat Party Catamaran" class="hero-image" style="height:150px; object-position: center center;" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fatcat-aerial.jpg" alt="Fat Cat Aerial" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fatcat-aerial.jpg" alt="Fat Cat Aerial" class="square-image" />
       <div class="caption">Two-Deck Catamaran — Up to 20 Guests</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fatcat-action.jpg" alt="Fat Cat Water Slide" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fatcat-action.jpg" alt="Fat Cat Water Slide" class="square-image" />
       <div class="caption">Water Slide, SUP &amp; Floating Mats</div>
     </div>
   </div>
@@ -269,7 +268,7 @@ const HTML = `
 
   <p style="font-size:.75rem; color:#555; margin:6px 0 10px;"><strong style="color:#1a4a52;">All durations include:</strong> Open premium bar · Continental breakfast, snacks &amp; lunch · All water activities · Water slide · Paddleboards · Floating mats · Bilingual crew · Departs Sayulita</p>
 
-  <div class="tip-box">💡 <strong>Concierge Tip:</strong> The Fat Cat is the go-to choice for groups of 11 or more — it has two full decks, a water slide and enough space that it never feels crowded. Book the 6-hour option for a true full-day experience with lunch on the water. The Monday whale watching tour is exceptional value for families — kids under 3 sail free.</div>
+  <div class="tip-box"><strong>Concierge Tip:</strong> The Fat Cat is the go-to choice for groups of 11+ — two decks, water slide, plenty of room. Book the 6-hour option for a true full-day with lunch on the water. The Monday whale tour is exceptional value for families — kids under 3 sail free.</div>
   <div class="page-num">6</div>
 </div>
 
@@ -282,14 +281,14 @@ const HTML = `
     <span class="gold-badge">3h · $9,500 MXN | 4h · $11,500 MXN</span>
   </div>
   <p class="description">Charter your own private vessel for a bespoke day on the water. Snorkel pristine reefs, spot dolphins and seasonal whales, or simply cruise the stunning Riviera Nayarit coastline. Up to 7 guests.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-hero.jpg" alt="Private Boat Tour" class="hero-image" style="height:280px; object-position: center center;" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-hero.jpg" alt="Private Boat Tour" class="hero-image" style="height:280px; object-position: center center;" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-square-v2.jpg" alt="Private Boat Tour" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-square-v2.jpg" alt="Private Boat Tour" class="square-image" />
       <div class="caption">Marietas Islands — UNESCO Reserve</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-snorkel.jpg" alt="Snorkeling" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-snorkel.jpg" alt="Snorkeling" class="square-image" />
       <div class="caption">Snorkel Playa de los Muertos</div>
     </div>
   </div>
@@ -314,14 +313,14 @@ const HTML = `
     <span class="gold-badge">$11,000 MXN · 3 hours</span>
   </div>
   <p class="description">Head out onto the Pacific aboard a traditional panga with an experienced local captain. The waters off Riviera Nayarit teem with mahi-mahi, tuna, snapper and more. Up to 4 guests, full equipment provided.</p>
-  <img src="/concierge-guide/panga.jpeg" alt="Panga Fishing Charter" class="hero-image" style="height:280px; object-position: center center;" />
+  <img crossorigin="anonymous" src="/concierge-guide/panga.jpeg" alt="Panga Fishing Charter" class="hero-image" style="height:280px; object-position: center center;" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-charter-boat.jpg" alt="Charter Boat" class="square-image" style="object-position: center 60%;" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-charter-boat.jpg" alt="Charter Boat" class="square-image" style="object-position: center 60%;" />
       <div class="caption">Pacific Panga Fishing</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-catch-v2.jpg" alt="Catch of the Day" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-catch-v2.jpg" alt="Catch of the Day" class="square-image" />
       <div class="caption">Catch of the Day</div>
     </div>
   </div>
@@ -346,14 +345,14 @@ const HTML = `
     <span class="gold-badge">Inshore $12k | Deep Water $21k MXN</span>
   </div>
   <p class="description">An adrenaline-charged underwater adventure with expert guides. Choose the inshore experience for reef hunting, or go deep water for a full-day ocean expedition. All equipment and wetsuits provided.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/boat-spearfishing.jpg" alt="Spearfishing" class="hero-image" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/boat-spearfishing.jpg" alt="Spearfishing" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/boat-shorespearfishing.jpg" alt="Inshore" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/boat-shorespearfishing.jpg" alt="Inshore" class="square-image" />
       <div class="caption">Inshore Reef Spearfishing</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/spearfishing-deepwater-v3.png" alt="Deep Water Expedition" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/spearfishing-deepwater-v3.png" alt="Deep Water Expedition" class="square-image" />
       <div class="caption">Deep Water Expedition</div>
     </div>
   </div>
@@ -378,14 +377,14 @@ const HTML = `
     <span class="gold-badge">Seasonal · Dec – Mar</span>
   </div>
   <p class="description">Every winter, hundreds of humpback whales migrate to Banderas Bay. Join a guided 3-hour tour from Sayulita to witness these magnificent creatures up close, alongside playful dolphins and rich marine life.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/whale.jpg" alt="Whale Watching" class="hero-image" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/whale.jpg" alt="Whale Watching" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/whale-breach.jpg" alt="Humpback Breaching" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/whale-breach.jpg" alt="Humpback Breaching" class="square-image" />
       <div class="caption">Humpback Breaching — Banderas Bay</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/whale-tour-boat.jpg" alt="Whale Tour Boat" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/whale-tour-boat.jpg" alt="Whale Tour Boat" class="square-image" />
       <div class="caption">Up Close with the Giants</div>
     </div>
   </div>
@@ -410,14 +409,14 @@ const HTML = `
     <span class="gold-badge">from $1,200 MXN / person</span>
   </div>
   <p class="description">Victor is your expert surf guide for the Riviera Nayarit. With intimate knowledge of every break — from Sayulita's beginner waves to La Lancha's world-class barrels — he tailors every session to your level. Instagram: @yeahvary.surf</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/surf-sayulita.jpg" alt="Victor Surf" class="hero-image" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/surf-sayulita.jpg" alt="Victor Surf" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/surf-victor-v4.jpeg" alt="Victor with surfboard on Sayulita Beach" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/surf-victor-v4.jpeg" alt="Victor with surfboard on Sayulita Beach" class="square-image" />
       <div class="caption">Sayulita Main Break</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/surf-victor3.jpg" alt="Victor Guide" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/surf-victor3.jpg" alt="Victor Guide" class="square-image" />
       <div class="caption">Victor — Your Surf Guide</div>
     </div>
   </div>
@@ -455,14 +454,14 @@ const HTML = `
     <span class="gold-badge">MiChula Tours</span>
   </div>
   <p class="description">Fly through the jungle canopy on 13 exhilarating zip lines at Rancho Mi Chula, just minutes from Sayulita. Suitable for all experience levels, with certified guides and full safety briefings.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/zipline-hero-v2.jpg" alt="Zipline" class="hero-image" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/zipline-hero-v2.jpg" alt="Zipline" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/zipline-sq1.jpg" alt="13 Lines Through the Jungle" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/zipline-sq1.jpg" alt="13 Lines Through the Jungle" class="square-image" />
       <div class="caption">13 Lines Through the Jungle</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/zipline-sq2-v2.jpg" alt="Certified Guides" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/zipline-sq2-v2.jpg" alt="Certified Guides" class="square-image" />
       <div class="caption">Certified Guides &amp; Safety Equipment</div>
     </div>
   </div>
@@ -489,11 +488,11 @@ const HTML = `
   <p class="description">Tear through jungle trails, sandy beaches and hidden mountain paths on a quad. Choose solo or double, with departures at 9 AM, 12 PM and 3 PM daily. Maximum 7 quads per group.</p>
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq1-v2.jpeg" alt="ATV Trails" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq1-v2.jpeg" alt="ATV Trails" class="square-image" />
       <div class="caption">Jungle &amp; Beach Trails</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq2-v2.jpeg" alt="ATV Quad" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq2-v2.jpeg" alt="ATV Quad" class="square-image" />
       <div class="caption">Solo &amp; Double Quads</div>
     </div>
   </div>
@@ -516,14 +515,14 @@ const HTML = `
     <span class="gold-badge">MiChula Tours · $76 USD/person</span>
   </div>
   <p class="description">Explore Sayulita on horseback through lush jungle trails and down to the beach at sunset. Suitable for all experience levels. Antonio, Jorge and Miguel lead unforgettable rides with a dedicated photography team.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-hero-v4.jpg" alt="Horseback Riding" class="hero-image" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-hero-v4.jpg" alt="Horseback Riding" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-sq1-v2.jpg" alt="Jungle Trails" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-sq1-v2.jpg" alt="Jungle Trails" class="square-image" />
       <div class="caption">Jungle Trails to the Beach</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-sq2-v2.jpg" alt="Sunset Ride" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-sq2-v2.jpg" alt="Sunset Ride" class="square-image" />
       <div class="caption">Sunset Beach Ride</div>
     </div>
   </div>
@@ -548,13 +547,13 @@ const HTML = `
     <span class="gold-badge">3.5 hrs · MiChula Tours</span>
   </div>
   <p class="description">Trek to the summit of Cerro del Mono (Monkey Mountain) for panoramic views of Banderas Bay from Punta Mita to Sayulita. An intermediate–advanced hike through dense tropical jungle with abundant wildlife.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-summit-girl.jpg" alt="Monkey Mountain Summit" class="hero-image" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-summit-girl.jpg" alt="Monkey Mountain Summit" class="hero-image" />
   <div class="image-row">
     <div class="image-frame">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-coastal-sunset.jpg" alt="Coastal Sunset" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-coastal-sunset.jpg" alt="Coastal Sunset" class="square-image" />
     </div>
     <div class="image-frame">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-view-flowers.jpg" alt="Mountain View" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-view-flowers.jpg" alt="Mountain View" class="square-image" />
       <div class="caption">Jungle Coast at Golden Hour</div>
     </div>
   </div>
@@ -581,14 +580,14 @@ const HTML = `
     <span class="gold-badge">Ask Concierge for Rates</span>
   </div>
   <p class="description">Punta Mita is home to two world-class Jack Nicklaus Signature golf courses — the Pacifico Course and the Bahia Course — set amid breathtaking ocean views of Banderas Bay and the Marietas Islands.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/golf-aerial-resort.jpg" alt="Punta Mita Golf Resort" class="hero-image" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/golf-aerial-resort.jpg" alt="Punta Mita Golf Resort" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/golf-fairway-beach.jpg" alt="Oceanfront Fairway" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/golf-fairway-beach.jpg" alt="Oceanfront Fairway" class="square-image" />
       <div class="caption">Oceanfront Fairway — Pacifico Course</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/golf-island-green.jpg" alt="Island Green" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/golf-island-green.jpg" alt="Island Green" class="square-image" />
       <div class="caption">Tail of the Whale — World's Only Natural Island Green</div>
     </div>
   </div>
@@ -614,14 +613,14 @@ const HTML = `
     <span class="gold-badge">$2,000 MXN up to 5 · +$500/extra adult</span>
   </div>
   <p class="description">Begin your morning with a private yoga session on the terrace or pool deck, led by a certified instructor from Sayulita. All styles available — Vinyasa, Yin, Restorative, or a custom session tailored to your group.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-villa-terrace.jpg" alt="Yoga" class="hero-image" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-villa-terrace.jpg" alt="Yoga" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-hero-v2.jpg" alt="Private Yoga Session" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-hero-v2.jpg" alt="Private Yoga Session" class="square-image" />
       <div class="caption">Private Yoga Session</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-beach-class.jpg" alt="Beach Yoga Class" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-beach-class.jpg" alt="Beach Yoga Class" class="square-image" />
       <div class="caption">Beach Yoga — Sayulita Cove</div>
     </div>
   </div>
@@ -648,7 +647,7 @@ const HTML = `
     <span class="gold-badge">from $1,500 MXN / treatment</span>
   </div>
   <p class="description">Indulge in a professional massage treatment on your private terrace or in the comfort of your villa. Our therapists bring everything needed for a world-class spa experience — without leaving the property.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/massage-hero-v3.jpg" alt="Beachside Massage" class="hero-image" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/massage-hero-v3.jpg" alt="Beachside Massage" class="hero-image" />
   <ul class="inclusions-list">
     <li>Swedish &amp; deep tissue</li>
     <li>Hot stone therapy</li>
@@ -670,7 +669,7 @@ const HTML = `
     <span class="gold-badge">$3,000 MXN up to 5 · +$600/extra adult</span>
   </div>
   <p class="description">A restorative sound healing session with two sound therapists using Tibetan singing bowls, crystal bowls and percussion instruments. Lie back, breathe deeply and let the vibrations dissolve stress and tension. Ideal for groups of 4–10.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/soundbath.jpg" alt="Sound Bath" class="hero-image" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/soundbath.jpg" alt="Sound Bath" class="hero-image" />
   <ul class="inclusions-list">
     <li>Two certified sound therapists</li>
     <li>Tibetan &amp; crystal bowls</li>
@@ -697,11 +696,11 @@ const HTML = `
   
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/bartender-cocktail-pour.jpg" alt="Cocktail Pour" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/bartender-cocktail-pour.jpg" alt="Cocktail Pour" class="square-image" />
       <div class="caption">Handcrafted Cocktails</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/bartender-cocktails.jpg" alt="Signature Drinks" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/bartender-cocktails.jpg" alt="Signature Drinks" class="square-image" />
       <div class="caption">Signature &amp; Classic Creations</div>
     </div>
   </div>
@@ -726,14 +725,14 @@ const HTML = `
     <span class="gold-badge">$1,700 MXN / person</span>
   </div>
   <p class="description">Step behind the scenes at Cachasol — Nayarit's most celebrated artisan tequila distillery set on a working agave farm just 10 minutes from the villa. A full farm-to-glass experience that includes two cocktails, the complete guided tour, and dinner on-site.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cachasol-bottles.jpg" alt="Cachasol Tequila" class="hero-image" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cachasol-bottles.jpg" alt="Cachasol Tequila" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cachasol-dock.jpg" alt="Cachasol Farm Grounds" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cachasol-dock.jpg" alt="Cachasol Farm Grounds" class="square-image" />
       <div class="caption">Cachasol Farm Grounds</div>
     </div>
     <div class="square-image-container">
-      <img src="https://sayulitaandbeyond.b-cdn.net/CachaSol/168492_1745863609.jpeg" alt="Cachasol Distillery" class="square-image" />
+      <img crossorigin="anonymous" src="https://sayulitaandbeyond.b-cdn.net/CachaSol/168492_1745863609.jpeg" alt="Cachasol Distillery" class="square-image" />
       <div class="caption">Cachasol Distillery</div>
     </div>
   </div>
@@ -758,14 +757,14 @@ const HTML = `
     <span class="gold-badge">$600 MXN / person · Before 5 PM</span>
   </div>
   <p class="description">Hosted at the villa by Chef Ricardo — learn the secrets of authentic Mexican cuisine with a fun, hands-on session right in our kitchen. From fresh salsas and ceviche to hand-pressed tortillas and complex moles. Sessions must start before 5 PM.</p>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cooking-class-group.jpg" alt="Cooking Class" class="hero-image" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cooking-class-group.jpg" alt="Cooking Class" class="hero-image" />
   <div class="image-row">
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cooking-salsas.jpg" alt="Mexican Ingredients" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cooking-salsas.jpg" alt="Mexican Ingredients" class="square-image" />
       <div class="caption">Fresh Salsas &amp; Local Ingredients</div>
     </div>
     <div class="square-image-container">
-      <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cooking-ingredients.jpg" alt="Cooking Station" class="square-image" />
+      <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cooking-ingredients.jpg" alt="Cooking Station" class="square-image" />
       <div class="caption">Hands-On Cooking Station</div>
     </div>
   </div>
@@ -786,7 +785,7 @@ const HTML = `
 ══════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">DINING IN SAYULITA</div>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/dining-sayulita-v2.jpg" alt="Sayulita Dining" class="hero-image" style="height:150px; object-position: center center;" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/dining-sayulita-v2.jpg" alt="Sayulita Dining" class="hero-image" style="height:150px; object-position: center center;" />
 
   <h3 style="color:#1a4a52;font-family:'Montserrat',sans-serif;font-size:.8rem;text-transform:uppercase;letter-spacing:1px;margin:10px 0 8px;padding-bottom:6px;border-bottom:2px solid #f0b429;">Breakfast, Lunch &amp; Cafés</h3>
 
@@ -890,7 +889,7 @@ const HTML = `
 ══════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">DINING OUT — PUNTA MITA</div>
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/diner.jpg" alt="Punta Mita Dining" class="hero-image" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/diner.jpg" alt="Punta Mita Dining" class="hero-image" />
 
   <h3 style="color:#1a4a52;font-family:'Montserrat',sans-serif;font-size:.85rem;text-transform:uppercase;letter-spacing:1px;margin:8px 0 10px;padding-bottom:6px;border-bottom:2px solid #f0b429;">Punta Mita <span style="font-weight:300;color:#666">· 5 min from villa</span></h3>
   <div class="restaurant-card">
@@ -967,7 +966,7 @@ const HTML = `
 <div class="page">
   <div class="section-header">EXPLORING THE RIVIERA NAYARIT</div>
 
-  <img src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/puerto-vallarta.jpg" alt="Riviera Nayarit" class="hero-image" />
+  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/puerto-vallarta.jpg" alt="Riviera Nayarit" class="hero-image" />
 
   <div class="grid-list" style="margin-top:16px">
     <div>
@@ -1056,9 +1055,9 @@ const STYLES = `
     .page {
       background: #fff;
       width: 794px;
-      min-height: 1123px;
+      height: 1123px;
       margin: 30px auto;
-      padding: 48px;
+      padding: 40px;
       box-shadow: 0 4px 24px rgba(0,0,0,.14);
       position: relative;
       overflow: hidden;
@@ -1085,12 +1084,12 @@ const STYLES = `
     }
 
     /* ─── Images ────────────────────────────────────────────────── */
-    .hero-image { width:100%; height:220px; object-fit:cover; border-radius:8px; margin:16px 0; display:block; }
-    .hero-image.no-crop { height:auto; object-fit:contain; background:transparent; }
-    .hero-image.tall { height:500px; }
-    .image-row { display:flex; gap:16px; margin-bottom:16px; }
-    .square-image-container { width:calc(50% - 8px); }
-    .square-image { width:100%; height:270px; object-fit:cover; border-radius:8px; display:block; }
+    .hero-image { width:100%; height:180px; object-fit:cover; border-radius:8px; margin:12px 0; display:block; }
+    .hero-image.no-crop { height:auto; max-height:200px; object-fit:contain; background:transparent; }
+    .hero-image.tall { height:380px; }
+    .image-row { display:flex; gap:14px; margin-bottom:12px; }
+    .square-image-container { width:calc(50% - 7px); }
+    .square-image { width:100%; height:200px; object-fit:cover; border-radius:8px; display:block; }
     .caption { font-size:.7rem; color:#888; text-align:center; margin-top:6px; font-weight:500; }
 
     /* ─── Content Blocks ────────────────────────────────────────── */
@@ -1117,9 +1116,10 @@ const STYLES = `
     .pricing-table td:last-child { text-align:right; font-weight:600; color:#1a4a52; }
 
     /* ─── Grid Lists ─────────────────────────────────────────────── */
-    .grid-list { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-    .grid-item { margin-bottom:10px; }
-    .grid-item strong { color:#1a4a52; display:block; margin-bottom:2px; }
+    .grid-list { display:grid; grid-template-columns:1fr 1fr; gap:12px 20px; }
+    .grid-item { margin-bottom:4px; }
+    .grid-item strong { color:#1a4a52; display:block; margin-bottom:2px; font-size:.88rem; }
+    .grid-item p { font-size:.78rem; line-height:1.5; }
     .grid-item span { font-size:.8rem; color:#666; }
 
     /* ─── Top-5 Cards ────────────────────────────────────────────── */
@@ -1130,14 +1130,14 @@ const STYLES = `
     .top-five-detail { font-size:.85rem; color:#555; }
 
     /* ─── WiFi Boxes ─────────────────────────────────────────────── */
-    .wifi-container { display:flex; gap:20px; margin-bottom:30px; }
-    .wifi-box { flex:1; background:#1a4a52; color:#fff; padding:20px; border-radius:8px; }
-    .wifi-box h3 { font-family:'Montserrat',sans-serif; font-size:.9rem; color:#f0b429; margin-bottom:10px; text-transform:uppercase; }
-    .wifi-detail { font-size:.85rem; margin-bottom:4px; }
+    .wifi-container { display:flex; gap:20px; margin-bottom:20px; }
+    .wifi-box { flex:1; background:#1a4a52; color:#fff; padding:16px; border-radius:8px; }
+    .wifi-box h3 { font-family:'Montserrat',sans-serif; font-size:.9rem; color:#f0b429; margin-bottom:8px; text-transform:uppercase; }
+    .wifi-detail { font-size:.82rem; margin-bottom:3px; }
     .wifi-detail span { opacity:.7; }
 
     /* ─── Page Numbers ───────────────────────────────────────────── */
-    .page-num { position:absolute; bottom:30px; right:48px; font-size:.7rem; color:#2e7b8c; font-weight:600; }
+    .page-num { position:absolute; bottom:24px; right:40px; font-size:.7rem; color:#2e7b8c; font-weight:600; }
 
     /* ─── Dining Sections ────────────────────────────────────────── */
     .restaurant-card { border-bottom:1px solid #f0f0f0; padding:10px 0; }
@@ -1175,13 +1175,13 @@ const STYLES = `
     .emergency-card p { font-size:.85rem; color:#333; }
     .emergency-card .number { font-size:1.1rem; font-weight:700; color:#c0392b; }
 
-    /* ─── Print (browser fallback only) ──────────────────────────── */
-    @page { size: A4 portrait; margin: 0; }
+    /* ─── Print disabled — use Download PDF button instead ──────── */
     @media print {
-      html, body { margin:0 !important; padding:0 !important; background:#fff !important; }
-      .page { box-shadow:none !important; margin:0 !important; border-radius:0 !important; page-break-after: always; break-after: page; page-break-inside: avoid; break-inside: avoid; }
-      .page:last-of-type { page-break-after: auto; break-after: auto; }
-      #pdf-btn-group { display:none !important; }
+      body::before {
+        content: "Please close this dialog and use the 'Download Guide (PDF)' button at the bottom-right for a perfectly formatted PDF.";
+        display:block; padding:40px; font-family:'Montserrat',sans-serif; font-size:14px; color:#1a4a52;
+      }
+      .page, #pdf-btn-group { display:none !important; }
     }
 
     /* ─── PDF capture mode (applied during html2canvas) ──────────── */
@@ -1209,10 +1209,16 @@ const STYLES = `
 
 const ConciergeGuide = () => {
   useEffect(() => {
-    const printButton = document.getElementById("print-btn");
-    const downloadButton = document.getElementById("download-pdf-btn") as HTMLButtonElement | null;
+    // Dev: warn if any .page overflows A4
+    requestAnimationFrame(() => {
+      document.querySelectorAll<HTMLElement>(".page").forEach((p, i) => {
+        if (p.scrollHeight > 1123) {
+          console.warn(`[ConciergeGuide] Page ${i + 1} overflows: ${p.scrollHeight}px (max 1123)`);
+        }
+      });
+    });
 
-    const handlePrint = () => window.print();
+    const downloadButton = document.getElementById("download-pdf-btn") as HTMLButtonElement | null;
 
     const handleDownload = async () => {
       if (!downloadButton) return;
@@ -1221,29 +1227,33 @@ const ConciergeGuide = () => {
       downloadButton.textContent = "Preparing PDF…";
 
       try {
-        // Wait for fonts and images
-        if ((document as any).fonts?.ready) {
-          await (document as any).fonts.ready;
-        }
+        if ((document as any).fonts?.ready) await (document as any).fonts.ready;
+
+        // Force-reload all images with crossorigin so html2canvas can read pixels
         const imgs = Array.from(document.querySelectorAll<HTMLImageElement>(".page img"));
         await Promise.all(
-          imgs.map((img) =>
-            img.complete && img.naturalWidth > 0
-              ? Promise.resolve()
-              : new Promise<void>((res) => {
-                  img.addEventListener("load", () => res(), { once: true });
-                  img.addEventListener("error", () => res(), { once: true });
-                })
+          imgs.map(
+            (img) =>
+              new Promise<void>((resolve) => {
+                if (img.crossOrigin === "anonymous" && img.complete && img.naturalWidth > 0) {
+                  resolve();
+                  return;
+                }
+                const src = img.src;
+                img.crossOrigin = "anonymous";
+                img.addEventListener("load", () => resolve(), { once: true });
+                img.addEventListener("error", () => resolve(), { once: true });
+                // Bust cache so the request is redone with CORS headers
+                img.src = src.includes("?") ? src : src + "?cors=1";
+              })
           )
         );
 
         const pages = Array.from(document.querySelectorAll<HTMLElement>(".page"));
         if (!pages.length) return;
 
-        // A4 in mm — full bleed, no margins
         const A4_W = 210;
         const A4_H = 297;
-        // A4 @ 96dpi in CSS pixels (matches .page size, ratio 1:1.4142)
         const PAGE_W_PX = 794;
         const PAGE_H_PX = 1123;
 
@@ -1268,7 +1278,6 @@ const ConciergeGuide = () => {
 
             const imgData = canvas.toDataURL("image/jpeg", 0.92);
             if (i > 0) pdf.addPage();
-            // Full bleed — bitmap aspect (1:1.4142) matches A4 exactly, no distortion
             pdf.addImage(imgData, "JPEG", 0, 0, A4_W, A4_H, undefined, "FAST");
           }
         } finally {
@@ -1278,20 +1287,15 @@ const ConciergeGuide = () => {
         pdf.save("Villas-Sempre-Avanti-Concierge-Guide.pdf");
       } catch (err) {
         console.error("PDF generation failed:", err);
-        alert("PDF generation failed. Please try again or use the Print fallback.");
+        alert("PDF generation failed: " + (err as Error).message);
       } finally {
         downloadButton.disabled = false;
-        downloadButton.textContent = originalLabel ?? "Download PDF";
+        downloadButton.textContent = originalLabel ?? "Download Guide (PDF)";
       }
     };
 
-    printButton?.addEventListener("click", handlePrint);
     downloadButton?.addEventListener("click", handleDownload);
-
-    return () => {
-      printButton?.removeEventListener("click", handlePrint);
-      downloadButton?.removeEventListener("click", handleDownload);
-    };
+    return () => downloadButton?.removeEventListener("click", handleDownload);
   }, []);
 
   return (
