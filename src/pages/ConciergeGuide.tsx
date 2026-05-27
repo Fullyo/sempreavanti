@@ -1129,14 +1129,14 @@ const STYLES = `
     .top-five-detail { font-size:.85rem; color:#555; }
 
     /* ─── WiFi Boxes ─────────────────────────────────────────────── */
-    .wifi-container { display:flex; gap:20px; margin-bottom:30px; }
-    .wifi-box { flex:1; background:#1a4a52; color:#fff; padding:20px; border-radius:8px; }
-    .wifi-box h3 { font-family:'Montserrat',sans-serif; font-size:.9rem; color:#f0b429; margin-bottom:10px; text-transform:uppercase; }
-    .wifi-detail { font-size:.85rem; margin-bottom:4px; }
+    .wifi-container { display:flex; gap:20px; margin-bottom:20px; }
+    .wifi-box { flex:1; background:#1a4a52; color:#fff; padding:16px; border-radius:8px; }
+    .wifi-box h3 { font-family:'Montserrat',sans-serif; font-size:.9rem; color:#f0b429; margin-bottom:8px; text-transform:uppercase; }
+    .wifi-detail { font-size:.82rem; margin-bottom:3px; }
     .wifi-detail span { opacity:.7; }
 
     /* ─── Page Numbers ───────────────────────────────────────────── */
-    .page-num { position:absolute; bottom:30px; right:48px; font-size:.7rem; color:#2e7b8c; font-weight:600; }
+    .page-num { position:absolute; bottom:24px; right:40px; font-size:.7rem; color:#2e7b8c; font-weight:600; }
 
     /* ─── Dining Sections ────────────────────────────────────────── */
     .restaurant-card { border-bottom:1px solid #f0f0f0; padding:10px 0; }
