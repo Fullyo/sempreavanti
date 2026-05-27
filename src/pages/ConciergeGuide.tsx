@@ -1208,10 +1208,16 @@ const STYLES = `
 
 const ConciergeGuide = () => {
   useEffect(() => {
-    const printButton = document.getElementById("print-btn");
-    const downloadButton = document.getElementById("download-pdf-btn") as HTMLButtonElement | null;
+    // Dev: warn if any .page overflows A4
+    requestAnimationFrame(() => {
+      document.querySelectorAll<HTMLElement>(".page").forEach((p, i) => {
+        if (p.scrollHeight > 1123) {
+          console.warn(`[ConciergeGuide] Page ${i + 1} overflows: ${p.scrollHeight}px (max 1123)`);
+        }
+      });
+    });
 
-    const handlePrint = () => window.print();
+    const downloadButton = document.getElementById("download-pdf-btn") as HTMLButtonElement | null;
 
     const handleDownload = async () => {
       if (!downloadButton) return;
@@ -1220,29 +1226,33 @@ const ConciergeGuide = () => {
       downloadButton.textContent = "Preparing PDF…";
 
       try {
-        // Wait for fonts and images
-        if ((document as any).fonts?.ready) {
-          await (document as any).fonts.ready;
-        }
+        if ((document as any).fonts?.ready) await (document as any).fonts.ready;
+
+        // Force-reload all images with crossorigin so html2canvas can read pixels
         const imgs = Array.from(document.querySelectorAll<HTMLImageElement>(".page img"));
         await Promise.all(
-          imgs.map((img) =>
-            img.complete && img.naturalWidth > 0
-              ? Promise.resolve()
-              : new Promise<void>((res) => {
-                  img.addEventListener("load", () => res(), { once: true });
-                  img.addEventListener("error", () => res(), { once: true });
-                })
+          imgs.map(
+            (img) =>
+              new Promise<void>((resolve) => {
+                if (img.crossOrigin === "anonymous" && img.complete && img.naturalWidth > 0) {
+                  resolve();
+                  return;
+                }
+                const src = img.src;
+                img.crossOrigin = "anonymous";
+                img.addEventListener("load", () => resolve(), { once: true });
+                img.addEventListener("error", () => resolve(), { once: true });
+                // Bust cache so the request is redone with CORS headers
+                img.src = src.includes("?") ? src : src + "?cors=1";
+              })
           )
         );
 
         const pages = Array.from(document.querySelectorAll<HTMLElement>(".page"));
         if (!pages.length) return;
 
-        // A4 in mm — full bleed, no margins
         const A4_W = 210;
         const A4_H = 297;
-        // A4 @ 96dpi in CSS pixels (matches .page size, ratio 1:1.4142)
         const PAGE_W_PX = 794;
         const PAGE_H_PX = 1123;
 
@@ -1267,7 +1277,6 @@ const ConciergeGuide = () => {
 
             const imgData = canvas.toDataURL("image/jpeg", 0.92);
             if (i > 0) pdf.addPage();
-            // Full bleed — bitmap aspect (1:1.4142) matches A4 exactly, no distortion
             pdf.addImage(imgData, "JPEG", 0, 0, A4_W, A4_H, undefined, "FAST");
           }
         } finally {
@@ -1277,20 +1286,15 @@ const ConciergeGuide = () => {
         pdf.save("Villas-Sempre-Avanti-Concierge-Guide.pdf");
       } catch (err) {
         console.error("PDF generation failed:", err);
-        alert("PDF generation failed. Please try again or use the Print fallback.");
+        alert("PDF generation failed: " + (err as Error).message);
       } finally {
         downloadButton.disabled = false;
-        downloadButton.textContent = originalLabel ?? "Download PDF";
+        downloadButton.textContent = originalLabel ?? "Download Guide (PDF)";
       }
     };
 
-    printButton?.addEventListener("click", handlePrint);
     downloadButton?.addEventListener("click", handleDownload);
-
-    return () => {
-      printButton?.removeEventListener("click", handlePrint);
-      downloadButton?.removeEventListener("click", handleDownload);
-    };
+    return () => downloadButton?.removeEventListener("click", handleDownload);
   }, []);
 
   return (
