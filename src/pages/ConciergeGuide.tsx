@@ -268,7 +268,7 @@ const HTML = `
 
   <p style="font-size:.75rem; color:#555; margin:6px 0 10px;"><strong style="color:#1a4a52;">All durations include:</strong> Open premium bar · Continental breakfast, snacks &amp; lunch · All water activities · Water slide · Paddleboards · Floating mats · Bilingual crew · Departs Sayulita</p>
 
-  <div class="tip-box">💡 <strong>Concierge Tip:</strong> The Fat Cat is the go-to choice for groups of 11 or more — it has two full decks, a water slide and enough space that it never feels crowded. Book the 6-hour option for a true full-day experience with lunch on the water. The Monday whale watching tour is exceptional value for families — kids under 3 sail free.</div>
+  <div class="tip-box"><strong>Concierge Tip:</strong> The Fat Cat is the go-to choice for groups of 11+ — two decks, water slide, plenty of room. Book the 6-hour option for a true full-day with lunch on the water. The Monday whale tour is exceptional value for families — kids under 3 sail free.</div>
   <div class="page-num">6</div>
 </div>
 
