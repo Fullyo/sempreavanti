@@ -1,55 +1,79 @@
-## Why this keeps failing
+## What's wrong
 
-Your screenshots are the **browser's "Save as PDF"** dialog (Chrome print preview), not our Download PDF button. Two different rendering engines, two different bugs:
+Two visual bugs left in the PDF. Both are isolated to CSS rules + a few inline overrides in `src/pages/ConciergeGuide.tsx`. Nothing else in the document is touched.
 
-1. **Browser print** (what you're using): Chrome paginates based on actual content height. Several `.page` divs contain MORE content than 1123px tall. On screen `overflow:hidden` masks it — in print, Chrome spills it onto a second sheet (the empty "page 2" / blank trailing pages you see).
-2. **Download PDF button** (html2canvas + jsPDF): captures each `.page` div at fixed 794×1123 → one image per A4 sheet. This is the only path that is structurally guaranteed to give you 32 pages, 1:1, no overflow.
+### 1. Hero photos look distorted on some pages
 
-We've been patching the html2canvas path while you've been testing the print dialog. That's the disconnect.
+The base rule is fine:
+```css
+.hero-image { width:100%; height:180px; object-fit:cover; }
+```
+But several pages override it inline with awkward heights that fight `object-fit:cover` and look squished or off-center after html2canvas rasterizes them:
+- `fatcat-hero.jpg` → `style="height:150px"` (too short, faces cropped)
+- `private-boat-hero.jpg` → `style="height:280px"` (pushes page content down, gets compressed)
+- `panga.jpeg` → `style="height:280px"` (same)
+- `dining-sayulita-v2.jpg` → `style="height:150px"`
+- Ally Cat uses `class="hero-image no-crop"` → `object-fit:contain` on transparent bg, which renders with letterboxing that reads as distortion
 
-## The fix — two parts
+### 2. Yellow pill ("gold-badge") text overflows or looks oversized
 
-### Part 1: Make Download PDF the only path (remove the trap)
+Current rule:
+```css
+.gold-badge { white-space:nowrap; font-size:.75rem; padding:4px 12px; }
+```
+On pages with long pricing strings (e.g. "$3,000 MXN UP TO 5 · +$600/EXTRA ADULT", "$8,500 MXN ALL-INCLUSIVE 4HR · +$1,500/EXTRA HR"), `nowrap` forces the pill wider than the header, sometimes clipping or pushing the section title to a second line. On short labels it looks correctly sized — that's the inconsistency the user is calling out.
 
-- Remove the floating **Print** button entirely. Keep only **Download PDF**.
-- Remove `@page` / `@media print` rules so the browser's Save-as-PDF behaves like a normal screen capture if anyone still tries it (no false "it looks fine in print preview" expectation).
-- Rename button to **"Download Guide (PDF)"** so it's unmistakable.
+## The fix (CSS-only, in `src/pages/ConciergeGuide.tsx`)
 
-This alone solves your immediate problem: the Download PDF output is already correct (full-bleed A4, no distortion since the last fix).
+**Hero photos — normalize to one rule, drop the inline height overrides**
 
-### Part 2: Audit + hard-cap every page so content cannot overflow
+1. Update base rule to be tolerant of all hero source aspect ratios:
+   ```css
+   .hero-image {
+     width:100%; height:180px;
+     object-fit:cover; object-position:center 40%;
+     border-radius:8px; margin:12px 0; display:block;
+   }
+   .hero-image.tall { height:220px; }  /* keep for the few pages that need more */
+   ```
+2. Remove `class="no-crop"` from the Ally Cat hero and delete the `.no-crop` rule (it was the cause of the letterboxed/distorted look).
+3. Remove the inline `style="height:150px"` and `style="height:280px"` overrides on: Fat Cat, Private Boat, Panga, Dining Sayulita. They all fall back to the standard 180px and render cleanly.
+4. For the two pages that genuinely need more vertical hero (private boat + panga, since those pages have less content), add `class="hero-image tall"` instead of an inline height — capped at 220px so the page still fits 1123px.
 
-Even with html2canvas, if content inside a `.page` exceeds 1123px, the bottom gets cropped. Today `.page` uses `min-height:1123px` + `overflow:hidden` — overflow is silently chopped.
+**Yellow pill — let it shrink/wrap gracefully**
 
-Changes in `src/pages/ConciergeGuide.tsx`:
+```css
+.gold-badge {
+  background:#f0b429; color:#2c2c2c;
+  padding:4px 12px; border-radius:14px;
+  font-family:'Montserrat',sans-serif;
+  font-size:.7rem; font-weight:700;
+  text-transform:uppercase;
+  white-space:normal;          /* allow wrap on long strings */
+  text-align:right;
+  max-width:55%;               /* never crowds the title */
+  line-height:1.25;
+  flex-shrink:0;
+}
+.section-header { gap:12px; }   /* breathing room when pill wraps */
+```
 
-- Change `.page { min-height:1123px }` → `.page { height:1123px }` (hard cap, matches A4 exactly).
-- Reduce inner padding from `48px` → `40px` to give content ~64px more vertical room.
-- Tighten oversized blocks that I'll identify by measurement (likely candidates from your screenshots):
-  - **Boat page (Ally Cat)**: hero image 220px → 180px, square-image 270px → 220px, so the pricing table + tip box fit above the fold.
-  - **House Rules page**: 2-col grid is fine, but the Airport Transportation block currently wraps awkwardly ("$5,000 MXN" on its own line because of a `<strong>` line break). Inline-reflow that paragraph and shrink the **GRATUITY & VILLA TEAM** card padding from 24px → 16px so it doesn't push past 1123px.
-- Add a dev-only runtime guard: after mount, loop every `.page`, measure `scrollHeight`, and `console.warn` any that exceed 1123px. Lets us catch future overflows immediately.
+Effect: short labels look identical to today; long labels wrap to 2 lines inside the pill and the header height grows by ~10px — well within the per-page slack.
 
-### Part 3: Verify before declaring done
+## Why this won't break the rest of the document
 
-After the edit I will:
+- All edits are in the `<style>` block + 6 inline `style=`/`class=` removals.
+- No `.page` heights change, no padding changes, no grid changes.
+- Pages that don't use `.hero-image`, `.no-crop`, or `.gold-badge` are untouched.
+- The Download PDF capture loop, fonts, colors, copy: not touched.
 
-1. Trigger the Download PDF flow in-browser (browser tool),
-2. Save the resulting PDF,
-3. Convert each of the 32 pages to a JPEG with `pdftoppm`,
-4. Open and visually inspect every page — confirm no clipped content, no empty trailing pages, photos undistorted on the Ally Cat and House Rules pages specifically.
-5. Report findings page-by-page before handing back.
+## Verification before handing back
+
+1. Trigger Download PDF in-browser.
+2. `pdftoppm` each page to JPEG.
+3. Spot-check every page that had an inline hero override (Fat Cat, Ally Cat, Private Boat, Panga, Dining Sayulita) + 3 pages with long pill text (Sound Bath, Fat Cat, Private Boat).
+4. Confirm: heroes uncropped/undistorted, pills fit inside the teal header, no content clipped at the bottom of any page.
 
 ## Files changed
 
-- `src/pages/ConciergeGuide.tsx` — remove Print button, drop print CSS, harden `.page` height, shrink the overflowing blocks listed above, add dev overflow warning.
-
-## What I will NOT touch
-
-- The web layout for any page that already fits.
-- The html2canvas/jsPDF capture loop (it's correct now).
-- Fonts, colors, copy.  
-  
-  
-the pdf download button was not working that's why i used the print ...
-- &nbsp;
+- `src/pages/ConciergeGuide.tsx` — only.
