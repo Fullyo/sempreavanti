@@ -1,60 +1,46 @@
-## Why the current approach keeps failing
+## What's wrong now
 
-Browser "Save as PDF" re-flows the page using the browser's print engine. Even though our `.page` divs are sized to A4 at 96dpi (794×1123px), the print engine:
+1. **Distorted images** — the current `handleDownloadPDF` passes `windowWidth/windowHeight` to html2canvas and then stretches the resulting bitmap into an A4 box minus 12mm margins. The bitmap's aspect ratio (794×1123 = 1:1.414) doesn't match the target box (186×273 = 1:1.468), so html2canvas resamples and `addImage` re-stretches → squashed photos.
+2. **Big white margins** — 12mm all sides + 6mm binding shift = ~18mm of white on every page. You don't want that.
+3. **Capture size mismatch** — capturing at `windowWidth/windowHeight` instead of each `.page` div's own 794×1123 means content outside the page (or padding inside the viewport) gets pulled in.
 
-- Rounds px→mm differently across Chrome versions, pushing 1–3px of content onto a second sheet (this is exactly what your screenshots show — the gratuity box header is on page 2, its body bleeds to page 3; the Ally Cat pricing table is split from its hero photo).
-- Honours/ignores `@page margin: 0` inconsistently when the user leaves "Margins: Default" in the print dialog (your screenshots show "Margins: Default", which adds ~10mm and guarantees overflow).
-- Re-rasterises images and fonts, so any CSS tweak we make to fight overflow distorts the design we want to preserve.
+## Fix
 
-No amount of `@media print` tuning will make this reliable. We need to stop relying on the browser's print engine.
+Rewrite `handleDownloadPDF` in `src/pages/ConciergeGuide.tsx` so each `.page` becomes one full-bleed A4 sheet with zero distortion.
 
-## New approach: rasterise each page to an image, assemble a PDF
+### Capture rules (per `.page` div)
 
-We keep the web layout exactly as it is today (the version you called "beautiful and perfectly curated") and add a dedicated **Download PDF** button that:
+- Force the `.page` to its known print size before capture: `width: 794px`, `height: 1123px` (A4 @ 96dpi, ratio 1:1.4142).
+- `html2canvas(pageEl, { scale: 2, width: 794, height: 1123, windowWidth: 794, windowHeight: 1123, useCORS: true, backgroundColor: '#ffffff', logging: false })`.
+- Resulting bitmap is exactly 1588×2246 → identical aspect ratio to A4.
 
-1. Iterates over each `.page` div in `ConciergeGuide.tsx`.
-2. Uses `html2canvas` to capture that div at 2× scale (sharp, print-quality).
-3. Uses `jsPDF` to drop each capture onto its own A4 sheet, centred, with a configurable binder margin (default **12mm** all sides, extra **6mm** on the inside edge for hole-punching).
-4. Saves `Villas-Sempre-Avanti-Concierge-Guide.pdf`.
+### PDF assembly
 
-Because each web page is captured as a single image and placed on a single A4 sheet, **content cannot spill across pages**. What you see on screen is exactly what lands in the PDF. No browser print dialog involved.
+- `new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true })` → 210×297mm, same 1:1.4142 ratio.
+- `pdf.addImage(dataUrl, 'JPEG', 0, 0, 210, 297, undefined, 'FAST')` — full bleed, x=0, y=0, width=210, height=297.
+- JPEG at quality 0.92 instead of PNG to keep the file under ~15MB for 32 pages.
+- `pdf.addPage()` between pages; no margin math, no odd/even shift.
 
-The existing "Print / Save as PDF" button stays as a fallback but the new button becomes the default, labelled **Download PDF (Print-Ready)**.
+### Pre-capture prep
 
-## Binder-friendly margins
+- Temporarily add a class `pdf-capturing` to `<body>` that:
+  - hides `#pdf-btn-group` (so the floating buttons don't end up in the bitmap),
+  - sets each `.page` to `box-shadow: none; border-radius: 0; margin: 0; transform: none`.
+- Remove the class in a `finally` block.
 
-A4 = 210×297mm. Each captured page image is scaled to fit inside 186×273mm (12mm margin all sides) and shifted 6mm right on odd pages / 6mm left on even pages so the binding edge always has extra clearance. Backgrounds inside the captured image stay full-bleed visually because the surrounding A4 margin is white.
+### What stays the same
 
-If you want zero margins instead (full-bleed), it's a one-line constant change.
+- Web layout, fonts, photos, spacing — untouched.
+- The existing **Print** button stays as a fallback.
+- `.page` keeps its current 794×1123 size.
 
-## Web layout adjustments
+### Verification
 
-To guarantee each `.page` div fits inside the captured frame with no internal scrolling:
+1. Open `/concierge-guide` → click **Download PDF**.
+2. PDF opens to exactly 32 A4 pages, each one full-bleed (no white border).
+3. Spot-check Monkey Mountain Hike and Horseback Riding pages from your screenshots: photos render at correct aspect ratio (no squashed horses, no stretched ridgeline), concierge tip box sits flush with the rest of the page.
+4. File size under ~20MB.
 
-- Add `overflow: hidden` to `.page` (web view unaffected — content already fits).
-- Remove the existing aggressive `@media print` overrides — they are no longer needed because we no longer use browser print.
-- Keep `.page` at its current 794×1123px size.
+### Files changed
 
-No visual redesign. No font shrinking. No image resizing.
-
-## Files to change
-
-- `src/pages/ConciergeGuide.tsx`
-  - Add `html2canvas` + `jspdf` imports.
-  - Add `handleDownloadPDF()` that loops `.page` divs and builds the PDF.
-  - Replace the print button with two buttons: **Download PDF (Print-Ready)** (primary) and **Print** (secondary fallback).
-  - Strip the `@media print` block down to the minimum (`#print-btn { display:none }`).
-  - Add `overflow: hidden` to `.page`.
-
-- `package.json` — add `html2canvas` and `jspdf` (installed via `bun add`).
-
-## Verification
-
-1. Open `/concierge-guide`, click **Download PDF (Print-Ready)**.
-2. Confirm the resulting PDF is exactly 32 single A4 pages, each one a 1:1 visual match of the corresponding web `.page`.
-3. Spot-check Welcome (gratuity box intact on one page), Ally Cat (hero + pricing table on one page), Fat Cat, Monkey Mountain.
-4. Confirm 12mm binder margin on all sides and extra clearance on the binding edge.
-
-## Why this will work where previous attempts didn't
-
-Previous fixes all tried to make the browser print engine cooperate. This approach removes the browser print engine from the equation entirely — each PDF page is a flat image of the web page, so PDF fidelity becomes a property of the web render, which we already control.
+- `src/pages/ConciergeGuide.tsx` — rewrite `handleDownloadPDF`, add the `pdf-capturing` body-class CSS rule. No other files touched.
