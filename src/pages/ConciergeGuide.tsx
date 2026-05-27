@@ -1163,7 +1163,7 @@ const STYLES = `
     /* ─── UTV Vehicle Cards ──────────────────────────────────────── */
     .utv-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:20px 0; }
     .utv-card { background:#f8f8f8; border:1px solid #e0e0e0; border-radius:12px; overflow:hidden; padding:0; text-align:center; }
-    .utv-card img { width:100%; height:200px; object-fit:cover; object-position:center center; display:block; }
+    .utv-card img { width:100%; height:220px; object-fit:cover; object-position:center center; display:block; }
     .utv-card-info { padding:14px 16px 16px; }
     .utv-card-name { font-family:'Montserrat',sans-serif; font-weight:700; color:#1a4a52; font-size:.95rem; text-transform:uppercase; letter-spacing:.05em; margin:12px 0 4px; }
     .utv-card-seats { font-size:.78rem; color:#2e7b8c; font-weight:600; margin-bottom:8px; }
