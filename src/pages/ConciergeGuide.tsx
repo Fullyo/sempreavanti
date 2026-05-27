@@ -1270,6 +1270,30 @@ const ConciergeGuide = () => {
           )
         );
 
+        // Convert object-fit:cover <img> tags to background-image <div>s so
+        // html2canvas preserves aspect ratio (it does not honor object-fit on imgs).
+        const imgSwaps: Array<{ placeholder: HTMLElement; original: HTMLImageElement }> = [];
+        const candidateImgs = Array.from(
+          document.querySelectorAll<HTMLImageElement>(".page img")
+        );
+        candidateImgs.forEach((img) => {
+          const cs = window.getComputedStyle(img);
+          if (cs.objectFit !== "cover") return;
+          const rect = img.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+          const div = document.createElement("div");
+          div.style.width = "100%";
+          div.style.height = rect.height + "px";
+          div.style.backgroundImage = `url("${img.src}")`;
+          div.style.backgroundSize = "cover";
+          div.style.backgroundPosition = cs.objectPosition || "center center";
+          div.style.backgroundRepeat = "no-repeat";
+          div.style.borderRadius = cs.borderRadius;
+          div.style.display = "block";
+          img.parentNode?.replaceChild(div, img);
+          imgSwaps.push({ placeholder: div, original: img });
+        });
+
         const pages = Array.from(document.querySelectorAll<HTMLElement>(".page"));
         if (!pages.length) return;
 
