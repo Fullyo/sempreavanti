@@ -1184,6 +1184,10 @@ const STYLES = `
       #pdf-btn-group { display:none !important; }
     }
 
+    /* ─── PDF capture mode (applied during html2canvas) ──────────── */
+    body.pdf-capturing #pdf-btn-group { display:none !important; }
+    body.pdf-capturing .page { box-shadow:none !important; margin:0 !important; border-radius:0 !important; transform:none !important; }
+
     /* PDF / Print button group */
     #pdf-btn-group {
       position: fixed; bottom: 32px; right: 32px; z-index: 9999;
