@@ -18,8 +18,7 @@ const HTML = `
 </div>
 
 <div id="pdf-btn-group">
-  <button id="download-pdf-btn" type="button">Download PDF</button>
-  <button id="print-btn" type="button">Print</button>
+  <button id="download-pdf-btn" type="button">Download Guide (PDF)</button>
 </div>
 
 
