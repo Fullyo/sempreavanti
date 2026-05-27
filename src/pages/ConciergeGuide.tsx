@@ -1116,9 +1116,10 @@ const STYLES = `
     .pricing-table td:last-child { text-align:right; font-weight:600; color:#1a4a52; }
 
     /* ─── Grid Lists ─────────────────────────────────────────────── */
-    .grid-list { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-    .grid-item { margin-bottom:10px; }
-    .grid-item strong { color:#1a4a52; display:block; margin-bottom:2px; }
+    .grid-list { display:grid; grid-template-columns:1fr 1fr; gap:12px 20px; }
+    .grid-item { margin-bottom:4px; }
+    .grid-item strong { color:#1a4a52; display:block; margin-bottom:2px; font-size:.88rem; }
+    .grid-item p { font-size:.78rem; line-height:1.5; }
     .grid-item span { font-size:.8rem; color:#666; }
 
     /* ─── Top-5 Cards ────────────────────────────────────────────── */
