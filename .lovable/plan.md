@@ -1,79 +1,108 @@
-## What's wrong
+## Scope
 
-**1. Smaller photos distorted in PDF (crystal clear on web).**
-The hero photos were fixed last round by converting them to `background-image` divs because `html2canvas` does NOT honor `object-fit: cover` on `<img>` tags — it stretches the raw image to fill the container, which reads as distortion.
+Four targeted fixes in `src/pages/ConciergeGuide.tsx`. Nothing else in the document is touched.
 
-Every remaining `<img class="square-image">` (the paired thumbnails on Ally Cat, Fat Cat, Private Boat, Panga, Spearfishing, etc.) and every `<img>` inside `.utv-card` has the same problem. On web the browser respects `object-fit:cover` so they look perfect; in the PDF they're stretched.
+### 1. Yellow pill text actually centered
 
-**2. Yellow pill text "not centered."**
-`.section-header` uses `display:flex; justify-content:space-between`. On pages where the header has both a title and a badge, the badge sits flush right (looks fine). But on pages where the only child is the badge — or where the badge wraps onto two short lines — the layout reads as the pill jammed to the right edge with the text inside it visually off-center because of `text-align:right`. The user wants the pill text reading as centered.
-
-**3. Make photos bigger but not overflow.**
-There's slack on most pages. Hero can grow from 180 → 210px and tall hero from 220 → 260px without pushing content past 1123px. Square-image height can grow from 200 → 230px. The dev-time overflow warning loop (already in code) will tell us if anything tips over — we adjust per-page if so.
-
-## The fix (all in `src/pages/ConciergeGuide.tsx`)
-
-### A. Cure the distortion — convert ALL content imgs to background-divs at capture time
-
-Rather than rewriting ~40 inline `<img>` tags, add a generic conversion step to `handleDownload` (already does this for heroes). Before the `html2canvas` loop:
-
-1. Find every `<img>` inside `.page` that has CSS `object-fit:cover` (square-image, utv-card img).
-2. For each, record original parent HTML / dimensions, then replace the `<img>` with a sibling `<div>` whose inline style is `width:100%; height:<measured>px; background-image:url(...); background-size:cover; background-position:<computed object-position>; border-radius:<inherited>;`.
-3. Run the existing capture loop.
-4. In the `finally` block, restore the originals from the saved references so the on-screen view is unchanged after download.
-
-This is the same technique that fixed the hero, applied uniformly. No HTML/CSS changes needed in the body of the document, so nothing else in the doc can shift.
-
-### B. Center the yellow pill
-
-Update `.section-header` and `.gold-badge` so the pill text reads centered:
+The pill currently uses `text-align:center` but the text still reads off-center because the pill is a plain inline `<span>` — the `padding` looks uneven against the uppercase/tracked text. Convert `.gold-badge` to a flex container with explicit centering and add letter-spacing tuned for the uppercase Montserrat:
 
 ```css
-.section-header {
-  background:#2e7b8c; color:#fff;
-  padding:12px 20px; border-radius:6px;
-  font-family:'Cormorant Garamond',serif; font-size:1.4rem;
-  display:flex; justify-content:space-between; align-items:center;
-  gap:16px; margin-bottom:24px;
-}
 .gold-badge {
-  background:#f0b429; color:#2c2c2c;
-  padding:6px 16px; border-radius:14px;
-  font-family:'Montserrat',sans-serif; font-size:.7rem; font-weight:700;
-  text-transform:uppercase;
-  white-space:normal;
-  text-align:center;          /* was right — this is the visible fix */
-  max-width:60%;
-  line-height:1.3;
-  flex-shrink:0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.04em;
+  padding: 7px 18px;   /* was 6px 16px — balances pill height */
+  /* all other rules unchanged */
 }
 ```
 
-Two changes only: `text-align:center` (the pill text reads centered) and slightly more vertical padding so wrapped 2-line pills don't look squashed.
+No other badge property changes. This fixes every page identically (Ally Cat, Fat Cat, ATV, Monkey Mountain, etc.).
 
-### C. Make photos bigger within page slack
+### 2. Ally Cat hero shows the boat
 
-In the `STYLES` block:
-- `.hero-image { height:210px; }` (was 180)
-- `.hero-image.tall { height:260px; }` (was 220)
-- `.square-image { height:230px; }` (was 200)
-- `.utv-card img { height:220px; }` (was 200)
+Globally heroes use `background-position: center 40%`. Ally Cat's image has the catamaran in the lower-middle, so the global crop hides it. Add a one-off inline `background-position` override only on the Ally Cat hero div (line 199):
 
-The existing `useEffect` already logs `[ConciergeGuide] Page N overflows: …` to the console for any page > 1123px. After change, the very next page reload tells us if any page tipped over; we'll dial that specific page back (only that page) — no global undo.
+```html
+<div class="hero-image" ... style="background-image:url('…ally-cat-hero-v5.jpg'); background-position:center 65%"></div>
+```
 
-## Why this won't break the rest of the document
+No CSS or other hero changed.
 
-- The img→div conversion happens only during the brief PDF capture and is fully reverted in `finally`. The on-screen view is byte-identical before and after download.
-- The 4 CSS height bumps + 2 `.section-header`/`.gold-badge` tweaks are the only style changes. No grid, padding, page height, font-size, or copy edits.
-- Pages without `.square-image`, `.utv-card`, or `.gold-badge` (cover page, house essentials text-only pages, emergency contacts) are untouched.
+### 3. Monkey Mountain hike — restore both photos
 
-## Verification before handing back
+Current page 15 uses `<div class="image-frame">` wrappers (not present in CSS) instead of `.square-image-container`, so the right image collapses / mis-renders. Replace the row with the standard pattern used everywhere else:
 
-1. Hard-reload `/concierge-guide`, watch console for any `[ConciergeGuide] Page N overflows` warnings — adjust only the offending page if any.
-2. Click Download Guide (PDF).
-3. `pdftoppm` the PDF to JPEGs; open all 22 pages.
-4. Confirm: every square image and UTV photo is uncropped/undistorted (correct aspect), heroes look proportional, the yellow pill text reads centered, no content clipped at the page bottom.
+```html
+<div class="image-row">
+  <div class="square-image-container">
+    <img crossorigin="anonymous" src="…monkey-coastal-sunset.jpg" alt="Coastal Sunset" class="square-image" />
+    <div class="caption">Coastal Sunset Views</div>
+  </div>
+  <div class="square-image-container">
+    <img crossorigin="anonymous" src="…monkey-view-flowers.jpg" alt="Mountain View" class="square-image" />
+    <div class="caption">Jungle Coast at Golden Hour</div>
+  </div>
+</div>
+```
 
-## Files changed
+Same images, just wrapped in the working layout class.
 
-- `src/pages/ConciergeGuide.tsx` — only. STYLES block (6 rules) + `handleDownload` (one extra preprocessing step + restore).
+### 4. ATV Adventure page — restore hero + add real info
+
+Copy the uploaded photo `user-uploads://chulaatvhero.jpg` to `public/concierge-guide/atv-hero.jpg` so it loads locally (no Supabase round-trip needed). Then in the ATV page (lines 483-507):
+
+- Insert a hero div right after the description, before the `image-row`:
+
+```html
+<div class="hero-image" role="img" aria-label="ATV Jungle River Crossing"
+     data-bg-src="/concierge-guide/atv-hero.jpg"
+     style="background-image:url('/concierge-guide/atv-hero.jpg'); background-position:center 60%"></div>
+```
+
+- Expand the description with researched MiChula Tours info (paraphrased, no marketing claims):
+
+> "Tear through jungle trails, sandy beaches, river crossings and hidden mountain paths on a Honda 250cc quad. Tours depart Rancho Mi Chula three times daily (9 AM, 12 PM, 3 PM), led by bilingual local guides who know every trail. The route loops through dense Sierra Madre jungle, crosses shallow rivers and ends with a beach run — roughly 2 hours of riding plus stops."
+
+- Expand the inclusions list to fill the empty lower half:
+
+```
+ATV Single: $119 USD
+ATV Double: $147 USD
+2-hour guided tour
+Departures 9 AM · 12 PM · 3 PM
+Driver min. 16 years (valid ID)
+Max 7 quads per group
+Helmet, goggles & bandana included
+Bilingual guides
+River crossings + jungle + beach
+Bring closed shoes & change of clothes
+Departs Rancho Mi Chula (~10 min)
+Bottled water provided
+```
+
+- Add a `tip-box` after the list (matches other pages):
+
+> "💡 **Concierge Tip:** Book the 9 AM departure — trails are quietest, the jungle is cool, and you're back at the villa in time for lunch. Bring sunglasses and clothes you don't mind getting muddy; the river crossings are part of the fun. Doubles work great for younger riders or anyone who'd rather hold on than drive."
+
+### Why this won't disturb other pages
+
+- The badge change is a 4-property CSS tweak in one block — every pill on every page gets the same visual lift (more centered, same size).
+- The Ally Cat fix is one inline style on one element.
+- Monkey Mountain swap reuses existing classes already used 10+ times.
+- ATV page changes are localised; no shared CSS or page-height rules touched.
+
+### Verification
+
+1. Hard-reload `/concierge-guide`, scan console for `[ConciergeGuide] Page N overflows` warnings — only ATV page is at risk because we added content. If it overflows, trim the inclusions list to 10 items.
+2. Click Download Guide; `pdftoppm` to JPEGs; verify pages 5 (Ally Cat boat visible), 13 (ATV hero + full content), 15 (two Monkey Mountain photos), and every page's pill text reads centered.
+
+### Files changed
+
+- `src/pages/ConciergeGuide.tsx` — only.
+- `public/concierge-guide/atv-hero.jpg` — added (copy of uploaded image).  
+  
+  
+keep our pricing in pesos for ATV mi chula, do not use online and usd pricing
+- &nbsp;
+- &nbsp;

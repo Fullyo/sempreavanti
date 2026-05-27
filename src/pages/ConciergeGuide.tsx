@@ -196,7 +196,7 @@ const HTML = `
     <span class="gold-badge">Up to 10 guests · from $20,000 MXN</span>
   </div>
   <p class="description">Sail Banderas Bay aboard the Ally Cat — a luxury 56 ft catamaran and the #1 guest favourite at Sempre Avanti. Open bar, fresh food prepared on board, snorkeling at Las Marietas Islands, boom netting and a breathtaking Pacific sunset. Choose your duration below.</p>
-  <div class="hero-image" role="img" aria-label="Ally Cat Catamaran" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-hero-v5.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-hero-v5.jpg')"></div>
+  <div class="hero-image" role="img" aria-label="Ally Cat Catamaran" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-hero-v5.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-hero-v5.jpg'); background-position:center 70%"></div>
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-deck.jpg" alt="Catamaran Deck Party" class="square-image" />
@@ -485,7 +485,8 @@ const HTML = `
     <span>ATV ADVENTURE</span>
     <span class="gold-badge">MiChula Tours</span>
   </div>
-  <p class="description">Tear through jungle trails, sandy beaches and hidden mountain paths on a quad. Choose solo or double, with departures at 9 AM, 12 PM and 3 PM daily. Maximum 7 quads per group.</p>
+  <p class="description">Tear through jungle trails, sandy beaches, river crossings and hidden mountain paths on a Honda 250cc quad. Tours depart Rancho Mi Chula three times daily (9 AM, 12 PM, 3 PM), led by bilingual local guides who know every trail. The route loops through dense Sierra Madre jungle, crosses shallow rivers and ends with a beach run — roughly two hours of riding plus stops for photos.</p>
+  <div class="hero-image" role="img" aria-label="ATV Jungle River Crossing" data-bg-src="/concierge-guide/atv-hero.jpg" style="background-image:url('/concierge-guide/atv-hero.jpg'); background-position:center 55%"></div>
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/atv-sq1-v2.jpeg" alt="ATV Trails" class="square-image" />
@@ -497,11 +498,18 @@ const HTML = `
     </div>
   </div>
   <ul class="inclusions-list">
-    <li>ATV Single: $119 USD</li>
-    <li>ATV Double: $147 USD</li>
-    <li>Driver min. 16 years</li>
-    <li>2-hour duration</li>
-    <li>Departs Rancho Mi Chula</li>
+    <li>ATV Single: $2,200 MXN</li>
+    <li>ATV Double: $2,700 MXN</li>
+    <li>2-hour guided tour</li>
+    <li>Departures 9 AM · 12 PM · 3 PM</li>
+    <li>Driver min. 16 years (valid ID)</li>
+    <li>Max 7 quads per group</li>
+    <li>Helmet, goggles &amp; bandana included</li>
+    <li>Bilingual guides</li>
+    <li>River crossings + jungle + beach</li>
+    <li>Bring closed shoes &amp; change of clothes</li>
+    <li>Departs Rancho Mi Chula (~10 min)</li>
+    <li>Bottled water provided</li>
   </ul>
   <div class="page-num">13</div>
 </div>
@@ -549,10 +557,11 @@ const HTML = `
   <p class="description">Trek to the summit of Cerro del Mono (Monkey Mountain) for panoramic views of Banderas Bay from Punta Mita to Sayulita. An intermediate–advanced hike through dense tropical jungle with abundant wildlife.</p>
   <div class="hero-image" role="img" aria-label="Monkey Mountain Summit" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-summit-girl.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-summit-girl.jpg')"></div>
   <div class="image-row">
-    <div class="image-frame">
+    <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-coastal-sunset.jpg" alt="Coastal Sunset" class="square-image" />
+      <div class="caption">Coastal Sunset Views</div>
     </div>
-    <div class="image-frame">
+    <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-view-flowers.jpg" alt="Mountain View" class="square-image" />
       <div class="caption">Jungle Coast at Golden Hour</div>
     </div>
@@ -1079,10 +1088,12 @@ const STYLES = `
     }
     .gold-badge {
       background:#f0b429; color:#2c2c2c;
-      padding:6px 16px; border-radius:14px;
+      padding:7px 18px; border-radius:14px;
       font-family:'Montserrat',sans-serif; font-size:.7rem; font-weight:700;
       text-transform:uppercase; white-space:normal; text-align:center;
+      letter-spacing:0.04em;
       max-width:60%; line-height:1.3; flex-shrink:0;
+      display:inline-flex; align-items:center; justify-content:center;
     }
 
     /* ─── Images ────────────────────────────────────────────────── */
