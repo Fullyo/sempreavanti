@@ -1084,12 +1084,12 @@ const STYLES = `
     }
 
     /* ─── Images ────────────────────────────────────────────────── */
-    .hero-image { width:100%; height:220px; object-fit:cover; border-radius:8px; margin:16px 0; display:block; }
-    .hero-image.no-crop { height:auto; object-fit:contain; background:transparent; }
-    .hero-image.tall { height:500px; }
-    .image-row { display:flex; gap:16px; margin-bottom:16px; }
-    .square-image-container { width:calc(50% - 8px); }
-    .square-image { width:100%; height:270px; object-fit:cover; border-radius:8px; display:block; }
+    .hero-image { width:100%; height:180px; object-fit:cover; border-radius:8px; margin:12px 0; display:block; }
+    .hero-image.no-crop { height:auto; max-height:200px; object-fit:contain; background:transparent; }
+    .hero-image.tall { height:380px; }
+    .image-row { display:flex; gap:14px; margin-bottom:12px; }
+    .square-image-container { width:calc(50% - 7px); }
+    .square-image { width:100%; height:200px; object-fit:cover; border-radius:8px; display:block; }
     .caption { font-size:.7rem; color:#888; text-align:center; margin-top:6px; font-weight:500; }
 
     /* ─── Content Blocks ────────────────────────────────────────── */
