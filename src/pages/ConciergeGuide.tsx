@@ -1074,23 +1074,23 @@ const STYLES = `
       padding: 12px 20px; border-radius: 6px;
       font-family:'Cormorant Garamond',serif; font-size:1.4rem;
       display:flex; justify-content:space-between; align-items:center;
-      gap:12px;
+      gap:16px;
       margin-bottom:24px;
     }
     .gold-badge {
       background:#f0b429; color:#2c2c2c;
-      padding:4px 12px; border-radius:14px;
+      padding:6px 16px; border-radius:14px;
       font-family:'Montserrat',sans-serif; font-size:.7rem; font-weight:700;
-      text-transform:uppercase; white-space:normal; text-align:right;
-      max-width:55%; line-height:1.25; flex-shrink:0;
+      text-transform:uppercase; white-space:normal; text-align:center;
+      max-width:60%; line-height:1.3; flex-shrink:0;
     }
 
     /* ─── Images ────────────────────────────────────────────────── */
-    .hero-image { width:100%; height:180px; background-size:cover; background-position:center 40%; background-repeat:no-repeat; border-radius:8px; margin:12px 0; display:block; }
-    .hero-image.tall { height:220px; }
+    .hero-image { width:100%; height:210px; background-size:cover; background-position:center 40%; background-repeat:no-repeat; border-radius:8px; margin:12px 0; display:block; }
+    .hero-image.tall { height:260px; }
     .image-row { display:flex; gap:14px; margin-bottom:12px; }
     .square-image-container { width:calc(50% - 7px); }
-    .square-image { width:100%; height:200px; object-fit:cover; border-radius:8px; display:block; }
+    .square-image { width:100%; height:230px; object-fit:cover; border-radius:8px; display:block; }
     .caption { font-size:.7rem; color:#888; text-align:center; margin-top:6px; font-weight:500; }
 
     /* ─── Content Blocks ────────────────────────────────────────── */
@@ -1163,7 +1163,7 @@ const STYLES = `
     /* ─── UTV Vehicle Cards ──────────────────────────────────────── */
     .utv-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:20px 0; }
     .utv-card { background:#f8f8f8; border:1px solid #e0e0e0; border-radius:12px; overflow:hidden; padding:0; text-align:center; }
-    .utv-card img { width:100%; height:200px; object-fit:cover; object-position:center center; display:block; }
+    .utv-card img { width:100%; height:220px; object-fit:cover; object-position:center center; display:block; }
     .utv-card-info { padding:14px 16px 16px; }
     .utv-card-name { font-family:'Montserrat',sans-serif; font-weight:700; color:#1a4a52; font-size:.95rem; text-transform:uppercase; letter-spacing:.05em; margin:12px 0 4px; }
     .utv-card-seats { font-size:.78rem; color:#2e7b8c; font-weight:600; margin-bottom:8px; }
@@ -1270,6 +1270,30 @@ const ConciergeGuide = () => {
           )
         );
 
+        // Convert object-fit:cover <img> tags to background-image <div>s so
+        // html2canvas preserves aspect ratio (it does not honor object-fit on imgs).
+        const imgSwaps: Array<{ placeholder: HTMLElement; original: HTMLImageElement }> = [];
+        const candidateImgs = Array.from(
+          document.querySelectorAll<HTMLImageElement>(".page img")
+        );
+        candidateImgs.forEach((img) => {
+          const cs = window.getComputedStyle(img);
+          if (cs.objectFit !== "cover") return;
+          const rect = img.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+          const div = document.createElement("div");
+          div.style.width = "100%";
+          div.style.height = rect.height + "px";
+          div.style.backgroundImage = `url("${img.src}")`;
+          div.style.backgroundSize = "cover";
+          div.style.backgroundPosition = cs.objectPosition || "center center";
+          div.style.backgroundRepeat = "no-repeat";
+          div.style.borderRadius = cs.borderRadius;
+          div.style.display = "block";
+          img.parentNode?.replaceChild(div, img);
+          imgSwaps.push({ placeholder: div, original: img });
+        });
+
         const pages = Array.from(document.querySelectorAll<HTMLElement>(".page"));
         if (!pages.length) return;
 
@@ -1305,6 +1329,9 @@ const ConciergeGuide = () => {
           document.body.classList.remove("pdf-capturing");
           originalHeroBackgrounds.forEach((backgroundImage, frame) => {
             frame.style.backgroundImage = backgroundImage;
+          });
+          imgSwaps.forEach(({ placeholder, original }) => {
+            placeholder.parentNode?.replaceChild(original, placeholder);
           });
         }
 

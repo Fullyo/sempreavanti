@@ -1,79 +1,79 @@
 ## What's wrong
 
-Two visual bugs left in the PDF. Both are isolated to CSS rules + a few inline overrides in `src/pages/ConciergeGuide.tsx`. Nothing else in the document is touched.
+**1. Smaller photos distorted in PDF (crystal clear on web).**
+The hero photos were fixed last round by converting them to `background-image` divs because `html2canvas` does NOT honor `object-fit: cover` on `<img>` tags — it stretches the raw image to fill the container, which reads as distortion.
 
-### 1. Hero photos look distorted on some pages
+Every remaining `<img class="square-image">` (the paired thumbnails on Ally Cat, Fat Cat, Private Boat, Panga, Spearfishing, etc.) and every `<img>` inside `.utv-card` has the same problem. On web the browser respects `object-fit:cover` so they look perfect; in the PDF they're stretched.
 
-The base rule is fine:
-```css
-.hero-image { width:100%; height:180px; object-fit:cover; }
-```
-But several pages override it inline with awkward heights that fight `object-fit:cover` and look squished or off-center after html2canvas rasterizes them:
-- `fatcat-hero.jpg` → `style="height:150px"` (too short, faces cropped)
-- `private-boat-hero.jpg` → `style="height:280px"` (pushes page content down, gets compressed)
-- `panga.jpeg` → `style="height:280px"` (same)
-- `dining-sayulita-v2.jpg` → `style="height:150px"`
-- Ally Cat uses `class="hero-image no-crop"` → `object-fit:contain` on transparent bg, which renders with letterboxing that reads as distortion
+**2. Yellow pill text "not centered."**
+`.section-header` uses `display:flex; justify-content:space-between`. On pages where the header has both a title and a badge, the badge sits flush right (looks fine). But on pages where the only child is the badge — or where the badge wraps onto two short lines — the layout reads as the pill jammed to the right edge with the text inside it visually off-center because of `text-align:right`. The user wants the pill text reading as centered.
 
-### 2. Yellow pill ("gold-badge") text overflows or looks oversized
+**3. Make photos bigger but not overflow.**
+There's slack on most pages. Hero can grow from 180 → 210px and tall hero from 220 → 260px without pushing content past 1123px. Square-image height can grow from 200 → 230px. The dev-time overflow warning loop (already in code) will tell us if anything tips over — we adjust per-page if so.
 
-Current rule:
-```css
-.gold-badge { white-space:nowrap; font-size:.75rem; padding:4px 12px; }
-```
-On pages with long pricing strings (e.g. "$3,000 MXN UP TO 5 · +$600/EXTRA ADULT", "$8,500 MXN ALL-INCLUSIVE 4HR · +$1,500/EXTRA HR"), `nowrap` forces the pill wider than the header, sometimes clipping or pushing the section title to a second line. On short labels it looks correctly sized — that's the inconsistency the user is calling out.
+## The fix (all in `src/pages/ConciergeGuide.tsx`)
 
-## The fix (CSS-only, in `src/pages/ConciergeGuide.tsx`)
+### A. Cure the distortion — convert ALL content imgs to background-divs at capture time
 
-**Hero photos — normalize to one rule, drop the inline height overrides**
+Rather than rewriting ~40 inline `<img>` tags, add a generic conversion step to `handleDownload` (already does this for heroes). Before the `html2canvas` loop:
 
-1. Update base rule to be tolerant of all hero source aspect ratios:
-   ```css
-   .hero-image {
-     width:100%; height:180px;
-     object-fit:cover; object-position:center 40%;
-     border-radius:8px; margin:12px 0; display:block;
-   }
-   .hero-image.tall { height:220px; }  /* keep for the few pages that need more */
-   ```
-2. Remove `class="no-crop"` from the Ally Cat hero and delete the `.no-crop` rule (it was the cause of the letterboxed/distorted look).
-3. Remove the inline `style="height:150px"` and `style="height:280px"` overrides on: Fat Cat, Private Boat, Panga, Dining Sayulita. They all fall back to the standard 180px and render cleanly.
-4. For the two pages that genuinely need more vertical hero (private boat + panga, since those pages have less content), add `class="hero-image tall"` instead of an inline height — capped at 220px so the page still fits 1123px.
+1. Find every `<img>` inside `.page` that has CSS `object-fit:cover` (square-image, utv-card img).
+2. For each, record original parent HTML / dimensions, then replace the `<img>` with a sibling `<div>` whose inline style is `width:100%; height:<measured>px; background-image:url(...); background-size:cover; background-position:<computed object-position>; border-radius:<inherited>;`.
+3. Run the existing capture loop.
+4. In the `finally` block, restore the originals from the saved references so the on-screen view is unchanged after download.
 
-**Yellow pill — let it shrink/wrap gracefully**
+This is the same technique that fixed the hero, applied uniformly. No HTML/CSS changes needed in the body of the document, so nothing else in the doc can shift.
+
+### B. Center the yellow pill
+
+Update `.section-header` and `.gold-badge` so the pill text reads centered:
 
 ```css
+.section-header {
+  background:#2e7b8c; color:#fff;
+  padding:12px 20px; border-radius:6px;
+  font-family:'Cormorant Garamond',serif; font-size:1.4rem;
+  display:flex; justify-content:space-between; align-items:center;
+  gap:16px; margin-bottom:24px;
+}
 .gold-badge {
   background:#f0b429; color:#2c2c2c;
-  padding:4px 12px; border-radius:14px;
-  font-family:'Montserrat',sans-serif;
-  font-size:.7rem; font-weight:700;
+  padding:6px 16px; border-radius:14px;
+  font-family:'Montserrat',sans-serif; font-size:.7rem; font-weight:700;
   text-transform:uppercase;
-  white-space:normal;          /* allow wrap on long strings */
-  text-align:right;
-  max-width:55%;               /* never crowds the title */
-  line-height:1.25;
+  white-space:normal;
+  text-align:center;          /* was right — this is the visible fix */
+  max-width:60%;
+  line-height:1.3;
   flex-shrink:0;
 }
-.section-header { gap:12px; }   /* breathing room when pill wraps */
 ```
 
-Effect: short labels look identical to today; long labels wrap to 2 lines inside the pill and the header height grows by ~10px — well within the per-page slack.
+Two changes only: `text-align:center` (the pill text reads centered) and slightly more vertical padding so wrapped 2-line pills don't look squashed.
+
+### C. Make photos bigger within page slack
+
+In the `STYLES` block:
+- `.hero-image { height:210px; }` (was 180)
+- `.hero-image.tall { height:260px; }` (was 220)
+- `.square-image { height:230px; }` (was 200)
+- `.utv-card img { height:220px; }` (was 200)
+
+The existing `useEffect` already logs `[ConciergeGuide] Page N overflows: …` to the console for any page > 1123px. After change, the very next page reload tells us if any page tipped over; we'll dial that specific page back (only that page) — no global undo.
 
 ## Why this won't break the rest of the document
 
-- All edits are in the `<style>` block + 6 inline `style=`/`class=` removals.
-- No `.page` heights change, no padding changes, no grid changes.
-- Pages that don't use `.hero-image`, `.no-crop`, or `.gold-badge` are untouched.
-- The Download PDF capture loop, fonts, colors, copy: not touched.
+- The img→div conversion happens only during the brief PDF capture and is fully reverted in `finally`. The on-screen view is byte-identical before and after download.
+- The 4 CSS height bumps + 2 `.section-header`/`.gold-badge` tweaks are the only style changes. No grid, padding, page height, font-size, or copy edits.
+- Pages without `.square-image`, `.utv-card`, or `.gold-badge` (cover page, house essentials text-only pages, emergency contacts) are untouched.
 
 ## Verification before handing back
 
-1. Trigger Download PDF in-browser.
-2. `pdftoppm` each page to JPEG.
-3. Spot-check every page that had an inline hero override (Fat Cat, Ally Cat, Private Boat, Panga, Dining Sayulita) + 3 pages with long pill text (Sound Bath, Fat Cat, Private Boat).
-4. Confirm: heroes uncropped/undistorted, pills fit inside the teal header, no content clipped at the bottom of any page.
+1. Hard-reload `/concierge-guide`, watch console for any `[ConciergeGuide] Page N overflows` warnings — adjust only the offending page if any.
+2. Click Download Guide (PDF).
+3. `pdftoppm` the PDF to JPEGs; open all 22 pages.
+4. Confirm: every square image and UTV photo is uncropped/undistorted (correct aspect), heroes look proportional, the yellow pill text reads centered, no content clipped at the page bottom.
 
 ## Files changed
 
-- `src/pages/ConciergeGuide.tsx` — only.
+- `src/pages/ConciergeGuide.tsx` — only. STYLES block (6 rules) + `handleDownload` (one extra preprocessing step + restore).
