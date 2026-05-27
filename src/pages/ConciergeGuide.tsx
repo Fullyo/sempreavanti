@@ -1086,7 +1086,7 @@ const STYLES = `
     }
 
     /* ─── Images ────────────────────────────────────────────────── */
-    .hero-image { width:100%; height:180px; object-fit:cover; object-position:center 40%; border-radius:8px; margin:12px 0; display:block; }
+    .hero-image { width:100%; height:180px; background-size:cover; background-position:center 40%; background-repeat:no-repeat; border-radius:8px; margin:12px 0; display:block; }
     .hero-image.tall { height:220px; }
     .image-row { display:flex; gap:14px; margin-bottom:12px; }
     .square-image-container { width:calc(50% - 7px); }
