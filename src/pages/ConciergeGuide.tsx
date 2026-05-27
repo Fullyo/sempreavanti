@@ -1055,9 +1055,9 @@ const STYLES = `
     .page {
       background: #fff;
       width: 794px;
-      min-height: 1123px;
+      height: 1123px;
       margin: 30px auto;
-      padding: 48px;
+      padding: 40px;
       box-shadow: 0 4px 24px rgba(0,0,0,.14);
       position: relative;
       overflow: hidden;
