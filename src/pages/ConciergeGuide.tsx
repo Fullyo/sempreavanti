@@ -196,7 +196,7 @@ const HTML = `
     <span class="gold-badge">Up to 10 guests · from $20,000 MXN</span>
   </div>
   <p class="description">Sail Banderas Bay aboard the Ally Cat — a luxury 56 ft catamaran and the #1 guest favourite at Sempre Avanti. Open bar, fresh food prepared on board, snorkeling at Las Marietas Islands, boom netting and a breathtaking Pacific sunset. Choose your duration below.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-hero-v5.jpg" alt="Ally Cat Catamaran" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Ally Cat Catamaran" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-hero-v5.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-hero-v5.jpg')"></div>
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/ally-cat-deck.jpg" alt="Catamaran Deck Party" class="square-image" />
@@ -238,7 +238,7 @@ const HTML = `
     <span class="gold-badge">Up to 20 guests · from $32,500 MXN</span>
   </div>
   <p class="description" style="font-size:.82rem;">For larger groups, the Fat Cat is a two-deck party catamaran built for big celebrations — bachelorette parties, corporate groups, family reunions. Same open bar and fresh food as Ally Cat, plus a water slide, floating mats, paddleboards and space for up to 20 guests. Also offers a dedicated Monday whale watching tour.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fatcat-hero.jpg" alt="Fat Cat Party Catamaran" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Fat Cat Party Catamaran" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fatcat-hero.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fatcat-hero.jpg')"></div>
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fatcat-aerial.jpg" alt="Fat Cat Aerial" class="square-image" />
@@ -281,7 +281,7 @@ const HTML = `
     <span class="gold-badge">3h · $9,500 MXN | 4h · $11,500 MXN</span>
   </div>
   <p class="description">Charter your own private vessel for a bespoke day on the water. Snorkel pristine reefs, spot dolphins and seasonal whales, or simply cruise the stunning Riviera Nayarit coastline. Up to 7 guests.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-hero.jpg" alt="Private Boat Tour" class="hero-image tall" />
+  <div class="hero-image tall" role="img" aria-label="Private Boat Tour" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-hero.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-hero.jpg')"></div>
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/private-boat-square-v2.jpg" alt="Private Boat Tour" class="square-image" />
@@ -313,7 +313,7 @@ const HTML = `
     <span class="gold-badge">$11,000 MXN · 3 hours</span>
   </div>
   <p class="description">Head out onto the Pacific aboard a traditional panga with an experienced local captain. The waters off Riviera Nayarit teem with mahi-mahi, tuna, snapper and more. Up to 4 guests, full equipment provided.</p>
-  <img crossorigin="anonymous" src="/concierge-guide/panga.jpeg" alt="Panga Fishing Charter" class="hero-image tall" />
+  <div class="hero-image tall" role="img" aria-label="Panga Fishing Charter" data-bg-src="/concierge-guide/panga.jpeg" style="background-image:url('/concierge-guide/panga.jpeg')"></div>
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/fishing-charter-boat.jpg" alt="Charter Boat" class="square-image" style="object-position: center 60%;" />
@@ -345,7 +345,7 @@ const HTML = `
     <span class="gold-badge">Inshore $12k | Deep Water $21k MXN</span>
   </div>
   <p class="description">An adrenaline-charged underwater adventure with expert guides. Choose the inshore experience for reef hunting, or go deep water for a full-day ocean expedition. All equipment and wetsuits provided.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/boat-spearfishing.jpg" alt="Spearfishing" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Spearfishing" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/boat-spearfishing.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/boat-spearfishing.jpg')"></div>
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/boat-shorespearfishing.jpg" alt="Inshore" class="square-image" />
@@ -377,7 +377,7 @@ const HTML = `
     <span class="gold-badge">Seasonal · Dec – Mar</span>
   </div>
   <p class="description">Every winter, hundreds of humpback whales migrate to Banderas Bay. Join a guided 3-hour tour from Sayulita to witness these magnificent creatures up close, alongside playful dolphins and rich marine life.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/whale.jpg" alt="Whale Watching" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Whale Watching" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/whale.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/whale.jpg')"></div>
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/whale-breach.jpg" alt="Humpback Breaching" class="square-image" />
@@ -409,7 +409,7 @@ const HTML = `
     <span class="gold-badge">from $1,200 MXN / person</span>
   </div>
   <p class="description">Victor is your expert surf guide for the Riviera Nayarit. With intimate knowledge of every break — from Sayulita's beginner waves to La Lancha's world-class barrels — he tailors every session to your level. Instagram: @yeahvary.surf</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/surf-sayulita.jpg" alt="Victor Surf" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Victor Surf" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/surf-sayulita.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/surf-sayulita.jpg')"></div>
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/surf-victor-v4.jpeg" alt="Victor with surfboard on Sayulita Beach" class="square-image" />
@@ -454,7 +454,7 @@ const HTML = `
     <span class="gold-badge">MiChula Tours</span>
   </div>
   <p class="description">Fly through the jungle canopy on 13 exhilarating zip lines at Rancho Mi Chula, just minutes from Sayulita. Suitable for all experience levels, with certified guides and full safety briefings.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/zipline-hero-v2.jpg" alt="Zipline" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Zipline" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/zipline-hero-v2.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/zipline-hero-v2.jpg')"></div>
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/zipline-sq1.jpg" alt="13 Lines Through the Jungle" class="square-image" />
@@ -515,7 +515,7 @@ const HTML = `
     <span class="gold-badge">MiChula Tours · $76 USD/person</span>
   </div>
   <p class="description">Explore Sayulita on horseback through lush jungle trails and down to the beach at sunset. Suitable for all experience levels. Antonio, Jorge and Miguel lead unforgettable rides with a dedicated photography team.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-hero-v4.jpg" alt="Horseback Riding" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Horseback Riding" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-hero-v4.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-hero-v4.jpg')"></div>
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/horse-sq1-v2.jpg" alt="Jungle Trails" class="square-image" />
@@ -547,7 +547,7 @@ const HTML = `
     <span class="gold-badge">3.5 hrs · MiChula Tours</span>
   </div>
   <p class="description">Trek to the summit of Cerro del Mono (Monkey Mountain) for panoramic views of Banderas Bay from Punta Mita to Sayulita. An intermediate–advanced hike through dense tropical jungle with abundant wildlife.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-summit-girl.jpg" alt="Monkey Mountain Summit" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Monkey Mountain Summit" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-summit-girl.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-summit-girl.jpg')"></div>
   <div class="image-row">
     <div class="image-frame">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/monkey-coastal-sunset.jpg" alt="Coastal Sunset" class="square-image" />
@@ -580,7 +580,7 @@ const HTML = `
     <span class="gold-badge">Ask Concierge for Rates</span>
   </div>
   <p class="description">Punta Mita is home to two world-class Jack Nicklaus Signature golf courses — the Pacifico Course and the Bahia Course — set amid breathtaking ocean views of Banderas Bay and the Marietas Islands.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/golf-aerial-resort.jpg" alt="Punta Mita Golf Resort" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Punta Mita Golf Resort" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/golf-aerial-resort.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/golf-aerial-resort.jpg')"></div>
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/golf-fairway-beach.jpg" alt="Oceanfront Fairway" class="square-image" />
@@ -613,7 +613,7 @@ const HTML = `
     <span class="gold-badge">$2,000 MXN up to 5 · +$500/extra adult</span>
   </div>
   <p class="description">Begin your morning with a private yoga session on the terrace or pool deck, led by a certified instructor from Sayulita. All styles available — Vinyasa, Yin, Restorative, or a custom session tailored to your group.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-villa-terrace.jpg" alt="Yoga" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Yoga" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-villa-terrace.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-villa-terrace.jpg')"></div>
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/yoga-hero-v2.jpg" alt="Private Yoga Session" class="square-image" />
@@ -647,7 +647,7 @@ const HTML = `
     <span class="gold-badge">from $1,500 MXN / treatment</span>
   </div>
   <p class="description">Indulge in a professional massage treatment on your private terrace or in the comfort of your villa. Our therapists bring everything needed for a world-class spa experience — without leaving the property.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/massage-hero-v3.jpg" alt="Beachside Massage" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Beachside Massage" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/massage-hero-v3.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/massage-hero-v3.jpg')"></div>
   <ul class="inclusions-list">
     <li>Swedish &amp; deep tissue</li>
     <li>Hot stone therapy</li>
@@ -669,7 +669,7 @@ const HTML = `
     <span class="gold-badge">$3,000 MXN up to 5 · +$600/extra adult</span>
   </div>
   <p class="description">A restorative sound healing session with two sound therapists using Tibetan singing bowls, crystal bowls and percussion instruments. Lie back, breathe deeply and let the vibrations dissolve stress and tension. Ideal for groups of 4–10.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/soundbath.jpg" alt="Sound Bath" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Sound Bath" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/soundbath.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/soundbath.jpg')"></div>
   <ul class="inclusions-list">
     <li>Two certified sound therapists</li>
     <li>Tibetan &amp; crystal bowls</li>
@@ -725,7 +725,7 @@ const HTML = `
     <span class="gold-badge">$1,700 MXN / person</span>
   </div>
   <p class="description">Step behind the scenes at Cachasol — Nayarit's most celebrated artisan tequila distillery set on a working agave farm just 10 minutes from the villa. A full farm-to-glass experience that includes two cocktails, the complete guided tour, and dinner on-site.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cachasol-bottles.jpg" alt="Cachasol Tequila" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Cachasol Tequila" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cachasol-bottles.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cachasol-bottles.jpg')"></div>
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cachasol-dock.jpg" alt="Cachasol Farm Grounds" class="square-image" />
@@ -757,7 +757,7 @@ const HTML = `
     <span class="gold-badge">$600 MXN / person · Before 5 PM</span>
   </div>
   <p class="description">Hosted at the villa by Chef Ricardo — learn the secrets of authentic Mexican cuisine with a fun, hands-on session right in our kitchen. From fresh salsas and ceviche to hand-pressed tortillas and complex moles. Sessions must start before 5 PM.</p>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cooking-class-group.jpg" alt="Cooking Class" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Cooking Class" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cooking-class-group.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cooking-class-group.jpg')"></div>
   <div class="image-row">
     <div class="square-image-container">
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/cooking-salsas.jpg" alt="Mexican Ingredients" class="square-image" />
@@ -785,7 +785,7 @@ const HTML = `
 ══════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">DINING IN SAYULITA</div>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/dining-sayulita-v2.jpg" alt="Sayulita Dining" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Sayulita Dining" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/dining-sayulita-v2.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/dining-sayulita-v2.jpg')"></div>
 
   <h3 style="color:#1a4a52;font-family:'Montserrat',sans-serif;font-size:.8rem;text-transform:uppercase;letter-spacing:1px;margin:10px 0 8px;padding-bottom:6px;border-bottom:2px solid #f0b429;">Breakfast, Lunch &amp; Cafés</h3>
 
@@ -889,7 +889,7 @@ const HTML = `
 ══════════════════════════════════════════════════════════════ -->
 <div class="page">
   <div class="section-header">DINING OUT — PUNTA MITA</div>
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/diner.jpg" alt="Punta Mita Dining" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Punta Mita Dining" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/diner.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/diner.jpg')"></div>
 
   <h3 style="color:#1a4a52;font-family:'Montserrat',sans-serif;font-size:.85rem;text-transform:uppercase;letter-spacing:1px;margin:8px 0 10px;padding-bottom:6px;border-bottom:2px solid #f0b429;">Punta Mita <span style="font-weight:300;color:#666">· 5 min from villa</span></h3>
   <div class="restaurant-card">
@@ -966,7 +966,7 @@ const HTML = `
 <div class="page">
   <div class="section-header">EXPLORING THE RIVIERA NAYARIT</div>
 
-  <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/puerto-vallarta.jpg" alt="Riviera Nayarit" class="hero-image" />
+  <div class="hero-image" role="img" aria-label="Riviera Nayarit" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/puerto-vallarta.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/puerto-vallarta.jpg')"></div>
 
   <div class="grid-list" style="margin-top:16px">
     <div>
