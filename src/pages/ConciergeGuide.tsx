@@ -11,7 +11,7 @@ const HTML = `
 <div class="page cover" id="cover-page" style="cursor:pointer;" title="Click to reveal print option">
   <div class="cover-line"></div>
   <h1 class="cover-title">VILLAS<br>SEMPRE AVANTI</h1>
-  <div class="cover-subtitle">Private Concierge Guide</div>
+  <div class="cover-subtitle">House Guide</div>
   <div class="cover-line"></div>
   <div class="cover-location">Patzcuarito · Riviera Nayarit · Mexico</div>
   <div class="cover-footer">villassempreavanti.com</div>
@@ -1346,7 +1346,7 @@ const ConciergeGuide = () => {
           });
         }
 
-        pdf.save("Villas-Sempre-Avanti-Concierge-Guide.pdf");
+        pdf.save("Villas-Sempre-Avanti-House-Guide.pdf");
       } catch (err) {
         console.error("PDF generation failed:", err);
         alert("PDF generation failed: " + (err as Error).message);
@@ -1363,9 +1363,9 @@ const ConciergeGuide = () => {
   return (
     <>
       <SEO
-        title="Private Concierge Guide — Villas Sempre Avanti"
+        title="House Guide — Villas Sempre Avanti"
         description="A private digital guide for guests of Villas Sempre Avanti — house essentials, services, local recommendations, and concierge contacts."
-        path="/concierge-guide"
+        path="/house-guide"
         noindex
       />
       <style dangerouslySetInnerHTML={{ __html: STYLES }} />
