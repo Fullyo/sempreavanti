@@ -34,13 +34,13 @@ const HTML = `
       <div style="font-size:2rem; letter-spacing:.15em; font-weight:700; color:#f0b429; font-family:'Montserrat',sans-serif; margin-bottom:8px;">WiFi</div>
       <h3>Villa Sempre Avanti</h3>
       <div class="wifi-detail"><span>Network: </span>SempreAvanti</div>
-      <div class="wifi-detail"><span>Password: </span>Provided on arrival by your concierge</div>
+      <div class="wifi-detail"><span>Password: </span>Sayulita4ever</div>
     </div>
     <div class="wifi-box">
       <div style="font-size:2rem; letter-spacing:.15em; font-weight:700; color:#f0b429; font-family:'Montserrat',sans-serif; margin-bottom:8px;">WiFi</div>
       <h3>Casa Pietro</h3>
       <div class="wifi-detail"><span>Network: </span>CasaPietro</div>
-      <div class="wifi-detail"><span>Password: </span>Provided on arrival by your concierge</div>
+      <div class="wifi-detail"><span>Password: </span>CasaPietroSayulita</div>
     </div>
   </div>
 
@@ -165,7 +165,7 @@ const HTML = `
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/polaris-6seater.jpg" alt="Polaris Ranger at the villa" />
       <div class="utv-card-info">
         <div class="utv-card-name">Polaris Ranger 570</div>
-        <div class="utv-card-seats">⭐ Best for Sayulita · 6 Passengers</div>
+        <div class="utv-card-seats">⭐ Best for Sayulita · 4 Passengers</div>
         <div class="utv-card-price">$2,200 MXN<span>per day · 2-day minimum</span></div>
       </div>
     </div>
