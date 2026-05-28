@@ -165,7 +165,7 @@ const HTML = `
       <img crossorigin="anonymous" src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/polaris-6seater.jpg" alt="Polaris Ranger at the villa" />
       <div class="utv-card-info">
         <div class="utv-card-name">Polaris Ranger 570</div>
-        <div class="utv-card-seats">⭐ Best for Sayulita · 6 Passengers</div>
+        <div class="utv-card-seats">⭐ Best for Sayulita · 4 Passengers</div>
         <div class="utv-card-price">$2,200 MXN<span>per day · 2-day minimum</span></div>
       </div>
     </div>
