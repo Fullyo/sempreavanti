@@ -166,7 +166,9 @@ export function formatUSD(n: number): string {
 }
 
 export function historicalMonthKey(b: HistoricalBooking): string {
-  // Bucket by check-in month (matches AllBookings live grouping behaviour).
+  // Explicit monthKey wins (e.g. a stay that checks in at the end of the prior month).
+  if (b.monthKey) return b.monthKey;
+  // Otherwise bucket by check-in month (matches AllBookings live grouping behaviour).
   const [y, m] = b.checkin.split("-");
   return `${y}-${m}`;
 }
