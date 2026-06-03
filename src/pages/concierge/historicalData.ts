@@ -28,6 +28,7 @@ export const MAY_2026_BOOKINGS: HistoricalBooking[] = [
     upsellsProfit: 3311.81,
     currency: "USD",
     notes: "10 nights · $1,300 paid in cash to owner direct",
+    monthKey: "2026-05",
   },
   {
     id: "hist-may-izquierdo",
@@ -40,6 +41,7 @@ export const MAY_2026_BOOKINGS: HistoricalBooking[] = [
     upsellsProfit: 403.00,
     currency: "USD",
     notes: "5 nights · Ref HMJ3K93XXY",
+    monthKey: "2026-05",
   },
   {
     id: "hist-may-teresa",
@@ -52,6 +54,7 @@ export const MAY_2026_BOOKINGS: HistoricalBooking[] = [
     upsellsProfit: 326.00,
     currency: "USD",
     notes: "4 nights · 4 guests · Ref GY-GhQQwakD",
+    monthKey: "2026-05",
   },
 ];
 
