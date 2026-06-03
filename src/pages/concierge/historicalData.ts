@@ -13,6 +13,7 @@ export type HistoricalBooking = {
   upsellsProfit: number;     // USD, profit pool from upsells
   currency: "USD";
   notes?: string;
+  monthKey?: string; // "YYYY-MM" — forces the folder this booking appears in (overrides check-in date)
 };
 
 export const MAY_2026_BOOKINGS: HistoricalBooking[] = [
