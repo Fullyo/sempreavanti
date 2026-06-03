@@ -13,6 +13,7 @@ export type HistoricalBooking = {
   upsellsProfit: number;     // USD, profit pool from upsells
   currency: "USD";
   notes?: string;
+  monthKey?: string; // "YYYY-MM" — forces the folder this booking appears in (overrides check-in date)
 };
 
 export const MAY_2026_BOOKINGS: HistoricalBooking[] = [
@@ -27,6 +28,7 @@ export const MAY_2026_BOOKINGS: HistoricalBooking[] = [
     upsellsProfit: 3311.81,
     currency: "USD",
     notes: "10 nights · $1,300 paid in cash to owner direct",
+    monthKey: "2026-05",
   },
   {
     id: "hist-may-izquierdo",
@@ -39,6 +41,7 @@ export const MAY_2026_BOOKINGS: HistoricalBooking[] = [
     upsellsProfit: 403.00,
     currency: "USD",
     notes: "5 nights · Ref HMJ3K93XXY",
+    monthKey: "2026-05",
   },
   {
     id: "hist-may-teresa",
@@ -51,6 +54,7 @@ export const MAY_2026_BOOKINGS: HistoricalBooking[] = [
     upsellsProfit: 326.00,
     currency: "USD",
     notes: "4 nights · 4 guests · Ref GY-GhQQwakD",
+    monthKey: "2026-05",
   },
 ];
 
@@ -162,7 +166,9 @@ export function formatUSD(n: number): string {
 }
 
 export function historicalMonthKey(b: HistoricalBooking): string {
-  // Bucket by check-in month (matches AllBookings live grouping behaviour).
+  // Explicit monthKey wins (e.g. a stay that checks in at the end of the prior month).
+  if (b.monthKey) return b.monthKey;
+  // Otherwise bucket by check-in month (matches AllBookings live grouping behaviour).
   const [y, m] = b.checkin.split("-");
   return `${y}-${m}`;
 }
