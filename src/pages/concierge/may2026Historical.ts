@@ -218,6 +218,20 @@ export function openMay2026Historical() {
     <section class="booking">
       <div class="booking-head">
         <div>
+          <div class="guest">Diego Alatorre</div>
+          <div class="dates">May 16 – 19, 2026 · 3 nights · 8 adults, 1 infant</div>
+        </div>
+        <div class="ref">Villa Luisa<br/>Ref: HM25A548RR</div>
+      </div>
+      <div class="accom-bar"><span>Accommodation fare: <strong>$973.05</strong></span><span>LUX 15% commission: <strong>$145.96</strong></span><span>Owner retains 85%: <strong>$827.09</strong></span></div>
+      <div class="note">Note · No concierge upsells on this stay. LUX takes 15% of the accommodation fare only.</div>
+    </section>
+
+
+
+    <section class="booking">
+      <div class="booking-head">
+        <div>
           <div class="guest">Abril García</div>
           <div class="dates">May 28 – Jun 1, 2026 · 4 nights · 7 adults, 1 child</div>
         </div>
