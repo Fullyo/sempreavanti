@@ -1,71 +1,62 @@
-# Petty Cash Tracker — per guest + monthly pool
+# Branded PDF Exports — Owner & Guest
 
-Add a "Concierge Petty Cash" box above every reservation. Scott (owner) hands the concierge a cash float for each guest; the box shows that float, what was spent on the guest, and the balance left. Each month also gets a roll-up summary so you can see total cash given vs. total spent vs. what's left in petty cash.
+Goal: deliver two polished, on-brand PDF exports from the concierge area:
 
-## How it works
+1. **Owner Statement PDF** — per-month financial report (currently only an HTML print page) becomes a true one-click downloadable branded PDF.
+2. **Guest Invoice PDF** — already exists for live bookings; keep it guest-facing (only what the guest is charged) and make it consistently available.
 
-For each booking card the box shows three values:
+Both use `@react-pdf/renderer` (already used by `GuestInvoicePDF.tsx`) so the output is a real downloadable PDF with embedded Cormorant Garamond + Jost fonts and the gold/cream brand palette — no browser "print to PDF" step.
+
+## What gets built
+
+### 1. New file `src/pages/concierge/OwnerStatementPDF.tsx`
+
+A branded owner statement document + `downloadOwnerStatement(...)` helper, mirroring the structure/styling of `GuestInvoicePDF.tsx`:
+
+- Brand header (Villas Sempre Avanti · Riviera Nayarit · Mexico) with "Internal Report · Confidential" tag.
+- Title: `{Month} {Year} — Owner Statement`.
+- Summary cards: Accommodation fare (Owner 85% / LUX 15%), Upsell revenue, Profit pool (Owner 85% / LUX 15%), Tips to staff (pass-through).
+- Per-booking tables: item, guest paid, profit, Owner 85%, LUX 15%, plus tip/CC pass-through rows — same columns as today's HTML statement.
+- Grand summary block + footer ("All figures in MXN · Accommodation excluded from profit split · Generated {date}").
+- Currency-aware: accepts an `currency: "MXN" | "USD"` flag so historical (USD) months render with `formatUSD` and live months with `formatMXN`.
+
+It will export:
 
 ```text
-+-----------------------------------------------------------+
-| CONCIERGE PETTY CASH — [Guest name]                       |
-|   Owner Float In        Spent on Guest        Balance     |
-|   $ [____ editable]     $ 1,234.00 (auto)     $ 3,766.00  |
-+-----------------------------------------------------------+
+downloadOwnerStatement({ month, year, currency, bookings|histRows, kpis }) -> triggers PDF download
 ```
 
-- **Owner Float In** — editable field. You type how much Scott gave the concierge for that guest (e.g. $5,000). Saved per guest. Starts blank.
-- **Spent on Guest** — calculated automatically = our **cost of the upsells** (what the concierge actually paid out of pocket for that guest's services). Not editable.
-- **Balance** — Float In − Spent. Green if positive, red if negative.
+### 2. Owner statement coverage for historical months
 
-At the bottom of each month, a **Petty Cash Summary** rolls up all guests:
-- Total given by owner · Total spent on guests · Petty cash remaining.
+Today the "Owner Statement" button only shows when `hasLive`. The PDF version will also work for **historical (USD)** and **mixed** months:
 
-## Where it appears
+- Live-only month → PDF from `group.live` line items (MXN).
+- Historical-only month → PDF from `group.hist` aggregate rows (USD): one summary row per guest (accommodation fare, upsells billed, profit, owner/LUX split) since historical entries have no line items.
+- Mixed month → two clearly separated currency sections in the same PDF (no FX conversion), matching the existing on-screen "treat each currency block separately" note.
 
-The box appears everywhere bookings render:
-1. **All Bookings view** — above each live (MXN) card and each historical (USD) card, with the monthly summary in each month folder.
-2. **May 2026 printable report** — a display version of the box above each of the 6 bookings, plus a month-end petty cash summary block. (Editable in the app; the printable report shows whatever has been saved, with blank float placeholders until amounts are entered.)
+### 3. Wiring in `src/pages/concierge/AllBookings.tsx`
 
-## Spent calculation
+- Replace the current month-header button `⬇ Owner Statement` (which calls `openOwnerStatement`) with `⬇ Owner Statement (PDF)` calling the new `downloadOwnerStatement`.
+- Show it whenever the open month has any bookings (`hasLive || hasHist`), not just live.
+- Keep the existing CSV download (`downloadOwnerStatementCSV`) available as a secondary "CSV" button for spreadsheet use.
+- Keep the full HTML "Open Full May/April 2026 Report" buttons as-is.
 
-- **Live (MXN) bookings:** sum of each item's `cost` (the "Our Cost" column already computed), in MXN.
-- **Historical (USD) bookings:** `upsellsBilled − upsellsProfit` = our cost, in USD.
-- Currency of the box matches the booking (MXN for live, USD for historical) so no FX mixing.
+### 4. Guest Invoice PDF (`GuestInvoicePDF.tsx`)
 
-## Technical details
-
-**New table `public.petty_cash`** (stores the editable float per guest, since historical bookings are hardcoded and live bookings are in the DB — both need a stable key):
-
-```sql
-create table public.petty_cash (
-  booking_ref text primary key,   -- 'live-<id>' or historical string id (e.g. 'hist-may-jackson')
-  float_amount numeric not null default 0,
-  currency text not null default 'USD',
-  notes text,
-  updated_at timestamptz not null default now()
-);
-grant select, insert, update, delete on public.petty_cash to anon, authenticated;
-grant all on public.petty_cash to service_role;
-alter table public.petty_cash enable row level security;
-create policy "Allow all on petty_cash" on public.petty_cash for all using (true) with check (true);
-```
-
-(Mirrors the existing open policy on `bookings`; the tool is gated by the concierge password edge function.)
-
-**`src/pages/concierge/AllBookings.tsx`**
-- Load all `petty_cash` rows on mount into a `Record<ref, {float, currency}>` map.
-- Add a `PettyCashBox` component rendered above each historical and live card. Shows Float In (editable input), Spent (computed), Balance. On blur/change it upserts to `petty_cash` keyed by ref (`live-${b.id}` or `h.id`).
-- Compute Spent per booking via a helper: live = sum of `item.cost`; historical = `upsellsBilled − upsellsProfit`.
-- Add a **Petty Cash Summary** row at the end of each open month section: totals of float, spent, and balance (kept per currency to avoid FX mixing).
-
-**`src/pages/concierge/may2026Historical.ts`**
-- Add a styled petty-cash box above each of the 6 booking sections (Float In shown as blank placeholder line, Spent computed from each booking's cost, Balance line).
-- Add a month-end Petty Cash Summary block before the Grand Summary.
-
-**`src/lib/calculations.ts`**
-- Add a small `bookingUpsellCost(booking)` helper for the live-cost sum (reused by the box and summary).
+- Confirmed guest-facing: shows only services, qty, unit price, amount, optional tip + CC fee, and Total Due — **no cost, profit, or margin**, and **no accommodation line**. This already matches the request ("showing obviously their cost" = what the guest is billed). No structural change needed beyond a label polish ("Concierge Services — Amount Due").
+- The per-card "Download Invoice" button stays on each live booking. Historical USD bookings have no line items, so they get the owner statement only (a note will clarify guest invoices require itemized live bookings).
 
 ## Out of scope
-- No FX conversion between MXN and USD in the petty cash totals (each shown in its own currency).
-- Float is a single number per guest; no per-deposit ledger of multiple cash drops.
+
+- No FX conversion between MXN and USD in any combined total.
+- No emailing of PDFs (download only).
+- No new database changes.
+
+## Technical notes
+
+- Reuse font registration + style patterns from `GuestInvoicePDF.tsx`; factor shared brand constants if convenient.
+- `formatUSD` / `formatMXN` / `OWNER_SHARE` / `LUX_SHARE` come from `@/lib/calculations` and `historicalData.ts`.
+- All amounts rounded as in existing statement logic.  
+  
+  
+lets stop this action for now, we have to fix calculations.
