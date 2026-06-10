@@ -169,7 +169,8 @@ export function openOwnerStatement(month: string, year: number, bookings: Bookin
           <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX's Cut</div><div class="v" style="color:#D4A96A">${formatMXN(luxShare)}</div></div>
         </div>
         <div class="grand-foot">
-          <div><span style="color:rgba(247,244,238,0.5)">Tips to Staff (pay out):</span> <span style="color:#7DD89E">${formatMXN(tipsTotal)}</span></div>
+          <div><span style="color:rgba(247,244,238,0.5)">Tips to send to staff (via CC, owner pays out):</span> <span style="color:#7DD89E">${formatMXN(tipsViaCC)}</span></div>
+          ${tipsCash > 0 ? `<div><span style="color:rgba(247,244,238,0.5)">Tips paid in cash to staff (excluded):</span> <span style="color:rgba(247,244,238,0.7)">${formatMXN(tipsCash)}</span></div>` : ""}
           <div><span style="color:rgba(247,244,238,0.5)">CC Fees (pass-through):</span> <span style="color:rgba(247,244,238,0.7)">${formatMXN(ccFeesTotal)}</span></div>
           <div><span style="color:rgba(247,244,238,0.5)">Total Profit Pool:</span> ${formatMXN(profitPool)}</div>
         </div>
