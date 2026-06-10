@@ -32,9 +32,29 @@ function monthKey(d: string) {
   return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, "0")}`;
 }
 
+const MONTH_NAMES = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 function monthLabel(key: string) {
   const [y, m] = key.split("-").map(Number);
-  return new Date(Date.UTC(y, m - 1, 1)).toLocaleDateString("en-US", { month: "long", year: "numeric" });
+  return `${MONTH_NAMES[m - 1]} ${y}`;
+}
+
+function monthNameFromKey(key: string) {
+  const [, m] = key.split("-").map(Number);
+  return MONTH_NAMES[m - 1];
 }
 
 type ViewTab = "upcoming" | "all";
@@ -389,7 +409,7 @@ export default function AllBookings() {
         const kpis = computeMonthKpis(group.live, group.hist);
         const label = monthLabel(key);
         const [yStr, mStr] = key.split("-");
-        const monthName = new Date(Date.UTC(Number(yStr), Number(mStr) - 1, 1)).toLocaleDateString("en-US", { month: "long" });
+        const monthName = monthNameFromKey(key);
         const hasHist = group.hist.length > 0;
         const hasLive = group.live.length > 0;
         const histReportBtn = key === "2026-05"
