@@ -1,39 +1,61 @@
-# Fix booking month placement
 
-## Root cause
+# Add three May 2026 bookings
 
-Historical bookings are bucketed into month folders using their **check-in date** (`historicalMonthKey` in `src/pages/concierge/historicalData.ts`). Jose Izquierdo checks in 2026-04-29, so he falls into the **April** folder even though his stay (checkout May 4) is a May booking. This is why the month "keeps coming out wrong" — any stay that starts at the end of a month gets misfiled.
+Add the three reservations from the screenshots into the **May 2026** historical records and the printable May report. All check in during May, so all land in the May folder.
 
-## The fix: explicit month override
+## Calculation rules applied (from your answers)
+- FX: **16 MXN = 1 USD** for all conversions.
+- **Massage:** our cost = **500p per massage**; profit = guest-billed − cost.
+- **Tips:** **100% to staff** → pass-through, $0 profit pool (recorded for transparency). *(Will save this as a standing rule in memory.)*
+- **Drinks & Alcohol (Abril):** sold **at cost** → $0 profit.
+- **Groceries (Abril):** remark shows "12,487 ÷ 16" with no +35% markup → treated **at cost**, $0 profit. (Christopher's shows "+35%" so it keeps the standard markup.)
+- **LUX commission:** flat **15% of the shown accommodation fare**; channel fees are NOT deducted and NOT noted.
+- **UTV:** owner asset → 100% profit. **Airport transfers:** flat $55/trip profit. **CC fee:** pass-through.
 
-Stop guessing the month from the check-in date. Add an optional explicit month field to each historical booking and group on that, falling back to the check-in date only when no override is given.
+## Booking 1 — Christopher Jackson (GY-gNZkbdwv)
+Casa Sempre Avanti (Pietro + Luisa) · May 20–27, 2026 · 7 nights · Invoice #58
 
-### 1. `src/pages/concierge/historicalData.ts`
+| Item | Billed | Cost | Profit |
+|---|---|---|---|
+| Groceries (1,924usd + 35%) | $2,597.00 | $1,924.00 | $673.00 |
+| UTV Rental (both UTVs, 240usd × 3) | $765.00 | $0.00 | $765.00 |
+| Airport SUV round trip (6,800p) | $425.00 | $370.00 | $55.00 |
+| In-House Massage (6 massages, 8,600p) | $537.50 | $187.50 | $350.00 |
+| Tip (10%) — pass-through to staff | $874.00 | $874.00 | $0.00 |
 
-- Add an optional field to the `HistoricalBooking` type:
-  ```ts
-  monthKey?: string; // "YYYY-MM" — forces the folder this booking appears in
-  ```
-- Update `historicalMonthKey()` to prefer it:
-  ```ts
-  export function historicalMonthKey(b: HistoricalBooking): string {
-    if (b.monthKey) return b.monthKey;
-    const [y, m] = b.checkin.split("-");
-    return `${y}-${m}`;
-  }
-  ```
-- On the three May records in `MAY_2026_BOOKINGS` (Maxim, Jose Izquierdo, Teresa), add `monthKey: "2026-05"`. This guarantees all three sit in the **May 2026** folder regardless of check-in day — Jose included.
+- Accommodation fare **$8,743.00** → LUX 15% $1,311.45 · owner $7,431.55
+- Upsells billed **$5,198.50** · Upsell profit pool **$1,843.00**
 
-### 2. Verify
+## Booking 2 — Gustavo Dominguez (HM3KZYP9KW)
+Villa Pietro · May 27–Jun 1, 2026 · 5 nights
 
-- Confirm the May 2026 folder now lists Maxim, Jose, and Teresa, and that April no longer shows Jose.
-- Confirm month KPI totals for May add up (accommodation fare + upsells across all three).
-- The full May report (`may2026Historical.ts`) already includes all three, so no change needed there.
+- Accommodation fare **$1,971.05** → LUX 15% $295.66 · owner $1,675.39
+- Only upsell: Tip $197.00 (pass-through to staff, $0 profit). Host channel fee −$305.67 ignored per rule.
+- Upsells billed **$197.00** · Upsell profit pool **$0.00**
 
-## Out of scope
+## Booking 3 — Abril García (HM45CA4DB3)
+Villa Luisa · May 28–Jun 1, 2026 · 4 nights · Invoice #60
 
-No changes to live (MXN) booking grouping, the report layouts, or any other page. Only the historical bucketing key and the three May records are touched.  
-  
-there are two rules, you can first look at the dates but also if i tell you this goes in may .. it must go in may or the appropriate month
+| Item | Billed | Cost | Profit |
+|---|---|---|---|
+| In-House Massage (8 massages, 11,800p) | $737.50 | $250.00 | $487.50 |
+| Drinks & Alcohol (1,600p) — at cost | $100.00 | $100.00 | $0.00 |
+| Groceries (12,487p) — at cost | $780.00 | $780.00 | $0.00 |
+| Tip (10%) — pass-through to staff | $143.00 | $143.00 | $0.00 |
 
-&nbsp;
+- Accommodation fare **$1,426.10** → LUX 15% $213.92 · owner $1,212.19. Host channel fee −$221.05 ignored per rule.
+- Upsells billed **$1,760.00** · Upsell profit pool **$487.50**
+
+> Note: For Abril's massage I'm assuming **8 massages** (11,800p ÷ ~1,475p each, one per guest). Tell me if the count differs.
+
+## New May 2026 grand totals (6 bookings)
+- Accommodation fare: **$30,857.00**
+- Upsells billed: **$15,425.82**
+- Upsell profit pool: **$6,371.31**
+- Owner's share (upsells 85%): **$5,415.61**
+- LUX total cut: **$5,584.25** ($955.70 upsells + $4,628.55 accommodation)
+
+## Files to change
+1. **`src/pages/concierge/historicalData.ts`** — add the three bookings to `MAY_2026_BOOKINGS` with `monthKey: "2026-05"`, each with `accommodationFare`, `upsellsBilled`, `upsellsProfit`, and a descriptive `notes` line.
+2. **`src/pages/concierge/may2026Historical.ts`** — add three new `booking` sections with full line-item tables (matching the existing styling), and update the top KPI cards + the "Grand Summary" block and "3 bookings" → "6 bookings" labels.
+3. **Memory** — save the rule: *Tips are 100% paid to staff → pass-through, excluded from the profit pool.*

@@ -51,14 +51,14 @@ export function openMay2026Historical() {
     <div class="conf">Internal Report · Confidential</div>
     <h1>Villas Sempre Avanti</h1>
     <div class="sub">Revenue &amp; Profit Report — May 2026</div>
-    <div class="meta">3 bookings · All figures in USD · Includes 15% management commission on accommodation fare</div>
+    <div class="meta">6 bookings · All figures in USD · Includes 15% management commission on accommodation fare</div>
 
     <div class="cards">
-      <div class="card"><div class="label">Guest Billed (Upsells)</div><div class="value">$8,270.32</div></div>
-      <div class="card accom"><div class="label">Accommodation Fare</div><div class="value">$18,716.85</div></div>
-      <div class="card"><div class="label">Upsell Profit Pool</div><div class="value">$4,040.81</div></div>
-      <div class="card owner"><div class="label">Owner's Share (Upsells 85%)</div><div class="value">$3,434.69</div></div>
-      <div class="card lux"><div class="label">LUX Total Cut</div><div class="value">$3,413.65</div></div>
+      <div class="card"><div class="label">Guest Billed (Upsells)</div><div class="value">$15,425.32</div></div>
+      <div class="card accom"><div class="label">Accommodation Fare</div><div class="value">$30,857.00</div></div>
+      <div class="card"><div class="label">Upsell Profit Pool</div><div class="value">$6,370.31</div></div>
+      <div class="card owner"><div class="label">Owner's Share (Upsells 85%)</div><div class="value">$5,414.76</div></div>
+      <div class="card lux"><div class="label">LUX Total Cut</div><div class="value">$5,584.10</div></div>
       <div class="card cash"><div class="label">Cash Collected On Site</div><div class="value">$1,300.00</div></div>
     </div>
 
@@ -144,19 +144,90 @@ export function openMay2026Historical() {
       <div class="note">Note · UTV vehicles are owner-owned (100% profit pool). Gas tank fill is reimbursement for fuel — billed at cost with no markup.</div>
     </section>
 
+    <section class="booking">
+      <div class="booking-head">
+        <div>
+          <div class="guest">Christopher Jackson</div>
+          <div class="dates">May 20–27, 2026 · 7 nights · 5 adults, 4 children</div>
+        </div>
+        <div class="ref">Casa Sempre Avanti<br/>(Villa Pietro + Villa Luisa) · #58 · GY-gNZkbdwv</div>
+      </div>
+      <table>
+        <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
+        <tbody>
+          <tr><td>Groceries <em style="color:#9E9080;font-size:11px">$1,924 cost + 35% service markup</em></td><td><span class="badge b-35">35% markup</span></td><td style="text-align:right">$2,597.00</td><td style="text-align:right">$1,924.00</td><td style="text-align:right">$673.00</td><td style="text-align:right;color:#2D6A45">$572.05</td><td style="text-align:right;color:#7A5C1E">$100.95</td></tr>
+          <tr><td>UTV Rental <em style="color:#9E9080;font-size:11px">Both UTVs at 120usd/day · 240usd × 3</em></td><td><span class="badge b-100">Owner asset</span></td><td style="text-align:right">$765.00</td><td style="text-align:right">$0.00</td><td style="text-align:right">$765.00</td><td style="text-align:right;color:#2D6A45">$650.25</td><td style="text-align:right;color:#7A5C1E">$114.75</td></tr>
+          <tr><td>Airport SUV (Round Trip) <em style="color:#9E9080;font-size:11px">6,800p for Sprinter · flat $55 profit per trip</em></td><td><span class="badge b-flat">Flat fee</span></td><td style="text-align:right">$425.00</td><td style="text-align:right">$370.00</td><td style="text-align:right">$55.00</td><td style="text-align:right;color:#2D6A45">$46.75</td><td style="text-align:right;color:#7A5C1E">$8.25</td></tr>
+          <tr><td>In-House Massage <em style="color:#9E9080;font-size:11px">6 massages (8,600p) · cost 500p each</em></td><td><span class="badge b-15">Markup</span></td><td style="text-align:right">$537.00</td><td style="text-align:right">$187.50</td><td style="text-align:right">$349.50</td><td style="text-align:right;color:#2D6A45">$297.08</td><td style="text-align:right;color:#7A5C1E">$52.43</td></tr>
+          <tr><td>Tip <em style="color:#9E9080;font-size:11px">10% of booking · paid in full to staff</em></td><td><span class="badge b-pass">Staff (pass-through)</span></td><td style="text-align:right">$874.00</td><td style="text-align:right">$874.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$5,198.00</td><td style="text-align:right">$3,355.50</td><td style="text-align:right">$1,842.50</td><td style="text-align:right;color:#2D6A45">$1,566.13</td><td style="text-align:right;color:#7A5C1E">$276.38</td></tr>
+        </tfoot>
+      </table>
+      <div class="accom-bar"><span>Accommodation fare: <strong>$8,743.00</strong></span><span>LUX 15% commission: <strong>$1,311.45</strong></span><span>Owner retains 85%: <strong>$7,431.55</strong></span></div>
+      <div class="note">Note · UTV vehicles are owner-owned (100% profit pool). Tips are paid in full to staff — recorded for transparency, excluded from the profit split.</div>
+    </section>
+
+    <section class="booking">
+      <div class="booking-head">
+        <div>
+          <div class="guest">Gustavo Dominguez</div>
+          <div class="dates">May 27 – Jun 1, 2026 · 5 nights · 4 adults</div>
+        </div>
+        <div class="ref">Villa Pietro<br/>Ref: HM3KZYP9KW</div>
+      </div>
+      <table>
+        <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
+        <tbody>
+          <tr><td>Tip <em style="color:#9E9080;font-size:11px">10% of booking · paid in full to staff</em></td><td><span class="badge b-pass">Staff (pass-through)</span></td><td style="text-align:right">$197.00</td><td style="text-align:right">$197.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$197.00</td><td style="text-align:right">$197.00</td><td style="text-align:right">$0.00</td><td style="text-align:right;color:#2D6A45">$0.00</td><td style="text-align:right;color:#7A5C1E">$0.00</td></tr>
+        </tfoot>
+      </table>
+      <div class="accom-bar"><span>Accommodation fare: <strong>$1,971.05</strong></span><span>LUX 15% commission: <strong>$295.66</strong></span><span>Owner retains 85%: <strong>$1,675.39</strong></span></div>
+      <div class="note">Note · LUX takes 15% of the accommodation fare only. Host channel fee (−$305.67) is a Guesty-side line item and does not affect the commission basis.</div>
+    </section>
+
+    <section class="booking">
+      <div class="booking-head">
+        <div>
+          <div class="guest">Abril García</div>
+          <div class="dates">May 28 – Jun 1, 2026 · 4 nights · 7 adults, 1 child</div>
+        </div>
+        <div class="ref">Villa Luisa<br/>#60 · HM45CA4DB3</div>
+      </div>
+      <table>
+        <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
+        <tbody>
+          <tr><td>In-House Massage <em style="color:#9E9080;font-size:11px">8 massages (11,800p) · cost 500p each</em></td><td><span class="badge b-15">Markup</span></td><td style="text-align:right">$737.00</td><td style="text-align:right">$250.00</td><td style="text-align:right">$487.00</td><td style="text-align:right;color:#2D6A45">$413.95</td><td style="text-align:right;color:#7A5C1E">$73.05</td></tr>
+          <tr><td>Groceries <em style="color:#9E9080;font-size:11px">12,487p · sold at cost (no markup this stay)</em></td><td><span class="badge b-pass">Pass-through</span></td><td style="text-align:right">$780.00</td><td style="text-align:right">$780.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
+          <tr><td>Drinks &amp; Alcohol <em style="color:#9E9080;font-size:11px">1,600p · sold at cost this stay</em></td><td><span class="badge b-pass">Pass-through</span></td><td style="text-align:right">$100.00</td><td style="text-align:right">$100.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
+          <tr><td>Tip <em style="color:#9E9080;font-size:11px">10% of booking · paid in full to staff</em></td><td><span class="badge b-pass">Staff (pass-through)</span></td><td style="text-align:right">$143.00</td><td style="text-align:right">$143.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$1,760.00</td><td style="text-align:right">$1,273.00</td><td style="text-align:right">$487.00</td><td style="text-align:right;color:#2D6A45">$413.95</td><td style="text-align:right;color:#7A5C1E">$73.05</td></tr>
+        </tfoot>
+      </table>
+      <div class="accom-bar"><span>Accommodation fare: <strong>$1,426.10</strong></span><span>LUX 15% commission: <strong>$213.92</strong></span><span>Owner retains 85%: <strong>$1,212.19</strong></span></div>
+      <div class="note">Note · Massage cost is 500p per session. Groceries and alcohol sold at cost this stay. Host channel fee (−$221.05) does not affect the 15% commission basis.</div>
+    </section>
+
+
     <div class="grand">
       <h2>May 2026 — Grand Summary</h2>
       <div class="grand-grid">
-        <div class="grand-cell"><div class="l">Bookings</div><div class="v">3</div></div>
-        <div class="grand-cell"><div class="l">Guest Billed (Upsells)</div><div class="v">$8,270.32</div></div>
-        <div class="grand-cell"><div class="l">Accommodation Fare</div><div class="v">$18,716.85</div></div>
-        <div class="grand-cell"><div class="l">Upsell Profit Pool</div><div class="v">$4,040.81</div></div>
-        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share (Upsells 85%)</div><div class="v" style="color:#7DD89E">$3,434.69</div></div>
-        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX Total Cut</div><div class="v" style="color:#D4A96A">$3,413.65</div></div>
+        <div class="grand-cell"><div class="l">Bookings</div><div class="v">6</div></div>
+        <div class="grand-cell"><div class="l">Guest Billed (Upsells)</div><div class="v">$15,425.32</div></div>
+        <div class="grand-cell"><div class="l">Accommodation Fare</div><div class="v">$30,857.00</div></div>
+        <div class="grand-cell"><div class="l">Upsell Profit Pool</div><div class="v">$6,370.31</div></div>
+        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share (Upsells 85%)</div><div class="v" style="color:#7DD89E">$5,414.76</div></div>
+        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX Total Cut</div><div class="v" style="color:#D4A96A">$5,584.10</div></div>
       </div>
       <div style="margin-top:14px;padding:12px 14px;background:rgba(212,169,106,0.08);border-left:2px solid #D4A96A;font-size:11px;color:rgba(247,244,238,0.85)">
         <span style="color:#D4A96A;text-transform:uppercase;letter-spacing:0.1em;font-size:10px">LUX cut breakdown</span><br/>
-        $606.12 from upsells (15% of profit pool) + $2,807.53 from accommodation (15% of fare) = <strong style="color:#D4A96A">$3,413.65</strong>
+        $955.55 from upsells (15% of profit pool) + $4,628.55 from accommodation (15% of fare) = <strong style="color:#D4A96A">$5,584.10</strong>
       </div>
       <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(247,244,238,0.15);font-size:12px">
         <span style="color:rgba(247,244,238,0.5)">Cash Collected (owner direct):</span> <span style="color:#B8924A">$1,300.00</span>
