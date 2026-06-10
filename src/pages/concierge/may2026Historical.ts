@@ -56,9 +56,9 @@ export function openMay2026Historical() {
     <div class="cards">
       <div class="card"><div class="label">Guest Billed (Upsells)</div><div class="value">$15,425.32</div></div>
       <div class="card accom"><div class="label">Accommodation Fare</div><div class="value">$30,857.00</div></div>
-      <div class="card"><div class="label">Upsell Profit Pool</div><div class="value">$6,370.31</div></div>
-      <div class="card owner"><div class="label">Owner's Share (Upsells 85%)</div><div class="value">$5,414.76</div></div>
-      <div class="card lux"><div class="label">LUX Total Cut</div><div class="value">$5,584.10</div></div>
+      <div class="card"><div class="label">Upsell Profit Pool</div><div class="value">$6,572.53</div></div>
+      <div class="card owner"><div class="label">Owner's Share (Upsells 85%)</div><div class="value">$5,586.65</div></div>
+      <div class="card lux"><div class="label">LUX Total Cut</div><div class="value">$5,614.43</div></div>
       <div class="card cash"><div class="label">Cash Collected On Site</div><div class="value">$1,300.00</div></div>
     </div>
 
