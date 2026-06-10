@@ -16,6 +16,10 @@ export function openOwnerStatement(month: string, year: number, bookings: Bookin
   const ownerShare = Math.round(profitPool * OWNER_SHARE);
   const luxShare = Math.round(profitPool * LUX_SHARE);
   const tipsTotal = bookings.reduce((s, b) => s + Number(b.tip), 0);
+  // Tips collected via credit card flow through the owner's account, so the owner
+  // must forward them to staff. Cash tips are paid to staff directly (excluded).
+  const tipsViaCC = bookings.reduce((s, b) => s + (b.cc_fee_on ? Number(b.tip) : 0), 0);
+  const tipsCash = tipsTotal - tipsViaCC;
   const ccFeesTotal = bookings.reduce((s, b) => s + Number(b.cc_fee), 0);
   const today = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
 
@@ -165,7 +169,8 @@ export function openOwnerStatement(month: string, year: number, bookings: Bookin
           <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX's Cut</div><div class="v" style="color:#D4A96A">${formatMXN(luxShare)}</div></div>
         </div>
         <div class="grand-foot">
-          <div><span style="color:rgba(247,244,238,0.5)">Tips to Staff (pay out):</span> <span style="color:#7DD89E">${formatMXN(tipsTotal)}</span></div>
+          <div><span style="color:rgba(247,244,238,0.5)">Tips to send to staff (via CC, owner pays out):</span> <span style="color:#7DD89E">${formatMXN(tipsViaCC)}</span></div>
+          ${tipsCash > 0 ? `<div><span style="color:rgba(247,244,238,0.5)">Tips paid in cash to staff (excluded):</span> <span style="color:rgba(247,244,238,0.7)">${formatMXN(tipsCash)}</span></div>` : ""}
           <div><span style="color:rgba(247,244,238,0.5)">CC Fees (pass-through):</span> <span style="color:rgba(247,244,238,0.7)">${formatMXN(ccFeesTotal)}</span></div>
           <div><span style="color:rgba(247,244,238,0.5)">Total Profit Pool:</span> ${formatMXN(profitPool)}</div>
         </div>

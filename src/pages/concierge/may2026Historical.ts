@@ -278,6 +278,10 @@ export function openMay2026Historical() {
         <span style="color:#D4A96A;text-transform:uppercase;letter-spacing:0.1em;font-size:10px">LUX cut breakdown</span><br/>
         $901.43 from upsells (15% of profit pool) + $4,774.51 from accommodation (15% of fare) = <strong style="color:#D4A96A">$5,675.94</strong>
       </div>
+      <div style="margin-top:14px;padding:12px 14px;background:rgba(125,216,158,0.08);border-left:2px solid #7DD89E;font-size:11px;color:rgba(247,244,238,0.85)">
+        <span style="color:#7DD89E;text-transform:uppercase;letter-spacing:0.1em;font-size:10px">Tips to send to staff (collected via credit card)</span><br/>
+        $874.00 (Jackson) + $143.00 (García) = <strong style="color:#7DD89E">$1,017.00</strong> owed by owner to staff. <span style="color:rgba(247,244,238,0.5)">Dominguez $197.00 tip was paid in cash directly to staff (excluded).</span>
+      </div>
       <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(247,244,238,0.15);font-size:12px">
         <span style="color:rgba(247,244,238,0.5)">Cash Collected (owner direct):</span> <span style="color:#B8924A">$1,300.00</span>
         &nbsp;&nbsp;&nbsp;<span style="color:rgba(247,244,238,0.5)">CC Fees (pass-through):</span> <span style="color:rgba(247,244,238,0.7)">$256.32</span>
