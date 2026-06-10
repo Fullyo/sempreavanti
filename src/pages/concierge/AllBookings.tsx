@@ -502,8 +502,18 @@ export default function AllBookings() {
             {group.live.map((b) => {
               const isEdit = editId === b.id && edit;
               const v = (isEdit ? edit! : b);
+              const liveRef = `live-${b.id}`;
+              const liveSpent = bookingUpsellCost(b.items);
               return (
-                <div key={b.id} style={{ background: "#fff", border: `1px solid ${isEdit ? COLORS.gold : COLORS.border}`, borderRadius: 4, padding: "18px 22px", marginBottom: 14 }}>
+                <div key={b.id} style={{ marginBottom: 14 }}>
+                <PettyCashBox
+                  guest={b.guest}
+                  currency="MXN"
+                  float={petty[liveRef] ?? null}
+                  spent={liveSpent}
+                  onSave={(amt) => saveFloat(liveRef, amt, "MXN")}
+                />
+                <div style={{ background: "#fff", border: `1px solid ${isEdit ? COLORS.gold : COLORS.border}`, borderRadius: 4, padding: "18px 22px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
                     <div style={{ flex: 1 }}>
                       {isEdit ? (
