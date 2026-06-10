@@ -201,18 +201,18 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Villa Pietro<br/>Ref: HM3KZYP9KW</div>
       </div>
-      ${pBox("$197.00")}
+      ${pBox("$0.00")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
-          <tr><td>Tip <em style="color:#9E9080;font-size:11px">10% of booking · paid in full to staff</em></td><td><span class="badge b-pass">Staff (pass-through)</span></td><td style="text-align:right">$197.00</td><td style="text-align:right">$197.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
+          <tr><td>Tip <em style="color:#9E9080;font-size:11px">10% of booking · paid in cash directly to staff</em></td><td><span class="badge b-pass">Staff (cash)</span></td><td style="text-align:right">$197.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
         </tbody>
         <tfoot>
-          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$197.00</td><td style="text-align:right">$197.00</td><td style="text-align:right">$0.00</td><td style="text-align:right;color:#2D6A45">$0.00</td><td style="text-align:right;color:#7A5C1E">$0.00</td></tr>
+          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$197.00</td><td style="text-align:right">$0.00</td><td style="text-align:right">$0.00</td><td style="text-align:right;color:#2D6A45">$0.00</td><td style="text-align:right;color:#7A5C1E">$0.00</td></tr>
         </tfoot>
       </table>
       <div class="accom-bar"><span>Accommodation fare: <strong>$1,971.05</strong></span><span>LUX 15% commission: <strong>$295.66</strong></span><span>Owner retains 85%: <strong>$1,675.39</strong></span></div>
-      <div class="note">Note · LUX takes 15% of the accommodation fare only. Host channel fee (−$305.67) is a Guesty-side line item and does not affect the commission basis.</div>
+      <div class="note">Note · Tip was paid in cash directly to staff — excluded from petty cash and the profit split. LUX takes 15% of the accommodation fare only. Host channel fee (−$305.67) is a Guesty-side line item and does not affect the commission basis.</div>
     </section>
 
     <section class="booking">
