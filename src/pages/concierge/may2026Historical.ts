@@ -1,4 +1,13 @@
 export function openMay2026Historical() {
+  const pBox = (spent: string) => `
+      <div class="petty">
+        <div class="ptitle">Concierge Petty Cash</div>
+        <div class="pgrid">
+          <div><div class="pl">Owner Float In (USD)</div><div class="pblank"></div></div>
+          <div><div class="pl">Spent on Guest</div><div class="pv">${spent}</div></div>
+          <div><div class="pl">Balance</div><div class="pblank"></div></div>
+        </div>
+      </div>`;
   const html = `<!doctype html><html><head><meta charset="utf-8"/>
   <title>May 2026 — Historical Report — Villas Sempre Avanti</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Jost:wght@300;400;500&display=swap"/>
