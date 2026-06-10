@@ -145,13 +145,21 @@ export default function AllBookings() {
     return [currentEntry, ...withoutCurrent];
   }, [monthSections, currentMonthKey]);
 
-  // Default selection = current month. User can switch by clicking other folders.
+  // Default selection = most recent month that actually has bookings (so the
+  // latest reservations are visible on load), falling back to the current month.
+  const defaultOpenKey = useMemo(() => {
+    const firstWithData = displayMonthSections.find(
+      ([, g]) => g.live.length > 0 || g.hist.length > 0,
+    );
+    return firstWithData ? firstWithData[0] : currentMonthKey;
+  }, [displayMonthSections, currentMonthKey]);
+
   useEffect(() => {
     setOpenMonthKey((prev) => {
       if (prev && displayMonthSections.some(([k]) => k === prev)) return prev;
-      return currentMonthKey;
+      return defaultOpenKey;
     });
-  }, [displayMonthSections, currentMonthKey]);
+  }, [displayMonthSections, defaultOpenKey]);
 
   const months = useMemo(() => {
     const set = new Set([
