@@ -201,18 +201,18 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Villa Pietro<br/>Ref: HM3KZYP9KW</div>
       </div>
-      ${pBox("$197.00")}
+      ${pBox("$0.00")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
-          <tr><td>Tip <em style="color:#9E9080;font-size:11px">10% of booking · paid in full to staff</em></td><td><span class="badge b-pass">Staff (pass-through)</span></td><td style="text-align:right">$197.00</td><td style="text-align:right">$197.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
+          <tr><td>Tip <em style="color:#9E9080;font-size:11px">10% of booking · paid in cash directly to staff</em></td><td><span class="badge b-pass">Staff (cash)</span></td><td style="text-align:right">$197.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
         </tbody>
         <tfoot>
-          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$197.00</td><td style="text-align:right">$197.00</td><td style="text-align:right">$0.00</td><td style="text-align:right;color:#2D6A45">$0.00</td><td style="text-align:right;color:#7A5C1E">$0.00</td></tr>
+          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$197.00</td><td style="text-align:right">$0.00</td><td style="text-align:right">$0.00</td><td style="text-align:right;color:#2D6A45">$0.00</td><td style="text-align:right;color:#7A5C1E">$0.00</td></tr>
         </tfoot>
       </table>
       <div class="accom-bar"><span>Accommodation fare: <strong>$1,971.05</strong></span><span>LUX 15% commission: <strong>$295.66</strong></span><span>Owner retains 85%: <strong>$1,675.39</strong></span></div>
-      <div class="note">Note · LUX takes 15% of the accommodation fare only. Host channel fee (−$305.67) is a Guesty-side line item and does not affect the commission basis.</div>
+      <div class="note">Note · Tip was paid in cash directly to staff — excluded from petty cash and the profit split. LUX takes 15% of the accommodation fare only. Host channel fee (−$305.67) is a Guesty-side line item and does not affect the commission basis.</div>
     </section>
 
     <section class="booking">
@@ -237,21 +237,21 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Villa Luisa<br/>#60 · HM45CA4DB3</div>
       </div>
-      ${pBox("$1,070.78")}
+      ${pBox("$1,629.00")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
-          <tr><td>In-House Massage <em style="color:#9E9080;font-size:11px">8 massages (11,800p) · cost 500p each</em></td><td><span class="badge b-15">Markup</span></td><td style="text-align:right">$737.00</td><td style="text-align:right">$250.00</td><td style="text-align:right">$487.00</td><td style="text-align:right;color:#2D6A45">$413.95</td><td style="text-align:right;color:#7A5C1E">$73.05</td></tr>
-          <tr><td>Groceries <em style="color:#9E9080;font-size:11px">$780 to guest · cost + 35% service markup</em></td><td><span class="badge b-35">35% markup</span></td><td style="text-align:right">$780.00</td><td style="text-align:right">$577.78</td><td style="text-align:right">$202.22</td><td style="text-align:right;color:#2D6A45">$171.89</td><td style="text-align:right;color:#7A5C1E">$30.33</td></tr>
+          <tr><td>In-House Massage <em style="color:#9E9080;font-size:11px">8 massages · billed 11,800p · cost 9,200p ($575)</em></td><td><span class="badge b-15">Markup</span></td><td style="text-align:right">$737.50</td><td style="text-align:right">$575.00</td><td style="text-align:right">$162.50</td><td style="text-align:right;color:#2D6A45">$138.13</td><td style="text-align:right;color:#7A5C1E">$24.38</td></tr>
+          <tr><td>Groceries <em style="color:#9E9080;font-size:11px">$780 to guest · cost $811 (loss this stay)</em></td><td><span class="badge b-35">At a loss</span></td><td style="text-align:right">$780.00</td><td style="text-align:right">$811.00</td><td style="text-align:right">-$31.00</td><td style="text-align:right;color:#8B2E2E">-$26.35</td><td style="text-align:right;color:#8B2E2E">-$4.65</td></tr>
           <tr><td>Drinks &amp; Alcohol <em style="color:#9E9080;font-size:11px">1,600p · sold at cost this stay</em></td><td><span class="badge b-pass">Pass-through</span></td><td style="text-align:right">$100.00</td><td style="text-align:right">$100.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
           <tr><td>Tip <em style="color:#9E9080;font-size:11px">10% of booking · paid in full to staff</em></td><td><span class="badge b-pass">Staff (pass-through)</span></td><td style="text-align:right">$143.00</td><td style="text-align:right">$143.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
         </tbody>
         <tfoot>
-          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$1,760.00</td><td style="text-align:right">$1,070.78</td><td style="text-align:right">$689.22</td><td style="text-align:right;color:#2D6A45">$585.84</td><td style="text-align:right;color:#7A5C1E">$103.38</td></tr>
+          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$1,760.50</td><td style="text-align:right">$1,629.00</td><td style="text-align:right">$131.50</td><td style="text-align:right;color:#2D6A45">$111.78</td><td style="text-align:right;color:#7A5C1E">$19.73</td></tr>
         </tfoot>
       </table>
       <div class="accom-bar"><span>Accommodation fare: <strong>$1,426.10</strong></span><span>LUX 15% commission: <strong>$213.92</strong></span><span>Owner retains 85%: <strong>$1,212.19</strong></span></div>
-      <div class="note">Note · Massage cost is 500p per session. Groceries sold at the standard cost + 35% markup; alcohol sold at cost this stay. Host channel fee (−$221.05) does not affect the 15% commission basis.</div>
+      <div class="note">Note · Guest paid all upsells in cash. Massage billed 11,800p vs 9,200p cost ($575); profit calculated at 16 MXN/USD. Groceries ran at a loss this stay ($811 cost vs $780 billed); alcohol sold at cost. Host channel fee (−$221.05) does not affect the 15% commission basis.</div>
     </section>
 
 
@@ -259,7 +259,7 @@ export function openMay2026Historical() {
       <div class="ptitle">Concierge Petty Cash Summary — May 2026</div>
       <div class="pgrid">
         <div><div class="pl">Total Given by Owner (USD)</div><div class="pv">—</div></div>
-        <div><div class="pl">Total Spent on Guests</div><div class="pv">$8,839.29</div></div>
+        <div><div class="pl">Total Spent on Guests</div><div class="pv">$9,200.51</div></div>
         <div><div class="pl">Petty Cash Remaining</div><div class="pv">—</div></div>
       </div>
     </div>
@@ -268,15 +268,15 @@ export function openMay2026Historical() {
       <h2>May 2026 — Grand Summary</h2>
       <div class="grand-grid">
         <div class="grand-cell"><div class="l">Bookings</div><div class="v">7</div></div>
-        <div class="grand-cell"><div class="l">Guest Billed (Upsells)</div><div class="v">$15,425.32</div></div>
+        <div class="grand-cell"><div class="l">Guest Billed (Upsells)</div><div class="v">$15,228.82</div></div>
         <div class="grand-cell"><div class="l">Accommodation Fare</div><div class="v">$31,830.05</div></div>
-        <div class="grand-cell"><div class="l">Upsell Profit Pool</div><div class="v">$6,567.28</div></div>
-        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share (Upsells 85%)</div><div class="v" style="color:#7DD89E">$5,582.19</div></div>
-        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX Total Cut</div><div class="v" style="color:#D4A96A">$5,759.60</div></div>
+        <div class="grand-cell"><div class="l">Upsell Profit Pool</div><div class="v">$6,009.56</div></div>
+        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share (Upsells 85%)</div><div class="v" style="color:#7DD89E">$5,108.13</div></div>
+        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX Total Cut</div><div class="v" style="color:#D4A96A">$5,675.94</div></div>
       </div>
       <div style="margin-top:14px;padding:12px 14px;background:rgba(212,169,106,0.08);border-left:2px solid #D4A96A;font-size:11px;color:rgba(247,244,238,0.85)">
         <span style="color:#D4A96A;text-transform:uppercase;letter-spacing:0.1em;font-size:10px">LUX cut breakdown</span><br/>
-        $985.09 from upsells (15% of profit pool) + $4,774.51 from accommodation (15% of fare) = <strong style="color:#D4A96A">$5,759.60</strong>
+        $901.43 from upsells (15% of profit pool) + $4,774.51 from accommodation (15% of fare) = <strong style="color:#D4A96A">$5,675.94</strong>
       </div>
       <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(247,244,238,0.15);font-size:12px">
         <span style="color:rgba(247,244,238,0.5)">Cash Collected (owner direct):</span> <span style="color:#B8924A">$1,300.00</span>
