@@ -107,7 +107,7 @@ export function openMay2026Historical() {
           <tr><td>Credit Card Fee</td><td><span class="badge b-pass">Pass-through</span></td><td style="text-align:right">$196.32</td><td style="text-align:right">$196.32</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
         </tbody>
         <tfoot>
-          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$6,690.32</td><td style="text-align:right">$3,378.51</td><td style="text-align:right">$3,311.81</td><td style="text-align:right;color:#2D6A45">$2,815.04</td><td style="text-align:right;color:#7A5C1E">$496.77</td></tr>
+          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$6,690.32</td><td style="text-align:right">$3,869.32</td><td style="text-align:right">$2,821.00</td><td style="text-align:right;color:#2D6A45">$2,397.85</td><td style="text-align:right;color:#7A5C1E">$423.15</td></tr>
           <tr><td colspan="2" style="text-align:right;color:#9E9080;font-weight:400">Less: Cash paid on site (owner direct)</td><td style="text-align:right;color:#9E9080;font-weight:400">−$1,300.00</td><td colspan="4" style="text-align:right;color:#9E9080;font-style:italic;font-weight:400">Offset against CC charge · does not affect profit split</td></tr>
           <tr><td colspan="2" style="text-align:right">Net charged to credit card</td><td style="text-align:right">$5,390.32</td><td colspan="4"></td></tr>
         </tfoot>
