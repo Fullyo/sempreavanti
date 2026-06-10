@@ -19,6 +19,7 @@ import { openApril2026Historical } from "./april2026Historical";
 import { openMay2026Historical } from "./may2026Historical";
 import {
   ALL_HISTORICAL,
+  MAY_2026_BOOKINGS,
   HistoricalBooking,
   KpiBreakdown,
   computeHistoricalKpis,
@@ -37,6 +38,7 @@ function monthLabel(key: string) {
 }
 
 type ViewTab = "upcoming" | "all";
+type MonthGroup = { live: Booking[]; hist: HistoricalBooking[] };
 
 function getCurrentMonthKey(date = new Date()) {
   // Local time keeps the concierge view aligned with the calendar users see;
@@ -117,7 +119,7 @@ export default function AllBookings() {
 
   // Group live and historical by month, latest month first.
   const monthSections = useMemo(() => {
-    const groups: Record<string, { live: Booking[]; hist: HistoricalBooking[] }> = {};
+    const groups: Record<string, MonthGroup> = {};
     viewFiltered.forEach((b) => {
       const k = monthKey(b.checkin);
       (groups[k] ||= { live: [], hist: [] }).live.push(b);
@@ -135,15 +137,24 @@ export default function AllBookings() {
 
   const currentMonthKey = getCurrentMonthKey();
   const currentMonthLabel = monthLabel(currentMonthKey);
+  const shouldForceMayHistorical = view === "all" && (monthFilter === "all" || monthFilter === "2026-05");
 
-  // Reorder: current month first (even if empty), then older months descending.
+  // Reorder: current month first if present, otherwise add one empty current folder.
+  // May 2026 is a hard historical month: if the card renders, it must contain
+  // the May imported rows and can never fall through to an empty placeholder.
   const displayMonthSections = useMemo(() => {
-    const withoutCurrent = monthSections.filter(([k]) => k !== currentMonthKey);
-    const current = monthSections.find(([k]) => k === currentMonthKey);
-    const currentEntry: [string, { live: Booking[]; hist: HistoricalBooking[] }] =
-      current ?? [currentMonthKey, { live: [], hist: [] }];
-    return [currentEntry, ...withoutCurrent];
-  }, [monthSections, currentMonthKey]);
+    const byKey = new Map<string, MonthGroup>(monthSections);
+    if (shouldForceMayHistorical) {
+      const mayGroup = byKey.get("2026-05") ?? { live: [], hist: [] };
+      byKey.set("2026-05", { ...mayGroup, hist: [...MAY_2026_BOOKINGS] });
+    }
+
+    const ordered = Array.from(byKey.entries()).sort(([a], [b]) => b.localeCompare(a));
+    const current = ordered.find(([k]) => k === currentMonthKey);
+    const withoutCurrent = ordered.filter(([k]) => k !== currentMonthKey);
+    if (!current) return [[currentMonthKey, { live: [], hist: [] }] as [string, MonthGroup], ...withoutCurrent];
+    return [current, ...withoutCurrent];
+  }, [monthSections, currentMonthKey, shouldForceMayHistorical]);
 
   // Default selection = most recent month that actually has bookings (so the
   // latest reservations are visible on load), falling back to the current month.
@@ -364,7 +375,7 @@ export default function AllBookings() {
       </div>
 
       <div style={{ fontStyle: "italic", color: COLORS.textMuted, fontSize: 12, marginBottom: 18 }}>
-        Current month is {currentMonthLabel}. Click any month folder to open its bookings.
+        Current month is {currentMonthLabel}. Historical reports stay attached to their booking month.
       </div>
 
       {loading && <div style={{ color: COLORS.textMuted }}>Loading…</div>}
