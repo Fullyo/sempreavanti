@@ -241,6 +241,15 @@ export function openMay2026Historical() {
     </section>
 
 
+    <div class="petty-summary">
+      <div class="ptitle">Concierge Petty Cash Summary — May 2026</div>
+      <div class="pgrid">
+        <div><div class="pl">Total Given by Owner (USD)</div><div class="pv">—</div></div>
+        <div><div class="pl">Total Spent on Guests</div><div class="pv">$8,852.79</div></div>
+        <div><div class="pl">Petty Cash Remaining</div><div class="pv">—</div></div>
+      </div>
+    </div>
+
     <div class="grand">
       <h2>May 2026 — Grand Summary</h2>
       <div class="grand-grid">
