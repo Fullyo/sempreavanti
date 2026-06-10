@@ -94,7 +94,7 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Casa Sempre Avanti<br/>(Villa Pietro + Villa Luisa)</div>
       </div>
-      ${pBox("$3,378.51")}
+      ${pBox("$3,869.32")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
@@ -102,12 +102,12 @@ export function openMay2026Historical() {
           <tr><td>Taxi <em style="color:#9E9080;font-size:11px">Flat $55 USD profit per trip</em></td><td><span class="badge b-flat">Flat fee</span></td><td style="text-align:right">$290.00</td><td style="text-align:right">$235.00</td><td style="text-align:right">$55.00</td><td style="text-align:right;color:#2D6A45">$46.75</td><td style="text-align:right;color:#7A5C1E">$8.25</td></tr>
           <tr><td>Meal at the House <em style="color:#9E9080;font-size:11px">Chef after-hours · 4 plates × $50</em></td><td><span class="badge b-15">15%</span></td><td style="text-align:right">$200.00</td><td style="text-align:right">$170.00</td><td style="text-align:right">$30.00</td><td style="text-align:right;color:#2D6A45">$25.50</td><td style="text-align:right;color:#7A5C1E">$4.50</td></tr>
           <tr><td>UTV Rental (Side-by-Side) <em style="color:#9E9080;font-size:11px">Owner-owned vehicles · 100% profit pool</em></td><td><span class="badge b-100">Owner asset</span></td><td style="text-align:right">$2,400.00</td><td style="text-align:right">$0.00</td><td style="text-align:right">$2,400.00</td><td style="text-align:right;color:#2D6A45">$2,040.00</td><td style="text-align:right;color:#7A5C1E">$360.00</td></tr>
-          <tr><td>Groceries <em style="color:#9E9080;font-size:11px">$2,206 + $771 combined · cost ≈ $2,205.19</em></td><td><span class="badge b-35">35% markup</span></td><td style="text-align:right">$2,977.00</td><td style="text-align:right">$2,205.19</td><td style="text-align:right">$771.81</td><td style="text-align:right;color:#2D6A45">$656.04</td><td style="text-align:right;color:#7A5C1E">$115.77</td></tr>
+          <tr><td>Groceries <em style="color:#9E9080;font-size:11px">$2,696 actual food cost · billed $2,977</em></td><td><span class="badge b-35">Margin</span></td><td style="text-align:right">$2,977.00</td><td style="text-align:right">$2,696.00</td><td style="text-align:right">$281.00</td><td style="text-align:right;color:#2D6A45">$238.85</td><td style="text-align:right;color:#7A5C1E">$42.15</td></tr>
           <tr><td>Drinks &amp; Alcohol <em style="color:#9E9080;font-size:11px">Sold at cost — no margin charged this stay</em></td><td><span class="badge b-pass">Pass-through</span></td><td style="text-align:right">$232.00</td><td style="text-align:right">$232.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
           <tr><td>Credit Card Fee</td><td><span class="badge b-pass">Pass-through</span></td><td style="text-align:right">$196.32</td><td style="text-align:right">$196.32</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
         </tbody>
         <tfoot>
-          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$6,690.32</td><td style="text-align:right">$3,378.51</td><td style="text-align:right">$3,311.81</td><td style="text-align:right;color:#2D6A45">$2,815.04</td><td style="text-align:right;color:#7A5C1E">$496.77</td></tr>
+          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$6,690.32</td><td style="text-align:right">$3,869.32</td><td style="text-align:right">$2,821.00</td><td style="text-align:right;color:#2D6A45">$2,397.85</td><td style="text-align:right;color:#7A5C1E">$423.15</td></tr>
           <tr><td colspan="2" style="text-align:right;color:#9E9080;font-weight:400">Less: Cash paid on site (owner direct)</td><td style="text-align:right;color:#9E9080;font-weight:400">−$1,300.00</td><td colspan="4" style="text-align:right;color:#9E9080;font-style:italic;font-weight:400">Offset against CC charge · does not affect profit split</td></tr>
           <tr><td colspan="2" style="text-align:right">Net charged to credit card</td><td style="text-align:right">$5,390.32</td><td colspan="4"></td></tr>
         </tfoot>
