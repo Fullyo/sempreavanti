@@ -90,7 +90,7 @@ export const MAY_2026_BOOKINGS: HistoricalBooking[] = [
     villa: "Villa Luisa",
     accommodationFare: 1426.10,
     upsellsBilled: 1760.00,
-    upsellsProfit: 487.00,
+    upsellsProfit: 689.22,
     currency: "USD",
     notes: "4 nights · 7 adults, 1 child · Invoice #60 · Ref HM45CA4DB3",
     monthKey: "2026-05",
