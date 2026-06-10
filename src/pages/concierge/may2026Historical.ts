@@ -94,7 +94,7 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Casa Sempre Avanti<br/>(Villa Pietro + Villa Luisa)</div>
       </div>
-      ${pBox("$3,378.51")}
+      ${pBox("$3,869.32")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
