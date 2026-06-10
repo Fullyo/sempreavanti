@@ -719,3 +719,103 @@ function HistCell({ label, value, sub, color }: { label: string; value: string; 
   );
 }
 
+function pcMoney(n: number, currency: string): string {
+  return currency === "MXN" ? formatMXN(n) : formatUSD(n);
+}
+
+function PettyCashBox({ guest, currency, float, spent, onSave }: {
+  guest: string;
+  currency: string;
+  float: number | null;
+  spent: number;
+  onSave: (amount: number) => void;
+}) {
+  const [draft, setDraft] = useState<string>(float != null ? String(float) : "");
+  useEffect(() => { setDraft(float != null ? String(float) : ""); }, [float]);
+  const floatNum = float ?? 0;
+  const balance = floatNum - spent;
+  const hasFloat = float != null && float > 0;
+  const commit = () => {
+    const amt = Math.max(0, Number(draft) || 0);
+    if (amt !== (float ?? 0)) onSave(amt);
+  };
+  return (
+    <div style={{ background: "#1C1914", border: "1px solid #1C1914", borderRadius: 4, padding: "12px 16px", marginBottom: 6 }}>
+      <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: "#B8924A", marginBottom: 10, fontWeight: 500 }}>
+        Concierge Petty Cash — {guest}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, alignItems: "end" }}>
+        <div>
+          <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: "rgba(247,244,238,0.5)", marginBottom: 4 }}>Owner Float In ({currency})</div>
+          <input
+            type="number"
+            min={0}
+            value={draft}
+            placeholder="0"
+            onChange={(e) => setDraft(e.target.value)}
+            onBlur={commit}
+            onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
+            style={{ width: "100%", padding: "8px 10px", background: "#2A2620", border: "1px solid #4A4338", borderRadius: 3, color: "#F7F4EE", fontFamily: "inherit", fontSize: 15 }}
+          />
+        </div>
+        <div>
+          <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: "rgba(247,244,238,0.5)" }}>Spent on Guest</div>
+          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, marginTop: 4, color: "#F7F4EE" }}>{pcMoney(spent, currency)}</div>
+        </div>
+        <div>
+          <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: "rgba(247,244,238,0.5)" }}>Balance</div>
+          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, marginTop: 4, color: !hasFloat ? "rgba(247,244,238,0.4)" : balance < 0 ? "#E08A8A" : "#7FC9A0" }}>
+            {hasFloat ? pcMoney(balance, currency) : "—"}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PettyCashSummary({ group, petty }: {
+  group: { live: Booking[]; hist: HistoricalBooking[] };
+  petty: Record<string, number>;
+}) {
+  const usd = { float: 0, spent: 0 };
+  const mxn = { float: 0, spent: 0 };
+  group.hist.forEach((h) => {
+    usd.float += petty[h.id] ?? 0;
+    usd.spent += Math.max(0, h.upsellsBilled - h.upsellsProfit);
+  });
+  group.live.forEach((b) => {
+    mxn.float += petty[`live-${b.id}`] ?? 0;
+    mxn.spent += bookingUpsellCost(b.items);
+  });
+  const blocks: { currency: string; float: number; spent: number }[] = [];
+  if (group.hist.length) blocks.push({ currency: "USD", ...usd });
+  if (group.live.length) blocks.push({ currency: "MXN", ...mxn });
+  if (!blocks.length) return null;
+  return (
+    <div style={{ background: "#FAF7F2", border: `1px solid ${COLORS.gold}`, borderRadius: 4, padding: "16px 18px", marginTop: 6, marginBottom: 12 }}>
+      <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: COLORS.gold, marginBottom: 12, fontWeight: 500 }}>
+        Petty Cash Summary — Month
+      </div>
+      {blocks.map((bl) => {
+        const balance = bl.float - bl.spent;
+        return (
+          <div key={bl.currency} style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 6 }}>
+            <div>
+              <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>Total Given by Owner ({bl.currency})</div>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, marginTop: 4, color: COLORS.textMid }}>{pcMoney(bl.float, bl.currency)}</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>Total Spent on Guests</div>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, marginTop: 4, color: COLORS.textMid }}>{pcMoney(bl.spent, bl.currency)}</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>Petty Cash Remaining</div>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, marginTop: 4, color: balance < 0 ? COLORS.red : COLORS.green }}>{pcMoney(balance, bl.currency)}</div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
