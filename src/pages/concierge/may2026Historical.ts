@@ -211,7 +211,7 @@ export function openMay2026Historical() {
         </tfoot>
       </table>
       <div class="accom-bar"><span>Accommodation fare: <strong>$1,426.10</strong></span><span>LUX 15% commission: <strong>$213.92</strong></span><span>Owner retains 85%: <strong>$1,212.19</strong></span></div>
-      <div class="note">Note · Massage cost is 500p per session. Groceries and alcohol sold at cost this stay. Host channel fee (−$221.05) does not affect the 15% commission basis.</div>
+      <div class="note">Note · Massage cost is 500p per session. Groceries sold at the standard cost + 35% markup; alcohol sold at cost this stay. Host channel fee (−$221.05) does not affect the 15% commission basis.</div>
     </section>
 
 
