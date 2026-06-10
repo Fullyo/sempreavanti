@@ -71,14 +71,14 @@ export function openMay2026Historical() {
     <div class="conf">Internal Report · Confidential</div>
     <h1>Villas Sempre Avanti</h1>
     <div class="sub">Revenue &amp; Profit Report — May 2026</div>
-    <div class="meta">6 bookings · All figures in USD · Includes 15% management commission on accommodation fare</div>
+    <div class="meta">7 bookings · All figures in USD · Includes 15% management commission on accommodation fare</div>
 
     <div class="cards">
       <div class="card"><div class="label">Guest Billed (Upsells)</div><div class="value">$15,425.32</div></div>
-      <div class="card accom"><div class="label">Accommodation Fare</div><div class="value">$30,857.00</div></div>
+      <div class="card accom"><div class="label">Accommodation Fare</div><div class="value">$31,830.05</div></div>
       <div class="card"><div class="label">Upsell Profit Pool</div><div class="value">$6,572.53</div></div>
       <div class="card owner"><div class="label">Owner's Share (Upsells 85%)</div><div class="value">$5,586.65</div></div>
-      <div class="card lux"><div class="label">LUX Total Cut</div><div class="value">$5,614.43</div></div>
+      <div class="card lux"><div class="label">LUX Total Cut</div><div class="value">$5,760.39</div></div>
       <div class="card cash"><div class="label">Cash Collected On Site</div><div class="value">$1,300.00</div></div>
     </div>
 
@@ -218,6 +218,20 @@ export function openMay2026Historical() {
     <section class="booking">
       <div class="booking-head">
         <div>
+          <div class="guest">Diego Alatorre</div>
+          <div class="dates">May 16 – 19, 2026 · 3 nights · 8 adults, 1 infant</div>
+        </div>
+        <div class="ref">Villa Luisa<br/>Ref: HM25A548RR</div>
+      </div>
+      <div class="accom-bar"><span>Accommodation fare: <strong>$973.05</strong></span><span>LUX 15% commission: <strong>$145.96</strong></span><span>Owner retains 85%: <strong>$827.09</strong></span></div>
+      <div class="note">Note · No concierge upsells on this stay. LUX takes 15% of the accommodation fare only.</div>
+    </section>
+
+
+
+    <section class="booking">
+      <div class="booking-head">
+        <div>
           <div class="guest">Abril García</div>
           <div class="dates">May 28 – Jun 1, 2026 · 4 nights · 7 adults, 1 child</div>
         </div>
@@ -253,16 +267,16 @@ export function openMay2026Historical() {
     <div class="grand">
       <h2>May 2026 — Grand Summary</h2>
       <div class="grand-grid">
-        <div class="grand-cell"><div class="l">Bookings</div><div class="v">6</div></div>
+        <div class="grand-cell"><div class="l">Bookings</div><div class="v">7</div></div>
         <div class="grand-cell"><div class="l">Guest Billed (Upsells)</div><div class="v">$15,425.32</div></div>
-        <div class="grand-cell"><div class="l">Accommodation Fare</div><div class="v">$30,857.00</div></div>
+        <div class="grand-cell"><div class="l">Accommodation Fare</div><div class="v">$31,830.05</div></div>
         <div class="grand-cell"><div class="l">Upsell Profit Pool</div><div class="v">$6,572.53</div></div>
         <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share (Upsells 85%)</div><div class="v" style="color:#7DD89E">$5,586.65</div></div>
-        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX Total Cut</div><div class="v" style="color:#D4A96A">$5,614.43</div></div>
+        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX Total Cut</div><div class="v" style="color:#D4A96A">$5,760.39</div></div>
       </div>
       <div style="margin-top:14px;padding:12px 14px;background:rgba(212,169,106,0.08);border-left:2px solid #D4A96A;font-size:11px;color:rgba(247,244,238,0.85)">
         <span style="color:#D4A96A;text-transform:uppercase;letter-spacing:0.1em;font-size:10px">LUX cut breakdown</span><br/>
-        $985.88 from upsells (15% of profit pool) + $4,628.55 from accommodation (15% of fare) = <strong style="color:#D4A96A">$5,614.43</strong>
+        $985.88 from upsells (15% of profit pool) + $4,774.51 from accommodation (15% of fare) = <strong style="color:#D4A96A">$5,760.39</strong>
       </div>
       <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(247,244,238,0.15);font-size:12px">
         <span style="color:rgba(247,244,238,0.5)">Cash Collected (owner direct):</span> <span style="color:#B8924A">$1,300.00</span>
