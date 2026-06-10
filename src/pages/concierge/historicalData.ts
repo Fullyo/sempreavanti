@@ -36,7 +36,7 @@ export const MAY_2026_BOOKINGS: HistoricalBooking[] = [
     checkin: "2026-04-29",
     checkout: "2026-05-04",
     villa: "Villa Pietro",
-    accommodationFare: 4623.85,
+    accommodationFare: 3245.00,
     upsellsBilled: 957.00,
     upsellsProfit: 319.00,
     currency: "USD",
