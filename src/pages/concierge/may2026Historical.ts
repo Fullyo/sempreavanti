@@ -44,6 +44,17 @@ export function openMay2026Historical() {
     .grand-cell .l { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(247,244,238,0.5); }
     .grand-cell .v { font-size: 16px; margin-top: 4px; font-weight: 500; }
     .fx { background: #FDF4E3; border: 1px solid #E5D8B5; border-radius: 4px; padding: 10px 14px; font-size: 11px; color: #7A5C1E; margin-bottom: 18px; }
+    .petty { background: #1C1914; border-radius: 4px; padding: 12px 16px; margin-bottom: 10px; }
+    .petty .ptitle { font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: #B8924A; margin-bottom: 10px; font-weight: 500; }
+    .petty .pgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .petty .pl { font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(247,244,238,0.5); }
+    .petty .pv { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; margin-top: 4px; color: #F7F4EE; }
+    .petty .pblank { display: inline-block; min-width: 90px; border-bottom: 1px solid #4A4338; height: 22px; margin-top: 4px; }
+    .petty-summary { background: #FAF7F2; border: 1px solid #B8924A; border-radius: 4px; padding: 16px 18px; margin-top: 6px; margin-bottom: 18px; }
+    .petty-summary .ptitle { font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: #B8924A; margin-bottom: 12px; font-weight: 500; }
+    .petty-summary .pgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .petty-summary .pl { font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: #9E9080; }
+    .petty-summary .pv { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; margin-top: 4px; color: #5A5242; }
     @media print { .print-btn { display:none; } body { background: #fff; } }
   </style></head><body>
   <div class="wrap">
