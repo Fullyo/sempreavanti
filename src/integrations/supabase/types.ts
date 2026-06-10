@@ -227,6 +227,30 @@ export type Database = {
         }
         Relationships: []
       }
+      petty_cash: {
+        Row: {
+          booking_ref: string
+          currency: string
+          float_amount: number
+          notes: string | null
+          updated_at: string
+        }
+        Insert: {
+          booking_ref: string
+          currency?: string
+          float_amount?: number
+          notes?: string | null
+          updated_at?: string
+        }
+        Update: {
+          booking_ref?: string
+          currency?: string
+          float_amount?: number
+          notes?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       services: {
         Row: {
           category: string

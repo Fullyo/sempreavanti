@@ -1,61 +1,71 @@
+# Petty Cash Tracker — per guest + monthly pool
 
-# Add three May 2026 bookings
+Add a "Concierge Petty Cash" box above every reservation. Scott (owner) hands the concierge a cash float for each guest; the box shows that float, what was spent on the guest, and the balance left. Each month also gets a roll-up summary so you can see total cash given vs. total spent vs. what's left in petty cash.
 
-Add the three reservations from the screenshots into the **May 2026** historical records and the printable May report. All check in during May, so all land in the May folder.
+## How it works
 
-## Calculation rules applied (from your answers)
-- FX: **16 MXN = 1 USD** for all conversions.
-- **Massage:** our cost = **500p per massage**; profit = guest-billed − cost.
-- **Tips:** **100% to staff** → pass-through, $0 profit pool (recorded for transparency). *(Will save this as a standing rule in memory.)*
-- **Drinks & Alcohol (Abril):** sold **at cost** → $0 profit.
-- **Groceries (Abril):** remark shows "12,487 ÷ 16" with no +35% markup → treated **at cost**, $0 profit. (Christopher's shows "+35%" so it keeps the standard markup.)
-- **LUX commission:** flat **15% of the shown accommodation fare**; channel fees are NOT deducted and NOT noted.
-- **UTV:** owner asset → 100% profit. **Airport transfers:** flat $55/trip profit. **CC fee:** pass-through.
+For each booking card the box shows three values:
 
-## Booking 1 — Christopher Jackson (GY-gNZkbdwv)
-Casa Sempre Avanti (Pietro + Luisa) · May 20–27, 2026 · 7 nights · Invoice #58
+```text
++-----------------------------------------------------------+
+| CONCIERGE PETTY CASH — [Guest name]                       |
+|   Owner Float In        Spent on Guest        Balance     |
+|   $ [____ editable]     $ 1,234.00 (auto)     $ 3,766.00  |
++-----------------------------------------------------------+
+```
 
-| Item | Billed | Cost | Profit |
-|---|---|---|---|
-| Groceries (1,924usd + 35%) | $2,597.00 | $1,924.00 | $673.00 |
-| UTV Rental (both UTVs, 240usd × 3) | $765.00 | $0.00 | $765.00 |
-| Airport SUV round trip (6,800p) | $425.00 | $370.00 | $55.00 |
-| In-House Massage (6 massages, 8,600p) | $537.50 | $187.50 | $350.00 |
-| Tip (10%) — pass-through to staff | $874.00 | $874.00 | $0.00 |
+- **Owner Float In** — editable field. You type how much Scott gave the concierge for that guest (e.g. $5,000). Saved per guest. Starts blank.
+- **Spent on Guest** — calculated automatically = our **cost of the upsells** (what the concierge actually paid out of pocket for that guest's services). Not editable.
+- **Balance** — Float In − Spent. Green if positive, red if negative.
 
-- Accommodation fare **$8,743.00** → LUX 15% $1,311.45 · owner $7,431.55
-- Upsells billed **$5,198.50** · Upsell profit pool **$1,843.00**
+At the bottom of each month, a **Petty Cash Summary** rolls up all guests:
+- Total given by owner · Total spent on guests · Petty cash remaining.
 
-## Booking 2 — Gustavo Dominguez (HM3KZYP9KW)
-Villa Pietro · May 27–Jun 1, 2026 · 5 nights
+## Where it appears
 
-- Accommodation fare **$1,971.05** → LUX 15% $295.66 · owner $1,675.39
-- Only upsell: Tip $197.00 (pass-through to staff, $0 profit). Host channel fee −$305.67 ignored per rule.
-- Upsells billed **$197.00** · Upsell profit pool **$0.00**
+The box appears everywhere bookings render:
+1. **All Bookings view** — above each live (MXN) card and each historical (USD) card, with the monthly summary in each month folder.
+2. **May 2026 printable report** — a display version of the box above each of the 6 bookings, plus a month-end petty cash summary block. (Editable in the app; the printable report shows whatever has been saved, with blank float placeholders until amounts are entered.)
 
-## Booking 3 — Abril García (HM45CA4DB3)
-Villa Luisa · May 28–Jun 1, 2026 · 4 nights · Invoice #60
+## Spent calculation
 
-| Item | Billed | Cost | Profit |
-|---|---|---|---|
-| In-House Massage (8 massages, 11,800p) | $737.50 | $250.00 | $487.50 |
-| Drinks & Alcohol (1,600p) — at cost | $100.00 | $100.00 | $0.00 |
-| Groceries (12,487p) — at cost | $780.00 | $780.00 | $0.00 |
-| Tip (10%) — pass-through to staff | $143.00 | $143.00 | $0.00 |
+- **Live (MXN) bookings:** sum of each item's `cost` (the "Our Cost" column already computed), in MXN.
+- **Historical (USD) bookings:** `upsellsBilled − upsellsProfit` = our cost, in USD.
+- Currency of the box matches the booking (MXN for live, USD for historical) so no FX mixing.
 
-- Accommodation fare **$1,426.10** → LUX 15% $213.92 · owner $1,212.19. Host channel fee −$221.05 ignored per rule.
-- Upsells billed **$1,760.00** · Upsell profit pool **$487.50**
+## Technical details
 
-> Note: For Abril's massage I'm assuming **8 massages** (11,800p ÷ ~1,475p each, one per guest). Tell me if the count differs.
+**New table `public.petty_cash`** (stores the editable float per guest, since historical bookings are hardcoded and live bookings are in the DB — both need a stable key):
 
-## New May 2026 grand totals (6 bookings)
-- Accommodation fare: **$30,857.00**
-- Upsells billed: **$15,425.82**
-- Upsell profit pool: **$6,371.31**
-- Owner's share (upsells 85%): **$5,415.61**
-- LUX total cut: **$5,584.25** ($955.70 upsells + $4,628.55 accommodation)
+```sql
+create table public.petty_cash (
+  booking_ref text primary key,   -- 'live-<id>' or historical string id (e.g. 'hist-may-jackson')
+  float_amount numeric not null default 0,
+  currency text not null default 'USD',
+  notes text,
+  updated_at timestamptz not null default now()
+);
+grant select, insert, update, delete on public.petty_cash to anon, authenticated;
+grant all on public.petty_cash to service_role;
+alter table public.petty_cash enable row level security;
+create policy "Allow all on petty_cash" on public.petty_cash for all using (true) with check (true);
+```
 
-## Files to change
-1. **`src/pages/concierge/historicalData.ts`** — add the three bookings to `MAY_2026_BOOKINGS` with `monthKey: "2026-05"`, each with `accommodationFare`, `upsellsBilled`, `upsellsProfit`, and a descriptive `notes` line.
-2. **`src/pages/concierge/may2026Historical.ts`** — add three new `booking` sections with full line-item tables (matching the existing styling), and update the top KPI cards + the "Grand Summary" block and "3 bookings" → "6 bookings" labels.
-3. **Memory** — save the rule: *Tips are 100% paid to staff → pass-through, excluded from the profit pool.*
+(Mirrors the existing open policy on `bookings`; the tool is gated by the concierge password edge function.)
+
+**`src/pages/concierge/AllBookings.tsx`**
+- Load all `petty_cash` rows on mount into a `Record<ref, {float, currency}>` map.
+- Add a `PettyCashBox` component rendered above each historical and live card. Shows Float In (editable input), Spent (computed), Balance. On blur/change it upserts to `petty_cash` keyed by ref (`live-${b.id}` or `h.id`).
+- Compute Spent per booking via a helper: live = sum of `item.cost`; historical = `upsellsBilled − upsellsProfit`.
+- Add a **Petty Cash Summary** row at the end of each open month section: totals of float, spent, and balance (kept per currency to avoid FX mixing).
+
+**`src/pages/concierge/may2026Historical.ts`**
+- Add a styled petty-cash box above each of the 6 booking sections (Float In shown as blank placeholder line, Spent computed from each booking's cost, Balance line).
+- Add a month-end Petty Cash Summary block before the Grand Summary.
+
+**`src/lib/calculations.ts`**
+- Add a small `bookingUpsellCost(booking)` helper for the live-cost sum (reused by the box and summary).
+
+## Out of scope
+- No FX conversion between MXN and USD in the petty cash totals (each shown in its own currency).
+- Float is a single number per guest; no per-deposit ledger of multiple cash drops.
