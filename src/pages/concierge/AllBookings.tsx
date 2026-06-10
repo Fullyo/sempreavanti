@@ -659,6 +659,8 @@ export default function AllBookings() {
                 </div>
               );
             })}
+
+            <PettyCashSummary group={group} petty={petty} />
             </>)}
           </div>
         );
