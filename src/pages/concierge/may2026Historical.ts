@@ -221,13 +221,13 @@ export function openMay2026Historical() {
         <div class="grand-cell"><div class="l">Bookings</div><div class="v">6</div></div>
         <div class="grand-cell"><div class="l">Guest Billed (Upsells)</div><div class="v">$15,425.32</div></div>
         <div class="grand-cell"><div class="l">Accommodation Fare</div><div class="v">$30,857.00</div></div>
-        <div class="grand-cell"><div class="l">Upsell Profit Pool</div><div class="v">$6,370.31</div></div>
-        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share (Upsells 85%)</div><div class="v" style="color:#7DD89E">$5,414.76</div></div>
-        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX Total Cut</div><div class="v" style="color:#D4A96A">$5,584.10</div></div>
+        <div class="grand-cell"><div class="l">Upsell Profit Pool</div><div class="v">$6,572.53</div></div>
+        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share (Upsells 85%)</div><div class="v" style="color:#7DD89E">$5,586.65</div></div>
+        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX Total Cut</div><div class="v" style="color:#D4A96A">$5,614.43</div></div>
       </div>
       <div style="margin-top:14px;padding:12px 14px;background:rgba(212,169,106,0.08);border-left:2px solid #D4A96A;font-size:11px;color:rgba(247,244,238,0.85)">
         <span style="color:#D4A96A;text-transform:uppercase;letter-spacing:0.1em;font-size:10px">LUX cut breakdown</span><br/>
-        $955.55 from upsells (15% of profit pool) + $4,628.55 from accommodation (15% of fare) = <strong style="color:#D4A96A">$5,584.10</strong>
+        $985.88 from upsells (15% of profit pool) + $4,628.55 from accommodation (15% of fare) = <strong style="color:#D4A96A">$5,614.43</strong>
       </div>
       <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(247,244,238,0.15);font-size:12px">
         <span style="color:rgba(247,244,238,0.5)">Cash Collected (owner direct):</span> <span style="color:#B8924A">$1,300.00</span>
