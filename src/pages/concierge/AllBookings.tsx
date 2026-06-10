@@ -52,6 +52,8 @@ export default function AllBookings() {
   const [openMonthKey, setOpenMonthKey] = useState<string | null>(null);
   const [editId, setEditId] = useState<number | null>(null);
   const [edit, setEdit] = useState<Booking | null>(null);
+  // Petty cash float per booking ref ('live-<id>' or historical string id).
+  const [petty, setPetty] = useState<Record<string, number>>({});
 
   const load = async () => {
     setLoading(true);
@@ -67,8 +69,25 @@ export default function AllBookings() {
     })));
   };
 
+  const loadPetty = async () => {
+    const { data, error } = await supabase.from("petty_cash").select("booking_ref, float_amount");
+    if (error) return;
+    const map: Record<string, number> = {};
+    (data ?? []).forEach((r: any) => { map[r.booking_ref] = Number(r.float_amount) || 0; });
+    setPetty(map);
+  };
+
+  const saveFloat = async (ref: string, amount: number, currency: string) => {
+    setPetty((p) => ({ ...p, [ref]: amount }));
+    const { error } = await supabase
+      .from("petty_cash")
+      .upsert({ booking_ref: ref, float_amount: amount, currency, updated_at: new Date().toISOString() }, { onConflict: "booking_ref" });
+    if (error) toast.error(error.message);
+  };
+
   useEffect(() => {
     load();
+    loadPetty();
   }, []);
 
   const now = new Date();
