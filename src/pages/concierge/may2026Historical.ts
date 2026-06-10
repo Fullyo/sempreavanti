@@ -94,6 +94,7 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Casa Sempre Avanti<br/>(Villa Pietro + Villa Luisa)</div>
       </div>
+      ${pBox("$3,378.51")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
@@ -125,6 +126,7 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Villa Pietro<br/>Ref: HMJ3K93XXY</div>
       </div>
+      ${pBox("$554.00")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
@@ -149,6 +151,7 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Villa Pietro<br/>Ref: GY-GhQQwakD</div>
       </div>
+      ${pBox("$297.00")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
@@ -172,6 +175,7 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Casa Sempre Avanti<br/>(Villa Pietro + Villa Luisa) · #58 · GY-gNZkbdwv</div>
       </div>
+      ${pBox("$3,355.50")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
@@ -197,6 +201,7 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Villa Pietro<br/>Ref: HM3KZYP9KW</div>
       </div>
+      ${pBox("$197.00")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
@@ -218,6 +223,7 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Villa Luisa<br/>#60 · HM45CA4DB3</div>
       </div>
+      ${pBox("$1,070.78")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
