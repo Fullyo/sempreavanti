@@ -76,13 +76,13 @@ export function openMay2026Historical() {
     <div class="cards">
       <div class="card"><div class="label">Guest Billed (Upsells)</div><div class="value">$15,425.32</div></div>
       <div class="card accom"><div class="label">Accommodation Fare</div><div class="value">$31,830.05</div></div>
-      <div class="card"><div class="label">Upsell Profit Pool</div><div class="value">$6,572.53</div></div>
+      <div class="card"><div class="label">Upsell Profit Pool</div><div class="value">$6,567.28</div></div>
       <div class="card owner"><div class="label">Owner's Share (Upsells 85%)</div><div class="value">$5,586.65</div></div>
       <div class="card lux"><div class="label">LUX Total Cut</div><div class="value">$5,760.39</div></div>
       <div class="card cash"><div class="label">Cash Collected On Site</div><div class="value">$1,300.00</div></div>
     </div>
 
-    <div class="fx">Transport flat fees are recorded at a fixed $55 USD profit per trip regardless of FX. UTV rates vary per booking — we always use the actual amount charged on the Guesty folio. Accommodation commission is calculated on the room fare only (cleaning fees, taxes, and other Guesty-side line items are excluded from the 15% basis).</div>
+    <div class="fx">Transport flat fees follow the standing rule of 1,000 MXN profit per trip (≈$62.50 USD @ 16); the Sprinter cost basis is 6,500 MXN. UTV rates vary per booking — we always use the actual amount charged on the Guesty folio. Accommodation commission is calculated on the room fare only (cleaning fees, taxes, and other Guesty-side line items are excluded from the 15% basis).</div>
 
 
 
@@ -175,18 +175,18 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Casa Sempre Avanti<br/>(Villa Pietro + Villa Luisa) · #58 · GY-gNZkbdwv</div>
       </div>
-      ${pBox("$3,355.50")}
+      ${pBox("$3,342.00")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
-          <tr><td>Groceries <em style="color:#9E9080;font-size:11px">$1,924 cost + 35% service markup</em></td><td><span class="badge b-35">35% markup</span></td><td style="text-align:right">$2,597.00</td><td style="text-align:right">$1,924.00</td><td style="text-align:right">$673.00</td><td style="text-align:right;color:#2D6A45">$572.05</td><td style="text-align:right;color:#7A5C1E">$100.95</td></tr>
+          <tr><td>Groceries <em style="color:#9E9080;font-size:11px">$1,874.25 actual food cost · billed $2,597</em></td><td><span class="badge b-35">Margin</span></td><td style="text-align:right">$2,597.00</td><td style="text-align:right">$1,874.25</td><td style="text-align:right">$722.75</td><td style="text-align:right;color:#2D6A45">$614.34</td><td style="text-align:right;color:#7A5C1E">$108.41</td></tr>
           <tr><td>UTV Rental <em style="color:#9E9080;font-size:11px">Both UTVs at 120usd/day · 240usd × 3</em></td><td><span class="badge b-100">Owner asset</span></td><td style="text-align:right">$765.00</td><td style="text-align:right">$0.00</td><td style="text-align:right">$765.00</td><td style="text-align:right;color:#2D6A45">$650.25</td><td style="text-align:right;color:#7A5C1E">$114.75</td></tr>
-          <tr><td>Airport SUV (Round Trip) <em style="color:#9E9080;font-size:11px">6,800p for Sprinter · flat $55 profit per trip</em></td><td><span class="badge b-flat">Flat fee</span></td><td style="text-align:right">$425.00</td><td style="text-align:right">$370.00</td><td style="text-align:right">$55.00</td><td style="text-align:right;color:#2D6A45">$46.75</td><td style="text-align:right;color:#7A5C1E">$8.25</td></tr>
+          <tr><td>Airport SUV (Round Trip) <em style="color:#9E9080;font-size:11px">Sprinter 6,500p ($406.25) · sold at cost · no profit this stay</em></td><td><span class="badge b-flat">Flat fee</span></td><td style="text-align:right">$425.00</td><td style="text-align:right">$406.25</td><td style="text-align:right">$0.00</td><td style="text-align:right;color:#2D6A45">$0.00</td><td style="text-align:right;color:#7A5C1E">$0.00</td></tr>
           <tr><td>In-House Massage <em style="color:#9E9080;font-size:11px">6 massages (8,600p) · cost 500p each</em></td><td><span class="badge b-15">Markup</span></td><td style="text-align:right">$537.00</td><td style="text-align:right">$187.50</td><td style="text-align:right">$349.50</td><td style="text-align:right;color:#2D6A45">$297.08</td><td style="text-align:right;color:#7A5C1E">$52.43</td></tr>
           <tr><td>Tip <em style="color:#9E9080;font-size:11px">10% of booking · paid in full to staff</em></td><td><span class="badge b-pass">Staff (pass-through)</span></td><td style="text-align:right">$874.00</td><td style="text-align:right">$874.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
         </tbody>
         <tfoot>
-          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$5,198.00</td><td style="text-align:right">$3,355.50</td><td style="text-align:right">$1,842.50</td><td style="text-align:right;color:#2D6A45">$1,566.13</td><td style="text-align:right;color:#7A5C1E">$276.38</td></tr>
+          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$5,198.00</td><td style="text-align:right">$3,342.00</td><td style="text-align:right">$1,837.25</td><td style="text-align:right;color:#2D6A45">$1,561.66</td><td style="text-align:right;color:#7A5C1E">$275.59</td></tr>
         </tfoot>
       </table>
       <div class="accom-bar"><span>Accommodation fare: <strong>$8,743.00</strong></span><span>LUX 15% commission: <strong>$1,311.45</strong></span><span>Owner retains 85%: <strong>$7,431.55</strong></span></div>
@@ -259,7 +259,7 @@ export function openMay2026Historical() {
       <div class="ptitle">Concierge Petty Cash Summary — May 2026</div>
       <div class="pgrid">
         <div><div class="pl">Total Given by Owner (USD)</div><div class="pv">—</div></div>
-        <div><div class="pl">Total Spent on Guests</div><div class="pv">$8,852.79</div></div>
+        <div><div class="pl">Total Spent on Guests</div><div class="pv">$8,839.29</div></div>
         <div><div class="pl">Petty Cash Remaining</div><div class="pv">—</div></div>
       </div>
     </div>
@@ -270,19 +270,19 @@ export function openMay2026Historical() {
         <div class="grand-cell"><div class="l">Bookings</div><div class="v">7</div></div>
         <div class="grand-cell"><div class="l">Guest Billed (Upsells)</div><div class="v">$15,425.32</div></div>
         <div class="grand-cell"><div class="l">Accommodation Fare</div><div class="v">$31,830.05</div></div>
-        <div class="grand-cell"><div class="l">Upsell Profit Pool</div><div class="v">$6,572.53</div></div>
-        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share (Upsells 85%)</div><div class="v" style="color:#7DD89E">$5,586.65</div></div>
-        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX Total Cut</div><div class="v" style="color:#D4A96A">$5,760.39</div></div>
+        <div class="grand-cell"><div class="l">Upsell Profit Pool</div><div class="v">$6,567.28</div></div>
+        <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share (Upsells 85%)</div><div class="v" style="color:#7DD89E">$5,582.19</div></div>
+        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX Total Cut</div><div class="v" style="color:#D4A96A">$5,759.60</div></div>
       </div>
       <div style="margin-top:14px;padding:12px 14px;background:rgba(212,169,106,0.08);border-left:2px solid #D4A96A;font-size:11px;color:rgba(247,244,238,0.85)">
         <span style="color:#D4A96A;text-transform:uppercase;letter-spacing:0.1em;font-size:10px">LUX cut breakdown</span><br/>
-        $985.88 from upsells (15% of profit pool) + $4,774.51 from accommodation (15% of fare) = <strong style="color:#D4A96A">$5,760.39</strong>
+        $985.09 from upsells (15% of profit pool) + $4,774.51 from accommodation (15% of fare) = <strong style="color:#D4A96A">$5,759.60</strong>
       </div>
       <div style="margin-top:18px;padding-top:14px;border-top:1px solid rgba(247,244,238,0.15);font-size:12px">
         <span style="color:rgba(247,244,238,0.5)">Cash Collected (owner direct):</span> <span style="color:#B8924A">$1,300.00</span>
         &nbsp;&nbsp;&nbsp;<span style="color:rgba(247,244,238,0.5)">CC Fees (pass-through):</span> <span style="color:rgba(247,244,238,0.7)">$256.32</span>
       </div>
-      <div style="margin-top:12px;font-size:10px;color:rgba(247,244,238,0.4)">All figures in USD · Transport flat fees at $55/trip · Accommodation commission on room fare only</div>
+      <div style="margin-top:12px;font-size:10px;color:rgba(247,244,238,0.4)">All figures in USD · Transport flat fee 1,000 MXN profit (≈$62.50) · Sprinter cost 6,500 MXN · Accommodation commission on room fare only</div>
     </div>
   </div></body></html>`;
 
