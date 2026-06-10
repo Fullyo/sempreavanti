@@ -126,16 +126,16 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Villa Pietro<br/>Ref: HMJ3K93XXY</div>
       </div>
-      ${pBox("$554.00")}
+      ${pBox("$638.00")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
-          <tr><td>Groceries <em style="color:#9E9080;font-size:11px">$494 cost + 35% service markup</em></td><td><span class="badge b-35">35% markup</span></td><td style="text-align:right">$667.00</td><td style="text-align:right">$494.00</td><td style="text-align:right">$173.00</td><td style="text-align:right;color:#2D6A45">$147.05</td><td style="text-align:right;color:#7A5C1E">$25.95</td></tr>
+          <tr><td>Groceries <em style="color:#9E9080;font-size:11px">$578 actual food cost · billed $667</em></td><td><span class="badge b-35">Margin</span></td><td style="text-align:right">$667.00</td><td style="text-align:right">$578.00</td><td style="text-align:right">$89.00</td><td style="text-align:right;color:#2D6A45">$75.65</td><td style="text-align:right;color:#7A5C1E">$13.35</td></tr>
           <tr><td>UTV Rental <em style="color:#9E9080;font-size:11px">12,300 MXN for 3-day rental · actual folio amount</em></td><td><span class="badge b-100">Owner asset</span></td><td style="text-align:right">$230.00</td><td style="text-align:right">$0.00</td><td style="text-align:right">$230.00</td><td style="text-align:right;color:#2D6A45">$195.50</td><td style="text-align:right;color:#7A5C1E">$34.50</td></tr>
           <tr><td>Credit Card Fee <em style="color:#9E9080;font-size:11px">5% on $1,186 base</em></td><td><span class="badge b-pass">Pass-through</span></td><td style="text-align:right">$60.00</td><td style="text-align:right">$60.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
         </tbody>
         <tfoot>
-          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$957.00</td><td style="text-align:right">$554.00</td><td style="text-align:right">$403.00</td><td style="text-align:right;color:#2D6A45">$342.55</td><td style="text-align:right;color:#7A5C1E">$60.45</td></tr>
+          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$957.00</td><td style="text-align:right">$638.00</td><td style="text-align:right">$319.00</td><td style="text-align:right;color:#2D6A45">$271.15</td><td style="text-align:right;color:#7A5C1E">$47.85</td></tr>
         </tfoot>
       </table>
       <div class="accom-bar"><span>Accommodation fare: <strong>$4,623.85</strong></span><span>LUX 15% commission: <strong>$693.58</strong></span><span>Owner retains 85%: <strong>$3,930.27</strong></span></div>
