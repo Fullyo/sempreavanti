@@ -77,7 +77,7 @@ export const MAY_2026_BOOKINGS: HistoricalBooking[] = [
     villa: "Casa Sempre Avanti (Pietro + Luisa)",
     accommodationFare: 8743.00,
     upsellsBilled: 5198.00,
-    upsellsProfit: 1842.50,
+    upsellsProfit: 1837.25,
     currency: "USD",
     notes: "7 nights · 5 adults, 4 children · Invoice #58 · Ref GY-gNZkbdwv",
     monthKey: "2026-05",

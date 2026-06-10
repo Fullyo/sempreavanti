@@ -82,7 +82,7 @@ export function openMay2026Historical() {
       <div class="card cash"><div class="label">Cash Collected On Site</div><div class="value">$1,300.00</div></div>
     </div>
 
-    <div class="fx">Transport flat fees are recorded at a fixed $55 USD profit per trip regardless of FX. UTV rates vary per booking — we always use the actual amount charged on the Guesty folio. Accommodation commission is calculated on the room fare only (cleaning fees, taxes, and other Guesty-side line items are excluded from the 15% basis).</div>
+    <div class="fx">Transport flat fees follow the standing rule of 1,000 MXN profit per trip (≈$62.50 USD @ 16); the Sprinter cost basis is 6,500 MXN. UTV rates vary per booking — we always use the actual amount charged on the Guesty folio. Accommodation commission is calculated on the room fare only (cleaning fees, taxes, and other Guesty-side line items are excluded from the 15% basis).</div>
 
 
 
@@ -282,7 +282,7 @@ export function openMay2026Historical() {
         <span style="color:rgba(247,244,238,0.5)">Cash Collected (owner direct):</span> <span style="color:#B8924A">$1,300.00</span>
         &nbsp;&nbsp;&nbsp;<span style="color:rgba(247,244,238,0.5)">CC Fees (pass-through):</span> <span style="color:rgba(247,244,238,0.7)">$256.32</span>
       </div>
-      <div style="margin-top:12px;font-size:10px;color:rgba(247,244,238,0.4)">All figures in USD · Transport flat fees at $55/trip · Accommodation commission on room fare only</div>
+      <div style="margin-top:12px;font-size:10px;color:rgba(247,244,238,0.4)">All figures in USD · Transport flat fee 1,000 MXN profit (≈$62.50) · Sprinter cost 6,500 MXN · Accommodation commission on room fare only</div>
     </div>
   </div></body></html>`;
 

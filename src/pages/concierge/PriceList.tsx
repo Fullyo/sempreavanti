@@ -86,7 +86,7 @@ export default function PriceList() {
           <li>Spa treatments → margin (price − cost)</li>
           <li>Groceries & shopping → 35% markup on cost</li>
           <li>Beer (per 6-pack) → $480 − wholesale − $140 overhead</li>
-          <li>Airport transport → $1,000 MXN flat commission</li>
+          <li>Airport transport → $1,000 MXN flat profit per trip (≈$62.50 @ 16) · Sprinter cost 6,500 MXN</li>
         </ul>
         <div style={{ textAlign: "center", fontStyle: "italic", color: COLORS.textMuted, marginTop: 10, fontSize: 12 }}>
           All profits split 85% owner · 15% LUX
