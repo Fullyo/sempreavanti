@@ -1,4 +1,13 @@
 export function openMay2026Historical() {
+  const pBox = (spent: string) => `
+      <div class="petty">
+        <div class="ptitle">Concierge Petty Cash</div>
+        <div class="pgrid">
+          <div><div class="pl">Owner Float In (USD)</div><div class="pblank"></div></div>
+          <div><div class="pl">Spent on Guest</div><div class="pv">${spent}</div></div>
+          <div><div class="pl">Balance</div><div class="pblank"></div></div>
+        </div>
+      </div>`;
   const html = `<!doctype html><html><head><meta charset="utf-8"/>
   <title>May 2026 — Historical Report — Villas Sempre Avanti</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Jost:wght@300;400;500&display=swap"/>
@@ -44,6 +53,17 @@ export function openMay2026Historical() {
     .grand-cell .l { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(247,244,238,0.5); }
     .grand-cell .v { font-size: 16px; margin-top: 4px; font-weight: 500; }
     .fx { background: #FDF4E3; border: 1px solid #E5D8B5; border-radius: 4px; padding: 10px 14px; font-size: 11px; color: #7A5C1E; margin-bottom: 18px; }
+    .petty { background: #1C1914; border-radius: 4px; padding: 12px 16px; margin-bottom: 10px; }
+    .petty .ptitle { font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: #B8924A; margin-bottom: 10px; font-weight: 500; }
+    .petty .pgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .petty .pl { font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(247,244,238,0.5); }
+    .petty .pv { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; margin-top: 4px; color: #F7F4EE; }
+    .petty .pblank { display: inline-block; min-width: 90px; border-bottom: 1px solid #4A4338; height: 22px; margin-top: 4px; }
+    .petty-summary { background: #FAF7F2; border: 1px solid #B8924A; border-radius: 4px; padding: 16px 18px; margin-top: 6px; margin-bottom: 18px; }
+    .petty-summary .ptitle { font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: #B8924A; margin-bottom: 12px; font-weight: 500; }
+    .petty-summary .pgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .petty-summary .pl { font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: #9E9080; }
+    .petty-summary .pv { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; margin-top: 4px; color: #5A5242; }
     @media print { .print-btn { display:none; } body { background: #fff; } }
   </style></head><body>
   <div class="wrap">
@@ -74,6 +94,7 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Casa Sempre Avanti<br/>(Villa Pietro + Villa Luisa)</div>
       </div>
+      ${pBox("$3,378.51")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
@@ -105,6 +126,7 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Villa Pietro<br/>Ref: HMJ3K93XXY</div>
       </div>
+      ${pBox("$554.00")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
@@ -129,6 +151,7 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Villa Pietro<br/>Ref: GY-GhQQwakD</div>
       </div>
+      ${pBox("$297.00")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
@@ -152,6 +175,7 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Casa Sempre Avanti<br/>(Villa Pietro + Villa Luisa) · #58 · GY-gNZkbdwv</div>
       </div>
+      ${pBox("$3,355.50")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
@@ -177,6 +201,7 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Villa Pietro<br/>Ref: HM3KZYP9KW</div>
       </div>
+      ${pBox("$197.00")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
@@ -198,6 +223,7 @@ export function openMay2026Historical() {
         </div>
         <div class="ref">Villa Luisa<br/>#60 · HM45CA4DB3</div>
       </div>
+      ${pBox("$1,070.78")}
       <table>
         <thead><tr><th>Item</th><th>Type</th><th style="text-align:right">Guest Paid</th><th style="text-align:right">Our Cost</th><th style="text-align:right">Profit</th><th style="text-align:right">Owner 85%</th><th style="text-align:right">LUX 15%</th></tr></thead>
         <tbody>
@@ -214,6 +240,15 @@ export function openMay2026Historical() {
       <div class="note">Note · Massage cost is 500p per session. Groceries sold at the standard cost + 35% markup; alcohol sold at cost this stay. Host channel fee (−$221.05) does not affect the 15% commission basis.</div>
     </section>
 
+
+    <div class="petty-summary">
+      <div class="ptitle">Concierge Petty Cash Summary — May 2026</div>
+      <div class="pgrid">
+        <div><div class="pl">Total Given by Owner (USD)</div><div class="pv">—</div></div>
+        <div><div class="pl">Total Spent on Guests</div><div class="pv">$8,852.79</div></div>
+        <div><div class="pl">Petty Cash Remaining</div><div class="pv">—</div></div>
+      </div>
+    </div>
 
     <div class="grand">
       <h2>May 2026 — Grand Summary</h2>

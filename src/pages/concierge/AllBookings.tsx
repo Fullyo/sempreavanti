@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import {
   Booking,
   BookingItem,
+  bookingUpsellCost,
   calcCCFee,
   calcCost,
   calcGuestTotal,
@@ -51,6 +52,8 @@ export default function AllBookings() {
   const [openMonthKey, setOpenMonthKey] = useState<string | null>(null);
   const [editId, setEditId] = useState<number | null>(null);
   const [edit, setEdit] = useState<Booking | null>(null);
+  // Petty cash float per booking ref ('live-<id>' or historical string id).
+  const [petty, setPetty] = useState<Record<string, number>>({});
 
   const load = async () => {
     setLoading(true);
@@ -66,8 +69,25 @@ export default function AllBookings() {
     })));
   };
 
+  const loadPetty = async () => {
+    const { data, error } = await supabase.from("petty_cash").select("booking_ref, float_amount");
+    if (error) return;
+    const map: Record<string, number> = {};
+    (data ?? []).forEach((r: any) => { map[r.booking_ref] = Number(r.float_amount) || 0; });
+    setPetty(map);
+  };
+
+  const saveFloat = async (ref: string, amount: number, currency: string) => {
+    setPetty((p) => ({ ...p, [ref]: amount }));
+    const { error } = await supabase
+      .from("petty_cash")
+      .upsert({ booking_ref: ref, float_amount: amount, currency, updated_at: new Date().toISOString() }, { onConflict: "booking_ref" });
+    if (error) toast.error(error.message);
+  };
+
   useEffect(() => {
     load();
+    loadPetty();
   }, []);
 
   const now = new Date();
@@ -448,23 +468,32 @@ export default function AllBookings() {
 
             {/* Historical (USD) rows — read-only */}
             {group.hist.map((h) => (
-              <div key={h.id} style={{ background: "#FDF9F1", border: `1px solid #E5D8B5`, borderRadius: 4, padding: "16px 20px", marginBottom: 12 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
-                  <div>
-                    <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 19, fontWeight: 400 }}>
-                      {h.guest}
-                      <span style={{ fontSize: 9, background: "#7A5C1E1a", color: "#7A5C1E", padding: "2px 8px", borderRadius: 10, marginLeft: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>Historical · USD</span>
+              <div key={h.id} style={{ marginBottom: 12 }}>
+                <PettyCashBox
+                  guest={h.guest}
+                  currency="USD"
+                  float={petty[h.id] ?? null}
+                  spent={Math.max(0, h.upsellsBilled - h.upsellsProfit)}
+                  onSave={(amt) => saveFloat(h.id, amt, "USD")}
+                />
+                <div style={{ background: "#FDF9F1", border: `1px solid #E5D8B5`, borderRadius: 4, padding: "16px 20px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
+                    <div>
+                      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 19, fontWeight: 400 }}>
+                        {h.guest}
+                        <span style={{ fontSize: 9, background: "#7A5C1E1a", color: "#7A5C1E", padding: "2px 8px", borderRadius: 10, marginLeft: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>Historical · USD</span>
+                      </div>
+                      <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 3 }}>
+                        {h.checkin} → {h.checkout} · {h.villa}
+                      </div>
+                      {h.notes && <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 4, fontStyle: "italic" }}>{h.notes}</div>}
                     </div>
-                    <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 3 }}>
-                      {h.checkin} → {h.checkout} · {h.villa}
-                    </div>
-                    {h.notes && <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 4, fontStyle: "italic" }}>{h.notes}</div>}
                   </div>
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginTop: 12 }}>
-                  <HistCell label="Accommodation Fare" value={formatUSD(h.accommodationFare)} sub={h.accommodationFare > 0 ? `Owner 85%: ${formatUSD(h.accommodationFare * 0.85)} · LUX 15%: ${formatUSD(h.accommodationFare * 0.15)}` : "Not captured for this booking"} />
-                  <HistCell label="Upsells Billed" value={formatUSD(h.upsellsBilled)} sub={`Profit pool: ${formatUSD(h.upsellsProfit)}`} />
-                  <HistCell label="LUX Cut (Total)" value={formatUSD(h.accommodationFare * 0.15 + h.upsellsProfit * 0.15)} sub={`Owner: ${formatUSD(h.accommodationFare * 0.85 + h.upsellsProfit * 0.85)}`} color={COLORS.amber} />
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginTop: 12 }}>
+                    <HistCell label="Accommodation Fare" value={formatUSD(h.accommodationFare)} sub={h.accommodationFare > 0 ? `Owner 85%: ${formatUSD(h.accommodationFare * 0.85)} · LUX 15%: ${formatUSD(h.accommodationFare * 0.15)}` : "Not captured for this booking"} />
+                    <HistCell label="Upsells Billed" value={formatUSD(h.upsellsBilled)} sub={`Profit pool: ${formatUSD(h.upsellsProfit)}`} />
+                    <HistCell label="LUX Cut (Total)" value={formatUSD(h.accommodationFare * 0.15 + h.upsellsProfit * 0.15)} sub={`Owner: ${formatUSD(h.accommodationFare * 0.85 + h.upsellsProfit * 0.85)}`} color={COLORS.amber} />
+                  </div>
                 </div>
               </div>
             ))}
@@ -473,8 +502,18 @@ export default function AllBookings() {
             {group.live.map((b) => {
               const isEdit = editId === b.id && edit;
               const v = (isEdit ? edit! : b);
+              const liveRef = `live-${b.id}`;
+              const liveSpent = bookingUpsellCost(b.items);
               return (
-                <div key={b.id} style={{ background: "#fff", border: `1px solid ${isEdit ? COLORS.gold : COLORS.border}`, borderRadius: 4, padding: "18px 22px", marginBottom: 14 }}>
+                <div key={b.id} style={{ marginBottom: 14 }}>
+                <PettyCashBox
+                  guest={b.guest}
+                  currency="MXN"
+                  float={petty[liveRef] ?? null}
+                  spent={liveSpent}
+                  onSave={(amt) => saveFloat(liveRef, amt, "MXN")}
+                />
+                <div style={{ background: "#fff", border: `1px solid ${isEdit ? COLORS.gold : COLORS.border}`, borderRadius: 4, padding: "18px 22px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
                     <div style={{ flex: 1 }}>
                       {isEdit ? (
@@ -617,8 +656,11 @@ export default function AllBookings() {
                     )}
                   </div>
                 </div>
+                </div>
               );
             })}
+
+            <PettyCashSummary group={group} petty={petty} />
             </>)}
           </div>
         );
@@ -673,6 +715,106 @@ function HistCell({ label, value, sub, color }: { label: string; value: string; 
       <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>{label}</div>
       <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 19, fontWeight: 400, marginTop: 4, color: color ?? COLORS.textMid }}>{value}</div>
       {sub && <div style={{ fontSize: 10, color: COLORS.textMuted, marginTop: 4 }}>{sub}</div>}
+    </div>
+  );
+}
+
+function pcMoney(n: number, currency: string): string {
+  return currency === "MXN" ? formatMXN(n) : formatUSD(n);
+}
+
+function PettyCashBox({ guest, currency, float, spent, onSave }: {
+  guest: string;
+  currency: string;
+  float: number | null;
+  spent: number;
+  onSave: (amount: number) => void;
+}) {
+  const [draft, setDraft] = useState<string>(float != null ? String(float) : "");
+  useEffect(() => { setDraft(float != null ? String(float) : ""); }, [float]);
+  const floatNum = float ?? 0;
+  const balance = floatNum - spent;
+  const hasFloat = float != null && float > 0;
+  const commit = () => {
+    const amt = Math.max(0, Number(draft) || 0);
+    if (amt !== (float ?? 0)) onSave(amt);
+  };
+  return (
+    <div style={{ background: "#1C1914", border: "1px solid #1C1914", borderRadius: 4, padding: "12px 16px", marginBottom: 6 }}>
+      <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: "#B8924A", marginBottom: 10, fontWeight: 500 }}>
+        Concierge Petty Cash — {guest}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, alignItems: "end" }}>
+        <div>
+          <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: "rgba(247,244,238,0.5)", marginBottom: 4 }}>Owner Float In ({currency})</div>
+          <input
+            type="number"
+            min={0}
+            value={draft}
+            placeholder="0"
+            onChange={(e) => setDraft(e.target.value)}
+            onBlur={commit}
+            onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
+            style={{ width: "100%", padding: "8px 10px", background: "#2A2620", border: "1px solid #4A4338", borderRadius: 3, color: "#F7F4EE", fontFamily: "inherit", fontSize: 15 }}
+          />
+        </div>
+        <div>
+          <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: "rgba(247,244,238,0.5)" }}>Spent on Guest</div>
+          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, marginTop: 4, color: "#F7F4EE" }}>{pcMoney(spent, currency)}</div>
+        </div>
+        <div>
+          <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: "rgba(247,244,238,0.5)" }}>Balance</div>
+          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, marginTop: 4, color: !hasFloat ? "rgba(247,244,238,0.4)" : balance < 0 ? "#E08A8A" : "#7FC9A0" }}>
+            {hasFloat ? pcMoney(balance, currency) : "—"}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PettyCashSummary({ group, petty }: {
+  group: { live: Booking[]; hist: HistoricalBooking[] };
+  petty: Record<string, number>;
+}) {
+  const usd = { float: 0, spent: 0 };
+  const mxn = { float: 0, spent: 0 };
+  group.hist.forEach((h) => {
+    usd.float += petty[h.id] ?? 0;
+    usd.spent += Math.max(0, h.upsellsBilled - h.upsellsProfit);
+  });
+  group.live.forEach((b) => {
+    mxn.float += petty[`live-${b.id}`] ?? 0;
+    mxn.spent += bookingUpsellCost(b.items);
+  });
+  const blocks: { currency: string; float: number; spent: number }[] = [];
+  if (group.hist.length) blocks.push({ currency: "USD", ...usd });
+  if (group.live.length) blocks.push({ currency: "MXN", ...mxn });
+  if (!blocks.length) return null;
+  return (
+    <div style={{ background: "#FAF7F2", border: `1px solid ${COLORS.gold}`, borderRadius: 4, padding: "16px 18px", marginTop: 6, marginBottom: 12 }}>
+      <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: COLORS.gold, marginBottom: 12, fontWeight: 500 }}>
+        Petty Cash Summary — Month
+      </div>
+      {blocks.map((bl) => {
+        const balance = bl.float - bl.spent;
+        return (
+          <div key={bl.currency} style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 6 }}>
+            <div>
+              <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>Total Given by Owner ({bl.currency})</div>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, marginTop: 4, color: COLORS.textMid }}>{pcMoney(bl.float, bl.currency)}</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>Total Spent on Guests</div>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, marginTop: 4, color: COLORS.textMid }}>{pcMoney(bl.spent, bl.currency)}</div>
+            </div>
+            <div>
+              <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>Petty Cash Remaining</div>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, marginTop: 4, color: balance < 0 ? COLORS.red : COLORS.green }}>{pcMoney(balance, bl.currency)}</div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

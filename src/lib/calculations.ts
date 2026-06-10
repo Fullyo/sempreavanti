@@ -71,6 +71,12 @@ export function formatUSD(n: number | null | undefined): string {
   return "$" + (n as number).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+// Concierge petty cash: what we actually paid out of pocket on a live booking's
+// upsells (sum of each item's cost). Tips and CC fees are pass-through and excluded.
+export function bookingUpsellCost(items: { cost: number | null }[]): number {
+  return items.reduce((s, i) => s + (i.cost ?? 0), 0);
+}
+
 export const OWNER_SHARE = 0.85;
 export const LUX_SHARE = 0.15;
 
