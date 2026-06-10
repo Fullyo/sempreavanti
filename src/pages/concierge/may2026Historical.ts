@@ -135,7 +135,7 @@ export function openMay2026Historical() {
           <tr><td>Credit Card Fee <em style="color:#9E9080;font-size:11px">5% on $1,186 base</em></td><td><span class="badge b-pass">Pass-through</span></td><td style="text-align:right">$60.00</td><td style="text-align:right">$60.00</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td></tr>
         </tbody>
         <tfoot>
-          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$957.00</td><td style="text-align:right">$554.00</td><td style="text-align:right">$403.00</td><td style="text-align:right;color:#2D6A45">$342.55</td><td style="text-align:right;color:#7A5C1E">$60.45</td></tr>
+          <tr><td colspan="2" style="text-align:right">Totals (billed)</td><td style="text-align:right">$957.00</td><td style="text-align:right">$638.00</td><td style="text-align:right">$319.00</td><td style="text-align:right;color:#2D6A45">$271.15</td><td style="text-align:right;color:#7A5C1E">$47.85</td></tr>
         </tfoot>
       </table>
       <div class="accom-bar"><span>Accommodation fare: <strong>$4,623.85</strong></span><span>LUX 15% commission: <strong>$693.58</strong></span><span>Owner retains 85%: <strong>$3,930.27</strong></span></div>
