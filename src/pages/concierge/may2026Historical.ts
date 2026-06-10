@@ -51,14 +51,14 @@ export function openMay2026Historical() {
     <div class="conf">Internal Report · Confidential</div>
     <h1>Villas Sempre Avanti</h1>
     <div class="sub">Revenue &amp; Profit Report — May 2026</div>
-    <div class="meta">3 bookings · All figures in USD · Includes 15% management commission on accommodation fare</div>
+    <div class="meta">6 bookings · All figures in USD · Includes 15% management commission on accommodation fare</div>
 
     <div class="cards">
-      <div class="card"><div class="label">Guest Billed (Upsells)</div><div class="value">$8,270.32</div></div>
-      <div class="card accom"><div class="label">Accommodation Fare</div><div class="value">$18,716.85</div></div>
-      <div class="card"><div class="label">Upsell Profit Pool</div><div class="value">$4,040.81</div></div>
-      <div class="card owner"><div class="label">Owner's Share (Upsells 85%)</div><div class="value">$3,434.69</div></div>
-      <div class="card lux"><div class="label">LUX Total Cut</div><div class="value">$3,413.65</div></div>
+      <div class="card"><div class="label">Guest Billed (Upsells)</div><div class="value">$15,425.82</div></div>
+      <div class="card accom"><div class="label">Accommodation Fare</div><div class="value">$30,857.00</div></div>
+      <div class="card"><div class="label">Upsell Profit Pool</div><div class="value">$6,371.31</div></div>
+      <div class="card owner"><div class="label">Owner's Share (Upsells 85%)</div><div class="value">$5,415.61</div></div>
+      <div class="card lux"><div class="label">LUX Total Cut</div><div class="value">$5,584.25</div></div>
       <div class="card cash"><div class="label">Cash Collected On Site</div><div class="value">$1,300.00</div></div>
     </div>
 
