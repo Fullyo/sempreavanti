@@ -29,6 +29,7 @@ export type Database = {
           items: Json
           saved_at: string
           tip: number
+          tip_method: string
           tip_mode: string
           tip_value: number
           total_guest: number
@@ -48,6 +49,7 @@ export type Database = {
           items?: Json
           saved_at?: string
           tip?: number
+          tip_method?: string
           tip_mode?: string
           tip_value?: number
           total_guest?: number
@@ -67,6 +69,7 @@ export type Database = {
           items?: Json
           saved_at?: string
           tip?: number
+          tip_method?: string
           tip_mode?: string
           tip_value?: number
           total_guest?: number
