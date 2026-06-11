@@ -154,6 +154,7 @@ export interface Booking {
   cc_fee_on: boolean;
   tip_mode: string;
   tip_value: number;
+  tip_method?: "cc" | "cash";
   tip: number;
   cc_fee: number;
   total_guest: number;
