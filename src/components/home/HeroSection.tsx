@@ -32,7 +32,7 @@ export default function HeroSection({ listings }: HeroSectionProps) {
           transition={{ delay: 0.2, duration: 0.8 }}
           className="text-xs md:text-sm font-sans uppercase tracking-[0.4em] mb-5 opacity-90 [text-shadow:0_1px_8px_rgba(0,0,0,0.5)]"
         >
-          A Private Beachfront Destination
+          Riviera Nayarit · Sayulita
         </motion.p>
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
@@ -48,24 +48,27 @@ export default function HeroSection({ listings }: HeroSectionProps) {
           transition={{ delay: 0.6, duration: 0.8 }}
           className="font-serif text-xl md:text-3xl font-light tracking-wide opacity-95 [text-shadow:0_2px_14px_rgba(0,0,0,0.5)]"
         >
-          More Than a Stay — A Destination
+          Secluded beachfront on Patzcuarito Beach
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.8 }}
-          className="mt-10 flex flex-col sm:flex-row gap-4 justify-center"
+          className="mt-10 flex flex-col sm:flex-row items-center gap-6 justify-center"
         >
           <InquiryDialog>
-            <button className="inline-block px-8 py-3 bg-accent text-accent-foreground font-sans text-sm uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full">
+            <button className="inline-block px-7 py-2.5 bg-accent text-accent-foreground font-sans text-xs uppercase tracking-widest font-light hover:bg-accent/90 transition-colors rounded-full">
               Inquire
             </button>
           </InquiryDialog>
           <Link
             to="/villas"
-            className="inline-block px-8 py-3 border border-primary-foreground/50 text-primary-foreground font-sans text-sm uppercase tracking-widest hover:bg-primary-foreground/10 transition-colors rounded-full"
+            className="group inline-flex items-center gap-1.5 text-primary-foreground/90 font-sans text-xs uppercase tracking-widest font-light hover:text-primary-foreground transition-colors [text-shadow:0_1px_8px_rgba(0,0,0,0.5)]"
           >
-            Explore the Estate
+            <span className="border-b border-primary-foreground/40 pb-0.5 group-hover:border-primary-foreground/80 transition-colors">
+              Explore the Estate
+            </span>
+            <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
           </Link>
         </motion.div>
       </div>
