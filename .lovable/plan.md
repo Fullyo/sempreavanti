@@ -1,21 +1,35 @@
-You’re right to be frustrated. I’m not going to treat this as refresh/deploy/cache anymore.
+## Goal
 
-Do I know what the issue is? Yes: the All Bookings page can render an empty “Current month” card for May before/without attaching the historical May rows. The fix should not depend on refresh, current date, or deployment timing.
+The long hero sentence ("Two luxury beachfront villas. Five bedrooms. Fully hosted. Where wellness, dining, adventure, and celebration flow seamlessly.") is hard to read over the busy photo. We'll make the hero stronger and more legible, and relocate the descriptive copy into the section below.
 
-Plan:
-1. Replace the current-month-first render logic in `AllBookings.tsx` with a safer month builder:
-   - Start from actual live bookings.
-   - Always inject historical bookings from `ALL_HISTORICAL` by their forced `monthKey`.
-   - Only add an empty current-month folder if that month does not already exist in historical/live data.
-2. Add a hard defensive guard for May 2026:
-   - If the rendered key is `2026-05`, its group must use `MAY_2026_BOOKINGS` directly if the grouped historical array is empty.
-   - This makes it impossible for May 2026 to show “No bookings yet” while May historical data exists in the app.
-3. Make the month filter and dropdown use the same historical month keys, so selecting “All months” or “May 2026” uses identical grouping.
-4. Update the visible helper text so it does not imply May/June current-month logic is what drives historical reports.
-5. Verify after implementation by checking the rendered source logic and, if browser access is available, opening `/upsells` and confirming:
-   - May 2026 shows 7 bookings.
-   - April 2026 remains separate with 6 bookings.
-   - The May report button opens the May report, not April.
+## Hero changes (`src/components/home/HeroSection.tsx`)
 
-Technical detail:
-The historical May rows already exist in `historicalData.ts`. The broken part is `AllBookings.tsx`: it creates a current-month placeholder and that placeholder can win in the UI. I’ll remove that failure mode instead of asking you to refresh again.
+- **Replace the long subtitle** with the short, punchy tagline: `More Than a Stay — A Destination`. This becomes a refined, legible line directly under "Sempre Avanti" instead of the dense four-clause sentence.
+- **Improve readability / make it stronger:**
+  - Deepen the gradient scrim (stronger bottom-weighted darkening) so white text reads cleanly over the bright villa photo.
+  - Add a subtle text shadow on the title and tagline.
+  - Tighten vertical rhythm so the eyebrow → title → tagline → buttons read as one strong, centered block.
+- Keep the existing buttons (Inquire / Explore the Estate) and entrance animations.
+
+Resulting hero stack:
+```text
+A PRIVATE BEACHFRONT DESTINATION   (eyebrow)
+Sempre Avanti                       (title)
+More Than a Stay — A Destination    (tagline)
+[ Inquire ]   [ Explore the Estate ]
+```
+
+## Estate section changes (`src/pages/Index.tsx`)
+
+Since "More Than a Stay — A Destination" moves up to the hero, the section below needs a fresh heading and absorbs the descriptive copy:
+
+- **New section heading** (replacing "More Than a Stay — A Destination"), e.g. `Two Villas. One Seamless Estate.`
+- **Lead the body paragraph** with the relocated hero line, woven into the existing copy:
+  > Two luxury beachfront villas. Five bedrooms. Fully hosted — where wellness, dining, adventure, and celebration flow seamlessly.
+- Refine the second paragraph so it doesn't repeat "two adjacent beachfront villas" twice (current copy duplicates this).
+- Keep the stats grid, carousel, and "Explore the Villas" button unchanged.
+
+## Notes
+
+- All copy uses existing semantic tokens and fonts (Cormorant Garamond / Montserrat) — no new colors or design tokens.
+- No changes to functionality, routing, or the rest of the page sections.
