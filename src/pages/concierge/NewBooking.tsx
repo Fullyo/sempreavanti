@@ -39,6 +39,7 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
   const [services, setServices] = useState<Service[]>([]);
   const [tipMode, setTipMode] = useState<"amount" | "percent">("amount");
   const [tipValue, setTipValue] = useState(0);
+  const [tipMethod, setTipMethod] = useState<"cc" | "cash">("cc");
   const [ccFeeOn, setCcFeeOn] = useState(false);
   const [cashCollected, setCashCollected] = useState(0);
   const [accommodationFare, setAccommodationFare] = useState(0);
