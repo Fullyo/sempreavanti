@@ -137,6 +137,7 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
       cc_fee_on: ccFeeOn,
       tip_mode: tipMode,
       tip_value: tipValue,
+      tip_method: tipMethod,
       tip,
       cc_fee: ccFee,
       total_guest: totalGuest,
