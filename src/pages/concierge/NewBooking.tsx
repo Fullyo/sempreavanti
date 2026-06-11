@@ -104,6 +104,7 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
     setRows([]);
     setTipMode("amount");
     setTipValue(0);
+    setTipMethod("cc");
     setCcFeeOn(false);
     setCashCollected(0);
     setAccommodationFare(0);
