@@ -24,13 +24,13 @@ export default function HeroSection({ listings }: HeroSectionProps) {
       ) : (
         <div className="absolute inset-0 bg-primary" />
       )}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/15 to-black/50" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/30 to-black/70" />
       <div className="relative z-10 text-center text-primary-foreground px-4 max-w-4xl">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.8 }}
-          className="text-xs md:text-sm font-sans uppercase tracking-[0.4em] mb-6 opacity-90"
+          className="text-xs md:text-sm font-sans uppercase tracking-[0.4em] mb-5 opacity-90 [text-shadow:0_1px_8px_rgba(0,0,0,0.5)]"
         >
           A Private Beachfront Destination
         </motion.p>
@@ -38,7 +38,7 @@ export default function HeroSection({ listings }: HeroSectionProps) {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.8 }}
-          className="font-serif text-5xl md:text-7xl lg:text-8xl font-light mb-6"
+          className="font-serif text-5xl md:text-7xl lg:text-8xl font-light mb-4 [text-shadow:0_2px_20px_rgba(0,0,0,0.45)]"
         >
           Sempre Avanti
         </motion.h1>
@@ -46,10 +46,9 @@ export default function HeroSection({ listings }: HeroSectionProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8 }}
-          className="text-base md:text-xl font-sans font-light max-w-2xl mx-auto opacity-90 leading-relaxed"
+          className="font-serif text-xl md:text-3xl font-light tracking-wide opacity-95 [text-shadow:0_2px_14px_rgba(0,0,0,0.5)]"
         >
-          Two luxury beachfront villas. Five bedrooms. Fully hosted.
-          Where wellness, dining, adventure, and celebration flow seamlessly.
+          More Than a Stay — A Destination
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
