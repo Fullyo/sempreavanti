@@ -107,7 +107,7 @@ export default function Index() {
                 The Estate
               </span>
               <h2 className="font-serif text-3xl md:text-5xl font-light leading-tight mb-4 text-foreground">
-                More Than a Stay — A Destination
+                Two Villas. One Seamless Estate.
               </h2>
               {/* Decorative divider */}
               <div className="flex items-center gap-3 mb-6">
@@ -116,10 +116,10 @@ export default function Index() {
                 <div className="h-px w-12 bg-golden" />
               </div>
               <p className="text-base font-sans text-muted-foreground leading-relaxed mb-4">
-                Villas Sempre Avanti is a self-contained private resort on the Riviera Nayarit coast. Two adjacent beachfront villas — Villa Pietro and Villa Luisa — create a seamless estate with private beach, pool, and every detail attended to by your dedicated team.
+                Two luxury beachfront villas. Five bedrooms. Fully hosted — where wellness, dining, adventure, and celebration flow seamlessly.
               </p>
               <p className="text-base font-sans text-muted-foreground leading-relaxed mb-8">
-                Two adjacent beachfront villas with private pool, beachfront dining, and a dedicated team of chefs, concierge, and housekeeping. Everything you need, nothing you don't.
+                Villas Sempre Avanti is a self-contained private resort on the Riviera Nayarit coast. Villa Pietro and Villa Luisa sit side by side on secluded beachfront, sharing a pool and a dedicated team of chefs, concierge, and housekeeping. Everything you need, nothing you don't.
               </p>
               {/* 2x2 Stats Grid */}
               <div className="grid grid-cols-2 gap-6 mb-8">
