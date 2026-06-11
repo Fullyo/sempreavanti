@@ -1,0 +1,1 @@
+ALTER TABLE public.bookings ADD COLUMN IF NOT EXISTS tip_method text NOT NULL DEFAULT 'cc';

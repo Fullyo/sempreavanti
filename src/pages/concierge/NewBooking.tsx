@@ -39,6 +39,7 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
   const [services, setServices] = useState<Service[]>([]);
   const [tipMode, setTipMode] = useState<"amount" | "percent">("amount");
   const [tipValue, setTipValue] = useState(0);
+  const [tipMethod, setTipMethod] = useState<"cc" | "cash">("cc");
   const [ccFeeOn, setCcFeeOn] = useState(false);
   const [cashCollected, setCashCollected] = useState(0);
   const [accommodationFare, setAccommodationFare] = useState(0);
@@ -103,6 +104,7 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
     setRows([]);
     setTipMode("amount");
     setTipValue(0);
+    setTipMethod("cc");
     setCcFeeOn(false);
     setCashCollected(0);
     setAccommodationFare(0);
@@ -135,6 +137,7 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
       cc_fee_on: ccFeeOn,
       tip_mode: tipMode,
       tip_value: tipValue,
+      tip_method: tipMethod,
       tip,
       cc_fee: ccFee,
       total_guest: totalGuest,
@@ -459,6 +462,50 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
             </span>
           </div>
         </div>
+
+        {/* Tip payment method row */}
+        {tip > 0 && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingTop: 12,
+              fontSize: 13,
+            }}
+          >
+            <div>
+              Tip Paid Via{" "}
+              <span style={{ color: "rgba(247,244,238,0.5)" }}>
+                {tipMethod === "cc"
+                  ? "(charged on card — owner pays staff back)"
+                  : "(cash — staff split it directly)"}
+              </span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              {(["cc", "cash"] as const).map((m) => (
+                <button
+                  key={m}
+                  onClick={() => setTipMethod(m)}
+                  style={{
+                    background: tipMethod === m ? COLORS.gold : "rgba(255,255,255,0.08)",
+                    color: tipMethod === m ? "#fff" : "rgba(247,244,238,0.7)",
+                    border: "1px solid rgba(247,244,238,0.2)",
+                    padding: "6px 14px",
+                    cursor: "pointer",
+                    fontFamily: "'Jost', sans-serif",
+                    fontSize: 11,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
+                    borderRadius: 2,
+                  }}
+                >
+                  {m === "cc" ? "Credit Card" : "Cash"}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* CC fee row */}
         <div

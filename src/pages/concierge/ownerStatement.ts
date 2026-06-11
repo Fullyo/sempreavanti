@@ -18,7 +18,11 @@ export function openOwnerStatement(month: string, year: number, bookings: Bookin
   const tipsTotal = bookings.reduce((s, b) => s + Number(b.tip), 0);
   // Tips collected via credit card flow through the owner's account, so the owner
   // must forward them to staff. Cash tips are paid to staff directly (excluded).
-  const tipsViaCC = bookings.reduce((s, b) => s + (b.cc_fee_on ? Number(b.tip) : 0), 0);
+  // Use the explicit tip_method when present; fall back to the cc_fee_on flag for
+  // older bookings saved before the tip method field existed.
+  const tipViaCC = (b: { tip: number; tip_method?: string; cc_fee_on: boolean }) =>
+    (b.tip_method ? b.tip_method === "cc" : b.cc_fee_on) ? Number(b.tip) : 0;
+  const tipsViaCC = bookings.reduce((s, b) => s + tipViaCC(b), 0);
   const tipsCash = tipsTotal - tipsViaCC;
   const ccFeesTotal = bookings.reduce((s, b) => s + Number(b.cc_fee), 0);
   const today = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
