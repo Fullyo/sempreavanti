@@ -121,7 +121,7 @@ const categories = [
     items: [
       {
         name: "Surf Lesson — Sayulita",
-        price: "$1,200 MXN per person",
+        price: "$1,400 MXN per person",
         details: "Minimum 2 people",
         desc: "Perfect for beginners or those looking to refine their skills. Board and rash guard included.",
       },
