@@ -20,7 +20,6 @@ import Golf from "./pages/experiences/Golf";
 import Ocean from "./pages/experiences/Ocean";
 import Land from "./pages/experiences/Land";
 import Cultural from "./pages/experiences/Cultural";
-import Pricing from "./pages/Pricing";
 import Book from "./pages/Book";
 import Menu from "./pages/Menu";
 import ConciergeGuide from "./pages/ConciergeGuide";
