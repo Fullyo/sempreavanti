@@ -109,7 +109,7 @@ const HTML = `
     <div class="top-five-num">2</div>
     <div class="top-five-content">
       <span class="top-five-title">Surf with Victor</span>
-      <span class="top-five-detail">Guided sessions for all levels · from $1,200 MXN/person</span>
+      <span class="top-five-detail">Guided sessions for all levels · from $1,400 MXN/person</span>
     </div>
   </div>
   <div class="top-five-item">
@@ -406,7 +406,7 @@ const HTML = `
 <div class="page">
   <div class="section-header">
     <span>SURFING WITH VICTOR</span>
-    <span class="gold-badge">from $1,200 MXN / person</span>
+    <span class="gold-badge">from $1,400 MXN / person</span>
   </div>
   <p class="description">Victor is your expert surf guide for the Riviera Nayarit. With intimate knowledge of every break — from Sayulita's beginner waves to La Lancha's world-class barrels — he tailors every session to your level. Instagram: @yeahvary.surf</p>
   <div class="hero-image" role="img" aria-label="Victor Surf" data-bg-src="https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/surf-sayulita.jpg" style="background-image:url('https://hrtyncnxnbdteccigzav.supabase.co/storage/v1/object/public/site-assets/concierge-guide/surf-sayulita.jpg')"></div>
@@ -422,7 +422,7 @@ const HTML = `
   </div>
   <div style="margin-top:10px">
     <div class="grid-item" style="border-bottom:1px solid #eee;padding:8px 0">
-      <strong>1. Beginner Lesson (Sayulita) — $1,200 MXN/pp</strong>
+      <strong>1. Beginner Lesson (Sayulita) — $1,400 MXN/pp</strong>
       <span>Min 2 · Board &amp; rash guard included</span>
     </div>
     <div class="grid-item" style="border-bottom:1px solid #eee;padding:8px 0">

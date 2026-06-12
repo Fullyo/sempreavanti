@@ -20,7 +20,6 @@ import Golf from "./pages/experiences/Golf";
 import Ocean from "./pages/experiences/Ocean";
 import Land from "./pages/experiences/Land";
 import Cultural from "./pages/experiences/Cultural";
-import Pricing from "./pages/Pricing";
 import Book from "./pages/Book";
 import Menu from "./pages/Menu";
 import ConciergeGuide from "./pages/ConciergeGuide";
@@ -56,7 +55,7 @@ const App = () => (
           <Route path="/upsells" element={<Concierge />} />
           <Route path="/concierge" element={<Navigate to="/upsells" replace />} />
           <Route path="/transportation" element={<Navigate to="/location" replace />} />
-          <Route path="/guide" element={<Pricing />} />
+          <Route path="/guide" element={<ConciergeGuide />} />
           <Route path="/pricing" element={<Navigate to="/guide" replace />} />
           <Route path="/book" element={<Book />} />
           <Route path="/menu" element={<Menu />} />
