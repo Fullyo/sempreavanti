@@ -176,6 +176,53 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
     <div>
       <h1 style={sectionTitle}>New Booking</h1>
 
+      {savedToken && (
+        <div
+          style={{
+            background: COLORS.dark,
+            color: "#F7F4EE",
+            borderRadius: 4,
+            padding: 22,
+            marginTop: 18,
+          }}
+        >
+          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, color: COLORS.gold, marginBottom: 6 }}>
+            Booking saved — share the payment link
+          </div>
+          <div style={{ fontSize: 12, color: "rgba(247,244,238,0.6)", marginBottom: 14 }}>
+            Send this to the guest. They'll see their experiences, the included 5% gratuity, optional tipping, and can
+            pay by card.
+          </div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            <input
+              readOnly
+              value={payLink}
+              onFocus={(e) => e.currentTarget.select()}
+              style={{
+                flex: "1 1 280px",
+                padding: "10px 12px",
+                background: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(247,244,238,0.2)",
+                color: "#F7F4EE",
+                fontFamily: "'Jost', sans-serif",
+                fontSize: 13,
+                borderRadius: 2,
+              }}
+            />
+            <button onClick={copyLink} style={btnPrimary}>
+              {copied ? "Copied ✓" : "Copy link"}
+            </button>
+            <button onClick={() => { setSavedToken(null); onSaved(); }} style={{ ...btnGhost, color: "#F7F4EE", borderColor: "rgba(247,244,238,0.3)" }}>
+              View all bookings
+            </button>
+            <button onClick={() => setSavedToken(null)} style={{ ...btnGhost, color: "#F7F4EE", borderColor: "rgba(247,244,238,0.3)" }}>
+              Start another
+            </button>
+          </div>
+        </div>
+      )}
+
+
       {/* Guest info */}
       <div
         style={{
