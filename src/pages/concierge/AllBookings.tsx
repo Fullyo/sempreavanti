@@ -593,6 +593,23 @@ export default function AllBookings() {
                     <div style={{ textAlign: "right" }}>
                       <div style={{ fontSize: 18, fontWeight: 500 }}>{formatMXN(v.total_guest)}</div>
                       <div style={{ fontSize: 12, color: COLORS.green, marginTop: 2 }}>Profit: {formatMXN(v.total_profit)}</div>
+                      <div
+                        style={{
+                          display: "inline-block",
+                          marginTop: 6,
+                          fontSize: 10,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.1em",
+                          padding: "3px 8px",
+                          borderRadius: 2,
+                          background: b.payment_status === "paid" ? "#E7F0E9" : "#FBEFE2",
+                          color: b.payment_status === "paid" ? COLORS.green : COLORS.amber,
+                        }}
+                      >
+                        {b.payment_status === "paid"
+                          ? `Paid${b.amount_paid ? " · " + formatMXN(b.amount_paid) : ""}`
+                          : "Unpaid"}
+                      </div>
                     </div>
                   </div>
 
