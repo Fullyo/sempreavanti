@@ -263,9 +263,8 @@ export default function AllBookings() {
     const total_guest = servicesSubtotal + tip + cc_fee;
     const total_profit = items.reduce((s, i) => s + (i.profit ?? 0), 0);
 
-    const { error } = await supabase
-      .from("bookings")
-      .update({
+    try {
+      await conciergeDb.bookingsUpdate(edit.id, {
         guest: edit.guest,
         checkin: edit.checkin,
         checkout: edit.checkout,
@@ -277,9 +276,10 @@ export default function AllBookings() {
         cc_fee,
         total_guest,
         total_profit,
-      })
-      .eq("id", edit.id);
-    if (error) return toast.error(error.message);
+      });
+    } catch (e) {
+      return toast.error((e as Error).message);
+    }
     toast.success("Booking updated");
     cancelEdit();
     load();
@@ -287,8 +287,11 @@ export default function AllBookings() {
 
   const remove = async (id: number) => {
     if (!confirm("Delete this booking? This cannot be undone.")) return;
-    const { error } = await supabase.from("bookings").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    try {
+      await conciergeDb.bookingsDelete(id);
+    } catch (e) {
+      return toast.error((e as Error).message);
+    }
     toast.success("Deleted");
     load();
   };
