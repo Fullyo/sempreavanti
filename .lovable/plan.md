@@ -1,46 +1,80 @@
-# Hero Redesign
+## Guest Upsell Payment System
 
-A cleaner, more editorial hero that puts the location front and center, fixes the terminology, and tones down the buttons.
+After the concierge saves a booking, they get a shareable **payment link** (`/pay/<token>`). The guest opens it, sees their stay summary, the included gratuity, optional extra tip choices, and pays by card via Stripe.
 
-## Copy decisions
+### What the guest is charged (all in MXN)
 
-On terminology: I will avoid "private beachfront" (per brand rules — "private beach" is forbidden). The estate sits in the Sayulita municipality, but the beach itself is Patzcuarito. So the location reads honestly as both:
-
-- **Eyebrow** (small, above title): `RIVIERA NAYARIT · SAYULITA`
-- **Title** (unchanged): `Sempre Avanti`
-- **Subtitle** (replaces "More Than a Stay — A Destination"): `Secluded beachfront on Patzcuarito Beach`
-
-This keeps it short, readable, names both places, and stays inside the brand language ("secluded beachfront").
-
-## Hero layout (`src/components/home/HeroSection.tsx`)
-
-New vertical stack, centered:
+The accommodation fare is **not** charged here (already paid via Guesty) — it is shown for transparency and as part of the gratuity base. USD accommodation fares are converted to pesos at a fixed **16** rate.
 
 ```text
-        RIVIERA NAYARIT · SAYULITA        (eyebrow, letter-spaced, smaller)
-              Sempre Avanti               (serif title, unchanged)
-   Secluded beachfront on Patzcuarito Beach   (serif subtitle, lighter)
-        [ Inquire ]   Explore the Estate →   (toned-down buttons)
+Upsells subtotal              (sum of all upsell guest totals, MXN)
+Accommodation fare            (shown for context, USD→MXN @16)
+─────────────────────────────
+Included gratuity (5%)        = 5% × (accommodation + upsells)   ← mandatory
+Additional tip (optional)     = guest picks 10% / 15% / 20% / custom × (accommodation + upsells)
+─────────────────────────────
+Card processing fee (5%)      = 5% × (upsells + gratuity + tip)   ← guest pays
+═════════════════════════════
+TOTAL CHARGED (MXN)           = upsells + gratuity + tip + 5% fee
 ```
 
-Visual refinements:
-- Keep the existing background image and the stronger bottom-weighted gradient scrim and text shadows (good for readability).
-- Tighten vertical rhythm so the stack feels balanced.
+The guest only ever sees totals — never our cost or profit figures.
 
-## Buttons (toned down)
+### Guest payment page
 
-Currently two full pill buttons — one solid accent, one outlined — both heavy.
+A new public, editorial-styled page (Cormorant Garamond / Montserrat, ocean-jungle palette) at `/pay/:token`:
 
-New treatment:
-- **Primary:** `Inquire` — keep one accent pill but smaller (reduced padding, lighter weight), so it reads as a single clear call to action.
-- **Secondary:** `Explore the Estate` — convert to a subtle underlined/arrow text link (no border, no fill), so it stops competing with the primary.
+- Header with villa name and the guest's name + dates.
+- Itemized upsells (name, qty, line total) and accommodation fare line.
+- A gratuity note in the house's warm voice, e.g.:
+  > "As part of a fully serviced villa, a base 5% gratuity is included. Our staff appreciates it deeply — it makes a real difference for the team caring for you."
+- An invitation to add more, with **10% / 15% / 20% / Custom** buttons:
+  > "If our concierge, chefs, housekeeping, property team, and valet made your stay special, you're welcome to add to their gratuity."
+- A live-updating total and a **Pay by card** button that opens Stripe Checkout.
+- A clear confirmation state once paid.
 
-This gives a single confident CTA plus a quiet secondary, instead of two competing blocks.
+### Concierge side
 
-## Scope
+- In **New Booking**, after saving, show the generated payment link with a **Copy link** button.
+- In **All Bookings**, each live booking gets a **Copy payment link** action and a payment-status badge (Unpaid / Paid, with amount + date once paid).
 
-- Only `src/components/home/HeroSection.tsx` changes.
-- No changes to the Estate section, routing, or other page content.
-- Uses existing semantic tokens and fonts (Cormorant Garamond / Montserrat) — no new colors.
+### Stripe (your own keys — BYOK)
 
-If you'd prefer different wording for the subtitle (e.g. drop "Beach", or add "fully hosted"), tell me and I'll adjust before/after building.
+- You'll provide your **Stripe secret key** and a **webhook signing secret**, stored securely as backend secrets.
+- Checkout runs in MXN. On successful payment, a webhook marks the booking paid and records the amount, gratuity, and tip the guest chose.
+
+---
+
+### Technical section
+
+**Database (migration on `bookings`)**
+
+- `pay_token uuid unique default gen_random_uuid()` — link identifier (backfilled for existing rows).
+- `payment_status text default 'unpaid'` — `unpaid` | `paid`.
+- `exchange_rate numeric default 16`.
+- `guest_gratuity numeric`, `guest_tip numeric`, `amount_paid numeric`, `paid_at timestamptz`, `stripe_session_id text`.
+- These are stored separately from the existing concierge `tip`/`cc_fee` fields, so internal owner-statement and profit math is untouched.
+
+**Edge functions** (all `verify_jwt = false`, CORS enabled):
+
+1. `guest-payment-get` — input `{ token }`; uses service role to load the booking and returns a **sanitized** payload (guest, dates, accommodation fare in MXN, upsell line items with names/qty/guest_total only, rate, computed gratuity, payment_status). Strips all `cost`/`profit`/`unit_cost`.
+2. `guest-payment-checkout` — input `{ token, tipMode, tipValue }`; recomputes gratuity, tip, and 5% fee server-side (never trusts client amounts), creates a Stripe Checkout Session (mode `payment`, currency `mxn`, line items for upsells, gratuity, tip, fee), stores `stripe_session_id`, returns the Checkout URL.
+3. `stripe-webhook` — verifies signature, on `checkout.session.completed` sets `payment_status='paid'`, `amount_paid`, `guest_gratuity`, `guest_tip`, `paid_at`.
+
+**Secrets to add:** `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` (requested via secure form before wiring checkout).
+
+**Frontend**
+
+- New route `/pay/:token` → `GuestPayment.tsx` (public, not behind concierge gate, `noindex`).
+- Shared MXN calc helpers (gratuity 5%, fee 5%) added to `src/lib/calculations.ts` so the page and the edge function agree.
+- New booking + All Bookings get link-copy buttons and status badges.
+
+**Notes / assumptions**
+
+- Mandatory gratuity and optional tip are both computed on the combined (accommodation + upsells) base — adjustable if you'd rather base the extra tip on upsells only.
+- Card fee is 5% (replaces the old 3% reference for this guest flow).
+- Currency is always MXN; the only conversion is USD accommodation → MXN at 16.  
+  
+alwasy include 1000 pesos if guests are renting the UTVs.  if two rentals, 2000 pesos for gas and consider any rules i may have forgotten
+- send me also the safe box in the chat for me to insert the api key for stripe
+- &nbsp;
