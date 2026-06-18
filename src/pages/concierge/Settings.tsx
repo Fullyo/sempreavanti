@@ -25,8 +25,11 @@ export default function Settings() {
   const saveRow = async (id: number) => {
     const p = edits[id];
     if (!p) return;
-    const { error } = await supabase.from("services").update(p).eq("id", id);
-    if (error) return toast.error(error.message);
+    try {
+      await conciergeDb.servicesUpdate(id, p);
+    } catch (e) {
+      return toast.error((e as Error).message);
+    }
     toast.success("Saved");
     setEdits((e) => {
       const { [id]: _, ...rest } = e;
@@ -37,24 +40,30 @@ export default function Settings() {
 
   const removeRow = async (id: number) => {
     if (!confirm("Delete this service?")) return;
-    const { error } = await supabase.from("services").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    try {
+      await conciergeDb.servicesDelete(id);
+    } catch (e) {
+      return toast.error((e as Error).message);
+    }
     load();
   };
 
   const addService = async () => {
     if (!newSvc.category || !newSvc.name) return toast.error("Category and name required");
-    const { error } = await supabase.from("services").insert({
-      category: newSvc.category,
-      name: newSvc.name,
-      type: newSvc.type ?? "tour",
-      price: Number(newSvc.price ?? 0),
-      unit_cost: newSvc.unit_cost ?? null,
-      sub_text: newSvc.sub_text ?? null,
-      is_active: true,
-      sort_order: 999,
-    });
-    if (error) return toast.error(error.message);
+    try {
+      await conciergeDb.servicesInsert({
+        category: newSvc.category,
+        name: newSvc.name,
+        type: newSvc.type ?? "tour",
+        price: Number(newSvc.price ?? 0),
+        unit_cost: newSvc.unit_cost ?? null,
+        sub_text: newSvc.sub_text ?? null,
+        is_active: true,
+        sort_order: 999,
+      });
+    } catch (e) {
+      return toast.error((e as Error).message);
+    }
     toast.success("Added");
     setShowAdd(false);
     setNewSvc({ type: "tour", price: 0, is_active: true });
