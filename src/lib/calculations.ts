@@ -162,6 +162,14 @@ export interface Booking {
   cash_collected?: number;
   accommodation_fare?: number;
   accommodation_currency?: string;
+  pay_token?: string;
+  payment_status?: string;
+  exchange_rate?: number;
+  guest_gratuity?: number | null;
+  guest_tip?: number | null;
+  amount_paid?: number | null;
+  paid_at?: string | null;
+  stripe_session_id?: string | null;
   saved_at: string;
   created_at: string;
 }
