@@ -79,12 +79,14 @@ export default function AllBookings() {
 
   const load = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("bookings")
-      .select("*")
-      .order("checkin", { ascending: true });
+    let data: any[];
+    try {
+      data = await conciergeDb.bookingsList();
+    } catch (e) {
+      setLoading(false);
+      return toast.error((e as Error).message);
+    }
     setLoading(false);
-    if (error) return toast.error(error.message);
     setBookings(((data ?? []) as unknown as Booking[]).map((b) => ({
       ...b,
       items: Array.isArray(b.items) ? b.items : [],
@@ -92,8 +94,12 @@ export default function AllBookings() {
   };
 
   const loadPetty = async () => {
-    const { data, error } = await supabase.from("petty_cash").select("booking_ref, float_amount");
-    if (error) return;
+    let data: any[];
+    try {
+      data = await conciergeDb.pettyCashList();
+    } catch {
+      return;
+    }
     const map: Record<string, number> = {};
     (data ?? []).forEach((r: any) => { map[r.booking_ref] = Number(r.float_amount) || 0; });
     setPetty(map);
@@ -101,10 +107,11 @@ export default function AllBookings() {
 
   const saveFloat = async (ref: string, amount: number, currency: string) => {
     setPetty((p) => ({ ...p, [ref]: amount }));
-    const { error } = await supabase
-      .from("petty_cash")
-      .upsert({ booking_ref: ref, float_amount: amount, currency, updated_at: new Date().toISOString() }, { onConflict: "booking_ref" });
-    if (error) toast.error(error.message);
+    try {
+      await conciergeDb.pettyCashUpsert({ booking_ref: ref, float_amount: amount, currency, updated_at: new Date().toISOString() });
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
   };
 
   useEffect(() => {
