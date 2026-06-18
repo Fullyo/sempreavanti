@@ -131,29 +131,45 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
       sub_text: r.sub_text ?? null,
     }));
 
-    const { error } = await supabase.from("bookings").insert({
-      guest,
-      checkin,
-      checkout: checkout || null,
-      items,
-      cc_fee_on: ccFeeOn,
-      tip_mode: tipMode,
-      tip_value: tipValue,
-      tip_method: tipMethod,
-      tip,
-      cc_fee: ccFee,
-      total_guest: totalGuest,
-      total_profit: totalProfit,
-      cash_collected: cashCollected,
-      accommodation_fare: accommodationFare,
-      accommodation_currency: accommodationCurrency,
-    });
+    const { data, error } = await supabase
+      .from("bookings")
+      .insert({
+        guest,
+        checkin,
+        checkout: checkout || null,
+        items,
+        cc_fee_on: ccFeeOn,
+        tip_mode: tipMode,
+        tip_value: tipValue,
+        tip_method: tipMethod,
+        tip,
+        cc_fee: ccFee,
+        total_guest: totalGuest,
+        total_profit: totalProfit,
+        cash_collected: cashCollected,
+        accommodation_fare: accommodationFare,
+        accommodation_currency: accommodationCurrency,
+      })
+      .select("pay_token")
+      .single();
 
     setSaving(false);
     if (error) return toast.error(error.message);
     toast.success("Booking saved");
     clearAll();
-    onSaved();
+    setSavedToken((data?.pay_token as string) ?? null);
+  };
+
+  const payLink = savedToken ? `${window.location.origin}/pay/${savedToken}` : "";
+  const copyLink = async () => {
+    if (!payLink) return;
+    try {
+      await navigator.clipboard.writeText(payLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error("Could not copy — select and copy manually");
+    }
   };
 
   return (
