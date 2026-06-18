@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { conciergeDb } from "@/lib/conciergeApi";
 import { toast } from "sonner";
 import { Booking, formatMXN } from "@/lib/calculations";
 import { COLORS, btnGhost, btnPrimary, sectionTitle } from "./styles";
@@ -26,11 +26,9 @@ export default function ExportTab() {
   const [preview, setPreview] = useState(false);
 
   useEffect(() => {
-    supabase
-      .from("bookings")
-      .select("*")
-      .order("checkin")
-      .then(({ data }) => setBookings(((data ?? []) as unknown as Booking[]).map((b) => ({ ...b, items: Array.isArray(b.items) ? b.items : [] }))));
+    conciergeDb
+      .bookingsList()
+      .then((data) => setBookings(((data ?? []) as unknown as Booking[]).map((b) => ({ ...b, items: Array.isArray(b.items) ? b.items : [] }))));
   }, []);
 
   const copyTSV = async () => {

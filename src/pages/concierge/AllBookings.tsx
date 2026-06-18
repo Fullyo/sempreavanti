@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { conciergeDb } from "@/lib/conciergeApi";
 import { toast } from "sonner";
 import {
   Booking,
@@ -79,12 +79,14 @@ export default function AllBookings() {
 
   const load = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("bookings")
-      .select("*")
-      .order("checkin", { ascending: true });
+    let data: any[];
+    try {
+      data = await conciergeDb.bookingsList();
+    } catch (e) {
+      setLoading(false);
+      return toast.error((e as Error).message);
+    }
     setLoading(false);
-    if (error) return toast.error(error.message);
     setBookings(((data ?? []) as unknown as Booking[]).map((b) => ({
       ...b,
       items: Array.isArray(b.items) ? b.items : [],
@@ -92,8 +94,12 @@ export default function AllBookings() {
   };
 
   const loadPetty = async () => {
-    const { data, error } = await supabase.from("petty_cash").select("booking_ref, float_amount");
-    if (error) return;
+    let data: any[];
+    try {
+      data = await conciergeDb.pettyCashList();
+    } catch {
+      return;
+    }
     const map: Record<string, number> = {};
     (data ?? []).forEach((r: any) => { map[r.booking_ref] = Number(r.float_amount) || 0; });
     setPetty(map);
@@ -101,10 +107,11 @@ export default function AllBookings() {
 
   const saveFloat = async (ref: string, amount: number, currency: string) => {
     setPetty((p) => ({ ...p, [ref]: amount }));
-    const { error } = await supabase
-      .from("petty_cash")
-      .upsert({ booking_ref: ref, float_amount: amount, currency, updated_at: new Date().toISOString() }, { onConflict: "booking_ref" });
-    if (error) toast.error(error.message);
+    try {
+      await conciergeDb.pettyCashUpsert({ booking_ref: ref, float_amount: amount, currency, updated_at: new Date().toISOString() });
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
   };
 
   useEffect(() => {
@@ -256,9 +263,8 @@ export default function AllBookings() {
     const total_guest = servicesSubtotal + tip + cc_fee;
     const total_profit = items.reduce((s, i) => s + (i.profit ?? 0), 0);
 
-    const { error } = await supabase
-      .from("bookings")
-      .update({
+    try {
+      await conciergeDb.bookingsUpdate(edit.id, {
         guest: edit.guest,
         checkin: edit.checkin,
         checkout: edit.checkout,
@@ -270,9 +276,10 @@ export default function AllBookings() {
         cc_fee,
         total_guest,
         total_profit,
-      })
-      .eq("id", edit.id);
-    if (error) return toast.error(error.message);
+      });
+    } catch (e) {
+      return toast.error((e as Error).message);
+    }
     toast.success("Booking updated");
     cancelEdit();
     load();
@@ -280,8 +287,11 @@ export default function AllBookings() {
 
   const remove = async (id: number) => {
     if (!confirm("Delete this booking? This cannot be undone.")) return;
-    const { error } = await supabase.from("bookings").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    try {
+      await conciergeDb.bookingsDelete(id);
+    } catch (e) {
+      return toast.error((e as Error).message);
+    }
     toast.success("Deleted");
     load();
   };
@@ -337,10 +347,7 @@ export default function AllBookings() {
           toast("No new bookings to restore");
           return;
         }
-        const { error } = await supabase.from("bookings").upsert(
-          toInsert.map(({ id, ...rest }) => ({ ...rest })) as any,
-        );
-        if (error) throw error;
+        await conciergeDb.bookingsUpsert(toInsert.map(({ id, ...rest }) => ({ ...rest })) as any);
         toast.success(`Restored ${toInsert.length} bookings`);
         load();
       } catch (err: any) {

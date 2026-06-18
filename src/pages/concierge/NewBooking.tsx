@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { conciergeDb } from "@/lib/conciergeApi";
 import { toast } from "sonner";
 import {
   calcCCFee,
@@ -49,12 +49,7 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    supabase
-      .from("services")
-      .select("*")
-      .eq("is_active", true)
-      .order("sort_order")
-      .then(({ data }) => setServices((data ?? []) as Service[]));
+    conciergeDb.servicesList(true).then((data) => setServices((data ?? []) as Service[]));
   }, []);
 
   const grouped = useMemo(() => {
@@ -131,9 +126,9 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
       sub_text: r.sub_text ?? null,
     }));
 
-    const { data, error } = await supabase
-      .from("bookings")
-      .insert({
+    let data: { pay_token?: string } | undefined;
+    try {
+      data = await conciergeDb.bookingsInsert({
         guest,
         checkin,
         checkout: checkout || null,
@@ -149,12 +144,13 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
         cash_collected: cashCollected,
         accommodation_fare: accommodationFare,
         accommodation_currency: accommodationCurrency,
-      })
-      .select("pay_token")
-      .single();
+      });
+    } catch (e) {
+      setSaving(false);
+      return toast.error((e as Error).message);
+    }
 
     setSaving(false);
-    if (error) return toast.error(error.message);
     toast.success("Booking saved");
     clearAll();
     setSavedToken((data?.pay_token as string) ?? null);
