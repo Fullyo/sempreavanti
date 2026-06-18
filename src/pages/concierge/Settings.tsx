@@ -13,12 +13,7 @@ export default function Settings() {
   const [newSvc, setNewSvc] = useState<Partial<Service>>({ type: "tour", price: 0, is_active: true });
 
   const load = () =>
-    supabase
-      .from("services")
-      .select("*")
-      .order("category")
-      .order("sort_order")
-      .then(({ data }) => setServices((data ?? []) as Service[]));
+    conciergeDb.servicesList().then((data) => setServices((data ?? []) as Service[]));
 
   useEffect(() => {
     load();
