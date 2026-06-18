@@ -700,6 +700,7 @@ export default function AllBookings() {
                     ) : (
                       <>
                         <button onClick={() => downloadInvoice(b)} style={btnPrimary}>Download Invoice</button>
+                        <button onClick={() => copyPayLink(b)} style={btnGhost}>Copy Payment Link</button>
                         <button onClick={() => startEdit(b)} style={btnGhost}>Edit</button>
                         <button onClick={() => remove(b.id)} style={btnDanger}>Delete</button>
                       </>
