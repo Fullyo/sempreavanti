@@ -192,3 +192,78 @@ export function commissionRule(type: string, price: number, unit_cost: number | 
       return "—";
   }
 }
+
+// ─── Guest payment (Stripe) ──────────────────────────────────────────────
+// Everything below is charged to the guest in MXN. Accommodation is NOT
+// charged (paid via Guesty) — it is shown for context and is part of the
+// gratuity base. USD accommodation converts to MXN at the booking's FX rate.
+
+export const GUEST_GRATUITY_RATE = 0.05; // mandatory included gratuity
+export const GUEST_CARD_FEE_RATE = 0.05; // card processing fee, guest pays
+export const UTV_GAS_PER_RENTAL = 1000; // MXN gas auto-added per UTV rental
+export const DEFAULT_FX = 16;
+
+export const TIP_PRESETS = [10, 15, 20];
+
+// A UTV rental line (Can-Am / Polaris / generic UTV) — but not a gas line.
+export function isUtvRental(name: string): boolean {
+  const n = (name || "").toLowerCase();
+  if (n.includes("gas")) return false;
+  return n.includes("can-am") || n.includes("maverick") || n.includes("polaris") || n.includes("utv");
+}
+
+export interface GuestPayItem {
+  name: string;
+  type: string;
+  qty: number;
+  price: number;
+  guest_total?: number | null;
+}
+
+export function computeUtvGas(items: GuestPayItem[]): number {
+  // Only auto-add gas when the booking doesn't already include a gas line.
+  const hasGasLine = items.some((i) => (i.name || "").toLowerCase().includes("gas"));
+  if (hasGasLine) return 0;
+  const units = items.filter((i) => isUtvRental(i.name)).reduce((s, i) => s + (Number(i.qty) || 0), 0);
+  return units * UTV_GAS_PER_RENTAL;
+}
+
+export interface GuestPaymentBreakdown {
+  upsellsSubtotal: number; // upsell line items only (MXN)
+  utvGas: number; // auto gas (MXN)
+  accommodationMXN: number; // context + gratuity base (MXN)
+  gratuityBase: number; // accommodation + upsells + gas
+  gratuity: number; // mandatory 5%
+  tip: number; // optional extra tip
+  fee: number; // 5% card fee on chargeable
+  chargeable: number; // upsells + gas + gratuity + tip (pre-fee)
+  total: number; // grand total charged in MXN
+}
+
+export function computeGuestPayment(params: {
+  items: GuestPayItem[];
+  accommodationFare: number;
+  accommodationCurrency: string;
+  fx?: number;
+  tipMode: "percent" | "amount";
+  tipValue: number;
+}): GuestPaymentBreakdown {
+  const fx = params.fx || DEFAULT_FX;
+  const upsellsSubtotal = params.items.reduce(
+    (s, i) => s + Number(i.guest_total ?? calcGuestTotal(i.type, i.price, i.qty)),
+    0,
+  );
+  const utvGas = computeUtvGas(params.items);
+  const accommodationMXN =
+    params.accommodationCurrency === "USD" ? params.accommodationFare * fx : params.accommodationFare;
+  const gratuityBase = accommodationMXN + upsellsSubtotal + utvGas;
+  const gratuity = Math.round(gratuityBase * GUEST_GRATUITY_RATE);
+  const tip =
+    params.tipMode === "percent"
+      ? Math.round(gratuityBase * ((Number(params.tipValue) || 0) / 100))
+      : Math.round(Number(params.tipValue) || 0);
+  const chargeable = upsellsSubtotal + utvGas + gratuity + tip;
+  const fee = Math.round(chargeable * GUEST_CARD_FEE_RATE);
+  const total = chargeable + fee;
+  return { upsellsSubtotal, utvGas, accommodationMXN, gratuityBase, gratuity, tip, fee, chargeable, total };
+}
