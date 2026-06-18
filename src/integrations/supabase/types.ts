@@ -18,16 +18,24 @@ export type Database = {
         Row: {
           accommodation_currency: string
           accommodation_fare: number
+          amount_paid: number | null
           cash_collected: number
           cc_fee: number
           cc_fee_on: boolean
           checkin: string
           checkout: string | null
           created_at: string
+          exchange_rate: number
           guest: string
+          guest_gratuity: number | null
+          guest_tip: number | null
           id: number
           items: Json
+          paid_at: string | null
+          pay_token: string
+          payment_status: string
           saved_at: string
+          stripe_session_id: string | null
           tip: number
           tip_method: string
           tip_mode: string
@@ -38,16 +46,24 @@ export type Database = {
         Insert: {
           accommodation_currency?: string
           accommodation_fare?: number
+          amount_paid?: number | null
           cash_collected?: number
           cc_fee?: number
           cc_fee_on?: boolean
           checkin: string
           checkout?: string | null
           created_at?: string
+          exchange_rate?: number
           guest: string
+          guest_gratuity?: number | null
+          guest_tip?: number | null
           id?: number
           items?: Json
+          paid_at?: string | null
+          pay_token?: string
+          payment_status?: string
           saved_at?: string
+          stripe_session_id?: string | null
           tip?: number
           tip_method?: string
           tip_mode?: string
@@ -58,16 +74,24 @@ export type Database = {
         Update: {
           accommodation_currency?: string
           accommodation_fare?: number
+          amount_paid?: number | null
           cash_collected?: number
           cc_fee?: number
           cc_fee_on?: boolean
           checkin?: string
           checkout?: string | null
           created_at?: string
+          exchange_rate?: number
           guest?: string
+          guest_gratuity?: number | null
+          guest_tip?: number | null
           id?: number
           items?: Json
+          paid_at?: string | null
+          pay_token?: string
+          payment_status?: string
           saved_at?: string
+          stripe_session_id?: string | null
           tip?: number
           tip_method?: string
           tip_mode?: string
