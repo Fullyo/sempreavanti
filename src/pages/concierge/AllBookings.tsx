@@ -286,6 +286,17 @@ export default function AllBookings() {
     load();
   };
 
+  const copyPayLink = async (b: Booking) => {
+    if (!b.pay_token) return toast.error("No payment link — re-save this booking");
+    const link = `${window.location.origin}/pay/${b.pay_token}`;
+    try {
+      await navigator.clipboard.writeText(link);
+      toast.success("Payment link copied");
+    } catch {
+      toast.error("Could not copy link");
+    }
+  };
+
   const downloadAllCSV = () => {
     const rows: string[][] = [];
     rows.push(["Month","Guest","Check-in","Check-out","Service","Qty","Unit Price (MXN)","Guest Total (MXN)","Our Cost (MXN)","Profit (MXN)"]);
