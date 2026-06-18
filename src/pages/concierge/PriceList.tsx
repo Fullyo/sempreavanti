@@ -48,13 +48,7 @@ export default function PriceList() {
   const [services, setServices] = useState<Service[]>([]);
 
   useEffect(() => {
-    supabase
-      .from("services")
-      .select("*")
-      .eq("is_active", true)
-      .order("category")
-      .order("sort_order")
-      .then(({ data }) => setServices((data ?? []) as Service[]));
+    conciergeDb.servicesList(true).then((data) => setServices((data ?? []) as Service[]));
   }, []);
 
   const byCat: Record<string, Service[]> = {};
