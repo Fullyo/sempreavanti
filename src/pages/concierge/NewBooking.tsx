@@ -49,12 +49,7 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    supabase
-      .from("services")
-      .select("*")
-      .eq("is_active", true)
-      .order("sort_order")
-      .then(({ data }) => setServices((data ?? []) as Service[]));
+    conciergeDb.servicesList(true).then((data) => setServices((data ?? []) as Service[]));
   }, []);
 
   const grouped = useMemo(() => {
