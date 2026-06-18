@@ -45,6 +45,8 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
   const [accommodationFare, setAccommodationFare] = useState(0);
   const [accommodationCurrency, setAccommodationCurrency] = useState<"MXN" | "USD">("MXN");
   const [saving, setSaving] = useState(false);
+  const [savedToken, setSavedToken] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     supabase
@@ -129,34 +131,97 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
       sub_text: r.sub_text ?? null,
     }));
 
-    const { error } = await supabase.from("bookings").insert({
-      guest,
-      checkin,
-      checkout: checkout || null,
-      items,
-      cc_fee_on: ccFeeOn,
-      tip_mode: tipMode,
-      tip_value: tipValue,
-      tip_method: tipMethod,
-      tip,
-      cc_fee: ccFee,
-      total_guest: totalGuest,
-      total_profit: totalProfit,
-      cash_collected: cashCollected,
-      accommodation_fare: accommodationFare,
-      accommodation_currency: accommodationCurrency,
-    });
+    const { data, error } = await supabase
+      .from("bookings")
+      .insert({
+        guest,
+        checkin,
+        checkout: checkout || null,
+        items,
+        cc_fee_on: ccFeeOn,
+        tip_mode: tipMode,
+        tip_value: tipValue,
+        tip_method: tipMethod,
+        tip,
+        cc_fee: ccFee,
+        total_guest: totalGuest,
+        total_profit: totalProfit,
+        cash_collected: cashCollected,
+        accommodation_fare: accommodationFare,
+        accommodation_currency: accommodationCurrency,
+      })
+      .select("pay_token")
+      .single();
 
     setSaving(false);
     if (error) return toast.error(error.message);
     toast.success("Booking saved");
     clearAll();
-    onSaved();
+    setSavedToken((data?.pay_token as string) ?? null);
+  };
+
+  const payLink = savedToken ? `${window.location.origin}/pay/${savedToken}` : "";
+  const copyLink = async () => {
+    if (!payLink) return;
+    try {
+      await navigator.clipboard.writeText(payLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error("Could not copy — select and copy manually");
+    }
   };
 
   return (
     <div>
       <h1 style={sectionTitle}>New Booking</h1>
+
+      {savedToken && (
+        <div
+          style={{
+            background: COLORS.dark,
+            color: "#F7F4EE",
+            borderRadius: 4,
+            padding: 22,
+            marginTop: 18,
+          }}
+        >
+          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, color: COLORS.gold, marginBottom: 6 }}>
+            Booking saved — share the payment link
+          </div>
+          <div style={{ fontSize: 12, color: "rgba(247,244,238,0.6)", marginBottom: 14 }}>
+            Send this to the guest. They'll see their experiences, the included 5% gratuity, optional tipping, and can
+            pay by card.
+          </div>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+            <input
+              readOnly
+              value={payLink}
+              onFocus={(e) => e.currentTarget.select()}
+              style={{
+                flex: "1 1 280px",
+                padding: "10px 12px",
+                background: "rgba(255,255,255,0.08)",
+                border: "1px solid rgba(247,244,238,0.2)",
+                color: "#F7F4EE",
+                fontFamily: "'Jost', sans-serif",
+                fontSize: 13,
+                borderRadius: 2,
+              }}
+            />
+            <button onClick={copyLink} style={btnPrimary}>
+              {copied ? "Copied ✓" : "Copy link"}
+            </button>
+            <button onClick={() => { setSavedToken(null); onSaved(); }} style={{ ...btnGhost, color: "#F7F4EE", borderColor: "rgba(247,244,238,0.3)" }}>
+              View all bookings
+            </button>
+            <button onClick={() => setSavedToken(null)} style={{ ...btnGhost, color: "#F7F4EE", borderColor: "rgba(247,244,238,0.3)" }}>
+              Start another
+            </button>
+          </div>
+        </div>
+      )}
+
 
       {/* Guest info */}
       <div

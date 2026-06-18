@@ -286,6 +286,17 @@ export default function AllBookings() {
     load();
   };
 
+  const copyPayLink = async (b: Booking) => {
+    if (!b.pay_token) return toast.error("No payment link — re-save this booking");
+    const link = `${window.location.origin}/pay/${b.pay_token}`;
+    try {
+      await navigator.clipboard.writeText(link);
+      toast.success("Payment link copied");
+    } catch {
+      toast.error("Could not copy link");
+    }
+  };
+
   const downloadAllCSV = () => {
     const rows: string[][] = [];
     rows.push(["Month","Guest","Check-in","Check-out","Service","Qty","Unit Price (MXN)","Guest Total (MXN)","Our Cost (MXN)","Profit (MXN)"]);
@@ -582,6 +593,23 @@ export default function AllBookings() {
                     <div style={{ textAlign: "right" }}>
                       <div style={{ fontSize: 18, fontWeight: 500 }}>{formatMXN(v.total_guest)}</div>
                       <div style={{ fontSize: 12, color: COLORS.green, marginTop: 2 }}>Profit: {formatMXN(v.total_profit)}</div>
+                      <div
+                        style={{
+                          display: "inline-block",
+                          marginTop: 6,
+                          fontSize: 10,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.1em",
+                          padding: "3px 8px",
+                          borderRadius: 2,
+                          background: b.payment_status === "paid" ? "#E7F0E9" : "#FBEFE2",
+                          color: b.payment_status === "paid" ? COLORS.green : COLORS.amber,
+                        }}
+                      >
+                        {b.payment_status === "paid"
+                          ? `Paid${b.amount_paid ? " · " + formatMXN(b.amount_paid) : ""}`
+                          : "Unpaid"}
+                      </div>
                     </div>
                   </div>
 
@@ -689,6 +717,7 @@ export default function AllBookings() {
                     ) : (
                       <>
                         <button onClick={() => downloadInvoice(b)} style={btnPrimary}>Download Invoice</button>
+                        <button onClick={() => copyPayLink(b)} style={btnGhost}>Copy Payment Link</button>
                         <button onClick={() => startEdit(b)} style={btnGhost}>Edit</button>
                         <button onClick={() => remove(b.id)} style={btnDanger}>Delete</button>
                       </>

@@ -26,6 +26,7 @@ import ConciergeGuide from "./pages/ConciergeGuide";
 import Unsubscribe from "./pages/Unsubscribe";
 import UtvContracts from "./pages/UtvContracts";
 import Concierge from "./pages/Concierge";
+import GuestPayment from "./pages/GuestPayment";
 
 
 const queryClient = new QueryClient();
@@ -53,6 +54,7 @@ const App = () => (
           <Route path="/events" element={<PrivateEvents />} />
           <Route path="/location" element={<Location />} />
           <Route path="/upsells" element={<Concierge />} />
+          <Route path="/pay/:token" element={<GuestPayment />} />
           <Route path="/concierge" element={<Navigate to="/upsells" replace />} />
           <Route path="/transportation" element={<Navigate to="/location" replace />} />
           <Route path="/house-guide" element={<ConciergeGuide />} />
