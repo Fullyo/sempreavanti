@@ -45,6 +45,8 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
   const [accommodationFare, setAccommodationFare] = useState(0);
   const [accommodationCurrency, setAccommodationCurrency] = useState<"MXN" | "USD">("MXN");
   const [saving, setSaving] = useState(false);
+  const [savedToken, setSavedToken] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     supabase
