@@ -347,10 +347,7 @@ export default function AllBookings() {
           toast("No new bookings to restore");
           return;
         }
-        const { error } = await supabase.from("bookings").upsert(
-          toInsert.map(({ id, ...rest }) => ({ ...rest })) as any,
-        );
-        if (error) throw error;
+        await conciergeDb.bookingsUpsert(toInsert.map(({ id, ...rest }) => ({ ...rest })) as any);
         toast.success(`Restored ${toInsert.length} bookings`);
         load();
       } catch (err: any) {
