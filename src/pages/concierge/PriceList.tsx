@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { conciergeDb } from "@/lib/conciergeApi";
 import { CATEGORY_ORDER, Service, formatMXN } from "@/lib/calculations";
 import { COLORS, btnPrimary, sectionTitle } from "./styles";
 
