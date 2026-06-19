@@ -851,10 +851,23 @@ export default function NewBooking({
               Reconciliation only — doesn't affect profit
             </div>
           </div>
+
+          {/* Internal billing notes — concierge/owner only, never shown to guest */}
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label style={fieldLabel}>Internal Billing Notes</label>
+            <textarea
+              value={notes}
+              placeholder="Private notes about this booking's billing (not shown to the guest)…"
+              onChange={(e) => setNotes(e.target.value)}
+              rows={3}
+              style={{ ...input, minHeight: 72, resize: "vertical", fontFamily: "'Jost', sans-serif", lineHeight: 1.5 }}
+            />
+            <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 5 }}>
+              Internal only — never appears on the guest payment page or invoice
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* ── Guest invoice: the exact charge the guest sees on /pay ── */}
       <div
         style={{
           background: COLORS.dark,
