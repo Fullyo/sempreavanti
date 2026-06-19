@@ -352,6 +352,13 @@ export default function GuestPayment() {
                 </button>
               </div>
 
+              <div style={{ fontSize: 12, color: C.muted, marginTop: 10, lineHeight: 1.5 }}>
+                Calculated on accommodation + experiences ({mxn(gratuityBase)}).
+                {tipChoice === "percent" && tipPct > 0 && (
+                  <> {tipPct}% = {mxn(Math.round(gratuityBase * (tipPct / 100)))}.</>
+                )}
+              </div>
+
               {tipChoice === "custom" && (
                 <div style={{ marginTop: 12, display: "flex", gap: 8, alignItems: "stretch" }}>
                   <input
