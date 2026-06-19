@@ -1050,6 +1050,215 @@ export default function NewBooking({
   );
 }
 
+/* ---------- Service Line (one row, responsive) ---------- */
+function ServiceLine({
+  r,
+  isMobile,
+  fx,
+  grouped,
+  updateRow,
+  removeRow,
+  pickService,
+}: {
+  r: Row;
+  isMobile: boolean;
+  fx: number;
+  grouped: { category: string; items: Service[] }[];
+  updateRow: (id: string, patch: Partial<Row>) => void;
+  removeRow: (id: string) => void;
+  pickService: (id: string, s: Service) => void;
+}) {
+  const [showDetail, setShowDetail] = useState(false);
+  const pMXN = r.currency === "USD" ? r.price * fx : r.price;
+  const guestTotal = calcGuestTotal(r.type, pMXN, r.qty);
+  const cost = calcCost(r.type, pMXN, r.qty, r.unit_cost);
+  const profit = calcProfit(r.type, pMXN, r.qty, r.unit_cost);
+  const qtyLess = isQtyLess(r.type);
+  const pricePlaceholder =
+    r.type === "grocery" || r.type === "minibar"
+      ? "Total cost paid"
+      : r.type === "beer"
+        ? "Wholesale"
+        : "0";
+
+  const picker = (
+    <ServicePicker
+      row={r}
+      grouped={grouped}
+      onPick={(s) => pickService(r.uid, s)}
+      onManual={(name, type) =>
+        updateRow(r.uid, { service_id: null, name, type, price: 0, unit_cost: null })
+      }
+      onEditName={(name) => updateRow(r.uid, { name })}
+    />
+  );
+
+  const priceField = (
+    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+      <input
+        type="number"
+        min={0}
+        style={{ ...input, minWidth: 0 }}
+        value={r.price || ""}
+        placeholder={pricePlaceholder}
+        onChange={(e) => updateRow(r.uid, { price: Number(e.target.value) || 0 })}
+      />
+      <CurrencyToggle size="sm" value={r.currency} onChange={(c) => updateRow(r.uid, { currency: c })} />
+    </div>
+  );
+
+  const qtyInput = (
+    <input
+      type="number"
+      min={1}
+      style={input}
+      value={r.qty}
+      onChange={(e) => updateRow(r.uid, { qty: Math.max(1, Number(e.target.value) || 1) })}
+    />
+  );
+
+  const removeBtn = (
+    <button
+      onClick={() => removeRow(r.uid)}
+      style={{ background: "none", border: "none", color: COLORS.textMuted, cursor: "pointer", fontSize: 20 }}
+      aria-label="Remove"
+    >
+      ×
+    </button>
+  );
+
+  const costText = cost === null ? "—" : formatMXN(cost);
+  const profitText = profit === null ? "cost TBD" : formatMXN(profit);
+  const profitColor = profit === null ? COLORS.amber : COLORS.green;
+
+  if (isMobile) {
+    return (
+      <div
+        style={{
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 4,
+          padding: 14,
+          marginBottom: 12,
+          background: COLORS.card,
+        }}
+      >
+        <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+          <div style={{ flex: 1, minWidth: 0 }}>{picker}</div>
+          {removeBtn}
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: qtyLess ? "1fr" : "1.6fr 1fr",
+            gap: 12,
+            marginTop: 12,
+          }}
+        >
+          <div>
+            <label style={fieldLabel}>Unit Price</label>
+            {priceField}
+          </div>
+          {!qtyLess && (
+            <div>
+              <label style={fieldLabel}>Qty</label>
+              {qtyInput}
+            </div>
+          )}
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginTop: 12,
+            paddingTop: 10,
+            borderTop: `1px solid ${COLORS.border}`,
+          }}
+        >
+          <span style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.1em", color: COLORS.textMuted }}>
+            Guest Total
+          </span>
+          <span style={{ fontSize: 15, fontWeight: 600, color: COLORS.textDark }}>{formatMXN(guestTotal)}</span>
+        </div>
+
+        <button
+          onClick={() => setShowDetail((v) => !v)}
+          style={{
+            marginTop: 8,
+            background: "none",
+            border: "none",
+            color: COLORS.gold,
+            cursor: "pointer",
+            fontFamily: "'Jost', sans-serif",
+            fontSize: 11,
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+            padding: 0,
+          }}
+        >
+          {showDetail ? "▾ Hide cost & profit" : "▸ Cost & profit"}
+        </button>
+
+        {showDetail && (
+          <div style={{ marginTop: 8, fontSize: 13, display: "grid", gap: 4 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", color: COLORS.textMid }}>
+              <span>Our Cost {r.currency === "USD" ? `(@ ${fx})` : ""}</span>
+              <span>{costText}</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", color: profitColor, fontWeight: 500 }}>
+              <span>Your Profit</span>
+              <span style={{ fontStyle: profit === null ? "italic" : "normal" }}>{profitText}</span>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: GRID_COLS,
+        gap: 10,
+        padding: "12px 0",
+        borderBottom: `1px solid ${COLORS.border}`,
+        alignItems: "start",
+      }}
+    >
+      {picker}
+      {qtyLess ? (
+        <div style={{ fontSize: 13, color: COLORS.textMuted, paddingTop: 10 }}>—</div>
+      ) : (
+        qtyInput
+      )}
+      {priceField}
+      <div style={{ fontSize: 13, color: COLORS.textMid, paddingTop: 10 }}>
+        {costText}
+        {r.currency === "USD" && <div style={{ fontSize: 10, color: COLORS.textMuted }}>@ {fx}</div>}
+      </div>
+      <div style={{ fontSize: 13, color: COLORS.textDark, fontWeight: 500, paddingTop: 10 }}>
+        {formatMXN(guestTotal)}
+      </div>
+      <div
+        style={{
+          fontSize: 13,
+          color: profitColor,
+          fontWeight: 500,
+          fontStyle: profit === null ? "italic" : "normal",
+          paddingTop: 10,
+        }}
+      >
+        {profitText}
+      </div>
+      <div style={{ paddingTop: 4 }}>{removeBtn}</div>
+    </div>
+  );
+}
+
+
 /* ---------- Service Picker ---------- */
 function ServicePicker({
   row,
