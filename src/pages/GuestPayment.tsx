@@ -344,6 +344,9 @@ export default function GuestPayment() {
               <RowDark label="Included gratuity (5%)" value={mxn(gratuity)} />
               {tip > 0 && <RowDark label="Additional tip" value={mxn(tip)} />}
               <RowDark label="Card processing fee (5%)" value={mxn(fee)} />
+              <div style={{ fontSize: 11, color: "rgba(245,241,232,0.55)", marginTop: 6, lineHeight: 1.4 }}>
+                The 5% card fee does not apply to the accommodation fare — that is already paid via Guesty.
+              </div>
               <div style={{ height: 1, background: "rgba(245,241,232,0.2)", margin: "14px 0" }} />
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
                 <div style={{ fontSize: 14, textTransform: "uppercase", letterSpacing: "0.14em", color: C.gold }}>
