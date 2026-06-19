@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
     const { data: booking, error } = await supabase
       .from("bookings")
       .select(
-        "guest, checkin, checkout, items, accommodation_fare, accommodation_currency, exchange_rate, payment_status, amount_paid, paid_at, tip, guest_tip",
+        "guest, checkin, checkout, items, accommodation_fare, accommodation_currency, exchange_rate, payment_status, amount_paid, paid_at, tip, guest_tip, tip_cash, tip_cash_value, tip_cash_currency, gratuity_waived",
       )
       .eq("pay_token", token)
       .maybeSingle();
@@ -67,6 +67,9 @@ Deno.serve(async (req) => {
       booking.accommodation_currency === "USD"
         ? Number(booking.accommodation_fare) * fx
         : Number(booking.accommodation_fare);
+    const gratuityWaived = booking.gratuity_waived === true;
+    // Cash tip already left at the house (info only — never charged on the card).
+    const tipCashMXN = Math.round(Number(booking.tip_cash) || 0);
 
     return new Response(
       JSON.stringify({
@@ -81,8 +84,12 @@ Deno.serve(async (req) => {
         upsellsSubtotal,
         utvGas,
         gratuityRate: GRATUITY_RATE,
+        gratuityWaived,
         feeRate: FEE_RATE,
         presetTip: Math.round(Number(booking.guest_tip ?? booking.tip) || 0),
+        cashTipMXN: tipCashMXN,
+        cashTipValue: Math.round(Number(booking.tip_cash_value) || 0),
+        cashTipCurrency: booking.tip_cash_currency === "USD" ? "USD" : "MXN",
         paymentStatus: booking.payment_status,
         amountPaid: booking.amount_paid,
         paidAt: booking.paid_at,

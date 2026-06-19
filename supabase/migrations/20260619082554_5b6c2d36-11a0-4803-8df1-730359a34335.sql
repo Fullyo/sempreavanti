@@ -1,0 +1,1 @@
+ALTER TABLE public.bookings ADD COLUMN IF NOT EXISTS gratuity_waived boolean NOT NULL DEFAULT false;

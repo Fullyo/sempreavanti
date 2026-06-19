@@ -154,6 +154,7 @@ export interface Booking {
   checkout: string | null;
   items: BookingItem[];
   cc_fee_on: boolean;
+  gratuity_waived?: boolean;
   tip_mode: string;
   tip_value: number;
   tip_method?: "cc" | "cash";
@@ -264,6 +265,7 @@ export function computeGuestPayment(params: {
   fx?: number;
   tipMode: "percent" | "amount";
   tipValue: number;
+  gratuityWaived?: boolean;
 }): GuestPaymentBreakdown {
   const fx = params.fx || DEFAULT_FX;
   const upsellsSubtotal = params.items.reduce(
@@ -274,7 +276,7 @@ export function computeGuestPayment(params: {
   const accommodationMXN =
     params.accommodationCurrency === "USD" ? params.accommodationFare * fx : params.accommodationFare;
   const gratuityBase = accommodationMXN + upsellsSubtotal + utvGas;
-  const gratuity = Math.round(gratuityBase * GUEST_GRATUITY_RATE);
+  const gratuity = params.gratuityWaived ? 0 : Math.round(gratuityBase * GUEST_GRATUITY_RATE);
   const tip =
     params.tipMode === "percent"
       ? Math.round(gratuityBase * ((Number(params.tipValue) || 0) / 100))

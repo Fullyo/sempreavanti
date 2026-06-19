@@ -26,6 +26,7 @@ export type Database = {
           checkout: string | null
           created_at: string
           exchange_rate: number
+          gratuity_waived: boolean
           guest: string
           guest_gratuity: number | null
           guest_tip: number | null
@@ -59,6 +60,7 @@ export type Database = {
           checkout?: string | null
           created_at?: string
           exchange_rate?: number
+          gratuity_waived?: boolean
           guest: string
           guest_gratuity?: number | null
           guest_tip?: number | null
@@ -92,6 +94,7 @@ export type Database = {
           checkout?: string | null
           created_at?: string
           exchange_rate?: number
+          gratuity_waived?: boolean
           guest?: string
           guest_gratuity?: number | null
           guest_tip?: number | null
