@@ -32,6 +32,7 @@ export function calcProfit(
   if (type === "flat") return 1000 * qty;
   if (type === "grocery") return Math.round(price * qty * 0.35);
   if (type === "minibar") return Math.round(price * qty);
+  if (type === "fuel") return 0; // UTV fuel is a pass-through cost — no profit
   return null; // villa = TBD
 }
 
