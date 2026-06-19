@@ -78,14 +78,14 @@ Deno.serve(async (req) => {
     const gratuityWaived = booking.gratuity_waived === true;
     const gratuityBase = accommodationMXN + upsellsSubtotal + utvGas;
     const gratuity = gratuityWaived ? 0 : Math.round(gratuityBase * GRATUITY_RATE);
-    // Agreed card tip set by the concierge — this is the floor; the guest may
-    // increase it but never go below it.
+    // Agreed card tip set by the concierge — always included.
     const agreedTip = Math.round(Number(booking.guest_tip ?? booking.tip) || 0);
-    const requestedTip =
+    // The extra tip the guest is adding — purely on top of the agreed tip.
+    const additionalTip =
       tipMode === "percent"
         ? Math.round(gratuityBase * (tipValue / 100))
         : Math.round(tipCurrency === "USD" ? tipValue * fx : tipValue);
-    const tip = Math.max(agreedTip, requestedTip);
+    const tip = agreedTip + additionalTip;
     const chargeable = upsellsSubtotal + utvGas + gratuity + tip;
     // Card fee applies ONLY to the charged lines (upsells + fuel + gratuity +
     // tip). It does NOT apply to the accommodation fare — paid via Guesty.

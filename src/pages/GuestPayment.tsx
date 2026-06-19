@@ -103,17 +103,16 @@ export default function GuestPayment() {
     ? 0
     : Math.round(gratuityBase * (data?.gratuityRate ?? GUEST_GRATUITY_RATE));
 
-  // The amount the guest is requesting (before applying the agreed floor).
-  const requestedTip = useMemo(() => {
+  // The extra tip the guest is adding — purely on top of the agreed tip.
+  const additionalTip = useMemo(() => {
     if (tipChoice === "percent") return Math.round(gratuityBase * (tipPct / 100));
     if (tipChoice === "custom")
       return Math.round(customCurrency === "USD" ? customAmount * fx : customAmount);
     return 0;
   }, [tipChoice, tipPct, customAmount, customCurrency, gratuityBase, fx]);
 
-  // Final card tip never drops below what was agreed with the concierge.
-  const tip = Math.max(agreedTip, requestedTip);
-  const additionalTip = Math.max(0, tip - agreedTip);
+  // Total card tip = what the concierge agreed + whatever the guest adds.
+  const tip = agreedTip + additionalTip;
 
   const chargeable = (data?.upsellsSubtotal ?? 0) + (data?.utvGas ?? 0) + gratuity + tip;
   // Card fee applies only to the charged lines (upsells + fuel + gratuity +
@@ -351,6 +350,13 @@ export default function GuestPayment() {
                 >
                   Custom
                 </button>
+              </div>
+
+              <div style={{ fontSize: 12, color: C.muted, marginTop: 10, lineHeight: 1.5 }}>
+                Calculated on accommodation + experiences ({mxn(gratuityBase)}).
+                {tipChoice === "percent" && tipPct > 0 && (
+                  <> {tipPct}% = {mxn(Math.round(gratuityBase * (tipPct / 100)))}.</>
+                )}
               </div>
 
               {tipChoice === "custom" && (
