@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, CSSProperties } from "react";
 import { conciergeDb } from "@/lib/conciergeApi";
 import { toast } from "sonner";
 import {
@@ -7,13 +7,57 @@ import {
   calcCost,
   calcGuestTotal,
   calcProfit,
-  calcTip,
   CATEGORY_ORDER,
   formatMXN,
   Service,
   TYPE_COLOR,
 } from "@/lib/calculations";
 import { COLORS, btnPrimary, btnGhost, fieldLabel, input, sectionTitle } from "./styles";
+
+const tipInput: CSSProperties = {
+  width: 100,
+  padding: "6px 10px",
+  background: "rgba(255,255,255,0.08)",
+  border: "1px solid rgba(247,244,238,0.2)",
+  color: "#F7F4EE",
+  fontFamily: "'Jost', sans-serif",
+  fontSize: 13,
+  borderRadius: 2,
+  textAlign: "right",
+};
+
+function CurrencyToggle({
+  value,
+  onChange,
+}: {
+  value: "MXN" | "USD";
+  onChange: (v: "MXN" | "USD") => void;
+}) {
+  return (
+    <div style={{ display: "flex", gap: 4 }}>
+      {(["MXN", "USD"] as const).map((c) => (
+        <button
+          key={c}
+          type="button"
+          onClick={() => onChange(c)}
+          style={{
+            background: value === c ? COLORS.gold : "rgba(255,255,255,0.08)",
+            color: value === c ? "#fff" : "rgba(247,244,238,0.7)",
+            border: "1px solid rgba(247,244,238,0.2)",
+            padding: "6px 10px",
+            cursor: "pointer",
+            fontFamily: "'Jost', sans-serif",
+            fontSize: 11,
+            letterSpacing: "0.06em",
+            borderRadius: 2,
+          }}
+        >
+          {c}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 interface Row {
   uid: string;
