@@ -1,64 +1,36 @@
-## Goals
+# Fix the guest payment-link tip calculation
 
-Four fixes spanning the service catalog, the concierge booking form, and the guest payment link.
+## The problem
+The custom tip and the 10/15/20% presets are treated as a **floor** against the concierge-agreed tip (e.g. Julie's $4,800), not as an amount added on top. So:
+- Typing a custom amount below/near the agreed tip shows almost nothing as "Additional tip" (your 5000 → $200).
+- The percent presets quietly subtract the agreed tip, so the displayed "additional" isn't actually 10% of anything obvious.
 
----
+The agreed tip should be its **own always-included line**, and the percent/custom amounts should be **purely additive on top of it**. The page should also clearly state what the % is calculated from.
 
-### 1. Correct the swapped UTV seater labels
+## What "the rule" is (for transparency in the UI)
+Percent is calculated on the **gratuity base = accommodation fare (converted to MXN) + all experiences/upsells + UTV gas** — the same base used for the included 5% gratuity. This holds even when the 5% is waived (Julie's case) and even when a tip was already left.
 
-The two UTV rentals have the wrong seat counts. Each model keeps its current price; only the seater suffix changes.
+## Changes
 
-| Current | Corrected |
-|---|---|
-| Can-Am Maverick 4-seater — $2,500/day | **Can-Am Maverick 6-seater — $2,500/day** |
-| Polaris Ranger 6-seater — $2,200/day | **Polaris Ranger 4-seater — $2,200/day** |
+### 1. `src/pages/GuestPayment.tsx` (logic + display)
+- Make the extra tip additive instead of a floor:
+  - `additionalTip` = the requested amount directly:
+    - percent → `Math.round(gratuityBase * tipPct/100)`
+    - custom → `customCurrency === "USD" ? customAmount * fx : customAmount`
+  - `tip` (total card tip) = `agreedTip + additionalTip`.
+  - Remove the `Math.max(agreedTip, requestedTip)` floor logic.
+- Show the calculation basis under the preset buttons, e.g.:
+  - "Calculated on accommodation + experiences ($75,484 MXN)."
+  - For a selected percent, show the live computed amount ("10% = $7,548 MXN").
+- Keep the existing custom MXN/USD toggle and the "= $X at the booking rate" helper for USD.
+- "Additional tip" row now reflects exactly what was entered/selected (no subtraction).
+- Totals section already lists Experiences, included gratuity (when not waived), "Tip agreed with concierge", "Additional tip", and card fee — these now stay consistent because `tip = agreedTip + additionalTip`.
 
-This is a data update to the `services` table rows (ids 27 and 28) — names only, prices unchanged.
+### 2. `supabase/functions/guest-payment-checkout/index.ts` (server recompute — must match)
+- Replace `const tip = Math.max(agreedTip, requestedTip)` with `const tip = agreedTip + requestedTip`.
+- Keep `requestedTip` computed server-side from `tipMode`/`tipValue`/`tipCurrency` (percent of `gratuityBase`, or MXN/USD amount). This keeps the charge trustworthy and identical to what the guest saw.
+- Redeploy the function after the edit.
 
----
-
-### 2. Rework the gratuity / tip section on the guest payment link
-
-Current behavior: the concierge-agreed card tip pre-fills the "Custom" input as an editable, removable number (the "4800" box in the screenshot), letting the guest opt out. That is wrong.
-
-New behavior on `/pay/:token`:
-
-- **Agreed credit-card tip** (set by concierge, e.g. Julie's 300 USD) is shown as a clear, always-included line: *"Tip agreed with concierge — $X MXN"*. It is the floor; the guest cannot go below it.
-- The default tip equals the agreed amount. The custom number box is **hidden by default** and only appears when the guest taps **Custom**.
-- When **Custom** is open, the guest can type an extra amount and choose **MXN or USD** (currency toggle); the entered USD converts at the booking FX rate. The custom amount cannot be set below the agreed floor.
-- The **10% / 15% / 20%** presets add an optional tip on top of the gratuity base, still respecting the agreed floor.
-- **Cash already left** (tip left in cash at the house, in whatever currency) is shown as an **info-only** row — *"Already left in cash — $X"* — and is NOT added to the card charge.
-- The dark totals box reflects: experiences, included gratuity (unless waived, see #4), the agreed/selected card tip, card fee, and total due.
-
-This keeps everything the concierge entered at booking time visible on the invoice (line items, fuel, agreed card tip, cash tip).
-
----
-
-### 3. Show everything entered at booking creation on the invoice
-
-To support #2, the `guest-payment-get` edge function will additionally return the cash tip already recorded (`tip_cash` / its currency) and the agreed card tip, and the `guest-payment-checkout` function will accept a tip currency so a USD custom tip converts correctly server-side (amounts are always recomputed server-side, never trusted from the client).
-
----
-
-### 4. Concierge toggle to waive the mandatory 5% gratuity
-
-For rare cases where service went badly and we don't want to request the 5%.
-
-- New boolean column `gratuity_waived` on `bookings` (default `false`).
-- New toggle in the concierge booking form (`NewBooking.tsx`), in the Tips & Adjustments area: *"Waive mandatory 5% gratuity"*.
-- When waived: the concierge totals, the `/pay` page, and `guest-payment-checkout` all skip the 5% gratuity line entirely. The card fee then applies only to upsells + fuel + tip.
-- The payment page hides the "5% gratuity included" copy when waived.
-
----
-
-## Technical notes
-
-- **Data update** (`services` ids 27, 28): names only — done via the data/insert tool, not a schema migration.
-- **Schema migration**: add `gratuity_waived boolean not null default false` to `public.bookings`; allow it in `concierge-db` edge function's column allow-list and in `src/integrations/supabase/types.ts` typing path.
-- **`src/lib/calculations.ts`**: `computeGuestPayment` gains a `gratuityWaived` flag (gratuity → 0 when true); add optional currency handling for the guest custom tip (or convert in the page before calling).
-- **`src/pages/GuestPayment.tsx`**: new tip UI (hidden custom box, MXN/USD toggle, agreed-tip floor, cash-tip info row, waiver-aware copy/totals).
-- **`src/pages/concierge/NewBooking.tsx`**: add the waiver toggle; include `gratuity_waived` in the saved payload; recompute totals with it.
-- **`supabase/functions/guest-payment-get/index.ts`**: return `tipCash`, `tipCashCurrency`, agreed card tip, and `gratuityWaived`.
-- **`supabase/functions/guest-payment-checkout/index.ts`**: honor `gratuity_waived`, accept tip currency, enforce the agreed-tip floor, recompute totals.
-
-No change to how accommodation is handled (still context-only, paid via Guesty, excluded from the card fee).
+## Notes
+- No schema changes. `agreedTip` still comes from `guest_tip ?? tip`; cash tip stays info-only.
+- After deploy, verify with Julie's link: agreed $4,800 shows as its own line; typing custom 5000 MXN adds exactly $5,000 as "Additional tip"; 10% shows "$7,548" and adds it on top.
