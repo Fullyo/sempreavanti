@@ -36,6 +36,7 @@ interface PayData {
   utvGas: number;
   gratuityRate: number;
   feeRate: number;
+  presetTip?: number;
   paymentStatus: string;
   amountPaid: number | null;
   paidAt: string | null;
