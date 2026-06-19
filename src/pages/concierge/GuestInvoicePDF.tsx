@@ -113,9 +113,24 @@ function Cell({ width, align, children, bold }: { width: string; align?: "right"
 }
 
 function InvoiceDoc({ booking }: { booking: Booking }) {
-  const servicesSubtotal = booking.items.reduce((s, i) => s + (i.guest_total ?? 0), 0);
-  const tipPct =
-    booking.tip_mode === "percent" ? `Staff Tip (${booking.tip_value}%)` : "Staff Tip";
+  // Use the same engine as the guest payment link so the invoice matches exactly:
+  // always-included 5% gratuity + optional guest tip + 5% card processing fee.
+  const tipValue = booking.guest_tip ?? booking.tip ?? 0;
+  const bd = computeGuestPayment({
+    items: booking.items.map((i) => ({
+      name: i.name,
+      type: i.type,
+      qty: i.qty,
+      price: i.price,
+      guest_total: i.guest_total,
+    })),
+    accommodationFare: booking.accommodation_fare ?? 0,
+    accommodationCurrency: booking.accommodation_currency ?? "MXN",
+    fx: booking.exchange_rate,
+    tipMode: "amount",
+    tipValue,
+  });
+  const experiencesTotal = bd.upsellsSubtotal + bd.utvGas;
   const today = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
   const ref = "SA-" + String(booking.id).padStart(8, "0").slice(-8);
 
