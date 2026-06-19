@@ -556,149 +556,110 @@ export default function NewBooking({
           border: `1px solid ${COLORS.border}`,
           borderRadius: 4,
           marginTop: 18,
-          padding: 22,
+          padding: isMobile ? 14 : 22,
         }}
       >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(200px,3fr) 60px 140px 110px 120px 120px 32px",
-            gap: 10,
-            fontSize: 10,
-            textTransform: "uppercase",
-            letterSpacing: "0.12em",
-            color: COLORS.textMuted,
-            paddingBottom: 10,
-            borderBottom: `1px solid ${COLORS.border}`,
-          }}
-        >
-          <div>Service</div>
-          <div>Qty</div>
-          <div>Unit Price</div>
-          <div>Our Cost</div>
-          <div>Guest Total</div>
-          <div>Your Profit</div>
-          <div></div>
-        </div>
+        {!isMobile && (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: GRID_COLS,
+              gap: 10,
+              fontSize: 10,
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              color: COLORS.textMuted,
+              paddingBottom: 10,
+              borderBottom: `1px solid ${COLORS.border}`,
+            }}
+          >
+            <div>Service</div>
+            <div>Qty</div>
+            <div>Unit Price</div>
+            <div>Our Cost</div>
+            <div>Guest Total</div>
+            <div>Your Profit</div>
+            <div></div>
+          </div>
+        )}
 
-        {rows.map((r) => {
-          const pMXN = priceMXN(r);
-          const guestTotal = calcGuestTotal(r.type, pMXN, r.qty);
-          const cost = calcCost(r.type, pMXN, r.qty, r.unit_cost);
-          const profit = calcProfit(r.type, pMXN, r.qty, r.unit_cost);
-          return (
+        {rows.map((r) => (
+          <ServiceLine
+            key={r.uid}
+            r={r}
+            isMobile={isMobile}
+            fx={fx}
+            grouped={grouped}
+            updateRow={updateRow}
+            removeRow={removeRow}
+            pickService={pickService}
+          />
+        ))}
+
+        {/* Auto fuel line for UTV rentals */}
+        {utvUnits > 0 &&
+          (isMobile ? (
             <div
-              key={r.uid}
+              style={{
+                border: `1px solid ${COLORS.border}`,
+                borderRadius: 4,
+                background: "rgba(122,92,30,0.05)",
+                padding: 14,
+                marginBottom: 12,
+              }}
+            >
+              <div style={{ fontSize: 14, fontWeight: 500, color: COLORS.textDark }}>UTV Fuel — Gas</div>
+              <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2, marginBottom: 10 }}>
+                Auto-added · {utvUnits} unit{utvUnits > 1 ? "s" : ""}
+              </div>
+              <label style={fieldLabel}>Rate per unit (MXN)</label>
+              <input
+                type="number"
+                min={0}
+                style={input}
+                value={fuelPerUnit || ""}
+                onChange={(e) => setFuelPerUnit(Number(e.target.value) || 0)}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10, fontSize: 13, color: COLORS.textDark, fontWeight: 500 }}>
+                <span>Guest Total</span>
+                <span>{formatMXN(fuelTotal)}</span>
+              </div>
+            </div>
+          ) : (
+            <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "minmax(200px,3fr) 60px 140px 110px 120px 120px 32px",
+                gridTemplateColumns: GRID_COLS,
                 gap: 10,
                 padding: "12px 0",
                 borderBottom: `1px solid ${COLORS.border}`,
                 alignItems: "center",
+                background: "rgba(122,92,30,0.05)",
               }}
             >
-              <ServicePicker
-                row={r}
-                grouped={grouped}
-                onPick={(s) => pickService(r.uid, s)}
-                onManual={(name, type) =>
-                  updateRow(r.uid, { service_id: null, name, type, price: 0, unit_cost: null })
-                }
-                onEditName={(name) => updateRow(r.uid, { name })}
-              />
-              <input
-                type="number"
-                min={1}
-                style={input}
-                value={r.qty}
-                onChange={(e) => updateRow(r.uid, { qty: Math.max(1, Number(e.target.value) || 1) })}
-              />
-              <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 500, color: COLORS.textDark }}>UTV Fuel — Gas</div>
+                <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2 }}>
+                  Auto-added · {utvUnits} unit{utvUnits > 1 ? "s" : ""} — editable rate per unit
+                </div>
+              </div>
+              <div style={{ fontSize: 13, color: COLORS.textMid }}>×{utvUnits}</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                 <input
                   type="number"
                   min={0}
-                  style={{ ...input, flex: 1, minWidth: 0 }}
-                  value={r.price || ""}
-                  placeholder={r.type === "grocery" ? "Cost paid" : r.type === "beer" ? "Wholesale" : "0"}
-                  onChange={(e) => updateRow(r.uid, { price: Number(e.target.value) || 0 })}
+                  style={{ ...input, minWidth: 0 }}
+                  value={fuelPerUnit || ""}
+                  onChange={(e) => setFuelPerUnit(Number(e.target.value) || 0)}
                 />
-                <CurrencyToggle
-                  size="sm"
-                  value={r.currency}
-                  onChange={(c) => updateRow(r.uid, { currency: c })}
-                />
+                <span style={{ fontSize: 10, color: COLORS.textMuted }}>MXN / unit</span>
               </div>
-              <div style={{ fontSize: 13, color: COLORS.textMid }}>
-                {cost === null ? "—" : formatMXN(cost)}
-                {r.currency === "USD" && (
-                  <div style={{ fontSize: 10, color: COLORS.textMuted }}>@ {fx}</div>
-                )}
-              </div>
-              <div style={{ fontSize: 13, color: COLORS.textDark, fontWeight: 500 }}>{formatMXN(guestTotal)}</div>
-              <div
-                style={{
-                  fontSize: 13,
-                  color: profit === null ? COLORS.amber : COLORS.green,
-                  fontWeight: 500,
-                  fontStyle: profit === null ? "italic" : "normal",
-                }}
-              >
-                {profit === null ? "cost TBD" : formatMXN(profit)}
-              </div>
-              <button
-                onClick={() => removeRow(r.uid)}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: COLORS.textMuted,
-                  cursor: "pointer",
-                  fontSize: 18,
-                }}
-                aria-label="Remove"
-              >
-                ×
-              </button>
+              <div style={{ fontSize: 13, color: COLORS.textMid }}>{formatMXN(fuelTotal)}</div>
+              <div style={{ fontSize: 13, color: COLORS.textDark, fontWeight: 500 }}>{formatMXN(fuelTotal)}</div>
+              <div style={{ fontSize: 13, color: COLORS.textMuted }}>—</div>
+              <div />
             </div>
-          );
-        })}
-
-        {/* Auto fuel line for UTV rentals */}
-        {utvUnits > 0 && (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(200px,3fr) 60px 140px 110px 120px 120px 32px",
-              gap: 10,
-              padding: "12px 0",
-              borderBottom: `1px solid ${COLORS.border}`,
-              alignItems: "center",
-              background: "rgba(122,92,30,0.05)",
-            }}
-          >
-            <div>
-              <div style={{ fontSize: 13, fontWeight: 500, color: COLORS.textDark }}>UTV Fuel — Gas</div>
-              <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2 }}>
-                Auto-added · {utvUnits} unit{utvUnits > 1 ? "s" : ""} — editable rate per unit
-              </div>
-            </div>
-            <div style={{ fontSize: 13, color: COLORS.textMid }}>×{utvUnits}</div>
-            <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
-              <input
-                type="number"
-                min={0}
-                style={{ ...input, flex: 1, minWidth: 0 }}
-                value={fuelPerUnit || ""}
-                onChange={(e) => setFuelPerUnit(Number(e.target.value) || 0)}
-              />
-              <span style={{ fontSize: 10, color: COLORS.textMuted }}>MXN/unit</span>
-            </div>
-            <div style={{ fontSize: 13, color: COLORS.textMid }}>{formatMXN(fuelTotal)}</div>
-            <div style={{ fontSize: 13, color: COLORS.textDark, fontWeight: 500 }}>{formatMXN(fuelTotal)}</div>
-            <div style={{ fontSize: 13, color: COLORS.textMuted }}>—</div>
-            <div />
-          </div>
-        )}
+          ))}
 
         <button
           onClick={addRow}
