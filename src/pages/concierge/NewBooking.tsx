@@ -96,7 +96,17 @@ export default function NewBooking({
     () => rows.reduce((sum, r) => sum + calcGuestTotal(r.type, r.price, r.qty), 0),
     [rows],
   );
-  const tip = useMemo(() => calcTip(tipMode, tipValue, servicesSubtotal), [tipMode, tipValue, servicesSubtotal]);
+  const fx = Number(exchangeRate) || 16;
+  // Credit-card staff tip — part of the guest charge (converted to MXN if entered in USD).
+  const tip = useMemo(
+    () => Math.round(tipCurrency === "USD" ? tipValue * fx : tipValue),
+    [tipValue, tipCurrency, fx],
+  );
+  // Cash staff tip — reconciliation only, never part of the guest charge or profit.
+  const tipCashMXN = useMemo(
+    () => Math.round(tipCashCurrency === "USD" ? tipCashValue * fx : tipCashValue),
+    [tipCashValue, tipCashCurrency, fx],
+  );
   const ccFee = useMemo(() => calcCCFee(ccFeeOn, servicesSubtotal, tip), [ccFeeOn, servicesSubtotal, tip]);
   const totalGuest = servicesSubtotal + tip + ccFee;
   const totalProfit = useMemo(
