@@ -7,7 +7,7 @@ import {
   Font,
   pdf,
 } from "@react-pdf/renderer";
-import { Booking, formatMXN } from "@/lib/calculations";
+import { Booking, formatMXN, computeGuestPayment } from "@/lib/calculations";
 
 Font.register({
   family: "Cormorant",
