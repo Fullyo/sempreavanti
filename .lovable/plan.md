@@ -1,44 +1,43 @@
-# Card Fee — Include Accommodation in the Base
+# Card Fee — Exclude Accommodation From the Base
 
 ## Why
 
-Today the 5% card fee is calculated only on the chargeable lines (experiences + UTV fuel + included gratuity + card tip). Accommodation is excluded because it's paid via Guesty, not on the card. That's why $1,000 USD accommodation produced just a $40 MXN fee — the fee was 5% of the $800 MXN gratuity only.
+The 5% card fee was recently changed to include the accommodation fare in its base. That was wrong: the accommodation fare is paid out via Guesty, not on the card, so the guest should not pay a 5% processing fee on it. The fee must apply only to what is actually charged on the card.
 
-You chose: **the card fee should include the accommodation amount**. With $16,000 MXN accommodation + $800 MXN gratuity, the fee becomes 5% × $16,800 = **$840 MXN**.
-
-## Change
-
-Update the card-fee base everywhere so it equals:
+## New rule
 
 ```text
-feeBase = accommodationMXN + upsells + UTV fuel + included gratuity + card tip
+feeBase = upsells + UTV fuel + included gratuity + card tip
 cardFee = 5% × feeBase
 ```
 
-The grand total charged to the guest stays the same line structure; only the fee line grows.
+Accommodation stays exactly where it was before: shown for context and used as the gratuity base — but NOT in the card-fee base.
 
-Note: accommodation itself is still NOT a charged line — it remains context/gratuity base. Only the card *fee* now counts it.
+## Where
 
-## Where (single source of truth + the two server copies that must match)
+1. **`src/lib/calculations.ts` — `computeGuestPayment`**
+   - Change `feeBase` from `accommodationMXN + chargeable` back to just `chargeable` (`upsells + gas + gratuity + tip`).
+   - `total = chargeable + fee` is unchanged.
+   - Keep `accommodationMXN` in `gratuityBase` (gratuity still computed on accommodation + upsells + fuel — unchanged).
 
-1. `**src/lib/calculations.ts` — `computeGuestPayment**`
-  - Change `chargeable` (the fee base) to add `accommodationMXN`.
-  - Keep `total = upsells + gas + gratuity + tip + fee` (total must not double-count accommodation — accommodation is only in the fee base, not added as a charged line).
-  - This drives the concierge Booking Summary in `NewBooking.tsx`.
-2. `**supabase/functions/guest-payment-checkout/index.ts**`
-  - Recompute `fee` on `accommodationMXN + chargeable` so the Stripe charge matches.
-  - The Stripe "Card processing fee (5%)" line item reflects the new amount; the other line items stay unchanged.
-3. `**supabase/functions/guest-payment-get/index.ts**`
-  - This function returns `feeRate` and the raw values; the guest `/pay` page computes the fee client-side. Confirm the guest page (`src/pages/GuestPayment.tsx`) applies the fee to a base that includes `accommodationMXN`, so the displayed total matches checkout.
+2. **`supabase/functions/guest-payment-checkout/index.ts`** (redeploy)
+   - Recompute `fee` on `chargeable` only (drop `accommodationMXN` from `feeBase`). Stripe "Card processing fee (5%)" line shrinks accordingly.
+
+3. **`supabase/functions/guest-payment-get/index.ts`** (redeploy)
+   - No math change needed (it already returns `feeRate` + raw values), but confirm the guest page computes the fee on the non-accommodation base.
+
+4. **Guest invoice / `/pay` page (`src/pages/GuestPayment.tsx`)**
+   - Update the fee line label/note to state the card fee does not apply to the accommodation fare (already paid via Guesty).
+   - Remove the "currency assumptions" explanatory text.
+
+5. **Concierge Booking Summary (`src/pages/concierge/NewBooking.tsx`)**
+   - Update the inline fee label so it no longer lists accommodation in the fee base.
 
 ## Verification
 
-- $1,000 USD accommodation @ 16, no services → fee = $840 MXN, total guest charge = $1,640 MXN ($800 gratuity + $840 fee).
+- $1,000 USD accommodation @ 16, no services, no tip → gratuity = 5% × $16,000 = $800 MXN; fee = 5% × $800 = $40 MXN; total = $840 MXN.
 - Confirm concierge Booking Summary, guest `/pay` page, and Stripe checkout all show the same total.
 
 ## Out of scope
 
-- No change to gratuity rate, markup rules, profit math, or owner statement.  
-  
-  
-i also want you to redesign to new bookingpage, ffeels like patch work. rethink the layout and where the fees go
+- No change to gratuity rate or base, markup rules, profit math, or owner statement.

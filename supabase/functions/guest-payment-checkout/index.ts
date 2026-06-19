@@ -79,9 +79,9 @@ Deno.serve(async (req) => {
     const gratuity = Math.round(gratuityBase * GRATUITY_RATE);
     const tip = tipMode === "percent" ? Math.round(gratuityBase * (tipValue / 100)) : Math.round(tipValue);
     const chargeable = upsellsSubtotal + utvGas + gratuity + tip;
-    // Card fee applies to the accommodation amount too (accommodation itself is
-    // not charged here — it's paid via Guesty — but it's part of the fee base).
-    const feeBase = accommodationMXN + chargeable;
+    // Card fee applies ONLY to the charged lines (upsells + fuel + gratuity +
+    // tip). It does NOT apply to the accommodation fare — paid via Guesty.
+    const feeBase = chargeable;
     const fee = Math.round(feeBase * FEE_RATE);
     const total = chargeable + fee;
 
