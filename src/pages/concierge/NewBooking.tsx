@@ -263,6 +263,7 @@ export default function NewBooking({
     setGuest("");
     setCheckin("");
     setCheckout("");
+    setNotes("");
     setRows([]);
     setTipValue(0);
     setTipCurrency("MXN");
@@ -273,6 +274,7 @@ export default function NewBooking({
     setAccommodationFare(0);
     setAccommodationCurrency("MXN");
     setFuelPerUnit(UTV_GAS_PER_RENTAL);
+    setFuelRemoved(false);
   };
 
   const buildPayload = () => {
