@@ -48,18 +48,20 @@ Deno.serve(async (req) => {
 
     const items = Array.isArray(booking.items) ? booking.items : [];
     // Sanitized line items — guest sees names, qty, and line total only.
-    const lineItems = items.map((i: any) => ({
-      name: i.name,
-      qty: Number(i.qty) || 1,
-      guest_total: Number(i.guest_total) || 0,
-    }));
+    // Drop zero-total lines (e.g. a fuel charge the concierge removed).
+    const lineItems = items
+      .map((i: any) => ({
+        name: i.name,
+        qty: Number(i.qty) || 1,
+        guest_total: Number(i.guest_total) || 0,
+      }))
+      .filter((i: any) => i.guest_total > 0);
 
     const fx = Number(booking.exchange_rate) || DEFAULT_FX;
     const upsellsSubtotal = lineItems.reduce((s: number, i: any) => s + i.guest_total, 0);
     const hasGasLine = items.some((i: any) => (i.name || "").toLowerCase().includes("gas"));
-    const utvUnits = hasGasLine
-      ? 0
-      : items.filter((i: any) => isUtvRental(i.name)).reduce((s: number, i: any) => s + (Number(i.qty) || 0), 0);
+    // One tank (one fuel charge) per UTV rental line — NOT per day/qty.
+    const utvUnits = hasGasLine ? 0 : items.filter((i: any) => isUtvRental(i.name)).length;
     const utvGas = utvUnits * UTV_GAS_PER_RENTAL;
     const accommodationMXN =
       booking.accommodation_currency === "USD"
