@@ -819,11 +819,17 @@ export default function NewBooking({
       </div>
 
       <div style={{ display: "flex", gap: 10, marginTop: 22, justifyContent: "flex-end" }}>
-        <button onClick={clearAll} style={btnGhost}>
-          Clear
-        </button>
+        {isEdit ? (
+          <button onClick={() => onCancel?.()} style={btnGhost}>
+            Cancel
+          </button>
+        ) : (
+          <button onClick={clearAll} style={btnGhost}>
+            Clear
+          </button>
+        )}
         <button onClick={save} disabled={saving} style={{ ...btnPrimary, opacity: saving ? 0.6 : 1 }}>
-          {saving ? "Saving…" : "Save Booking"}
+          {saving ? "Saving…" : isEdit ? "Save Changes" : "Save Booking"}
         </button>
       </div>
     </div>
