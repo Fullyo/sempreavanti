@@ -136,12 +136,7 @@ export default function NewBooking({
     setAccommodationCurrency("MXN");
   };
 
-  const save = async () => {
-    if (!guest.trim()) return toast.error("Guest name is required");
-    if (!checkin) return toast.error("Check-in is required");
-    if (rows.length === 0) return toast.error("Add at least one service");
-
-    setSaving(true);
+  const buildPayload = () => {
     const items = rows.map((r) => ({
       name: r.name,
       type: r.type,
@@ -153,26 +148,51 @@ export default function NewBooking({
       profit: calcProfit(r.type, r.price, r.qty, r.unit_cost),
       sub_text: r.sub_text ?? null,
     }));
+    return {
+      guest,
+      checkin,
+      checkout: checkout || null,
+      items,
+      cc_fee_on: ccFeeOn,
+      tip_mode: tipMode,
+      tip_value: tipValue,
+      tip_method: tipMethod,
+      tip,
+      cc_fee: ccFee,
+      total_guest: totalGuest,
+      total_profit: totalProfit,
+      cash_collected: cashCollected,
+      accommodation_fare: accommodationFare,
+      accommodation_currency: accommodationCurrency,
+    };
+  };
+
+  const save = async () => {
+    if (!guest.trim()) return toast.error("Guest name is required");
+    if (!checkin) return toast.error("Check-in is required");
+    if (rows.length === 0) return toast.error("Add at least one service");
+
+    setSaving(true);
+    const payload = buildPayload();
+
+    if (isEdit && initialBooking) {
+      try {
+        await conciergeDb.bookingsUpdate(initialBooking.id, payload);
+      } catch (e) {
+        setSaving(false);
+        return toast.error((e as Error).message);
+      }
+      setSaving(false);
+      toast.success("Reservation updated");
+      // Same link automatically reflects the new totals.
+      setSavedToken(initialBooking.pay_token ?? null);
+      onSaved();
+      return;
+    }
 
     let data: { pay_token?: string } | undefined;
     try {
-      data = await conciergeDb.bookingsInsert({
-        guest,
-        checkin,
-        checkout: checkout || null,
-        items,
-        cc_fee_on: ccFeeOn,
-        tip_mode: tipMode,
-        tip_value: tipValue,
-        tip_method: tipMethod,
-        tip,
-        cc_fee: ccFee,
-        total_guest: totalGuest,
-        total_profit: totalProfit,
-        cash_collected: cashCollected,
-        accommodation_fare: accommodationFare,
-        accommodation_currency: accommodationCurrency,
-      });
+      data = await conciergeDb.bookingsInsert(payload);
     } catch (e) {
       setSaving(false);
       return toast.error((e as Error).message);
@@ -194,6 +214,29 @@ export default function NewBooking({
     } catch {
       toast.error("Could not copy — select and copy manually");
     }
+  };
+
+  const regenerateLink = async () => {
+    const targetId = initialBooking?.id;
+    if (!targetId) return;
+    if (
+      !confirm(
+        "Generate a brand-new link? The previous link will stop working and the guest must use the new one.",
+      )
+    )
+      return;
+    setRegenerating(true);
+    const newToken = crypto.randomUUID();
+    try {
+      await conciergeDb.bookingsUpdate(targetId, { pay_token: newToken });
+    } catch (e) {
+      setRegenerating(false);
+      return toast.error((e as Error).message);
+    }
+    setRegenerating(false);
+    setSavedToken(newToken);
+    toast.success("New link generated — the old one no longer works");
+    onSaved();
   };
 
   return (
