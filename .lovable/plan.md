@@ -1,39 +1,55 @@
-# Fully Editable Reservations + Re-shareable Link
+# Zero-Calculation Booking Form
 
 ## Goal
-Any saved reservation can be opened and edited exactly like a new booking — change guest/dates, add or remove services, adjust quantities/prices, accommodation, tip and card fee. The same payment link automatically reflects the changes, with a one-tap "Generate new link" option and a clear warning when editing a booking that's already been paid.
+The concierge enters raw numbers and never does math. The booking summary shows the **exact** invoice the guest will pay (same numbers as the `/pay` page), every money field accepts MXN or USD, the card fee is applied automatically, and fuel is added automatically for UTV rentals with an editable amount.
 
-## How it works today (and the gaps)
-- **All Bookings** has a cramped inline editor: it only edits existing line items' qty/price, dates, tip and the card-fee toggle.
-- You **cannot** add a new service, remove a line, or change accommodation fare/currency or exchange rate while editing.
-- The payment link already reads live data, so edits *do* reach the guest — but there's no obvious "copy/re-send" step after editing and no way to retire an old link.
-- The backend already permits updating every booking field (including the link token), so no security/permission changes are needed.
+## What's wrong today
+1. **Card fee is off by default** and hidden behind an Add/Remove button — the concierge has to remember to turn it on.
+2. **No fuel** is added in the booking form when a UTV/Polaris is booked. Gas is only auto-added later on the guest `/pay` page, so the concierge's summary understates the total.
+3. **The concierge total ≠ the guest total.** The guest page adds a mandatory 5% gratuity (on accommodation + upsells + gas); the booking summary never shows it. So the concierge quotes one number and the guest is charged another.
+4. **Service line prices are MXN-only** — no USD entry for items priced/paid in dollars.
 
 ## What will change
 
-### 1. Shared booking form (create + edit)
-Refactor the New Booking form into a single reusable form used for both creating and editing:
-- Full service picker with **add line / remove line**, quantity and price editing, accommodation fare + currency + exchange rate, tip mode/value/method, card-fee toggle, cash collected — identical to creating a booking.
-- When opened in edit mode it is pre-filled with the reservation's saved values.
-- Live totals recompute as you type (services subtotal, included 5% gratuity, 5% card fee, grand total).
+### 1. Card fee — automatic, still removable
+- Defaults to **on** for every booking (new and edit).
+- Recalculates live as 5% of the chargeable amount — no manual step needed.
+- Keep a small toggle so it can be removed for special cases (per your choice), but it starts applied.
 
-### 2. Edit entry point in All Bookings
-- The **Edit** button on each reservation opens this full form (replacing the limited inline editor) pre-loaded with everything.
-- **Save Changes** writes the update and recomputes all stored totals. The existing link keeps working and now shows the new amounts.
+### 2. UTV fuel — auto-added, editable
+- When a UTV/Polaris/Can-Am rental line is added, a **Fuel** line is automatically created for each unit, defaulting to **$1,000 MXN per unit**.
+- The fuel amount is **editable** (concierge can override the peso value).
+- Removing the UTV line removes its auto fuel; manually added fuel is left alone.
+- This mirrors the existing `computeUtvGas` rule so the booking and the guest page agree.
 
-### 3. Link handling after edit
-- After saving, the reservation shows its payment link with **Copy link** so it can be re-sent immediately.
-- A **Generate new link** action creates a fresh link token and retires the old one (old URL stops working) — for cases where you want to be certain the guest uses the corrected invoice.
+### 3. Per-line MXN / USD toggle
+- Each service row gets a currency toggle next to its unit price. USD lines convert to MXN at the booking's exchange rate for all totals, cost and profit.
+- The exchange-rate field becomes always-relevant (shown whenever any USD value exists: a line, accommodation, or a tip).
 
-### 4. Paid-booking safety
-- If a reservation is already marked **paid**, opening it to edit shows a clear inline warning ("This reservation was already paid — changing totals may cause a mismatch with what the guest paid"). Editing is still allowed per your choice.
+### 4. Summary mirrors the guest invoice exactly
+Rebuild the Booking Summary so it shows the same line structure and totals as the guest `/pay` page:
+
+```text
+Upsells subtotal           (services, converted to MXN)
+UTV fuel                   (auto)
+Accommodation (context)    (MXN equiv — gratuity base only, not charged)
+Included gratuity 5%       (on accommodation + upsells + fuel)
+Staff tip — credit card    (optional, part of total)
+Card fee 5%                (auto)
+─────────────────────────
+TOTAL GUEST CHARGE         (identical to /pay)
+Staff tip — cash           (reconciliation only, shown separately)
+Your total profit
+```
+
+The shared calculation helper (`computeGuestPayment` in `src/lib/calculations.ts`) becomes the single source of truth used by both the concierge form and the guest page, so the two can never drift.
 
 ## Technical notes
-- Extract the form body of `src/pages/concierge/NewBooking.tsx` into a shared `BookingForm` component taking an optional `initialBooking`; `NewBooking` becomes a thin wrapper. `AllBookings` renders it for edits.
-- Save path: `conciergeDb.bookingsInsert` for new, `conciergeDb.bookingsUpdate(id, patch)` for edits — both already exist in `src/lib/conciergeApi.ts`.
-- "Generate new link" sets a new `pay_token` (via `crypto.randomUUID()`) through `bookingsUpdate`; the `/pay` page and `guest-payment-get` already resolve by token, so the old token simply stops matching. No edge-function changes required.
-- Totals reuse the existing helpers in `src/lib/calculations.ts`; no pricing-rule changes.
-- Remove the old inline-edit markup in `AllBookings.tsx` to avoid two divergent editors.
+- Add a per-row `currency` (and keep `price` as entered); a row's MXN value = `price * fx` when USD. Update `calcGuestTotal`/`calcCost`/`calcProfit` call sites to use the MXN-normalized price, and persist both the entered value and currency in each saved item.
+- Auto-fuel: derive fuel lines from UTV rows in a `useEffect`/memo so they stay in sync; store an editable `fuelPerUnit` (default `UTV_GAS_PER_RENTAL = 1000`). Persist fuel as normal line items so `/pay` doesn't double-add (the existing `computeUtvGas` skips when a gas line is already present).
+- Replace the form's ad-hoc `totalGuest = servicesSubtotal + tip + ccFee` with `computeGuestPayment({...})` including mandatory `GUEST_GRATUITY_RATE` (5%) and the card fee, so the concierge total equals the guest total.
+- `ccFeeOn` defaults to `true`.
+- Save payload stores the final computed `total_guest`, `cc_fee`, gratuity, fuel and per-line currency. A DB migration adds any missing columns (e.g. per-item currency is already in `items` JSON, so likely only a `guest_gratuity`/fuel handling check — confirm during build; no destructive changes).
 
 ## Out of scope
-- No changes to pricing rules, the guest payment page layout, or Stripe flow.
+- No change to Stripe checkout, the guest `/pay` page layout, pricing markup rules, or the owner statement math (beyond reading the already-correct totals).
