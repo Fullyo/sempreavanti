@@ -60,11 +60,15 @@ export default function NewBooking({
   const [checkout, setCheckout] = useState(initialBooking?.checkout ?? "");
   const [rows, setRows] = useState<Row[]>(initialBooking ? bookingToRows(initialBooking) : []);
   const [services, setServices] = useState<Service[]>([]);
-  const [tipMode, setTipMode] = useState<"amount" | "percent">(
-    initialBooking?.tip_mode === "percent" ? "percent" : "amount",
-  );
   const [tipValue, setTipValue] = useState(initialBooking?.tip_value ?? 0);
-  const [tipMethod, setTipMethod] = useState<"cc" | "cash">(initialBooking?.tip_method ?? "cc");
+  const [tipCurrency, setTipCurrency] = useState<"MXN" | "USD">(
+    initialBooking?.tip_currency === "USD" ? "USD" : "MXN",
+  );
+  const [tipCashValue, setTipCashValue] = useState(initialBooking?.tip_cash_value ?? 0);
+  const [tipCashCurrency, setTipCashCurrency] = useState<"MXN" | "USD">(
+    initialBooking?.tip_cash_currency === "USD" ? "USD" : "MXN",
+  );
+  const [exchangeRate, setExchangeRate] = useState(initialBooking?.exchange_rate ?? 16);
   const [ccFeeOn, setCcFeeOn] = useState(initialBooking?.cc_fee_on ?? false);
   const [cashCollected, setCashCollected] = useState(initialBooking?.cash_collected ?? 0);
   const [accommodationFare, setAccommodationFare] = useState(initialBooking?.accommodation_fare ?? 0);
