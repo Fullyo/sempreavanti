@@ -3,16 +3,10 @@ import { conciergeDb } from "@/lib/conciergeApi";
 import { toast } from "sonner";
 import {
   Booking,
-  BookingItem,
   bookingUpsellCost,
-  calcCCFee,
-  calcCost,
-  calcGuestTotal,
-  calcProfit,
-  calcTip,
   formatMXN,
 } from "@/lib/calculations";
-import { COLORS, btnGhost, btnPrimary, btnDanger, fieldLabel, input, sectionTitle } from "./styles";
+import { COLORS, btnGhost, btnPrimary, btnDanger, input, sectionTitle } from "./styles";
 import NewBooking from "./NewBooking";
 import { downloadInvoice } from "./GuestInvoicePDF";
 import { downloadOwnerStatementCSV, openOwnerStatement } from "./ownerStatement";
