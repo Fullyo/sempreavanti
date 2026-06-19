@@ -536,7 +536,7 @@ export default function NewBooking({
               <option value="USD">USD</option>
             </select>
           </div>
-          <div style={{ fontSize: 11, color: COLORS.textMuted, lineHeight: 1.5, paddingBottom: 8 }}>
+          <div style={{ fontSize: 11, color: COLORS.textMuted, lineHeight: 1.5, paddingBottom: 8, gridColumn: isMobile ? "1 / -1" : undefined }}>
             {accommodationFare > 0 ? (
               <>
                 LUX 15% commission: <strong style={{ color: COLORS.amber }}>{accommodationCurrency} {(accommodationFare * 0.15).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
