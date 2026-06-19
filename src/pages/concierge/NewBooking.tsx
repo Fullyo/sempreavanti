@@ -493,14 +493,14 @@ export default function NewBooking({
           background: "#fff",
           border: `1px solid ${COLORS.border}`,
           borderRadius: 4,
-          padding: 22,
+          padding: isMobile ? 16 : 22,
           marginTop: 18,
           display: "grid",
-          gridTemplateColumns: "2fr 1fr 1fr",
-          gap: 18,
+          gridTemplateColumns: isMobile ? "1fr" : "2fr 1fr 1fr",
+          gap: isMobile ? 14 : 18,
         }}
       >
-        <div>
+        <div style={isMobile ? { gridColumn: "1 / -1" } : undefined}>
           <label style={fieldLabel}>Guest Name</label>
           <input style={input} value={guest} onChange={(e) => setGuest(e.target.value)} />
         </div>
@@ -512,8 +512,8 @@ export default function NewBooking({
           <label style={fieldLabel}>Check-out</label>
           <input style={input} type="date" value={checkout} onChange={(e) => setCheckout(e.target.value)} />
         </div>
-        <div style={{ gridColumn: "1 / -1", borderTop: `1px dashed ${COLORS.border}`, paddingTop: 16, display: "grid", gridTemplateColumns: "2fr 1fr 2fr", gap: 18, alignItems: "end" }}>
-          <div>
+        <div style={{ gridColumn: "1 / -1", borderTop: `1px dashed ${COLORS.border}`, paddingTop: 16, display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "2fr 1fr 2fr", gap: isMobile ? 12 : 18, alignItems: "end" }}>
+          <div style={isMobile ? { gridColumn: "1 / -1" } : undefined}>
             <label style={fieldLabel}>Accommodation Fare (room only)</label>
             <input
               style={input}
