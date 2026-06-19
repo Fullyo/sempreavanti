@@ -32,14 +32,29 @@ Deno.serve(async (req) => {
         Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
       );
 
-      const update = {
+      // Sync the ACTUAL amounts the guest paid (the guest may raise the tip on
+      // the /pay page) back into the fields every report reads, so the Owner
+      // Statement, booking list, and staff tip payouts reflect reality — not
+      // the concierge's pre-set estimate.
+      const actualTip = session.metadata?.tip != null ? Number(session.metadata.tip) : null;
+      const actualFee = session.metadata?.fee != null ? Number(session.metadata.fee) : null;
+      const actualTotal = session.metadata?.total != null ? Number(session.metadata.total) : null;
+      const update: Record<string, unknown> = {
         payment_status: "paid",
         amount_paid: session.amount_total != null ? session.amount_total / 100 : null,
         guest_gratuity: session.metadata?.gratuity ? Number(session.metadata.gratuity) : null,
-        guest_tip: session.metadata?.tip ? Number(session.metadata.tip) : null,
+        guest_tip: actualTip,
         paid_at: new Date().toISOString(),
         stripe_session_id: session.id,
       };
+      if (actualTip != null) {
+        // Keep the report label truthful: store as a fixed amount, not a %.
+        update.tip = actualTip;
+        update.tip_mode = "amount";
+        update.tip_value = actualTip;
+      }
+      if (actualFee != null) update.cc_fee = actualFee;
+      if (actualTotal != null) update.total_guest = actualTotal;
 
       if (bookingId) {
         await supabase.from("bookings").update(update).eq("id", Number(bookingId));

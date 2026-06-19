@@ -62,7 +62,7 @@ export function openOwnerStatement(month: string, year: number, bookings: Bookin
       const ccRow =
         Number(b.cc_fee) > 0
           ? `<tr>
-              <td>Credit Card Fee (5% on total)</td>
+              <td>Credit Card Fee (5%, excludes accommodation)</td>
               <td>${badge("Pass-through", "#9E9080")}</td>
               <td style="text-align:right">${formatMXN(b.cc_fee)}</td>
               <td colspan="3" style="text-align:right;color:#9E9080">—</td>

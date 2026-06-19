@@ -205,7 +205,13 @@ export default function AllBookings() {
   function computeMonthKpis(live: Booking[], hist: HistoricalBooking[]): KpiBreakdown {
     const histK = computeHistoricalKpis(hist);
     const liveProfit = live.reduce((s, b) => s + Number(b.total_profit), 0);
-    const liveBilled = live.reduce((s, b) => s + Number(b.total_guest), 0);
+    // Upsell revenue = line-item guest totals only (matches the Owner Statement
+    // and historical figures). Gratuity, tips, and the card fee are NOT upsell
+    // revenue, so they must not inflate this KPI.
+    const liveBilled = live.reduce(
+      (s, b) => s + (b.items ?? []).reduce((sum, i) => sum + (Number(i.guest_total) || 0), 0),
+      0,
+    );
     const liveAccomFare = live.reduce((s, b) => s + Number(b.accommodation_fare ?? 0), 0);
     const liveAccomOwner = liveAccomFare * 0.85;
     const liveAccomLux = liveAccomFare * 0.15;
