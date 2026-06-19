@@ -249,8 +249,9 @@ export interface GuestPaymentBreakdown {
   gratuityBase: number; // accommodation + upsells + gas
   gratuity: number; // mandatory 5%
   tip: number; // optional extra tip
-  fee: number; // 5% card fee on chargeable
-  chargeable: number; // upsells + gas + gratuity + tip (pre-fee)
+  feeBase: number; // accommodation + upsells + gas + gratuity + tip
+  fee: number; // 5% card fee on feeBase
+  chargeable: number; // upsells + gas + gratuity + tip (pre-fee, accommodation excluded)
   total: number; // grand total charged in MXN
 }
 
