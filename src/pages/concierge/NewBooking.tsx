@@ -290,7 +290,9 @@ export default function NewBooking({
     }));
     // Persist auto fuel as a real line so the guest /pay page shows it and
     // doesn't double-add gas (it skips when a "gas" line already exists).
-    if (utvUnits > 0 && fuelTotal > 0) {
+    // When fuel is removed but UTVs exist, persist a zero-total fuel line so
+    // the guest page recognizes the gas as intentionally removed (not re-added).
+    if (fuelActive && fuelTotal > 0) {
       items.push({
         name: FUEL_NAME,
         type: "fuel",
@@ -301,13 +303,27 @@ export default function NewBooking({
         guest_total: fuelTotal,
         cost: fuelTotal,
         profit: 0,
-        sub_text: `${utvUnits} unit${utvUnits > 1 ? "s" : ""} × ${formatMXN(Number(fuelPerUnit) || 0)}`,
+        sub_text: `${utvLineCount} rental${utvLineCount > 1 ? "s" : ""} × ${formatMXN(Number(fuelPerUnit) || 0)}`,
+      });
+    } else if (utvLineCount > 0 && fuelRemoved) {
+      items.push({
+        name: FUEL_NAME,
+        type: "fuel",
+        qty: 1,
+        price: 0,
+        currency: "MXN",
+        unit_cost: 0,
+        guest_total: 0,
+        cost: 0,
+        profit: 0,
+        sub_text: "Fuel removed",
       });
     }
     return {
       guest,
       checkin,
       checkout: checkout || null,
+      notes: notes || null,
       items,
       cc_fee_on: ccFeeOn,
       tip_mode: "amount",
