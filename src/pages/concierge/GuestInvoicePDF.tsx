@@ -198,27 +198,27 @@ function InvoiceDoc({ booking }: { booking: Booking }) {
         })}
 
         <View style={styles.totalsBlock}>
-          {(booking.tip > 0 || booking.cc_fee > 0) && (
+          <View style={styles.totalRow}>
+            <Text>Experiences subtotal</Text>
+            <Text>{formatMXN(experiencesTotal)}</Text>
+          </View>
+          <View style={styles.totalRow}>
+            <Text>Included gratuity (5%)</Text>
+            <Text>{formatMXN(bd.gratuity)}</Text>
+          </View>
+          {bd.tip > 0 && (
             <View style={styles.totalRow}>
-              <Text>Subtotal</Text>
-              <Text>{formatMXN(servicesSubtotal)}</Text>
+              <Text>Additional tip</Text>
+              <Text>{formatMXN(bd.tip)}</Text>
             </View>
           )}
-          {booking.tip > 0 && (
-            <View style={styles.totalRow}>
-              <Text>{tipPct}</Text>
-              <Text>{formatMXN(booking.tip)}</Text>
-            </View>
-          )}
-          {booking.cc_fee > 0 && (
-            <View style={styles.totalRow}>
-              <Text>3% Credit Card Fee</Text>
-              <Text>{formatMXN(booking.cc_fee)}</Text>
-            </View>
-          )}
+          <View style={styles.totalRow}>
+            <Text>Card processing fee (5%)</Text>
+            <Text>{formatMXN(bd.fee)}</Text>
+          </View>
           <View style={styles.totalDueRow}>
             <Text style={styles.totalDueLabel}>TOTAL DUE (MXN)</Text>
-            <Text style={styles.totalDueValue}>{formatMXN(booking.total_guest)}</Text>
+            <Text style={styles.totalDueValue}>{formatMXN(bd.total)}</Text>
           </View>
         </View>
 
