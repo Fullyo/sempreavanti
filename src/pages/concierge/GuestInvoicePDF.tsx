@@ -7,7 +7,7 @@ import {
   Font,
   pdf,
 } from "@react-pdf/renderer";
-import { Booking, formatMXN } from "@/lib/calculations";
+import { Booking, formatMXN, computeGuestPayment } from "@/lib/calculations";
 
 Font.register({
   family: "Cormorant",
@@ -113,9 +113,24 @@ function Cell({ width, align, children, bold }: { width: string; align?: "right"
 }
 
 function InvoiceDoc({ booking }: { booking: Booking }) {
-  const servicesSubtotal = booking.items.reduce((s, i) => s + (i.guest_total ?? 0), 0);
-  const tipPct =
-    booking.tip_mode === "percent" ? `Staff Tip (${booking.tip_value}%)` : "Staff Tip";
+  // Use the same engine as the guest payment link so the invoice matches exactly:
+  // always-included 5% gratuity + optional guest tip + 5% card processing fee.
+  const tipValue = booking.guest_tip ?? booking.tip ?? 0;
+  const bd = computeGuestPayment({
+    items: booking.items.map((i) => ({
+      name: i.name,
+      type: i.type,
+      qty: i.qty,
+      price: i.price,
+      guest_total: i.guest_total,
+    })),
+    accommodationFare: booking.accommodation_fare ?? 0,
+    accommodationCurrency: booking.accommodation_currency ?? "MXN",
+    fx: booking.exchange_rate,
+    tipMode: "amount",
+    tipValue,
+  });
+  const experiencesTotal = bd.upsellsSubtotal + bd.utvGas;
   const today = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
   const ref = "SA-" + String(booking.id).padStart(8, "0").slice(-8);
 
@@ -183,27 +198,27 @@ function InvoiceDoc({ booking }: { booking: Booking }) {
         })}
 
         <View style={styles.totalsBlock}>
-          {(booking.tip > 0 || booking.cc_fee > 0) && (
+          <View style={styles.totalRow}>
+            <Text>Experiences subtotal</Text>
+            <Text>{formatMXN(experiencesTotal)}</Text>
+          </View>
+          <View style={styles.totalRow}>
+            <Text>Included gratuity (5%)</Text>
+            <Text>{formatMXN(bd.gratuity)}</Text>
+          </View>
+          {bd.tip > 0 && (
             <View style={styles.totalRow}>
-              <Text>Subtotal</Text>
-              <Text>{formatMXN(servicesSubtotal)}</Text>
+              <Text>Additional tip</Text>
+              <Text>{formatMXN(bd.tip)}</Text>
             </View>
           )}
-          {booking.tip > 0 && (
-            <View style={styles.totalRow}>
-              <Text>{tipPct}</Text>
-              <Text>{formatMXN(booking.tip)}</Text>
-            </View>
-          )}
-          {booking.cc_fee > 0 && (
-            <View style={styles.totalRow}>
-              <Text>3% Credit Card Fee</Text>
-              <Text>{formatMXN(booking.cc_fee)}</Text>
-            </View>
-          )}
+          <View style={styles.totalRow}>
+            <Text>Card processing fee (5%)</Text>
+            <Text>{formatMXN(bd.fee)}</Text>
+          </View>
           <View style={styles.totalDueRow}>
             <Text style={styles.totalDueLabel}>TOTAL DUE (MXN)</Text>
-            <Text style={styles.totalDueValue}>{formatMXN(booking.total_guest)}</Text>
+            <Text style={styles.totalDueValue}>{formatMXN(bd.total)}</Text>
           </View>
         </View>
 
@@ -211,8 +226,8 @@ function InvoiceDoc({ booking }: { booking: Booking }) {
           <Text style={styles.gratuityLabel}>A Note on Gratuity</Text>
           <Text style={styles.gratuityTitle}>Service is already taken care of</Text>
           <Text style={styles.gratuityBody}>
-            As part of our fully-serviced stay, a 10% service charge is already included in your accommodation rate and shared among the chefs, housekeeping and concierge team who looked after you this week.{"\n\n"}
-            If our team went above and beyond — and you felt the food, the service and the overall experience truly reflected the five-star stay we strive to deliver — additional gratuity is warmly appreciated but never expected. You can simply let your concierge know to add it to this invoice, or leave cash directly in the envelope provided in your villa.
+            As part of our fully-serviced stay, a 5% gratuity is already included in this total and shared among the chefs, housekeeping and concierge team who looked after you this week.{"\n\n"}
+            If our team went above and beyond — and you felt the food, the service and the overall experience truly reflected the five-star stay we strive to deliver — additional gratuity is warmly appreciated but never expected. You can add it directly when you pay through your secure payment link, or leave cash in the envelope provided in your villa.
           </Text>
         </View>
 
