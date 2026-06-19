@@ -226,8 +226,8 @@ function InvoiceDoc({ booking }: { booking: Booking }) {
           <Text style={styles.gratuityLabel}>A Note on Gratuity</Text>
           <Text style={styles.gratuityTitle}>Service is already taken care of</Text>
           <Text style={styles.gratuityBody}>
-            As part of our fully-serviced stay, a 10% service charge is already included in your accommodation rate and shared among the chefs, housekeeping and concierge team who looked after you this week.{"\n\n"}
-            If our team went above and beyond — and you felt the food, the service and the overall experience truly reflected the five-star stay we strive to deliver — additional gratuity is warmly appreciated but never expected. You can simply let your concierge know to add it to this invoice, or leave cash directly in the envelope provided in your villa.
+            As part of our fully-serviced stay, a 5% gratuity is already included in this total and shared among the chefs, housekeeping and concierge team who looked after you this week.{"\n\n"}
+            If our team went above and beyond — and you felt the food, the service and the overall experience truly reflected the five-star stay we strive to deliver — additional gratuity is warmly appreciated but never expected. You can add it directly when you pay through your secure payment link, or leave cash in the envelope provided in your villa.
           </Text>
         </View>
 
