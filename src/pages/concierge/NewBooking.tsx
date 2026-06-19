@@ -15,6 +15,7 @@ import {
   UTV_GAS_PER_RENTAL,
 } from "@/lib/calculations";
 import { COLORS, btnPrimary, btnGhost, fieldLabel, input, sectionTitle } from "./styles";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const tipInput: CSSProperties = {
   width: 100,
@@ -81,6 +82,13 @@ function uid() {
 
 const MANUAL_TYPES = ["tour", "tour10", "mgmt", "margin", "fixedprofit", "grocery", "minibar", "beer", "flat", "villa"];
 
+// Types where quantity is meaningless (priced as a single/total amount).
+const QTY_LESS_TYPES = ["grocery", "minibar", "flat", "fixedprofit"];
+const isQtyLess = (t: string) => QTY_LESS_TYPES.includes(t);
+
+// Shared desktop grid template so header and rows always line up.
+const GRID_COLS = "minmax(180px,2.6fr) 60px minmax(150px,1.5fr) 96px 110px 110px 30px";
+
 const FUEL_NAME = "UTV Fuel — Gas";
 
 function bookingToRows(b: Booking): Row[] {
@@ -110,6 +118,7 @@ export default function NewBooking({
   onCancel?: () => void;
 }) {
   const isEdit = !!initialBooking;
+  const isMobile = useIsMobile();
   const [guest, setGuest] = useState(initialBooking?.guest ?? "");
   const [checkin, setCheckin] = useState(initialBooking?.checkin ?? "");
   const [checkout, setCheckout] = useState(initialBooking?.checkout ?? "");
@@ -420,7 +429,7 @@ export default function NewBooking({
             background: COLORS.dark,
             color: "#F7F4EE",
             borderRadius: 4,
-            padding: 22,
+            padding: isMobile ? 16 : 22,
             marginTop: 18,
           }}
         >
@@ -484,14 +493,14 @@ export default function NewBooking({
           background: "#fff",
           border: `1px solid ${COLORS.border}`,
           borderRadius: 4,
-          padding: 22,
+          padding: isMobile ? 16 : 22,
           marginTop: 18,
           display: "grid",
-          gridTemplateColumns: "2fr 1fr 1fr",
-          gap: 18,
+          gridTemplateColumns: isMobile ? "1fr" : "2fr 1fr 1fr",
+          gap: isMobile ? 14 : 18,
         }}
       >
-        <div>
+        <div style={isMobile ? { gridColumn: "1 / -1" } : undefined}>
           <label style={fieldLabel}>Guest Name</label>
           <input style={input} value={guest} onChange={(e) => setGuest(e.target.value)} />
         </div>
@@ -503,8 +512,8 @@ export default function NewBooking({
           <label style={fieldLabel}>Check-out</label>
           <input style={input} type="date" value={checkout} onChange={(e) => setCheckout(e.target.value)} />
         </div>
-        <div style={{ gridColumn: "1 / -1", borderTop: `1px dashed ${COLORS.border}`, paddingTop: 16, display: "grid", gridTemplateColumns: "2fr 1fr 2fr", gap: 18, alignItems: "end" }}>
-          <div>
+        <div style={{ gridColumn: "1 / -1", borderTop: `1px dashed ${COLORS.border}`, paddingTop: 16, display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "2fr 1fr 2fr", gap: isMobile ? 12 : 18, alignItems: "end" }}>
+          <div style={isMobile ? { gridColumn: "1 / -1" } : undefined}>
             <label style={fieldLabel}>Accommodation Fare (room only)</label>
             <input
               style={input}
@@ -527,7 +536,7 @@ export default function NewBooking({
               <option value="USD">USD</option>
             </select>
           </div>
-          <div style={{ fontSize: 11, color: COLORS.textMuted, lineHeight: 1.5, paddingBottom: 8 }}>
+          <div style={{ fontSize: 11, color: COLORS.textMuted, lineHeight: 1.5, paddingBottom: 8, gridColumn: isMobile ? "1 / -1" : undefined }}>
             {accommodationFare > 0 ? (
               <>
                 LUX 15% commission: <strong style={{ color: COLORS.amber }}>{accommodationCurrency} {(accommodationFare * 0.15).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
@@ -547,149 +556,110 @@ export default function NewBooking({
           border: `1px solid ${COLORS.border}`,
           borderRadius: 4,
           marginTop: 18,
-          padding: 22,
+          padding: isMobile ? 14 : 22,
         }}
       >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(200px,3fr) 60px 140px 110px 120px 120px 32px",
-            gap: 10,
-            fontSize: 10,
-            textTransform: "uppercase",
-            letterSpacing: "0.12em",
-            color: COLORS.textMuted,
-            paddingBottom: 10,
-            borderBottom: `1px solid ${COLORS.border}`,
-          }}
-        >
-          <div>Service</div>
-          <div>Qty</div>
-          <div>Unit Price</div>
-          <div>Our Cost</div>
-          <div>Guest Total</div>
-          <div>Your Profit</div>
-          <div></div>
-        </div>
+        {!isMobile && (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: GRID_COLS,
+              gap: 10,
+              fontSize: 10,
+              textTransform: "uppercase",
+              letterSpacing: "0.12em",
+              color: COLORS.textMuted,
+              paddingBottom: 10,
+              borderBottom: `1px solid ${COLORS.border}`,
+            }}
+          >
+            <div>Service</div>
+            <div>Qty</div>
+            <div>Unit Price</div>
+            <div>Our Cost</div>
+            <div>Guest Total</div>
+            <div>Your Profit</div>
+            <div></div>
+          </div>
+        )}
 
-        {rows.map((r) => {
-          const pMXN = priceMXN(r);
-          const guestTotal = calcGuestTotal(r.type, pMXN, r.qty);
-          const cost = calcCost(r.type, pMXN, r.qty, r.unit_cost);
-          const profit = calcProfit(r.type, pMXN, r.qty, r.unit_cost);
-          return (
+        {rows.map((r) => (
+          <ServiceLine
+            key={r.uid}
+            r={r}
+            isMobile={isMobile}
+            fx={fx}
+            grouped={grouped}
+            updateRow={updateRow}
+            removeRow={removeRow}
+            pickService={pickService}
+          />
+        ))}
+
+        {/* Auto fuel line for UTV rentals */}
+        {utvUnits > 0 &&
+          (isMobile ? (
             <div
-              key={r.uid}
+              style={{
+                border: `1px solid ${COLORS.border}`,
+                borderRadius: 4,
+                background: "rgba(122,92,30,0.05)",
+                padding: 14,
+                marginBottom: 12,
+              }}
+            >
+              <div style={{ fontSize: 14, fontWeight: 500, color: COLORS.textDark }}>UTV Fuel — Gas</div>
+              <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2, marginBottom: 10 }}>
+                Auto-added · {utvUnits} unit{utvUnits > 1 ? "s" : ""}
+              </div>
+              <label style={fieldLabel}>Rate per unit (MXN)</label>
+              <input
+                type="number"
+                min={0}
+                style={input}
+                value={fuelPerUnit || ""}
+                onChange={(e) => setFuelPerUnit(Number(e.target.value) || 0)}
+              />
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10, fontSize: 13, color: COLORS.textDark, fontWeight: 500 }}>
+                <span>Guest Total</span>
+                <span>{formatMXN(fuelTotal)}</span>
+              </div>
+            </div>
+          ) : (
+            <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "minmax(200px,3fr) 60px 140px 110px 120px 120px 32px",
+                gridTemplateColumns: GRID_COLS,
                 gap: 10,
                 padding: "12px 0",
                 borderBottom: `1px solid ${COLORS.border}`,
                 alignItems: "center",
+                background: "rgba(122,92,30,0.05)",
               }}
             >
-              <ServicePicker
-                row={r}
-                grouped={grouped}
-                onPick={(s) => pickService(r.uid, s)}
-                onManual={(name, type) =>
-                  updateRow(r.uid, { service_id: null, name, type, price: 0, unit_cost: null })
-                }
-                onEditName={(name) => updateRow(r.uid, { name })}
-              />
-              <input
-                type="number"
-                min={1}
-                style={input}
-                value={r.qty}
-                onChange={(e) => updateRow(r.uid, { qty: Math.max(1, Number(e.target.value) || 1) })}
-              />
-              <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 500, color: COLORS.textDark }}>UTV Fuel — Gas</div>
+                <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2 }}>
+                  Auto-added · {utvUnits} unit{utvUnits > 1 ? "s" : ""} — editable rate per unit
+                </div>
+              </div>
+              <div style={{ fontSize: 13, color: COLORS.textMid }}>×{utvUnits}</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                 <input
                   type="number"
                   min={0}
-                  style={{ ...input, flex: 1, minWidth: 0 }}
-                  value={r.price || ""}
-                  placeholder={r.type === "grocery" ? "Cost paid" : r.type === "beer" ? "Wholesale" : "0"}
-                  onChange={(e) => updateRow(r.uid, { price: Number(e.target.value) || 0 })}
+                  style={{ ...input, minWidth: 0 }}
+                  value={fuelPerUnit || ""}
+                  onChange={(e) => setFuelPerUnit(Number(e.target.value) || 0)}
                 />
-                <CurrencyToggle
-                  size="sm"
-                  value={r.currency}
-                  onChange={(c) => updateRow(r.uid, { currency: c })}
-                />
+                <span style={{ fontSize: 10, color: COLORS.textMuted }}>MXN / unit</span>
               </div>
-              <div style={{ fontSize: 13, color: COLORS.textMid }}>
-                {cost === null ? "—" : formatMXN(cost)}
-                {r.currency === "USD" && (
-                  <div style={{ fontSize: 10, color: COLORS.textMuted }}>@ {fx}</div>
-                )}
-              </div>
-              <div style={{ fontSize: 13, color: COLORS.textDark, fontWeight: 500 }}>{formatMXN(guestTotal)}</div>
-              <div
-                style={{
-                  fontSize: 13,
-                  color: profit === null ? COLORS.amber : COLORS.green,
-                  fontWeight: 500,
-                  fontStyle: profit === null ? "italic" : "normal",
-                }}
-              >
-                {profit === null ? "cost TBD" : formatMXN(profit)}
-              </div>
-              <button
-                onClick={() => removeRow(r.uid)}
-                style={{
-                  background: "none",
-                  border: "none",
-                  color: COLORS.textMuted,
-                  cursor: "pointer",
-                  fontSize: 18,
-                }}
-                aria-label="Remove"
-              >
-                ×
-              </button>
+              <div style={{ fontSize: 13, color: COLORS.textMid }}>{formatMXN(fuelTotal)}</div>
+              <div style={{ fontSize: 13, color: COLORS.textDark, fontWeight: 500 }}>{formatMXN(fuelTotal)}</div>
+              <div style={{ fontSize: 13, color: COLORS.textMuted }}>—</div>
+              <div />
             </div>
-          );
-        })}
-
-        {/* Auto fuel line for UTV rentals */}
-        {utvUnits > 0 && (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(200px,3fr) 60px 140px 110px 120px 120px 32px",
-              gap: 10,
-              padding: "12px 0",
-              borderBottom: `1px solid ${COLORS.border}`,
-              alignItems: "center",
-              background: "rgba(122,92,30,0.05)",
-            }}
-          >
-            <div>
-              <div style={{ fontSize: 13, fontWeight: 500, color: COLORS.textDark }}>UTV Fuel — Gas</div>
-              <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2 }}>
-                Auto-added · {utvUnits} unit{utvUnits > 1 ? "s" : ""} — editable rate per unit
-              </div>
-            </div>
-            <div style={{ fontSize: 13, color: COLORS.textMid }}>×{utvUnits}</div>
-            <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
-              <input
-                type="number"
-                min={0}
-                style={{ ...input, flex: 1, minWidth: 0 }}
-                value={fuelPerUnit || ""}
-                onChange={(e) => setFuelPerUnit(Number(e.target.value) || 0)}
-              />
-              <span style={{ fontSize: 10, color: COLORS.textMuted }}>MXN/unit</span>
-            </div>
-            <div style={{ fontSize: 13, color: COLORS.textMid }}>{formatMXN(fuelTotal)}</div>
-            <div style={{ fontSize: 13, color: COLORS.textDark, fontWeight: 500 }}>{formatMXN(fuelTotal)}</div>
-            <div style={{ fontSize: 13, color: COLORS.textMuted }}>—</div>
-            <div />
-          </div>
-        )}
+          ))}
 
         <button
           onClick={addRow}
@@ -726,7 +696,7 @@ export default function NewBooking({
           background: "#fff",
           border: `1px solid ${COLORS.border}`,
           borderRadius: 4,
-          padding: 22,
+          padding: isMobile ? 16 : 22,
           marginTop: 18,
         }}
       >
@@ -746,7 +716,7 @@ export default function NewBooking({
           Enter raw amounts in either currency — every total below updates automatically.
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 18 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: isMobile ? 14 : 18 }}>
           {/* Staff tip — credit card */}
           <div>
             <label style={fieldLabel}>Staff Tip — Credit Card</label>
@@ -824,7 +794,7 @@ export default function NewBooking({
         style={{
           background: COLORS.dark,
           color: "#F7F4EE",
-          padding: 28,
+          padding: isMobile ? 18 : 28,
           marginTop: 18,
           borderRadius: 4,
         }}
@@ -1062,23 +1032,232 @@ export default function NewBooking({
       </div>
 
 
-      <div style={{ display: "flex", gap: 10, marginTop: 22, justifyContent: "flex-end" }}>
+      <div style={{ display: "flex", gap: 10, marginTop: 22, justifyContent: isMobile ? "stretch" : "flex-end", flexDirection: isMobile ? "column-reverse" : "row" }}>
         {isEdit ? (
-          <button onClick={() => onCancel?.()} style={btnGhost}>
+          <button onClick={() => onCancel?.()} style={{ ...btnGhost, padding: isMobile ? "14px 18px" : btnGhost.padding }}>
             Cancel
           </button>
         ) : (
-          <button onClick={clearAll} style={btnGhost}>
+          <button onClick={clearAll} style={{ ...btnGhost, padding: isMobile ? "14px 18px" : btnGhost.padding }}>
             Clear
           </button>
         )}
-        <button onClick={save} disabled={saving} style={{ ...btnPrimary, opacity: saving ? 0.6 : 1 }}>
+        <button onClick={save} disabled={saving} style={{ ...btnPrimary, opacity: saving ? 0.6 : 1, padding: isMobile ? "14px 18px" : btnPrimary.padding }}>
           {saving ? "Saving…" : isEdit ? "Save Changes" : "Save Booking"}
         </button>
       </div>
     </div>
   );
 }
+
+/* ---------- Service Line (one row, responsive) ---------- */
+function ServiceLine({
+  r,
+  isMobile,
+  fx,
+  grouped,
+  updateRow,
+  removeRow,
+  pickService,
+}: {
+  r: Row;
+  isMobile: boolean;
+  fx: number;
+  grouped: { category: string; items: Service[] }[];
+  updateRow: (id: string, patch: Partial<Row>) => void;
+  removeRow: (id: string) => void;
+  pickService: (id: string, s: Service) => void;
+}) {
+  const [showDetail, setShowDetail] = useState(false);
+  const pMXN = r.currency === "USD" ? r.price * fx : r.price;
+  const guestTotal = calcGuestTotal(r.type, pMXN, r.qty);
+  const cost = calcCost(r.type, pMXN, r.qty, r.unit_cost);
+  const profit = calcProfit(r.type, pMXN, r.qty, r.unit_cost);
+  const qtyLess = isQtyLess(r.type);
+  const pricePlaceholder =
+    r.type === "grocery" || r.type === "minibar"
+      ? "Total cost paid"
+      : r.type === "beer"
+        ? "Wholesale"
+        : "0";
+
+  const picker = (
+    <ServicePicker
+      row={r}
+      grouped={grouped}
+      onPick={(s) => pickService(r.uid, s)}
+      onManual={(name, type) =>
+        updateRow(r.uid, { service_id: null, name, type, price: 0, unit_cost: null })
+      }
+      onEditName={(name) => updateRow(r.uid, { name })}
+    />
+  );
+
+  const priceField = (
+    <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+      <input
+        type="number"
+        min={0}
+        style={{ ...input, minWidth: 0 }}
+        value={r.price || ""}
+        placeholder={pricePlaceholder}
+        onChange={(e) => updateRow(r.uid, { price: Number(e.target.value) || 0 })}
+      />
+      <CurrencyToggle size="sm" value={r.currency} onChange={(c) => updateRow(r.uid, { currency: c })} />
+    </div>
+  );
+
+  const qtyInput = (
+    <input
+      type="number"
+      min={1}
+      style={input}
+      value={r.qty}
+      onChange={(e) => updateRow(r.uid, { qty: Math.max(1, Number(e.target.value) || 1) })}
+    />
+  );
+
+  const removeBtn = (
+    <button
+      onClick={() => removeRow(r.uid)}
+      style={{ background: "none", border: "none", color: COLORS.textMuted, cursor: "pointer", fontSize: 20 }}
+      aria-label="Remove"
+    >
+      ×
+    </button>
+  );
+
+  const costText = cost === null ? "—" : formatMXN(cost);
+  const profitText = profit === null ? "cost TBD" : formatMXN(profit);
+  const profitColor = profit === null ? COLORS.amber : COLORS.green;
+
+  if (isMobile) {
+    return (
+      <div
+        style={{
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 4,
+          padding: 14,
+          marginBottom: 12,
+          background: COLORS.card,
+        }}
+      >
+        <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+          <div style={{ flex: 1, minWidth: 0 }}>{picker}</div>
+          {removeBtn}
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: qtyLess ? "1fr" : "1.6fr 1fr",
+            gap: 12,
+            marginTop: 12,
+          }}
+        >
+          <div>
+            <label style={fieldLabel}>Unit Price</label>
+            {priceField}
+          </div>
+          {!qtyLess && (
+            <div>
+              <label style={fieldLabel}>Qty</label>
+              {qtyInput}
+            </div>
+          )}
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginTop: 12,
+            paddingTop: 10,
+            borderTop: `1px solid ${COLORS.border}`,
+          }}
+        >
+          <span style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.1em", color: COLORS.textMuted }}>
+            Guest Total
+          </span>
+          <span style={{ fontSize: 15, fontWeight: 600, color: COLORS.textDark }}>{formatMXN(guestTotal)}</span>
+        </div>
+
+        <button
+          onClick={() => setShowDetail((v) => !v)}
+          style={{
+            marginTop: 8,
+            background: "none",
+            border: "none",
+            color: COLORS.gold,
+            cursor: "pointer",
+            fontFamily: "'Jost', sans-serif",
+            fontSize: 11,
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+            padding: 0,
+          }}
+        >
+          {showDetail ? "▾ Hide cost & profit" : "▸ Cost & profit"}
+        </button>
+
+        {showDetail && (
+          <div style={{ marginTop: 8, fontSize: 13, display: "grid", gap: 4 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", color: COLORS.textMid }}>
+              <span>Our Cost {r.currency === "USD" ? `(@ ${fx})` : ""}</span>
+              <span>{costText}</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", color: profitColor, fontWeight: 500 }}>
+              <span>Your Profit</span>
+              <span style={{ fontStyle: profit === null ? "italic" : "normal" }}>{profitText}</span>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: GRID_COLS,
+        gap: 10,
+        padding: "12px 0",
+        borderBottom: `1px solid ${COLORS.border}`,
+        alignItems: "start",
+      }}
+    >
+      {picker}
+      {qtyLess ? (
+        <div style={{ fontSize: 13, color: COLORS.textMuted, paddingTop: 10 }}>—</div>
+      ) : (
+        qtyInput
+      )}
+      {priceField}
+      <div style={{ fontSize: 13, color: COLORS.textMid, paddingTop: 10 }}>
+        {costText}
+        {r.currency === "USD" && <div style={{ fontSize: 10, color: COLORS.textMuted }}>@ {fx}</div>}
+      </div>
+      <div style={{ fontSize: 13, color: COLORS.textDark, fontWeight: 500, paddingTop: 10 }}>
+        {formatMXN(guestTotal)}
+      </div>
+      <div
+        style={{
+          fontSize: 13,
+          color: profitColor,
+          fontWeight: 500,
+          fontStyle: profit === null ? "italic" : "normal",
+          paddingTop: 10,
+        }}
+      >
+        {profitText}
+      </div>
+      <div style={{ paddingTop: 4 }}>{removeBtn}</div>
+    </div>
+  );
+}
+
 
 /* ---------- Service Picker ---------- */
 function ServicePicker({
