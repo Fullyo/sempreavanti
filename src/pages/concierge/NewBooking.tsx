@@ -32,22 +32,49 @@ function uid() {
 
 const MANUAL_TYPES = ["tour", "tour10", "mgmt", "margin", "fixedprofit", "grocery", "minibar", "beer", "flat", "villa"];
 
-export default function NewBooking({ onSaved }: { onSaved: () => void }) {
-  const [guest, setGuest] = useState("");
-  const [checkin, setCheckin] = useState("");
-  const [checkout, setCheckout] = useState("");
-  const [rows, setRows] = useState<Row[]>([]);
+function bookingToRows(b: Booking): Row[] {
+  return (b.items ?? []).map((i) => ({
+    uid: uid(),
+    service_id: null,
+    name: i.name,
+    type: i.type,
+    qty: i.qty,
+    price: i.price,
+    unit_cost: i.unit_cost,
+    sub_text: i.sub_text ?? null,
+  }));
+}
+
+export default function NewBooking({
+  onSaved,
+  initialBooking = null,
+  onCancel,
+}: {
+  onSaved: () => void;
+  initialBooking?: Booking | null;
+  onCancel?: () => void;
+}) {
+  const isEdit = !!initialBooking;
+  const [guest, setGuest] = useState(initialBooking?.guest ?? "");
+  const [checkin, setCheckin] = useState(initialBooking?.checkin ?? "");
+  const [checkout, setCheckout] = useState(initialBooking?.checkout ?? "");
+  const [rows, setRows] = useState<Row[]>(initialBooking ? bookingToRows(initialBooking) : []);
   const [services, setServices] = useState<Service[]>([]);
-  const [tipMode, setTipMode] = useState<"amount" | "percent">("amount");
-  const [tipValue, setTipValue] = useState(0);
-  const [tipMethod, setTipMethod] = useState<"cc" | "cash">("cc");
-  const [ccFeeOn, setCcFeeOn] = useState(false);
-  const [cashCollected, setCashCollected] = useState(0);
-  const [accommodationFare, setAccommodationFare] = useState(0);
-  const [accommodationCurrency, setAccommodationCurrency] = useState<"MXN" | "USD">("MXN");
+  const [tipMode, setTipMode] = useState<"amount" | "percent">(
+    initialBooking?.tip_mode === "percent" ? "percent" : "amount",
+  );
+  const [tipValue, setTipValue] = useState(initialBooking?.tip_value ?? 0);
+  const [tipMethod, setTipMethod] = useState<"cc" | "cash">(initialBooking?.tip_method ?? "cc");
+  const [ccFeeOn, setCcFeeOn] = useState(initialBooking?.cc_fee_on ?? false);
+  const [cashCollected, setCashCollected] = useState(initialBooking?.cash_collected ?? 0);
+  const [accommodationFare, setAccommodationFare] = useState(initialBooking?.accommodation_fare ?? 0);
+  const [accommodationCurrency, setAccommodationCurrency] = useState<"MXN" | "USD">(
+    initialBooking?.accommodation_currency === "USD" ? "USD" : "MXN",
+  );
   const [saving, setSaving] = useState(false);
   const [savedToken, setSavedToken] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
 
   useEffect(() => {
     conciergeDb.servicesList(true).then((data) => setServices((data ?? []) as Service[]));
