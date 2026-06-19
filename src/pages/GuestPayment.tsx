@@ -302,9 +302,6 @@ export default function GuestPayment() {
                 >
                   Custom
                 </button>
-                <button onClick={() => setTipMode("none")} style={tipBtn(tipMode === "none")}>
-                  No extra
-                </button>
               </div>
 
               {tipMode === "amount" && (
