@@ -100,9 +100,9 @@ export default function GuestPayment() {
   }, [tipMode, tipPct, customTip, gratuityBase]);
 
   const chargeable = (data?.upsellsSubtotal ?? 0) + (data?.utvGas ?? 0) + gratuity + tip;
-  // Card fee includes the accommodation amount in its base (accommodation itself
-  // is not charged here — it's paid via Guesty).
-  const feeBase = (data?.accommodationMXN ?? 0) + chargeable;
+  // Card fee applies only to the charged lines (upsells + fuel + gratuity +
+  // tip). It does NOT apply to the accommodation fare — that's paid via Guesty.
+  const feeBase = chargeable;
   const fee = Math.round(feeBase * (data?.feeRate ?? GUEST_CARD_FEE_RATE));
   const total = chargeable + fee;
 
