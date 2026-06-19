@@ -242,49 +242,13 @@ export default function AllBookings() {
 
   const startEdit = (b: Booking) => {
     setEditId(b.id);
-    setEdit(JSON.parse(JSON.stringify(b)));
   };
 
   const cancelEdit = () => {
     setEditId(null);
-    setEdit(null);
   };
 
-  const saveEdit = async () => {
-    if (!edit) return;
-    const items: BookingItem[] = edit.items.map((i) => ({
-      ...i,
-      guest_total: calcGuestTotal(i.type, i.price, i.qty),
-      cost: calcCost(i.type, i.price, i.qty, i.unit_cost),
-      profit: calcProfit(i.type, i.price, i.qty, i.unit_cost),
-    }));
-    const servicesSubtotal = items.reduce((s, i) => s + i.guest_total, 0);
-    const tip = calcTip(edit.tip_mode, Number(edit.tip_value), servicesSubtotal);
-    const cc_fee = calcCCFee(edit.cc_fee_on, servicesSubtotal, tip);
-    const total_guest = servicesSubtotal + tip + cc_fee;
-    const total_profit = items.reduce((s, i) => s + (i.profit ?? 0), 0);
 
-    try {
-      await conciergeDb.bookingsUpdate(edit.id, {
-        guest: edit.guest,
-        checkin: edit.checkin,
-        checkout: edit.checkout,
-        items: items as any,
-        cc_fee_on: edit.cc_fee_on,
-        tip_mode: edit.tip_mode,
-        tip_value: edit.tip_value,
-        tip,
-        cc_fee,
-        total_guest,
-        total_profit,
-      });
-    } catch (e) {
-      return toast.error((e as Error).message);
-    }
-    toast.success("Booking updated");
-    cancelEdit();
-    load();
-  };
 
   const remove = async (id: number) => {
     if (!confirm("Delete this booking? This cannot be undone.")) return;
