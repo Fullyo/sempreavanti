@@ -794,7 +794,7 @@ export default function NewBooking({
         style={{
           background: COLORS.dark,
           color: "#F7F4EE",
-          padding: 28,
+          padding: isMobile ? 18 : 28,
           marginTop: 18,
           borderRadius: 4,
         }}
