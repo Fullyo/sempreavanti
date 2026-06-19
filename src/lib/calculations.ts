@@ -170,6 +170,7 @@ export interface Booking {
   accommodation_currency?: string;
   pay_token?: string;
   payment_status?: string;
+  notes?: string | null;
   exchange_rate?: number;
   guest_gratuity?: number | null;
   guest_tip?: number | null;
