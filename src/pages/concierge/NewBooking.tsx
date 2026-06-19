@@ -82,6 +82,13 @@ function uid() {
 
 const MANUAL_TYPES = ["tour", "tour10", "mgmt", "margin", "fixedprofit", "grocery", "minibar", "beer", "flat", "villa"];
 
+// Types where quantity is meaningless (priced as a single/total amount).
+const QTY_LESS_TYPES = ["grocery", "minibar", "flat", "fixedprofit"];
+const isQtyLess = (t: string) => QTY_LESS_TYPES.includes(t);
+
+// Shared desktop grid template so header and rows always line up.
+const GRID_COLS = "minmax(180px,2.6fr) 60px minmax(150px,1.5fr) 96px 110px 110px 30px";
+
 const FUEL_NAME = "UTV Fuel — Gas";
 
 function bookingToRows(b: Booking): Row[] {
