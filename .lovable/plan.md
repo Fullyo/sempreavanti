@@ -1,80 +1,39 @@
-## Guest Upsell Payment System
+# Fully Editable Reservations + Re-shareable Link
 
-After the concierge saves a booking, they get a shareable **payment link** (`/pay/<token>`). The guest opens it, sees their stay summary, the included gratuity, optional extra tip choices, and pays by card via Stripe.
+## Goal
+Any saved reservation can be opened and edited exactly like a new booking — change guest/dates, add or remove services, adjust quantities/prices, accommodation, tip and card fee. The same payment link automatically reflects the changes, with a one-tap "Generate new link" option and a clear warning when editing a booking that's already been paid.
 
-### What the guest is charged (all in MXN)
+## How it works today (and the gaps)
+- **All Bookings** has a cramped inline editor: it only edits existing line items' qty/price, dates, tip and the card-fee toggle.
+- You **cannot** add a new service, remove a line, or change accommodation fare/currency or exchange rate while editing.
+- The payment link already reads live data, so edits *do* reach the guest — but there's no obvious "copy/re-send" step after editing and no way to retire an old link.
+- The backend already permits updating every booking field (including the link token), so no security/permission changes are needed.
 
-The accommodation fare is **not** charged here (already paid via Guesty) — it is shown for transparency and as part of the gratuity base. USD accommodation fares are converted to pesos at a fixed **16** rate.
+## What will change
 
-```text
-Upsells subtotal              (sum of all upsell guest totals, MXN)
-Accommodation fare            (shown for context, USD→MXN @16)
-─────────────────────────────
-Included gratuity (5%)        = 5% × (accommodation + upsells)   ← mandatory
-Additional tip (optional)     = guest picks 10% / 15% / 20% / custom × (accommodation + upsells)
-─────────────────────────────
-Card processing fee (5%)      = 5% × (upsells + gratuity + tip)   ← guest pays
-═════════════════════════════
-TOTAL CHARGED (MXN)           = upsells + gratuity + tip + 5% fee
-```
+### 1. Shared booking form (create + edit)
+Refactor the New Booking form into a single reusable form used for both creating and editing:
+- Full service picker with **add line / remove line**, quantity and price editing, accommodation fare + currency + exchange rate, tip mode/value/method, card-fee toggle, cash collected — identical to creating a booking.
+- When opened in edit mode it is pre-filled with the reservation's saved values.
+- Live totals recompute as you type (services subtotal, included 5% gratuity, 5% card fee, grand total).
 
-The guest only ever sees totals — never our cost or profit figures.
+### 2. Edit entry point in All Bookings
+- The **Edit** button on each reservation opens this full form (replacing the limited inline editor) pre-loaded with everything.
+- **Save Changes** writes the update and recomputes all stored totals. The existing link keeps working and now shows the new amounts.
 
-### Guest payment page
+### 3. Link handling after edit
+- After saving, the reservation shows its payment link with **Copy link** so it can be re-sent immediately.
+- A **Generate new link** action creates a fresh link token and retires the old one (old URL stops working) — for cases where you want to be certain the guest uses the corrected invoice.
 
-A new public, editorial-styled page (Cormorant Garamond / Montserrat, ocean-jungle palette) at `/pay/:token`:
+### 4. Paid-booking safety
+- If a reservation is already marked **paid**, opening it to edit shows a clear inline warning ("This reservation was already paid — changing totals may cause a mismatch with what the guest paid"). Editing is still allowed per your choice.
 
-- Header with villa name and the guest's name + dates.
-- Itemized upsells (name, qty, line total) and accommodation fare line.
-- A gratuity note in the house's warm voice, e.g.:
-  > "As part of a fully serviced villa, a base 5% gratuity is included. Our staff appreciates it deeply — it makes a real difference for the team caring for you."
-- An invitation to add more, with **10% / 15% / 20% / Custom** buttons:
-  > "If our concierge, chefs, housekeeping, property team, and valet made your stay special, you're welcome to add to their gratuity."
-- A live-updating total and a **Pay by card** button that opens Stripe Checkout.
-- A clear confirmation state once paid.
+## Technical notes
+- Extract the form body of `src/pages/concierge/NewBooking.tsx` into a shared `BookingForm` component taking an optional `initialBooking`; `NewBooking` becomes a thin wrapper. `AllBookings` renders it for edits.
+- Save path: `conciergeDb.bookingsInsert` for new, `conciergeDb.bookingsUpdate(id, patch)` for edits — both already exist in `src/lib/conciergeApi.ts`.
+- "Generate new link" sets a new `pay_token` (via `crypto.randomUUID()`) through `bookingsUpdate`; the `/pay` page and `guest-payment-get` already resolve by token, so the old token simply stops matching. No edge-function changes required.
+- Totals reuse the existing helpers in `src/lib/calculations.ts`; no pricing-rule changes.
+- Remove the old inline-edit markup in `AllBookings.tsx` to avoid two divergent editors.
 
-### Concierge side
-
-- In **New Booking**, after saving, show the generated payment link with a **Copy link** button.
-- In **All Bookings**, each live booking gets a **Copy payment link** action and a payment-status badge (Unpaid / Paid, with amount + date once paid).
-
-### Stripe (your own keys — BYOK)
-
-- You'll provide your **Stripe secret key** and a **webhook signing secret**, stored securely as backend secrets.
-- Checkout runs in MXN. On successful payment, a webhook marks the booking paid and records the amount, gratuity, and tip the guest chose.
-
----
-
-### Technical section
-
-**Database (migration on `bookings`)**
-
-- `pay_token uuid unique default gen_random_uuid()` — link identifier (backfilled for existing rows).
-- `payment_status text default 'unpaid'` — `unpaid` | `paid`.
-- `exchange_rate numeric default 16`.
-- `guest_gratuity numeric`, `guest_tip numeric`, `amount_paid numeric`, `paid_at timestamptz`, `stripe_session_id text`.
-- These are stored separately from the existing concierge `tip`/`cc_fee` fields, so internal owner-statement and profit math is untouched.
-
-**Edge functions** (all `verify_jwt = false`, CORS enabled):
-
-1. `guest-payment-get` — input `{ token }`; uses service role to load the booking and returns a **sanitized** payload (guest, dates, accommodation fare in MXN, upsell line items with names/qty/guest_total only, rate, computed gratuity, payment_status). Strips all `cost`/`profit`/`unit_cost`.
-2. `guest-payment-checkout` — input `{ token, tipMode, tipValue }`; recomputes gratuity, tip, and 5% fee server-side (never trusts client amounts), creates a Stripe Checkout Session (mode `payment`, currency `mxn`, line items for upsells, gratuity, tip, fee), stores `stripe_session_id`, returns the Checkout URL.
-3. `stripe-webhook` — verifies signature, on `checkout.session.completed` sets `payment_status='paid'`, `amount_paid`, `guest_gratuity`, `guest_tip`, `paid_at`.
-
-**Secrets to add:** `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` (requested via secure form before wiring checkout).
-
-**Frontend**
-
-- New route `/pay/:token` → `GuestPayment.tsx` (public, not behind concierge gate, `noindex`).
-- Shared MXN calc helpers (gratuity 5%, fee 5%) added to `src/lib/calculations.ts` so the page and the edge function agree.
-- New booking + All Bookings get link-copy buttons and status badges.
-
-**Notes / assumptions**
-
-- Mandatory gratuity and optional tip are both computed on the combined (accommodation + upsells) base — adjustable if you'd rather base the extra tip on upsells only.
-- Card fee is 5% (replaces the old 3% reference for this guest flow).
-- Currency is always MXN; the only conversion is USD accommodation → MXN at 16.  
-  
-alwasy include 1000 pesos if guests are renting the UTVs.  if two rentals, 2000 pesos for gas and consider any rules i may have forgotten
-- send me also the safe box in the chat for me to insert the api key for stripe
-- &nbsp;
+## Out of scope
+- No changes to pricing rules, the guest payment page layout, or Stripe flow.

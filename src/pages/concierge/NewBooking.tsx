@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { conciergeDb } from "@/lib/conciergeApi";
 import { toast } from "sonner";
 import {
+  Booking,
   calcCCFee,
   calcCost,
   calcGuestTotal,
@@ -31,22 +32,49 @@ function uid() {
 
 const MANUAL_TYPES = ["tour", "tour10", "mgmt", "margin", "fixedprofit", "grocery", "minibar", "beer", "flat", "villa"];
 
-export default function NewBooking({ onSaved }: { onSaved: () => void }) {
-  const [guest, setGuest] = useState("");
-  const [checkin, setCheckin] = useState("");
-  const [checkout, setCheckout] = useState("");
-  const [rows, setRows] = useState<Row[]>([]);
+function bookingToRows(b: Booking): Row[] {
+  return (b.items ?? []).map((i) => ({
+    uid: uid(),
+    service_id: null,
+    name: i.name,
+    type: i.type,
+    qty: i.qty,
+    price: i.price,
+    unit_cost: i.unit_cost,
+    sub_text: i.sub_text ?? null,
+  }));
+}
+
+export default function NewBooking({
+  onSaved,
+  initialBooking = null,
+  onCancel,
+}: {
+  onSaved: () => void;
+  initialBooking?: Booking | null;
+  onCancel?: () => void;
+}) {
+  const isEdit = !!initialBooking;
+  const [guest, setGuest] = useState(initialBooking?.guest ?? "");
+  const [checkin, setCheckin] = useState(initialBooking?.checkin ?? "");
+  const [checkout, setCheckout] = useState(initialBooking?.checkout ?? "");
+  const [rows, setRows] = useState<Row[]>(initialBooking ? bookingToRows(initialBooking) : []);
   const [services, setServices] = useState<Service[]>([]);
-  const [tipMode, setTipMode] = useState<"amount" | "percent">("amount");
-  const [tipValue, setTipValue] = useState(0);
-  const [tipMethod, setTipMethod] = useState<"cc" | "cash">("cc");
-  const [ccFeeOn, setCcFeeOn] = useState(false);
-  const [cashCollected, setCashCollected] = useState(0);
-  const [accommodationFare, setAccommodationFare] = useState(0);
-  const [accommodationCurrency, setAccommodationCurrency] = useState<"MXN" | "USD">("MXN");
+  const [tipMode, setTipMode] = useState<"amount" | "percent">(
+    initialBooking?.tip_mode === "percent" ? "percent" : "amount",
+  );
+  const [tipValue, setTipValue] = useState(initialBooking?.tip_value ?? 0);
+  const [tipMethod, setTipMethod] = useState<"cc" | "cash">(initialBooking?.tip_method ?? "cc");
+  const [ccFeeOn, setCcFeeOn] = useState(initialBooking?.cc_fee_on ?? false);
+  const [cashCollected, setCashCollected] = useState(initialBooking?.cash_collected ?? 0);
+  const [accommodationFare, setAccommodationFare] = useState(initialBooking?.accommodation_fare ?? 0);
+  const [accommodationCurrency, setAccommodationCurrency] = useState<"MXN" | "USD">(
+    initialBooking?.accommodation_currency === "USD" ? "USD" : "MXN",
+  );
   const [saving, setSaving] = useState(false);
   const [savedToken, setSavedToken] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
 
   useEffect(() => {
     conciergeDb.servicesList(true).then((data) => setServices((data ?? []) as Service[]));
@@ -108,12 +136,7 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
     setAccommodationCurrency("MXN");
   };
 
-  const save = async () => {
-    if (!guest.trim()) return toast.error("Guest name is required");
-    if (!checkin) return toast.error("Check-in is required");
-    if (rows.length === 0) return toast.error("Add at least one service");
-
-    setSaving(true);
+  const buildPayload = () => {
     const items = rows.map((r) => ({
       name: r.name,
       type: r.type,
@@ -125,26 +148,51 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
       profit: calcProfit(r.type, r.price, r.qty, r.unit_cost),
       sub_text: r.sub_text ?? null,
     }));
+    return {
+      guest,
+      checkin,
+      checkout: checkout || null,
+      items,
+      cc_fee_on: ccFeeOn,
+      tip_mode: tipMode,
+      tip_value: tipValue,
+      tip_method: tipMethod,
+      tip,
+      cc_fee: ccFee,
+      total_guest: totalGuest,
+      total_profit: totalProfit,
+      cash_collected: cashCollected,
+      accommodation_fare: accommodationFare,
+      accommodation_currency: accommodationCurrency,
+    };
+  };
+
+  const save = async () => {
+    if (!guest.trim()) return toast.error("Guest name is required");
+    if (!checkin) return toast.error("Check-in is required");
+    if (rows.length === 0) return toast.error("Add at least one service");
+
+    setSaving(true);
+    const payload = buildPayload();
+
+    if (isEdit && initialBooking) {
+      try {
+        await conciergeDb.bookingsUpdate(initialBooking.id, payload);
+      } catch (e) {
+        setSaving(false);
+        return toast.error((e as Error).message);
+      }
+      setSaving(false);
+      toast.success("Reservation updated");
+      // Same link automatically reflects the new totals.
+      setSavedToken(initialBooking.pay_token ?? null);
+      onSaved();
+      return;
+    }
 
     let data: { pay_token?: string } | undefined;
     try {
-      data = await conciergeDb.bookingsInsert({
-        guest,
-        checkin,
-        checkout: checkout || null,
-        items,
-        cc_fee_on: ccFeeOn,
-        tip_mode: tipMode,
-        tip_value: tipValue,
-        tip_method: tipMethod,
-        tip,
-        cc_fee: ccFee,
-        total_guest: totalGuest,
-        total_profit: totalProfit,
-        cash_collected: cashCollected,
-        accommodation_fare: accommodationFare,
-        accommodation_currency: accommodationCurrency,
-      });
+      data = await conciergeDb.bookingsInsert(payload);
     } catch (e) {
       setSaving(false);
       return toast.error((e as Error).message);
@@ -168,9 +216,50 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
     }
   };
 
+  const regenerateLink = async () => {
+    const targetId = initialBooking?.id;
+    if (!targetId) return;
+    if (
+      !confirm(
+        "Generate a brand-new link? The previous link will stop working and the guest must use the new one.",
+      )
+    )
+      return;
+    setRegenerating(true);
+    const newToken = crypto.randomUUID();
+    try {
+      await conciergeDb.bookingsUpdate(targetId, { pay_token: newToken });
+    } catch (e) {
+      setRegenerating(false);
+      return toast.error((e as Error).message);
+    }
+    setRegenerating(false);
+    setSavedToken(newToken);
+    toast.success("New link generated — the old one no longer works");
+    onSaved();
+  };
+
   return (
     <div>
-      <h1 style={sectionTitle}>New Booking</h1>
+      <h1 style={sectionTitle}>{isEdit ? "Edit Reservation" : "New Booking"}</h1>
+
+      {isEdit && initialBooking?.payment_status === "paid" && (
+        <div
+          style={{
+            background: "rgba(180,60,40,0.12)",
+            border: `1px solid ${COLORS.red}`,
+            color: COLORS.red,
+            borderRadius: 4,
+            padding: "14px 18px",
+            marginTop: 18,
+            fontSize: 13,
+            lineHeight: 1.5,
+          }}
+        >
+          <strong>This reservation was already paid.</strong> Changing services or totals may cause a
+          mismatch with what the guest actually paid. Edit only if you know what you're doing.
+        </div>
+      )}
 
       {savedToken && (
         <div
@@ -183,11 +272,12 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
           }}
         >
           <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, color: COLORS.gold, marginBottom: 6 }}>
-            Booking saved — share the payment link
+            {isEdit ? "Reservation updated — re-send the payment link" : "Booking saved — share the payment link"}
           </div>
           <div style={{ fontSize: 12, color: "rgba(247,244,238,0.6)", marginBottom: 14 }}>
-            Send this to the guest. They'll see their experiences, the included 5% gratuity, optional tipping, and can
-            pay by card.
+            {isEdit
+              ? "This is the same link as before — it now shows the updated invoice automatically, so just re-send it. Use “Generate new link” only if you want the old one to stop working."
+              : "Send this to the guest. They'll see their experiences, the included 5% gratuity, optional tipping, and can pay by card."}
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
             <input
@@ -208,15 +298,33 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
             <button onClick={copyLink} style={btnPrimary}>
               {copied ? "Copied ✓" : "Copy link"}
             </button>
-            <button onClick={() => { setSavedToken(null); onSaved(); }} style={{ ...btnGhost, color: "#F7F4EE", borderColor: "rgba(247,244,238,0.3)" }}>
-              View all bookings
-            </button>
-            <button onClick={() => setSavedToken(null)} style={{ ...btnGhost, color: "#F7F4EE", borderColor: "rgba(247,244,238,0.3)" }}>
-              Start another
-            </button>
+            {isEdit && (
+              <button
+                onClick={regenerateLink}
+                disabled={regenerating}
+                style={{ ...btnGhost, color: "#F7F4EE", borderColor: "rgba(247,244,238,0.3)", opacity: regenerating ? 0.6 : 1 }}
+              >
+                {regenerating ? "Generating…" : "Generate new link"}
+              </button>
+            )}
+            {isEdit ? (
+              <button onClick={() => onCancel?.()} style={{ ...btnGhost, color: "#F7F4EE", borderColor: "rgba(247,244,238,0.3)" }}>
+                Done
+              </button>
+            ) : (
+              <>
+                <button onClick={() => { setSavedToken(null); onSaved(); }} style={{ ...btnGhost, color: "#F7F4EE", borderColor: "rgba(247,244,238,0.3)" }}>
+                  View all bookings
+                </button>
+                <button onClick={() => setSavedToken(null)} style={{ ...btnGhost, color: "#F7F4EE", borderColor: "rgba(247,244,238,0.3)" }}>
+                  Start another
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
+
 
 
       {/* Guest info */}
@@ -711,11 +819,17 @@ export default function NewBooking({ onSaved }: { onSaved: () => void }) {
       </div>
 
       <div style={{ display: "flex", gap: 10, marginTop: 22, justifyContent: "flex-end" }}>
-        <button onClick={clearAll} style={btnGhost}>
-          Clear
-        </button>
+        {isEdit ? (
+          <button onClick={() => onCancel?.()} style={btnGhost}>
+            Cancel
+          </button>
+        ) : (
+          <button onClick={clearAll} style={btnGhost}>
+            Clear
+          </button>
+        )}
         <button onClick={save} disabled={saving} style={{ ...btnPrimary, opacity: saving ? 0.6 : 1 }}>
-          {saving ? "Saving…" : "Save Booking"}
+          {saving ? "Saving…" : isEdit ? "Save Changes" : "Save Booking"}
         </button>
       </div>
     </div>
