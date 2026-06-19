@@ -16,7 +16,7 @@ const json = (body: unknown, status = 200) =>
 const SERVICE_COLS = ["category", "name", "type", "price", "unit_cost", "sub_text", "is_active", "sort_order"];
 const BOOKING_COLS = [
   "guest", "checkin", "checkout", "items", "cc_fee_on", "tip_mode", "tip_value", "tip_method",
-  "tip", "tip_currency", "tip_cash", "tip_cash_value", "tip_cash_currency",
+  "tip", "tip_currency", "tip_cash", "tip_cash_value", "tip_cash_currency", "tip_cash_usd", "tip_cash_mxn",
   "cc_fee", "total_guest", "total_profit", "cash_collected", "accommodation_fare",
   "accommodation_currency", "pay_token", "payment_status", "exchange_rate", "guest_tip",
   "guest_gratuity", "amount_paid", "paid_at", "stripe_session_id", "created_at", "saved_at",

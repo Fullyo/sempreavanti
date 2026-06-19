@@ -125,14 +125,23 @@ export default function NewBooking({
   const [notes, setNotes] = useState(initialBooking?.notes ?? "");
   const [rows, setRows] = useState<Row[]>(initialBooking ? bookingToRows(initialBooking) : []);
   const [services, setServices] = useState<Service[]>([]);
-  const [tipValue, setTipValue] = useState(initialBooking?.tip_value ?? 0);
-  const [tipCurrency, setTipCurrency] = useState<"MXN" | "USD">(
-    initialBooking?.tip_currency === "USD" ? "USD" : "MXN",
+  // The agreed card tip is stored canonically in MXN (`tip`). On reload we edit
+  // it as MXN to avoid double-converting an already-converted USD amount.
+  const [tipValue, setTipValue] = useState(
+    initialBooking ? Math.round(Number(initialBooking.tip) || 0) : 0,
   );
-  const [tipCashValue, setTipCashValue] = useState(initialBooking?.tip_cash_value ?? 0);
-  const [tipCashCurrency, setTipCashCurrency] = useState<"MXN" | "USD">(
-    initialBooking?.tip_cash_currency === "USD" ? "USD" : "MXN",
-  );
+  const [tipCurrency, setTipCurrency] = useState<"MXN" | "USD">("MXN");
+  // Cash tip can be left in both currencies (e.g. 200 USD + 2,000 MXN).
+  const [tipCashUsd, setTipCashUsd] = useState<number>(() => {
+    const b = initialBooking as any;
+    if (b?.tip_cash_usd != null) return Number(b.tip_cash_usd) || 0;
+    return b?.tip_cash_currency === "USD" ? Number(b?.tip_cash_value) || 0 : 0;
+  });
+  const [tipCashMxn, setTipCashMxn] = useState<number>(() => {
+    const b = initialBooking as any;
+    if (b?.tip_cash_mxn != null) return Number(b.tip_cash_mxn) || 0;
+    return b?.tip_cash_currency !== "USD" ? Number(b?.tip_cash_value) || 0 : 0;
+  });
   const [exchangeRate, setExchangeRate] = useState(initialBooking?.exchange_rate ?? 16);
   // Card fee is on by default — the concierge never has to remember it.
   const [ccFeeOn, setCcFeeOn] = useState(initialBooking ? (initialBooking.cc_fee_on ?? true) : true);
@@ -211,8 +220,8 @@ export default function NewBooking({
   );
   // Cash staff tip — reconciliation only, never part of the guest charge or profit.
   const tipCashMXN = useMemo(
-    () => Math.round(tipCashCurrency === "USD" ? tipCashValue * fx : tipCashValue),
-    [tipCashValue, tipCashCurrency, fx],
+    () => Math.round((Number(tipCashUsd) || 0) * fx + (Number(tipCashMxn) || 0)),
+    [tipCashUsd, tipCashMxn, fx],
   );
 
   // Single source of truth — identical math to the guest /pay page.
@@ -238,7 +247,7 @@ export default function NewBooking({
     [rows, fx],
   );
 
-  const anyUSD = tipCurrency === "USD" || tipCashCurrency === "USD" || accommodationCurrency === "USD" || rows.some((r) => r.currency === "USD");
+  const anyUSD = tipCurrency === "USD" || tipCashUsd > 0 || accommodationCurrency === "USD" || rows.some((r) => r.currency === "USD");
 
   const addRow = () =>
     setRows((r) => [
@@ -270,8 +279,8 @@ export default function NewBooking({
     setRows([]);
     setTipValue(0);
     setTipCurrency("MXN");
-    setTipCashValue(0);
-    setTipCashCurrency("MXN");
+    setTipCashUsd(0);
+    setTipCashMxn(0);
     setCcFeeOn(true);
     setGratuityWaived(false);
     setCashCollected(0);
@@ -339,8 +348,10 @@ export default function NewBooking({
       tip,
       tip_currency: tipCurrency,
       tip_cash: tipCashMXN,
-      tip_cash_value: tipCashValue,
-      tip_cash_currency: tipCashCurrency,
+      tip_cash_usd: tipCashUsd,
+      tip_cash_mxn: tipCashMxn,
+      tip_cash_value: tipCashUsd,
+      tip_cash_currency: "USD" as const,
       exchange_rate: fx,
       cc_fee: ccFee,
       guest_gratuity: breakdown.gratuity,
@@ -806,22 +817,33 @@ export default function NewBooking({
             </div>
           </div>
 
-          {/* Staff tip — cash */}
+          {/* Staff tip — cash (can be left in both USD and MXN) */}
           <div>
             <label style={fieldLabel}>Staff Tip — Cash</label>
             <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
               <input
                 type="number"
                 min={0}
-                value={tipCashValue || ""}
+                value={tipCashUsd || ""}
                 placeholder="0"
-                onChange={(e) => setTipCashValue(Number(e.target.value) || 0)}
+                onChange={(e) => setTipCashUsd(Number(e.target.value) || 0)}
                 style={{ ...input, flex: 1, minWidth: 0 }}
               />
-              <CurrencyToggle value={tipCashCurrency} onChange={setTipCashCurrency} />
+              <span style={{ fontSize: 12, color: COLORS.textMuted, width: 40 }}>USD</span>
+            </div>
+            <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 8 }}>
+              <input
+                type="number"
+                min={0}
+                value={tipCashMxn || ""}
+                placeholder="0"
+                onChange={(e) => setTipCashMxn(Number(e.target.value) || 0)}
+                style={{ ...input, flex: 1, minWidth: 0 }}
+              />
+              <span style={{ fontSize: 12, color: COLORS.textMuted, width: 40 }}>MXN</span>
             </div>
             <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 5 }}>
-              Paid in cash to staff — tracked separately{tipCashCurrency === "USD" ? ` · = ${formatMXN(tipCashMXN)}` : ""}
+              Paid in cash to staff — tracked separately{tipCashMXN > 0 ? ` · total = ${formatMXN(tipCashMXN)}` : ""}
             </div>
           </div>
 
