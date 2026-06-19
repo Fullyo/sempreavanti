@@ -716,7 +716,7 @@ export default function NewBooking({
           Enter raw amounts in either currency — every total below updates automatically.
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 18 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)", gap: isMobile ? 14 : 18 }}>
           {/* Staff tip — credit card */}
           <div>
             <label style={fieldLabel}>Staff Tip — Credit Card</label>
