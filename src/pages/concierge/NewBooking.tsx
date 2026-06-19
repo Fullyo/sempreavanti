@@ -15,6 +15,7 @@ import {
   UTV_GAS_PER_RENTAL,
 } from "@/lib/calculations";
 import { COLORS, btnPrimary, btnGhost, fieldLabel, input, sectionTitle } from "./styles";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const tipInput: CSSProperties = {
   width: 100,
