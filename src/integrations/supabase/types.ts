@@ -37,6 +37,10 @@ export type Database = {
           saved_at: string
           stripe_session_id: string | null
           tip: number
+          tip_cash: number
+          tip_cash_currency: string
+          tip_cash_value: number
+          tip_currency: string
           tip_method: string
           tip_mode: string
           tip_value: number
@@ -65,6 +69,10 @@ export type Database = {
           saved_at?: string
           stripe_session_id?: string | null
           tip?: number
+          tip_cash?: number
+          tip_cash_currency?: string
+          tip_cash_value?: number
+          tip_currency?: string
           tip_method?: string
           tip_mode?: string
           tip_value?: number
@@ -93,6 +101,10 @@ export type Database = {
           saved_at?: string
           stripe_session_id?: string | null
           tip?: number
+          tip_cash?: number
+          tip_cash_currency?: string
+          tip_cash_value?: number
+          tip_currency?: string
           tip_method?: string
           tip_mode?: string
           tip_value?: number

@@ -1,0 +1,5 @@
+ALTER TABLE public.bookings
+  ADD COLUMN IF NOT EXISTS tip_currency text NOT NULL DEFAULT 'MXN',
+  ADD COLUMN IF NOT EXISTS tip_cash numeric NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS tip_cash_value numeric NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS tip_cash_currency text NOT NULL DEFAULT 'MXN';

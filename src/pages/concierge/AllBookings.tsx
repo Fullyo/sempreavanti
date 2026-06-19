@@ -274,7 +274,7 @@ export default function AllBookings() {
         rows.push([m, b.guest, b.checkin, b.checkout ?? "", i.name, String(i.qty), String(Math.round(i.price)), String(Math.round(i.guest_total ?? 0)), i.cost === null ? "" : String(Math.round(i.cost)), i.profit === null ? "TBD" : String(Math.round(i.profit))]),
       );
       if (Number(b.tip) > 0) rows.push([m, b.guest, b.checkin, b.checkout ?? "", b.tip_mode === "percent" ? `Staff Tip (${b.tip_value}%)` : "Staff Tip", "", "", String(Math.round(b.tip)), "", "pass-through"]);
-      if (Number(b.cc_fee) > 0) rows.push([m, b.guest, b.checkin, b.checkout ?? "", "3% Credit Card Fee", "", "", String(Math.round(b.cc_fee)), "", ""]);
+      if (Number(b.cc_fee) > 0) rows.push([m, b.guest, b.checkin, b.checkout ?? "", "5% Credit Card Fee", "", "", String(Math.round(b.cc_fee)), "", ""]);
     });
     const csv = rows.map((r) => r.map((c) => `"${(c ?? "").toString().replace(/"/g, '""')}"`).join(",")).join("\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
@@ -611,7 +611,7 @@ export default function AllBookings() {
                       )}
                       {Number(v.cc_fee) > 0 && (
                         <tr>
-                          <td style={{ padding: "8px 6px" }}>3% Credit Card Fee</td>
+                          <td style={{ padding: "8px 6px" }}>5% Credit Card Fee</td>
                           <td style={{ textAlign: "right", padding: "8px 6px" }}>{formatMXN(v.cc_fee)}</td>
                           <td style={{ textAlign: "right", padding: "8px 6px", color: COLORS.textMuted }}>—</td>
                           <td style={{ textAlign: "right", padding: "8px 6px", color: COLORS.textMuted }}>—</td>

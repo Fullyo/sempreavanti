@@ -58,7 +58,7 @@ export function calcTip(tipMode: string, tipValue: number, servicesSubtotal: num
 }
 
 export function calcCCFee(ccFeeOn: boolean, servicesSubtotal: number, tip: number): number {
-  return ccFeeOn ? Math.round((servicesSubtotal + tip) * 0.03) : 0;
+  return ccFeeOn ? Math.round((servicesSubtotal + tip) * 0.05) : 0;
 }
 
 export function formatMXN(n: number | null | undefined): string {
@@ -156,6 +156,10 @@ export interface Booking {
   tip_value: number;
   tip_method?: "cc" | "cash";
   tip: number;
+  tip_currency?: string;
+  tip_cash?: number;
+  tip_cash_value?: number;
+  tip_cash_currency?: string;
   cc_fee: number;
   total_guest: number;
   total_profit: number;

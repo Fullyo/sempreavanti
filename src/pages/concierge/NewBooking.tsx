@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, CSSProperties } from "react";
 import { conciergeDb } from "@/lib/conciergeApi";
 import { toast } from "sonner";
 import {
@@ -7,13 +7,57 @@ import {
   calcCost,
   calcGuestTotal,
   calcProfit,
-  calcTip,
   CATEGORY_ORDER,
   formatMXN,
   Service,
   TYPE_COLOR,
 } from "@/lib/calculations";
 import { COLORS, btnPrimary, btnGhost, fieldLabel, input, sectionTitle } from "./styles";
+
+const tipInput: CSSProperties = {
+  width: 100,
+  padding: "6px 10px",
+  background: "rgba(255,255,255,0.08)",
+  border: "1px solid rgba(247,244,238,0.2)",
+  color: "#F7F4EE",
+  fontFamily: "'Jost', sans-serif",
+  fontSize: 13,
+  borderRadius: 2,
+  textAlign: "right",
+};
+
+function CurrencyToggle({
+  value,
+  onChange,
+}: {
+  value: "MXN" | "USD";
+  onChange: (v: "MXN" | "USD") => void;
+}) {
+  return (
+    <div style={{ display: "flex", gap: 4 }}>
+      {(["MXN", "USD"] as const).map((c) => (
+        <button
+          key={c}
+          type="button"
+          onClick={() => onChange(c)}
+          style={{
+            background: value === c ? COLORS.gold : "rgba(255,255,255,0.08)",
+            color: value === c ? "#fff" : "rgba(247,244,238,0.7)",
+            border: "1px solid rgba(247,244,238,0.2)",
+            padding: "6px 10px",
+            cursor: "pointer",
+            fontFamily: "'Jost', sans-serif",
+            fontSize: 11,
+            letterSpacing: "0.06em",
+            borderRadius: 2,
+          }}
+        >
+          {c}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 interface Row {
   uid: string;
@@ -60,11 +104,15 @@ export default function NewBooking({
   const [checkout, setCheckout] = useState(initialBooking?.checkout ?? "");
   const [rows, setRows] = useState<Row[]>(initialBooking ? bookingToRows(initialBooking) : []);
   const [services, setServices] = useState<Service[]>([]);
-  const [tipMode, setTipMode] = useState<"amount" | "percent">(
-    initialBooking?.tip_mode === "percent" ? "percent" : "amount",
-  );
   const [tipValue, setTipValue] = useState(initialBooking?.tip_value ?? 0);
-  const [tipMethod, setTipMethod] = useState<"cc" | "cash">(initialBooking?.tip_method ?? "cc");
+  const [tipCurrency, setTipCurrency] = useState<"MXN" | "USD">(
+    initialBooking?.tip_currency === "USD" ? "USD" : "MXN",
+  );
+  const [tipCashValue, setTipCashValue] = useState(initialBooking?.tip_cash_value ?? 0);
+  const [tipCashCurrency, setTipCashCurrency] = useState<"MXN" | "USD">(
+    initialBooking?.tip_cash_currency === "USD" ? "USD" : "MXN",
+  );
+  const [exchangeRate, setExchangeRate] = useState(initialBooking?.exchange_rate ?? 16);
   const [ccFeeOn, setCcFeeOn] = useState(initialBooking?.cc_fee_on ?? false);
   const [cashCollected, setCashCollected] = useState(initialBooking?.cash_collected ?? 0);
   const [accommodationFare, setAccommodationFare] = useState(initialBooking?.accommodation_fare ?? 0);
@@ -92,7 +140,17 @@ export default function NewBooking({
     () => rows.reduce((sum, r) => sum + calcGuestTotal(r.type, r.price, r.qty), 0),
     [rows],
   );
-  const tip = useMemo(() => calcTip(tipMode, tipValue, servicesSubtotal), [tipMode, tipValue, servicesSubtotal]);
+  const fx = Number(exchangeRate) || 16;
+  // Credit-card staff tip — part of the guest charge (converted to MXN if entered in USD).
+  const tip = useMemo(
+    () => Math.round(tipCurrency === "USD" ? tipValue * fx : tipValue),
+    [tipValue, tipCurrency, fx],
+  );
+  // Cash staff tip — reconciliation only, never part of the guest charge or profit.
+  const tipCashMXN = useMemo(
+    () => Math.round(tipCashCurrency === "USD" ? tipCashValue * fx : tipCashValue),
+    [tipCashValue, tipCashCurrency, fx],
+  );
   const ccFee = useMemo(() => calcCCFee(ccFeeOn, servicesSubtotal, tip), [ccFeeOn, servicesSubtotal, tip]);
   const totalGuest = servicesSubtotal + tip + ccFee;
   const totalProfit = useMemo(
@@ -127,9 +185,10 @@ export default function NewBooking({
     setCheckin("");
     setCheckout("");
     setRows([]);
-    setTipMode("amount");
     setTipValue(0);
-    setTipMethod("cc");
+    setTipCurrency("MXN");
+    setTipCashValue(0);
+    setTipCashCurrency("MXN");
     setCcFeeOn(false);
     setCashCollected(0);
     setAccommodationFare(0);
@@ -154,10 +213,15 @@ export default function NewBooking({
       checkout: checkout || null,
       items,
       cc_fee_on: ccFeeOn,
-      tip_mode: tipMode,
+      tip_mode: "amount",
       tip_value: tipValue,
-      tip_method: tipMethod,
+      tip_method: "cc" as const,
       tip,
+      tip_currency: tipCurrency,
+      tip_cash: tipCashMXN,
+      tip_cash_value: tipCashValue,
+      tip_cash_currency: tipCashCurrency,
+      exchange_rate: fx,
       cc_fee: ccFee,
       total_guest: totalGuest,
       total_profit: totalProfit,
@@ -575,7 +639,7 @@ export default function NewBooking({
           );
         })}
 
-        {/* Tip row */}
+        {/* Staff Tip — Credit Card (part of the guest charge) */}
         <div
           style={{
             display: "flex",
@@ -588,52 +652,59 @@ export default function NewBooking({
           }}
         >
           <div>
-            Staff Tip <span style={{ color: "rgba(247,244,238,0.5)" }}>(pass-through to staff)</span>
+            Staff Tip — Credit Card{" "}
+            <span style={{ color: "rgba(247,244,238,0.5)" }}>(charged on card — part of total)</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <button
-              onClick={() => {
-                setTipMode((m) => (m === "amount" ? "percent" : "amount"));
-                setTipValue(0);
-              }}
-              style={{
-                background: COLORS.gold,
-                color: "#fff",
-                border: "none",
-                padding: "6px 12px",
-                cursor: "pointer",
-                fontFamily: "'Jost', sans-serif",
-                fontSize: 12,
-                borderRadius: 2,
-                minWidth: 36,
-              }}
-            >
-              {tipMode === "amount" ? "$" : "%"}
-            </button>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <input
               type="number"
               min={0}
               value={tipValue || ""}
               onChange={(e) => setTipValue(Number(e.target.value) || 0)}
-              style={{
-                width: 90,
-                padding: "6px 10px",
-                background: "rgba(255,255,255,0.08)",
-                border: "1px solid rgba(247,244,238,0.2)",
-                color: "#F7F4EE",
-                fontFamily: "'Jost', sans-serif",
-                fontSize: 13,
-                borderRadius: 2,
-              }}
+              style={tipInput}
             />
-            <span style={{ color: "rgba(247,244,238,0.6)", fontSize: 12, minWidth: 110 }}>
-              {tipMode === "amount" ? "MXN" : `% (= ${formatMXN(tip)})`}
-            </span>
+            <CurrencyToggle value={tipCurrency} onChange={setTipCurrency} />
+            {tipCurrency === "USD" && (
+              <span style={{ color: "rgba(247,244,238,0.6)", fontSize: 12, minWidth: 90 }}>
+                = {formatMXN(tip)}
+              </span>
+            )}
           </div>
         </div>
 
-        {/* Tip payment method row */}
-        {tip > 0 && (
+        {/* Staff Tip — Cash (reconciliation only, not part of the guest charge) */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            paddingTop: 14,
+            fontSize: 13,
+          }}
+        >
+          <div>
+            Staff Tip — Cash{" "}
+            <span style={{ color: "rgba(247,244,238,0.5)" }}>(cash to staff — not part of total)</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <input
+              type="number"
+              min={0}
+              value={tipCashValue || ""}
+              onChange={(e) => setTipCashValue(Number(e.target.value) || 0)}
+              style={tipInput}
+            />
+            <CurrencyToggle value={tipCashCurrency} onChange={setTipCashCurrency} />
+            {tipCashCurrency === "USD" && (
+              <span style={{ color: "rgba(247,244,238,0.6)", fontSize: 12, minWidth: 90 }}>
+                = {formatMXN(tipCashMXN)}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Exchange rate (only relevant when a tip is in USD) */}
+        {(tipCurrency === "USD" || tipCashCurrency === "USD") && (
           <div
             style={{
               display: "flex",
@@ -644,37 +715,23 @@ export default function NewBooking({
             }}
           >
             <div>
-              Tip Paid Via{" "}
-              <span style={{ color: "rgba(247,244,238,0.5)" }}>
-                {tipMethod === "cc"
-                  ? "(charged on card — owner pays staff back)"
-                  : "(cash — staff split it directly)"}
-              </span>
+              Exchange Rate{" "}
+              <span style={{ color: "rgba(247,244,238,0.5)" }}>(USD → MXN)</span>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              {(["cc", "cash"] as const).map((m) => (
-                <button
-                  key={m}
-                  onClick={() => setTipMethod(m)}
-                  style={{
-                    background: tipMethod === m ? COLORS.gold : "rgba(255,255,255,0.08)",
-                    color: tipMethod === m ? "#fff" : "rgba(247,244,238,0.7)",
-                    border: "1px solid rgba(247,244,238,0.2)",
-                    padding: "6px 14px",
-                    cursor: "pointer",
-                    fontFamily: "'Jost', sans-serif",
-                    fontSize: 11,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.08em",
-                    borderRadius: 2,
-                  }}
-                >
-                  {m === "cc" ? "Credit Card" : "Cash"}
-                </button>
-              ))}
+              <input
+                type="number"
+                min={0}
+                step="0.1"
+                value={exchangeRate || ""}
+                onChange={(e) => setExchangeRate(Number(e.target.value) || 0)}
+                style={tipInput}
+              />
+              <span style={{ color: "rgba(247,244,238,0.6)", fontSize: 12, minWidth: 40 }}>MXN</span>
             </div>
           </div>
         )}
+
 
         {/* CC fee row */}
         <div
@@ -687,8 +744,8 @@ export default function NewBooking({
           }}
         >
           <div>
-            3% Credit Card Fee{" "}
-            <span style={{ color: "rgba(247,244,238,0.5)" }}>(on total — services + tip)</span>
+            5% Credit Card Fee{" "}
+            <span style={{ color: "rgba(247,244,238,0.5)" }}>(on total — services + card tip)</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <span style={{ minWidth: 110, textAlign: "right" }}>{formatMXN(ccFee)}</span>
