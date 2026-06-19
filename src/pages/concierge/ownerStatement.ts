@@ -62,7 +62,7 @@ export function openOwnerStatement(month: string, year: number, bookings: Bookin
       const ccRow =
         Number(b.cc_fee) > 0
           ? `<tr>
-              <td>Credit Card Fee (3% on total)</td>
+              <td>Credit Card Fee (5% on total)</td>
               <td>${badge("Pass-through", "#9E9080")}</td>
               <td style="text-align:right">${formatMXN(b.cc_fee)}</td>
               <td colspan="3" style="text-align:right;color:#9E9080">—</td>
@@ -208,7 +208,7 @@ export function downloadOwnerStatementCSV(month: string, year: number, bookings:
       ]);
     });
     if (Number(b.tip) > 0) rows.push([b.guest, b.checkin, b.checkout ?? "", "Staff Tip", "pass-through", String(Math.round(b.tip)), "", "", ""]);
-    if (Number(b.cc_fee) > 0) rows.push([b.guest, b.checkin, b.checkout ?? "", "3% Credit Card Fee", "pass-through", String(Math.round(b.cc_fee)), "", "", ""]);
+    if (Number(b.cc_fee) > 0) rows.push([b.guest, b.checkin, b.checkout ?? "", "5% Credit Card Fee", "pass-through", String(Math.round(b.cc_fee)), "", "", ""]);
   });
 
   const totalRevenue = bookings.reduce((s, b) => s + Number(b.total_guest), 0);
