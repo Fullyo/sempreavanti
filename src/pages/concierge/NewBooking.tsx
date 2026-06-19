@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { conciergeDb } from "@/lib/conciergeApi";
 import { toast } from "sonner";
 import {
+  Booking,
   calcCCFee,
   calcCost,
   calcGuestTotal,
