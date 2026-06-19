@@ -36,6 +36,7 @@ interface PayData {
   utvGas: number;
   gratuityRate: number;
   feeRate: number;
+  presetTip?: number;
   paymentStatus: string;
   amountPaid: number | null;
   paidAt: string | null;
@@ -73,6 +74,12 @@ export default function GuestPayment() {
       return;
     }
     setData(res as PayData);
+    // Pre-fill the staff card tip set by the concierge (guest can increase it).
+    const preset = Math.round(Number((res as PayData)?.presetTip) || 0);
+    if (preset > 0) {
+      setTipMode("amount");
+      setCustomTip(preset);
+    }
   };
 
   useEffect(() => {

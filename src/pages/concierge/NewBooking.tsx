@@ -3,14 +3,16 @@ import { conciergeDb } from "@/lib/conciergeApi";
 import { toast } from "sonner";
 import {
   Booking,
-  calcCCFee,
   calcCost,
   calcGuestTotal,
   calcProfit,
   CATEGORY_ORDER,
+  computeGuestPayment,
   formatMXN,
+  isUtvRental,
   Service,
   TYPE_COLOR,
+  UTV_GAS_PER_RENTAL,
 } from "@/lib/calculations";
 import { COLORS, btnPrimary, btnGhost, fieldLabel, input, sectionTitle } from "./styles";
 
@@ -29,9 +31,11 @@ const tipInput: CSSProperties = {
 function CurrencyToggle({
   value,
   onChange,
+  size = "md",
 }: {
   value: "MXN" | "USD";
   onChange: (v: "MXN" | "USD") => void;
+  size?: "sm" | "md";
 }) {
   return (
     <div style={{ display: "flex", gap: 4 }}>
@@ -41,13 +45,13 @@ function CurrencyToggle({
           type="button"
           onClick={() => onChange(c)}
           style={{
-            background: value === c ? COLORS.gold : "rgba(255,255,255,0.08)",
-            color: value === c ? "#fff" : "rgba(247,244,238,0.7)",
-            border: "1px solid rgba(247,244,238,0.2)",
-            padding: "6px 10px",
+            background: value === c ? COLORS.gold : "rgba(0,0,0,0.04)",
+            color: value === c ? "#fff" : COLORS.textMid,
+            border: `1px solid ${COLORS.border}`,
+            padding: size === "sm" ? "4px 7px" : "6px 10px",
             cursor: "pointer",
             fontFamily: "'Jost', sans-serif",
-            fontSize: 11,
+            fontSize: size === "sm" ? 10 : 11,
             letterSpacing: "0.06em",
             borderRadius: 2,
           }}
@@ -66,6 +70,7 @@ interface Row {
   type: string;
   qty: number;
   price: number;
+  currency: "MXN" | "USD";
   unit_cost: number | null;
   sub_text?: string | null;
 }
@@ -76,17 +81,23 @@ function uid() {
 
 const MANUAL_TYPES = ["tour", "tour10", "mgmt", "margin", "fixedprofit", "grocery", "minibar", "beer", "flat", "villa"];
 
+const FUEL_NAME = "UTV Fuel — Gas";
+
 function bookingToRows(b: Booking): Row[] {
-  return (b.items ?? []).map((i) => ({
-    uid: uid(),
-    service_id: null,
-    name: i.name,
-    type: i.type,
-    qty: i.qty,
-    price: i.price,
-    unit_cost: i.unit_cost,
-    sub_text: i.sub_text ?? null,
-  }));
+  return (b.items ?? [])
+    // Auto-fuel is recreated from the UTV lines, so don't load a stored fuel row.
+    .filter((i) => i.type !== "fuel")
+    .map((i) => ({
+      uid: uid(),
+      service_id: null,
+      name: i.name,
+      type: i.type,
+      qty: i.qty,
+      price: i.price,
+      currency: ((i as { currency?: string }).currency === "USD" ? "USD" : "MXN") as "MXN" | "USD",
+      unit_cost: i.unit_cost,
+      sub_text: i.sub_text ?? null,
+    }));
 }
 
 export default function NewBooking({
@@ -113,12 +124,22 @@ export default function NewBooking({
     initialBooking?.tip_cash_currency === "USD" ? "USD" : "MXN",
   );
   const [exchangeRate, setExchangeRate] = useState(initialBooking?.exchange_rate ?? 16);
-  const [ccFeeOn, setCcFeeOn] = useState(initialBooking?.cc_fee_on ?? false);
+  // Card fee is on by default — the concierge never has to remember it.
+  const [ccFeeOn, setCcFeeOn] = useState(initialBooking ? (initialBooking.cc_fee_on ?? true) : true);
   const [cashCollected, setCashCollected] = useState(initialBooking?.cash_collected ?? 0);
   const [accommodationFare, setAccommodationFare] = useState(initialBooking?.accommodation_fare ?? 0);
   const [accommodationCurrency, setAccommodationCurrency] = useState<"MXN" | "USD">(
     initialBooking?.accommodation_currency === "USD" ? "USD" : "MXN",
   );
+  // Editable fuel rate per UTV unit (auto-added when a UTV/Polaris is booked).
+  const [fuelPerUnit, setFuelPerUnit] = useState<number>(() => {
+    const f = (initialBooking?.items ?? []).find((i) => i.type === "fuel");
+    const utvUnits = (initialBooking?.items ?? [])
+      .filter((i) => isUtvRental(i.name))
+      .reduce((s, i) => s + (Number(i.qty) || 0), 0);
+    if (f && utvUnits > 0) return Math.round((f.guest_total || 0) / utvUnits);
+    return UTV_GAS_PER_RENTAL;
+  });
   const [saving, setSaving] = useState(false);
   const [savedToken, setSavedToken] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -136,12 +157,34 @@ export default function NewBooking({
     return CATEGORY_ORDER.filter((c) => map[c]).map((c) => ({ category: c, items: map[c] }));
   }, [services]);
 
-  const servicesSubtotal = useMemo(
-    () => rows.reduce((sum, r) => sum + calcGuestTotal(r.type, r.price, r.qty), 0),
+  const fx = Number(exchangeRate) || 16;
+  // A row's price normalized to MXN (USD lines convert at the booking FX rate).
+  const priceMXN = (r: Row) => (r.currency === "USD" ? r.price * fx : r.price);
+
+  // Auto fuel: one fuel charge per UTV/Polaris unit booked.
+  const utvUnits = useMemo(
+    () => rows.filter((r) => isUtvRental(r.name)).reduce((s, r) => s + (Number(r.qty) || 0), 0),
     [rows],
   );
-  const fx = Number(exchangeRate) || 16;
-  // Credit-card staff tip — part of the guest charge (converted to MXN if entered in USD).
+  const fuelTotal = utvUnits * (Number(fuelPerUnit) || 0);
+
+  // Line items in MXN (services + auto fuel) used for every total.
+  const calcItems = useMemo(() => {
+    const items = rows.map((r) => ({
+      name: r.name,
+      type: r.type,
+      qty: r.qty,
+      price: priceMXN(r),
+      guest_total: calcGuestTotal(r.type, priceMXN(r), r.qty),
+    }));
+    if (utvUnits > 0 && fuelTotal > 0) {
+      items.push({ name: FUEL_NAME, type: "fuel", qty: 1, price: fuelTotal, guest_total: fuelTotal });
+    }
+    return items;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rows, fx, utvUnits, fuelTotal]);
+
+  // Credit-card staff tip — a pre-set tip the guest pays on their card (MXN).
   const tip = useMemo(
     () => Math.round(tipCurrency === "USD" ? tipValue * fx : tipValue),
     [tipValue, tipCurrency, fx],
@@ -151,17 +194,35 @@ export default function NewBooking({
     () => Math.round(tipCashCurrency === "USD" ? tipCashValue * fx : tipCashValue),
     [tipCashValue, tipCashCurrency, fx],
   );
-  const ccFee = useMemo(() => calcCCFee(ccFeeOn, servicesSubtotal, tip), [ccFeeOn, servicesSubtotal, tip]);
-  const totalGuest = servicesSubtotal + tip + ccFee;
-  const totalProfit = useMemo(
-    () => rows.reduce((sum, r) => sum + (calcProfit(r.type, r.price, r.qty, r.unit_cost) ?? 0), 0),
-    [rows],
+
+  // Single source of truth — identical math to the guest /pay page.
+  const breakdown = useMemo(
+    () =>
+      computeGuestPayment({
+        items: calcItems,
+        accommodationFare,
+        accommodationCurrency,
+        fx,
+        tipMode: "amount",
+        tipValue: tip,
+      }),
+    [calcItems, accommodationFare, accommodationCurrency, fx, tip],
   );
+
+  const ccFee = ccFeeOn ? breakdown.fee : 0;
+  const totalGuest = breakdown.chargeable + ccFee;
+  const totalProfit = useMemo(
+    () => rows.reduce((sum, r) => sum + (calcProfit(r.type, priceMXN(r), r.qty, r.unit_cost) ?? 0), 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [rows, fx],
+  );
+
+  const anyUSD = tipCurrency === "USD" || tipCashCurrency === "USD" || accommodationCurrency === "USD" || rows.some((r) => r.currency === "USD");
 
   const addRow = () =>
     setRows((r) => [
       ...r,
-      { uid: uid(), service_id: null, name: "", type: "tour", qty: 1, price: 0, unit_cost: null },
+      { uid: uid(), service_id: null, name: "", type: "tour", qty: 1, price: 0, currency: "MXN", unit_cost: null },
     ]);
 
   const updateRow = (id: string, patch: Partial<Row>) =>
@@ -189,10 +250,11 @@ export default function NewBooking({
     setTipCurrency("MXN");
     setTipCashValue(0);
     setTipCashCurrency("MXN");
-    setCcFeeOn(false);
+    setCcFeeOn(true);
     setCashCollected(0);
     setAccommodationFare(0);
     setAccommodationCurrency("MXN");
+    setFuelPerUnit(UTV_GAS_PER_RENTAL);
   };
 
   const buildPayload = () => {
@@ -200,13 +262,30 @@ export default function NewBooking({
       name: r.name,
       type: r.type,
       qty: r.qty,
-      price: r.price,
+      price: r.price, // value AS ENTERED (in the row's currency)
+      currency: r.currency,
       unit_cost: r.unit_cost,
-      guest_total: calcGuestTotal(r.type, r.price, r.qty),
-      cost: calcCost(r.type, r.price, r.qty, r.unit_cost),
-      profit: calcProfit(r.type, r.price, r.qty, r.unit_cost),
+      guest_total: calcGuestTotal(r.type, priceMXN(r), r.qty), // always MXN
+      cost: calcCost(r.type, priceMXN(r), r.qty, r.unit_cost),
+      profit: calcProfit(r.type, priceMXN(r), r.qty, r.unit_cost),
       sub_text: r.sub_text ?? null,
     }));
+    // Persist auto fuel as a real line so the guest /pay page shows it and
+    // doesn't double-add gas (it skips when a "gas" line already exists).
+    if (utvUnits > 0 && fuelTotal > 0) {
+      items.push({
+        name: FUEL_NAME,
+        type: "fuel",
+        qty: 1,
+        price: fuelTotal,
+        currency: "MXN",
+        unit_cost: fuelTotal,
+        guest_total: fuelTotal,
+        cost: fuelTotal,
+        profit: 0,
+        sub_text: `${utvUnits} unit${utvUnits > 1 ? "s" : ""} × ${formatMXN(Number(fuelPerUnit) || 0)}`,
+      });
+    }
     return {
       guest,
       checkin,
@@ -223,6 +302,8 @@ export default function NewBooking({
       tip_cash_currency: tipCashCurrency,
       exchange_rate: fx,
       cc_fee: ccFee,
+      guest_gratuity: breakdown.gratuity,
+      guest_tip: tip,
       total_guest: totalGuest,
       total_profit: totalProfit,
       cash_collected: cashCollected,
@@ -301,6 +382,14 @@ export default function NewBooking({
     setSavedToken(newToken);
     toast.success("New link generated — the old one no longer works");
     onSaved();
+  };
+
+  const summaryRow: CSSProperties = {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingTop: 14,
+    fontSize: 13,
   };
 
   return (
@@ -389,8 +478,6 @@ export default function NewBooking({
         </div>
       )}
 
-
-
       {/* Guest info */}
       <div
         style={{
@@ -453,7 +540,6 @@ export default function NewBooking({
         </div>
       </div>
 
-
       {/* Services table */}
       <div
         style={{
@@ -467,7 +553,7 @@ export default function NewBooking({
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "minmax(220px,3fr) 70px 110px 110px 130px 130px 36px",
+            gridTemplateColumns: "minmax(200px,3fr) 60px 140px 110px 120px 120px 32px",
             gap: 10,
             fontSize: 10,
             textTransform: "uppercase",
@@ -487,15 +573,16 @@ export default function NewBooking({
         </div>
 
         {rows.map((r) => {
-          const guestTotal = calcGuestTotal(r.type, r.price, r.qty);
-          const cost = calcCost(r.type, r.price, r.qty, r.unit_cost);
-          const profit = calcProfit(r.type, r.price, r.qty, r.unit_cost);
+          const pMXN = priceMXN(r);
+          const guestTotal = calcGuestTotal(r.type, pMXN, r.qty);
+          const cost = calcCost(r.type, pMXN, r.qty, r.unit_cost);
+          const profit = calcProfit(r.type, pMXN, r.qty, r.unit_cost);
           return (
             <div
               key={r.uid}
               style={{
                 display: "grid",
-                gridTemplateColumns: "minmax(220px,3fr) 70px 110px 110px 130px 130px 36px",
+                gridTemplateColumns: "minmax(200px,3fr) 60px 140px 110px 120px 120px 32px",
                 gap: 10,
                 padding: "12px 0",
                 borderBottom: `1px solid ${COLORS.border}`,
@@ -518,15 +605,27 @@ export default function NewBooking({
                 value={r.qty}
                 onChange={(e) => updateRow(r.uid, { qty: Math.max(1, Number(e.target.value) || 1) })}
               />
-              <input
-                type="number"
-                min={0}
-                style={input}
-                value={r.price || ""}
-                placeholder={r.type === "grocery" ? "Cost paid" : r.type === "beer" ? "Wholesale" : "0"}
-                onChange={(e) => updateRow(r.uid, { price: Number(e.target.value) || 0 })}
-              />
-              <div style={{ fontSize: 13, color: COLORS.textMid }}>{cost === null ? "—" : formatMXN(cost)}</div>
+              <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                <input
+                  type="number"
+                  min={0}
+                  style={{ ...input, flex: 1, minWidth: 0 }}
+                  value={r.price || ""}
+                  placeholder={r.type === "grocery" ? "Cost paid" : r.type === "beer" ? "Wholesale" : "0"}
+                  onChange={(e) => updateRow(r.uid, { price: Number(e.target.value) || 0 })}
+                />
+                <CurrencyToggle
+                  size="sm"
+                  value={r.currency}
+                  onChange={(c) => updateRow(r.uid, { currency: c })}
+                />
+              </div>
+              <div style={{ fontSize: 13, color: COLORS.textMid }}>
+                {cost === null ? "—" : formatMXN(cost)}
+                {r.currency === "USD" && (
+                  <div style={{ fontSize: 10, color: COLORS.textMuted }}>@ {fx}</div>
+                )}
+              </div>
               <div style={{ fontSize: 13, color: COLORS.textDark, fontWeight: 500 }}>{formatMXN(guestTotal)}</div>
               <div
                 style={{
@@ -554,6 +653,43 @@ export default function NewBooking({
             </div>
           );
         })}
+
+        {/* Auto fuel line for UTV rentals */}
+        {utvUnits > 0 && (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(200px,3fr) 60px 140px 110px 120px 120px 32px",
+              gap: 10,
+              padding: "12px 0",
+              borderBottom: `1px solid ${COLORS.border}`,
+              alignItems: "center",
+              background: "rgba(122,92,30,0.05)",
+            }}
+          >
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 500, color: COLORS.textDark }}>UTV Fuel — Gas</div>
+              <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2 }}>
+                Auto-added · {utvUnits} unit{utvUnits > 1 ? "s" : ""} — editable rate per unit
+              </div>
+            </div>
+            <div style={{ fontSize: 13, color: COLORS.textMid }}>×{utvUnits}</div>
+            <div style={{ display: "flex", gap: 4, alignItems: "center" }}>
+              <input
+                type="number"
+                min={0}
+                style={{ ...input, flex: 1, minWidth: 0 }}
+                value={fuelPerUnit || ""}
+                onChange={(e) => setFuelPerUnit(Number(e.target.value) || 0)}
+              />
+              <span style={{ fontSize: 10, color: COLORS.textMuted }}>MXN/unit</span>
+            </div>
+            <div style={{ fontSize: 13, color: COLORS.textMid }}>{formatMXN(fuelTotal)}</div>
+            <div style={{ fontSize: 13, color: COLORS.textDark, fontWeight: 500 }}>{formatMXN(fuelTotal)}</div>
+            <div style={{ fontSize: 13, color: COLORS.textMuted }}>—</div>
+            <div />
+          </div>
+        )}
 
         <button
           onClick={addRow}
@@ -584,7 +720,7 @@ export default function NewBooking({
         </button>
       </div>
 
-      {/* Summary */}
+      {/* Summary — mirrors the guest /pay invoice exactly */}
       <div
         style={{
           background: COLORS.dark,
@@ -613,8 +749,8 @@ export default function NewBooking({
         )}
 
         {rows.map((r) => {
-          const gt = calcGuestTotal(r.type, r.price, r.qty);
-          const p = calcProfit(r.type, r.price, r.qty, r.unit_cost);
+          const gt = calcGuestTotal(r.type, priceMXN(r), r.qty);
+          const p = calcProfit(r.type, priceMXN(r), r.qty, r.unit_cost);
           return (
             <div
               key={r.uid}
@@ -639,18 +775,54 @@ export default function NewBooking({
           );
         })}
 
-        {/* Staff Tip — Credit Card (part of the guest charge) */}
+        {/* Auto fuel */}
+        {utvUnits > 0 && fuelTotal > 0 && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              padding: "6px 0",
+              fontSize: 13,
+              borderBottom: "1px solid rgba(247,244,238,0.08)",
+            }}
+          >
+            <div>
+              UTV Fuel — Gas{" "}
+              <span style={{ color: "rgba(247,244,238,0.5)" }}>(auto · {utvUnits}×)</span>
+            </div>
+            <div>{formatMXN(fuelTotal)}</div>
+          </div>
+        )}
+
+        {/* Accommodation context (gratuity base — not charged here) */}
+        {breakdown.accommodationMXN > 0 && (
+          <div style={{ ...summaryRow, color: "rgba(247,244,238,0.7)" }}>
+            <div>
+              Accommodation{" "}
+              <span style={{ color: "rgba(247,244,238,0.45)" }}>(gratuity base — paid via Guesty, not charged here)</span>
+            </div>
+            <div>{formatMXN(breakdown.accommodationMXN)}</div>
+          </div>
+        )}
+
+        {/* Included gratuity 5% — mandatory, matches guest invoice */}
         <div
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
+            ...summaryRow,
             paddingTop: 16,
             marginTop: 14,
             borderTop: "1px solid rgba(247,244,238,0.15)",
-            fontSize: 13,
           }}
         >
+          <div>
+            Included Gratuity (5%){" "}
+            <span style={{ color: "rgba(247,244,238,0.5)" }}>(on accommodation + experiences + fuel)</span>
+          </div>
+          <div>{formatMXN(breakdown.gratuity)}</div>
+        </div>
+
+        {/* Staff Tip — Credit Card (pre-set tip the guest pays on card) */}
+        <div style={summaryRow}>
           <div>
             Staff Tip — Credit Card{" "}
             <span style={{ color: "rgba(247,244,238,0.5)" }}>(charged on card — part of total)</span>
@@ -672,80 +844,11 @@ export default function NewBooking({
           </div>
         </div>
 
-        {/* Staff Tip — Cash (reconciliation only, not part of the guest charge) */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingTop: 14,
-            fontSize: 13,
-          }}
-        >
-          <div>
-            Staff Tip — Cash{" "}
-            <span style={{ color: "rgba(247,244,238,0.5)" }}>(cash to staff — not part of total)</span>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <input
-              type="number"
-              min={0}
-              value={tipCashValue || ""}
-              onChange={(e) => setTipCashValue(Number(e.target.value) || 0)}
-              style={tipInput}
-            />
-            <CurrencyToggle value={tipCashCurrency} onChange={setTipCashCurrency} />
-            {tipCashCurrency === "USD" && (
-              <span style={{ color: "rgba(247,244,238,0.6)", fontSize: 12, minWidth: 90 }}>
-                = {formatMXN(tipCashMXN)}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Exchange rate (only relevant when a tip is in USD) */}
-        {(tipCurrency === "USD" || tipCashCurrency === "USD") && (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              paddingTop: 12,
-              fontSize: 13,
-            }}
-          >
-            <div>
-              Exchange Rate{" "}
-              <span style={{ color: "rgba(247,244,238,0.5)" }}>(USD → MXN)</span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <input
-                type="number"
-                min={0}
-                step="0.1"
-                value={exchangeRate || ""}
-                onChange={(e) => setExchangeRate(Number(e.target.value) || 0)}
-                style={tipInput}
-              />
-              <span style={{ color: "rgba(247,244,238,0.6)", fontSize: 12, minWidth: 40 }}>MXN</span>
-            </div>
-          </div>
-        )}
-
-
-        {/* CC fee row */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingTop: 14,
-            fontSize: 13,
-          }}
-        >
+        {/* CC fee row — auto, but removable */}
+        <div style={summaryRow}>
           <div>
             5% Credit Card Fee{" "}
-            <span style={{ color: "rgba(247,244,238,0.5)" }}>(on total — services + card tip)</span>
+            <span style={{ color: "rgba(247,244,238,0.5)" }}>(auto — on experiences + fuel + gratuity + card tip)</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <span style={{ minWidth: 110, textAlign: "right" }}>{formatMXN(ccFee)}</span>
@@ -769,16 +872,52 @@ export default function NewBooking({
           </div>
         </div>
 
+        {/* Staff Tip — Cash (reconciliation only) */}
+        <div style={summaryRow}>
+          <div>
+            Staff Tip — Cash{" "}
+            <span style={{ color: "rgba(247,244,238,0.5)" }}>(cash to staff — not part of total)</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <input
+              type="number"
+              min={0}
+              value={tipCashValue || ""}
+              onChange={(e) => setTipCashValue(Number(e.target.value) || 0)}
+              style={tipInput}
+            />
+            <CurrencyToggle value={tipCashCurrency} onChange={setTipCashCurrency} />
+            {tipCashCurrency === "USD" && (
+              <span style={{ color: "rgba(247,244,238,0.6)", fontSize: 12, minWidth: 90 }}>
+                = {formatMXN(tipCashMXN)}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Exchange rate (relevant whenever any USD value is used) */}
+        {anyUSD && (
+          <div style={summaryRow}>
+            <div>
+              Exchange Rate{" "}
+              <span style={{ color: "rgba(247,244,238,0.5)" }}>(USD → MXN)</span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <input
+                type="number"
+                min={0}
+                step="0.1"
+                value={exchangeRate || ""}
+                onChange={(e) => setExchangeRate(Number(e.target.value) || 0)}
+                style={tipInput}
+              />
+              <span style={{ color: "rgba(247,244,238,0.6)", fontSize: 12, minWidth: 40 }}>MXN</span>
+            </div>
+          </div>
+        )}
+
         {/* Cash collected row */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingTop: 14,
-            fontSize: 13,
-          }}
-        >
+        <div style={summaryRow}>
           <div>
             Paid in Cash{" "}
             <span style={{ color: "rgba(247,244,238,0.5)" }}>(reconciliation only — doesn't affect profit)</span>
@@ -851,6 +990,21 @@ export default function NewBooking({
           </div>
           <div style={{ fontSize: 16, fontWeight: 500 }}>{formatMXN(totalProfit)}</div>
         </div>
+        {tipCashMXN > 0 && (
+          <div
+            style={{
+              marginTop: 4,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "baseline",
+              color: "rgba(247,244,238,0.6)",
+              fontSize: 12,
+            }}
+          >
+            <div>Cash tip to staff (tracked separately)</div>
+            <div>{formatMXN(tipCashMXN)}</div>
+          </div>
+        )}
         {cashCollected > 0 && (
           <div
             style={{

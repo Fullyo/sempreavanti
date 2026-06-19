@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
     const { data: booking, error } = await supabase
       .from("bookings")
       .select(
-        "guest, checkin, checkout, items, accommodation_fare, accommodation_currency, exchange_rate, payment_status, amount_paid, paid_at",
+        "guest, checkin, checkout, items, accommodation_fare, accommodation_currency, exchange_rate, payment_status, amount_paid, paid_at, tip, guest_tip",
       )
       .eq("pay_token", token)
       .maybeSingle();
@@ -80,6 +80,7 @@ Deno.serve(async (req) => {
         utvGas,
         gratuityRate: GRATUITY_RATE,
         feeRate: FEE_RATE,
+        presetTip: Math.round(Number(booking.guest_tip ?? booking.tip) || 0),
         paymentStatus: booking.payment_status,
         amountPaid: booking.amount_paid,
         paidAt: booking.paid_at,
