@@ -65,9 +65,8 @@ Deno.serve(async (req) => {
     const upsellsSubtotal = upsellLines.reduce((s: number, i: any) => s + i.guest_total, 0);
 
     const hasGasLine = items.some((i: any) => (i.name || "").toLowerCase().includes("gas"));
-    const utvUnits = hasGasLine
-      ? 0
-      : items.filter((i: any) => isUtvRental(i.name)).reduce((s: number, i: any) => s + (Number(i.qty) || 0), 0);
+    // One tank (one fuel charge) per UTV rental line — NOT per day/qty.
+    const utvUnits = hasGasLine ? 0 : items.filter((i: any) => isUtvRental(i.name)).length;
     const utvGas = utvUnits * UTV_GAS_PER_RENTAL;
 
     const accommodationMXN =
