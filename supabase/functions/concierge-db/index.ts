@@ -20,6 +20,7 @@ const BOOKING_COLS = [
   "cc_fee", "total_guest", "total_profit", "cash_collected", "accommodation_fare",
   "accommodation_currency", "pay_token", "payment_status", "exchange_rate", "guest_tip",
   "guest_gratuity", "amount_paid", "paid_at", "stripe_session_id", "created_at", "saved_at",
+  "notes",
 ];
 const PETTY_COLS = ["booking_ref", "float_amount", "currency", "updated_at", "notes"];
 

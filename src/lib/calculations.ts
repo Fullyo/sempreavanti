@@ -170,6 +170,7 @@ export interface Booking {
   accommodation_currency?: string;
   pay_token?: string;
   payment_status?: string;
+  notes?: string | null;
   exchange_rate?: number;
   guest_gratuity?: number | null;
   guest_tip?: number | null;
@@ -238,8 +239,9 @@ export function computeUtvGas(items: GuestPayItem[]): number {
   // Only auto-add gas when the booking doesn't already include a gas line.
   const hasGasLine = items.some((i) => (i.name || "").toLowerCase().includes("gas"));
   if (hasGasLine) return 0;
-  const units = items.filter((i) => isUtvRental(i.name)).reduce((s, i) => s + (Number(i.qty) || 0), 0);
-  return units * UTV_GAS_PER_RENTAL;
+  // One tank (one fuel charge) per UTV rental line — NOT per day/qty.
+  const lines = items.filter((i) => isUtvRental(i.name)).length;
+  return lines * UTV_GAS_PER_RENTAL;
 }
 
 export interface GuestPaymentBreakdown {

@@ -31,6 +31,7 @@ export type Database = {
           guest_tip: number | null
           id: number
           items: Json
+          notes: string | null
           paid_at: string | null
           pay_token: string
           payment_status: string
@@ -63,6 +64,7 @@ export type Database = {
           guest_tip?: number | null
           id?: number
           items?: Json
+          notes?: string | null
           paid_at?: string | null
           pay_token?: string
           payment_status?: string
@@ -95,6 +97,7 @@ export type Database = {
           guest_tip?: number | null
           id?: number
           items?: Json
+          notes?: string | null
           paid_at?: string | null
           pay_token?: string
           payment_status?: string

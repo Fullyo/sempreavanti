@@ -122,6 +122,7 @@ export default function NewBooking({
   const [guest, setGuest] = useState(initialBooking?.guest ?? "");
   const [checkin, setCheckin] = useState(initialBooking?.checkin ?? "");
   const [checkout, setCheckout] = useState(initialBooking?.checkout ?? "");
+  const [notes, setNotes] = useState(initialBooking?.notes ?? "");
   const [rows, setRows] = useState<Row[]>(initialBooking ? bookingToRows(initialBooking) : []);
   const [services, setServices] = useState<Service[]>([]);
   const [tipValue, setTipValue] = useState(initialBooking?.tip_value ?? 0);
@@ -140,14 +141,20 @@ export default function NewBooking({
   const [accommodationCurrency, setAccommodationCurrency] = useState<"MXN" | "USD">(
     initialBooking?.accommodation_currency === "USD" ? "USD" : "MXN",
   );
-  // Editable fuel rate per UTV unit (auto-added when a UTV/Polaris is booked).
+  // Editable fuel rate per UTV rental (one tank, auto-added when a UTV is booked).
   const [fuelPerUnit, setFuelPerUnit] = useState<number>(() => {
     const f = (initialBooking?.items ?? []).find((i) => i.type === "fuel");
-    const utvUnits = (initialBooking?.items ?? [])
-      .filter((i) => isUtvRental(i.name))
-      .reduce((s, i) => s + (Number(i.qty) || 0), 0);
-    if (f && utvUnits > 0) return Math.round((f.guest_total || 0) / utvUnits);
+    const utvLines = (initialBooking?.items ?? []).filter((i) => isUtvRental(i.name)).length;
+    if (f && (f.guest_total || 0) > 0 && utvLines > 0) return Math.round((f.guest_total || 0) / utvLines);
     return UTV_GAS_PER_RENTAL;
+  });
+  // The auto fuel line can be removed by the concierge. When editing, a stored
+  // fuel line with a zero total marks a previously-removed fuel charge.
+  const [fuelRemoved, setFuelRemoved] = useState<boolean>(() => {
+    const items = initialBooking?.items ?? [];
+    const hasUtv = items.some((i) => isUtvRental(i.name));
+    const fuel = items.find((i) => i.type === "fuel");
+    return hasUtv && !!fuel && (fuel.guest_total || 0) === 0;
   });
   const [saving, setSaving] = useState(false);
   const [savedToken, setSavedToken] = useState<string | null>(null);
@@ -170,12 +177,14 @@ export default function NewBooking({
   // A row's price normalized to MXN (USD lines convert at the booking FX rate).
   const priceMXN = (r: Row) => (r.currency === "USD" ? r.price * fx : r.price);
 
-  // Auto fuel: one fuel charge per UTV/Polaris unit booked.
-  const utvUnits = useMemo(
-    () => rows.filter((r) => isUtvRental(r.name)).reduce((s, r) => s + (Number(r.qty) || 0), 0),
+  // Auto fuel: ONE fuel charge (one tank) per UTV/Polaris rental line — NOT per
+  // day. Qty on a UTV line represents rental days, so we count lines, not qty.
+  const utvLineCount = useMemo(
+    () => rows.filter((r) => isUtvRental(r.name)).length,
     [rows],
   );
-  const fuelTotal = utvUnits * (Number(fuelPerUnit) || 0);
+  const fuelActive = utvLineCount > 0 && !fuelRemoved;
+  const fuelTotal = fuelActive ? utvLineCount * (Number(fuelPerUnit) || 0) : 0;
 
   // Line items in MXN (services + auto fuel) used for every total.
   const calcItems = useMemo(() => {
@@ -186,12 +195,12 @@ export default function NewBooking({
       price: priceMXN(r),
       guest_total: calcGuestTotal(r.type, priceMXN(r), r.qty),
     }));
-    if (utvUnits > 0 && fuelTotal > 0) {
+    if (fuelActive && fuelTotal > 0) {
       items.push({ name: FUEL_NAME, type: "fuel", qty: 1, price: fuelTotal, guest_total: fuelTotal });
     }
     return items;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rows, fx, utvUnits, fuelTotal]);
+  }, [rows, fx, fuelActive, fuelTotal]);
 
   // Credit-card staff tip — a pre-set tip the guest pays on their card (MXN).
   const tip = useMemo(
@@ -254,6 +263,7 @@ export default function NewBooking({
     setGuest("");
     setCheckin("");
     setCheckout("");
+    setNotes("");
     setRows([]);
     setTipValue(0);
     setTipCurrency("MXN");
@@ -264,6 +274,7 @@ export default function NewBooking({
     setAccommodationFare(0);
     setAccommodationCurrency("MXN");
     setFuelPerUnit(UTV_GAS_PER_RENTAL);
+    setFuelRemoved(false);
   };
 
   const buildPayload = () => {
@@ -281,7 +292,9 @@ export default function NewBooking({
     }));
     // Persist auto fuel as a real line so the guest /pay page shows it and
     // doesn't double-add gas (it skips when a "gas" line already exists).
-    if (utvUnits > 0 && fuelTotal > 0) {
+    // When fuel is removed but UTVs exist, persist a zero-total fuel line so
+    // the guest page recognizes the gas as intentionally removed (not re-added).
+    if (fuelActive && fuelTotal > 0) {
       items.push({
         name: FUEL_NAME,
         type: "fuel",
@@ -292,13 +305,27 @@ export default function NewBooking({
         guest_total: fuelTotal,
         cost: fuelTotal,
         profit: 0,
-        sub_text: `${utvUnits} unit${utvUnits > 1 ? "s" : ""} × ${formatMXN(Number(fuelPerUnit) || 0)}`,
+        sub_text: `${utvLineCount} rental${utvLineCount > 1 ? "s" : ""} × ${formatMXN(Number(fuelPerUnit) || 0)}`,
+      });
+    } else if (utvLineCount > 0 && fuelRemoved) {
+      items.push({
+        name: FUEL_NAME,
+        type: "fuel",
+        qty: 1,
+        price: 0,
+        currency: "MXN",
+        unit_cost: 0,
+        guest_total: 0,
+        cost: 0,
+        profit: 0,
+        sub_text: "Fuel removed",
       });
     }
     return {
       guest,
       checkin,
       checkout: checkout || null,
+      notes: notes || null,
       items,
       cc_fee_on: ccFeeOn,
       tip_mode: "amount",
@@ -596,8 +623,8 @@ export default function NewBooking({
           />
         ))}
 
-        {/* Auto fuel line for UTV rentals */}
-        {utvUnits > 0 &&
+        {/* Auto fuel line for UTV rentals — one tank per rental, removable */}
+        {fuelActive &&
           (isMobile ? (
             <div
               style={{
@@ -608,11 +635,20 @@ export default function NewBooking({
                 marginBottom: 12,
               }}
             >
-              <div style={{ fontSize: 14, fontWeight: 500, color: COLORS.textDark }}>UTV Fuel — Gas</div>
-              <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2, marginBottom: 10 }}>
-                Auto-added · {utvUnits} unit{utvUnits > 1 ? "s" : ""}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div style={{ fontSize: 14, fontWeight: 500, color: COLORS.textDark }}>UTV Fuel — Gas</div>
+                <button
+                  onClick={() => setFuelRemoved(true)}
+                  style={{ background: "none", border: "none", color: COLORS.textMuted, cursor: "pointer", fontSize: 20, lineHeight: 1 }}
+                  aria-label="Remove fuel"
+                >
+                  ×
+                </button>
               </div>
-              <label style={fieldLabel}>Rate per unit (MXN)</label>
+              <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2, marginBottom: 10 }}>
+                Auto-added · one tank per rental · {utvLineCount} rental{utvLineCount > 1 ? "s" : ""}
+              </div>
+              <label style={fieldLabel}>Rate per rental — one tank (MXN)</label>
               <input
                 type="number"
                 min={0}
@@ -640,10 +676,10 @@ export default function NewBooking({
               <div>
                 <div style={{ fontSize: 13, fontWeight: 500, color: COLORS.textDark }}>UTV Fuel — Gas</div>
                 <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2 }}>
-                  Auto-added · {utvUnits} unit{utvUnits > 1 ? "s" : ""} — editable rate per unit
+                  Auto-added · one tank per rental — editable rate
                 </div>
               </div>
-              <div style={{ fontSize: 13, color: COLORS.textMid }}>×{utvUnits}</div>
+              <div style={{ fontSize: 13, color: COLORS.textMid }}>×{utvLineCount}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                 <input
                   type="number"
@@ -652,14 +688,43 @@ export default function NewBooking({
                   value={fuelPerUnit || ""}
                   onChange={(e) => setFuelPerUnit(Number(e.target.value) || 0)}
                 />
-                <span style={{ fontSize: 10, color: COLORS.textMuted }}>MXN / unit</span>
+                <span style={{ fontSize: 10, color: COLORS.textMuted }}>MXN / rental</span>
               </div>
               <div style={{ fontSize: 13, color: COLORS.textMid }}>{formatMXN(fuelTotal)}</div>
               <div style={{ fontSize: 13, color: COLORS.textDark, fontWeight: 500 }}>{formatMXN(fuelTotal)}</div>
               <div style={{ fontSize: 13, color: COLORS.textMuted }}>—</div>
-              <div />
+              <div style={{ paddingTop: 4 }}>
+                <button
+                  onClick={() => setFuelRemoved(true)}
+                  style={{ background: "none", border: "none", color: COLORS.textMuted, cursor: "pointer", fontSize: 20 }}
+                  aria-label="Remove fuel"
+                >
+                  ×
+                </button>
+              </div>
             </div>
           ))}
+
+        {/* Restore the auto fuel if it was removed but a UTV rental still exists */}
+        {utvLineCount > 0 && fuelRemoved && (
+          <button
+            onClick={() => setFuelRemoved(false)}
+            style={{
+              marginTop: 4,
+              background: "none",
+              border: "none",
+              color: COLORS.gold,
+              cursor: "pointer",
+              fontFamily: "'Jost', sans-serif",
+              fontSize: 11,
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              padding: "6px 0",
+            }}
+          >
+            + Add UTV fuel back
+          </button>
+        )}
 
         <button
           onClick={addRow}
@@ -786,10 +851,23 @@ export default function NewBooking({
               Reconciliation only — doesn't affect profit
             </div>
           </div>
+
+          {/* Internal billing notes — concierge/owner only, never shown to guest */}
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label style={fieldLabel}>Internal Billing Notes</label>
+            <textarea
+              value={notes}
+              placeholder="Private notes about this booking's billing (not shown to the guest)…"
+              onChange={(e) => setNotes(e.target.value)}
+              rows={3}
+              style={{ ...input, minHeight: 72, resize: "vertical", fontFamily: "'Jost', sans-serif", lineHeight: 1.5 }}
+            />
+            <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 5 }}>
+              Internal only — never appears on the guest payment page or invoice
+            </div>
+          </div>
         </div>
       </div>
-
-      {/* ── Guest invoice: the exact charge the guest sees on /pay ── */}
       <div
         style={{
           background: COLORS.dark,
@@ -827,7 +905,7 @@ export default function NewBooking({
           Experiences
         </div>
 
-        {rows.length === 0 && utvUnits === 0 && (
+        {rows.length === 0 && !fuelActive && (
           <div style={{ color: "rgba(247,244,238,0.5)", fontStyle: "italic", fontSize: 13, paddingBottom: 6 }}>
             No services added yet.
           </div>
@@ -860,7 +938,7 @@ export default function NewBooking({
           );
         })}
 
-        {utvUnits > 0 && fuelTotal > 0 && (
+        {fuelActive && fuelTotal > 0 && (
           <div
             style={{
               display: "flex",
@@ -871,7 +949,7 @@ export default function NewBooking({
             }}
           >
             <div>
-              UTV Fuel — Gas <span style={{ color: "rgba(247,244,238,0.5)" }}>(auto · {utvUnits}×)</span>
+              UTV Fuel — Gas <span style={{ color: "rgba(247,244,238,0.5)" }}>(auto · one tank/rental)</span>
             </div>
             <div>{formatMXN(fuelTotal)}</div>
           </div>
