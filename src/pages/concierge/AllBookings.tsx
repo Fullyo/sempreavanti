@@ -557,10 +557,21 @@ export default function AllBookings() {
 
             {/* Live (MXN) rows */}
             {group.live.map((b) => {
-              const isEdit = editId === b.id && edit;
-              const v = (isEdit ? edit! : b);
+              const isEditing = editId === b.id;
               const liveRef = `live-${b.id}`;
               const liveSpent = bookingUpsellCost(b.items);
+              if (isEditing) {
+                return (
+                  <div key={b.id} style={{ marginBottom: 14, border: `1px solid ${COLORS.gold}`, borderRadius: 4, padding: "18px 22px", background: "#fff" }}>
+                    <NewBooking
+                      initialBooking={b}
+                      onSaved={() => { load(); }}
+                      onCancel={() => { cancelEdit(); load(); }}
+                    />
+                  </div>
+                );
+              }
+              const v = b;
               return (
                 <div key={b.id} style={{ marginBottom: 14 }}>
                 <PettyCashBox
@@ -570,31 +581,16 @@ export default function AllBookings() {
                   spent={liveSpent}
                   onSave={(amt) => saveFloat(liveRef, amt, "MXN")}
                 />
-                <div style={{ background: "#fff", border: `1px solid ${isEdit ? COLORS.gold : COLORS.border}`, borderRadius: 4, padding: "18px 22px" }}>
+                <div style={{ background: "#fff", border: `1px solid ${COLORS.border}`, borderRadius: 4, padding: "18px 22px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
                     <div style={{ flex: 1 }}>
-                      {isEdit ? (
-                        <input
-                          style={{ ...input, fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 300 }}
-                          value={v.guest}
-                          onChange={(e) => setEdit({ ...edit!, guest: e.target.value })}
-                        />
-                      ) : (
-                        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 300 }}>
-                          {v.guest}
-                        </div>
-                      )}
+                      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 300 }}>
+                        {v.guest}
+                      </div>
                       <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 4, display: "flex", gap: 10, alignItems: "center" }}>
-                        {isEdit ? (
-                          <>
-                            <input type="date" style={{ ...input, width: "auto" }} value={v.checkin} onChange={(e) => setEdit({ ...edit!, checkin: e.target.value })} />
-                            <input type="date" style={{ ...input, width: "auto" }} value={v.checkout ?? ""} onChange={(e) => setEdit({ ...edit!, checkout: e.target.value || null })} />
-                          </>
-                        ) : (
-                          <span>
-                            Check-in: {v.checkin}{v.checkout ? ` · Check-out: ${v.checkout}` : ""}
-                          </span>
-                        )}
+                        <span>
+                          Check-in: {v.checkin}{v.checkout ? ` · Check-out: ${v.checkout}` : ""}
+                        </span>
                       </div>
                     </div>
                     <div style={{ textAlign: "right" }}>
@@ -624,8 +620,6 @@ export default function AllBookings() {
                     <thead>
                       <tr style={{ color: COLORS.textMuted, fontSize: 10, textTransform: "uppercase", letterSpacing: "0.12em" }}>
                         <th style={{ textAlign: "left", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Service</th>
-                        {isEdit && <th style={{ width: 70, padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Qty</th>}
-                        {isEdit && <th style={{ width: 100, padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Unit Price</th>}
                         <th style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Total</th>
                         <th style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Cost</th>
                         <th style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Profit</th>
@@ -633,32 +627,14 @@ export default function AllBookings() {
                     </thead>
                     <tbody>
                       {v.items.map((i, idx) => {
-                        const gt = isEdit ? calcGuestTotal(i.type, i.price, i.qty) : i.guest_total;
-                        const c = isEdit ? calcCost(i.type, i.price, i.qty, i.unit_cost) : i.cost;
-                        const p = isEdit ? calcProfit(i.type, i.price, i.qty, i.unit_cost) : i.profit;
+                        const gt = i.guest_total;
+                        const c = i.cost;
+                        const p = i.profit;
                         return (
                           <tr key={idx}>
                             <td style={{ padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>
                               {i.name} <span style={{ color: COLORS.textMuted }}>×{i.qty}</span>
                             </td>
-                            {isEdit && (
-                              <td style={{ padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>
-                                <input type="number" min={1} style={input} value={i.qty} onChange={(e) => {
-                                  const items = [...edit!.items];
-                                  items[idx] = { ...i, qty: Math.max(1, Number(e.target.value) || 1) };
-                                  setEdit({ ...edit!, items });
-                                }} />
-                              </td>
-                            )}
-                            {isEdit && (
-                              <td style={{ padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>
-                                <input type="number" min={0} style={input} value={i.price} onChange={(e) => {
-                                  const items = [...edit!.items];
-                                  items[idx] = { ...i, price: Number(e.target.value) || 0 };
-                                  setEdit({ ...edit!, items });
-                                }} />
-                              </td>
-                            )}
                             <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>{formatMXN(gt)}</td>
                             <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}`, color: COLORS.textMid }}>{c === null ? "—" : formatMXN(c)}</td>
                             <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}`, color: p === null ? COLORS.amber : COLORS.green, fontStyle: p === null ? "italic" : "normal" }}>{p === null ? "TBD" : formatMXN(p)}</td>
@@ -670,7 +646,6 @@ export default function AllBookings() {
                           <td style={{ padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>
                             {v.tip_mode === "percent" ? `Staff Tip (${v.tip_value}%)` : "Staff Tip"}
                           </td>
-                          {isEdit && <td colSpan={2} />}
                           <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>{formatMXN(v.tip)}</td>
                           <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}`, color: COLORS.textMuted }}>—</td>
                           <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}`, color: COLORS.blue, fontStyle: "italic", fontSize: 11 }}>pass-through</td>
@@ -679,7 +654,6 @@ export default function AllBookings() {
                       {Number(v.cc_fee) > 0 && (
                         <tr>
                           <td style={{ padding: "8px 6px" }}>3% Credit Card Fee</td>
-                          {isEdit && <td colSpan={2} />}
                           <td style={{ textAlign: "right", padding: "8px 6px" }}>{formatMXN(v.cc_fee)}</td>
                           <td style={{ textAlign: "right", padding: "8px 6px", color: COLORS.textMuted }}>—</td>
                           <td style={{ textAlign: "right", padding: "8px 6px", color: COLORS.textMuted }}>—</td>
@@ -688,52 +662,17 @@ export default function AllBookings() {
                     </tbody>
                   </table>
 
-                  {isEdit && (
-                    <div style={{ display: "flex", gap: 14, marginTop: 14, alignItems: "center", flexWrap: "wrap" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <label style={fieldLabel}>Tip</label>
-                        <button
-                          onClick={() => setEdit({ ...edit!, tip_mode: edit!.tip_mode === "amount" ? "percent" : "amount", tip_value: 0 })}
-                          style={{ ...btnGhost, padding: "6px 12px", minWidth: 36 }}
-                        >
-                          {edit!.tip_mode === "amount" ? "$" : "%"}
-                        </button>
-                        <input
-                          type="number"
-                          min={0}
-                          style={{ ...input, width: 90 }}
-                          value={edit!.tip_value || ""}
-                          onChange={(e) => setEdit({ ...edit!, tip_value: Number(e.target.value) || 0 })}
-                        />
-                      </div>
-                      <button
-                        onClick={() => setEdit({ ...edit!, cc_fee_on: !edit!.cc_fee_on })}
-                        style={{ ...btnGhost, color: edit!.cc_fee_on ? COLORS.red : COLORS.textMid }}
-                      >
-                        CC Fee: {edit!.cc_fee_on ? "ON" : "OFF"}
-                      </button>
-                    </div>
-                  )}
-
                   <div style={{ display: "flex", gap: 8, marginTop: 14, justifyContent: "flex-end" }}>
-                    {isEdit ? (
-                      <>
-                        <button onClick={cancelEdit} style={btnGhost}>Cancel</button>
-                        <button onClick={saveEdit} style={btnPrimary}>Save Changes</button>
-                      </>
-                    ) : (
-                      <>
-                        <button onClick={() => downloadInvoice(b)} style={btnPrimary}>Download Invoice</button>
-                        <button onClick={() => copyPayLink(b)} style={btnGhost}>Copy Payment Link</button>
-                        <button onClick={() => startEdit(b)} style={btnGhost}>Edit</button>
-                        <button onClick={() => remove(b.id)} style={btnDanger}>Delete</button>
-                      </>
-                    )}
+                    <button onClick={() => downloadInvoice(b)} style={btnPrimary}>Download Invoice</button>
+                    <button onClick={() => copyPayLink(b)} style={btnGhost}>Copy Payment Link</button>
+                    <button onClick={() => startEdit(b)} style={btnGhost}>Edit</button>
+                    <button onClick={() => remove(b.id)} style={btnDanger}>Delete</button>
                   </div>
                 </div>
                 </div>
               );
             })}
+
 
             <PettyCashSummary group={group} petty={petty} />
             </>)}
