@@ -125,14 +125,23 @@ export default function NewBooking({
   const [notes, setNotes] = useState(initialBooking?.notes ?? "");
   const [rows, setRows] = useState<Row[]>(initialBooking ? bookingToRows(initialBooking) : []);
   const [services, setServices] = useState<Service[]>([]);
-  const [tipValue, setTipValue] = useState(initialBooking?.tip_value ?? 0);
-  const [tipCurrency, setTipCurrency] = useState<"MXN" | "USD">(
-    initialBooking?.tip_currency === "USD" ? "USD" : "MXN",
+  // The agreed card tip is stored canonically in MXN (`tip`). On reload we edit
+  // it as MXN to avoid double-converting an already-converted USD amount.
+  const [tipValue, setTipValue] = useState(
+    initialBooking ? Math.round(Number(initialBooking.tip) || 0) : 0,
   );
-  const [tipCashValue, setTipCashValue] = useState(initialBooking?.tip_cash_value ?? 0);
-  const [tipCashCurrency, setTipCashCurrency] = useState<"MXN" | "USD">(
-    initialBooking?.tip_cash_currency === "USD" ? "USD" : "MXN",
-  );
+  const [tipCurrency, setTipCurrency] = useState<"MXN" | "USD">("MXN");
+  // Cash tip can be left in both currencies (e.g. 200 USD + 2,000 MXN).
+  const [tipCashUsd, setTipCashUsd] = useState<number>(() => {
+    const b = initialBooking as any;
+    if (b?.tip_cash_usd != null) return Number(b.tip_cash_usd) || 0;
+    return b?.tip_cash_currency === "USD" ? Number(b?.tip_cash_value) || 0 : 0;
+  });
+  const [tipCashMxn, setTipCashMxn] = useState<number>(() => {
+    const b = initialBooking as any;
+    if (b?.tip_cash_mxn != null) return Number(b.tip_cash_mxn) || 0;
+    return b?.tip_cash_currency !== "USD" ? Number(b?.tip_cash_value) || 0 : 0;
+  });
   const [exchangeRate, setExchangeRate] = useState(initialBooking?.exchange_rate ?? 16);
   // Card fee is on by default — the concierge never has to remember it.
   const [ccFeeOn, setCcFeeOn] = useState(initialBooking ? (initialBooking.cc_fee_on ?? true) : true);
@@ -211,8 +220,8 @@ export default function NewBooking({
   );
   // Cash staff tip — reconciliation only, never part of the guest charge or profit.
   const tipCashMXN = useMemo(
-    () => Math.round(tipCashCurrency === "USD" ? tipCashValue * fx : tipCashValue),
-    [tipCashValue, tipCashCurrency, fx],
+    () => Math.round((Number(tipCashUsd) || 0) * fx + (Number(tipCashMxn) || 0)),
+    [tipCashUsd, tipCashMxn, fx],
   );
 
   // Single source of truth — identical math to the guest /pay page.
