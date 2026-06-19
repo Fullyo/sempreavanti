@@ -1,55 +1,44 @@
-# Zero-Calculation Booking Form
+# Card Fee — Include Accommodation in the Base
 
-## Goal
-The concierge enters raw numbers and never does math. The booking summary shows the **exact** invoice the guest will pay (same numbers as the `/pay` page), every money field accepts MXN or USD, the card fee is applied automatically, and fuel is added automatically for UTV rentals with an editable amount.
+## Why
 
-## What's wrong today
-1. **Card fee is off by default** and hidden behind an Add/Remove button — the concierge has to remember to turn it on.
-2. **No fuel** is added in the booking form when a UTV/Polaris is booked. Gas is only auto-added later on the guest `/pay` page, so the concierge's summary understates the total.
-3. **The concierge total ≠ the guest total.** The guest page adds a mandatory 5% gratuity (on accommodation + upsells + gas); the booking summary never shows it. So the concierge quotes one number and the guest is charged another.
-4. **Service line prices are MXN-only** — no USD entry for items priced/paid in dollars.
+Today the 5% card fee is calculated only on the chargeable lines (experiences + UTV fuel + included gratuity + card tip). Accommodation is excluded because it's paid via Guesty, not on the card. That's why $1,000 USD accommodation produced just a $40 MXN fee — the fee was 5% of the $800 MXN gratuity only.
 
-## What will change
+You chose: **the card fee should include the accommodation amount**. With $16,000 MXN accommodation + $800 MXN gratuity, the fee becomes 5% × $16,800 = **$840 MXN**.
 
-### 1. Card fee — automatic, still removable
-- Defaults to **on** for every booking (new and edit).
-- Recalculates live as 5% of the chargeable amount — no manual step needed.
-- Keep a small toggle so it can be removed for special cases (per your choice), but it starts applied.
+## Change
 
-### 2. UTV fuel — auto-added, editable
-- When a UTV/Polaris/Can-Am rental line is added, a **Fuel** line is automatically created for each unit, defaulting to **$1,000 MXN per unit**.
-- The fuel amount is **editable** (concierge can override the peso value).
-- Removing the UTV line removes its auto fuel; manually added fuel is left alone.
-- This mirrors the existing `computeUtvGas` rule so the booking and the guest page agree.
-
-### 3. Per-line MXN / USD toggle
-- Each service row gets a currency toggle next to its unit price. USD lines convert to MXN at the booking's exchange rate for all totals, cost and profit.
-- The exchange-rate field becomes always-relevant (shown whenever any USD value exists: a line, accommodation, or a tip).
-
-### 4. Summary mirrors the guest invoice exactly
-Rebuild the Booking Summary so it shows the same line structure and totals as the guest `/pay` page:
+Update the card-fee base everywhere so it equals:
 
 ```text
-Upsells subtotal           (services, converted to MXN)
-UTV fuel                   (auto)
-Accommodation (context)    (MXN equiv — gratuity base only, not charged)
-Included gratuity 5%       (on accommodation + upsells + fuel)
-Staff tip — credit card    (optional, part of total)
-Card fee 5%                (auto)
-─────────────────────────
-TOTAL GUEST CHARGE         (identical to /pay)
-Staff tip — cash           (reconciliation only, shown separately)
-Your total profit
+feeBase = accommodationMXN + upsells + UTV fuel + included gratuity + card tip
+cardFee = 5% × feeBase
 ```
 
-The shared calculation helper (`computeGuestPayment` in `src/lib/calculations.ts`) becomes the single source of truth used by both the concierge form and the guest page, so the two can never drift.
+The grand total charged to the guest stays the same line structure; only the fee line grows.
 
-## Technical notes
-- Add a per-row `currency` (and keep `price` as entered); a row's MXN value = `price * fx` when USD. Update `calcGuestTotal`/`calcCost`/`calcProfit` call sites to use the MXN-normalized price, and persist both the entered value and currency in each saved item.
-- Auto-fuel: derive fuel lines from UTV rows in a `useEffect`/memo so they stay in sync; store an editable `fuelPerUnit` (default `UTV_GAS_PER_RENTAL = 1000`). Persist fuel as normal line items so `/pay` doesn't double-add (the existing `computeUtvGas` skips when a gas line is already present).
-- Replace the form's ad-hoc `totalGuest = servicesSubtotal + tip + ccFee` with `computeGuestPayment({...})` including mandatory `GUEST_GRATUITY_RATE` (5%) and the card fee, so the concierge total equals the guest total.
-- `ccFeeOn` defaults to `true`.
-- Save payload stores the final computed `total_guest`, `cc_fee`, gratuity, fuel and per-line currency. A DB migration adds any missing columns (e.g. per-item currency is already in `items` JSON, so likely only a `guest_gratuity`/fuel handling check — confirm during build; no destructive changes).
+Note: accommodation itself is still NOT a charged line — it remains context/gratuity base. Only the card *fee* now counts it.
+
+## Where (single source of truth + the two server copies that must match)
+
+1. `**src/lib/calculations.ts` — `computeGuestPayment**`
+  - Change `chargeable` (the fee base) to add `accommodationMXN`.
+  - Keep `total = upsells + gas + gratuity + tip + fee` (total must not double-count accommodation — accommodation is only in the fee base, not added as a charged line).
+  - This drives the concierge Booking Summary in `NewBooking.tsx`.
+2. `**supabase/functions/guest-payment-checkout/index.ts**`
+  - Recompute `fee` on `accommodationMXN + chargeable` so the Stripe charge matches.
+  - The Stripe "Card processing fee (5%)" line item reflects the new amount; the other line items stay unchanged.
+3. `**supabase/functions/guest-payment-get/index.ts**`
+  - This function returns `feeRate` and the raw values; the guest `/pay` page computes the fee client-side. Confirm the guest page (`src/pages/GuestPayment.tsx`) applies the fee to a base that includes `accommodationMXN`, so the displayed total matches checkout.
+
+## Verification
+
+- $1,000 USD accommodation @ 16, no services → fee = $840 MXN, total guest charge = $1,640 MXN ($800 gratuity + $840 fee).
+- Confirm concierge Booking Summary, guest `/pay` page, and Stripe checkout all show the same total.
 
 ## Out of scope
-- No change to Stripe checkout, the guest `/pay` page layout, pricing markup rules, or the owner statement math (beyond reading the already-correct totals).
+
+- No change to gratuity rate, markup rules, profit math, or owner statement.  
+  
+  
+i also want you to redesign to new bookingpage, ffeels like patch work. rethink the layout and where the fees go
