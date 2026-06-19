@@ -13,6 +13,7 @@ import {
   formatMXN,
 } from "@/lib/calculations";
 import { COLORS, btnGhost, btnPrimary, btnDanger, fieldLabel, input, sectionTitle } from "./styles";
+import NewBooking from "./NewBooking";
 import { downloadInvoice } from "./GuestInvoicePDF";
 import { downloadOwnerStatementCSV, openOwnerStatement } from "./ownerStatement";
 import { openApril2026Historical } from "./april2026Historical";
