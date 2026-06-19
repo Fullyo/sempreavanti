@@ -177,12 +177,14 @@ export default function NewBooking({
   // A row's price normalized to MXN (USD lines convert at the booking FX rate).
   const priceMXN = (r: Row) => (r.currency === "USD" ? r.price * fx : r.price);
 
-  // Auto fuel: one fuel charge per UTV/Polaris unit booked.
-  const utvUnits = useMemo(
-    () => rows.filter((r) => isUtvRental(r.name)).reduce((s, r) => s + (Number(r.qty) || 0), 0),
+  // Auto fuel: ONE fuel charge (one tank) per UTV/Polaris rental line — NOT per
+  // day. Qty on a UTV line represents rental days, so we count lines, not qty.
+  const utvLineCount = useMemo(
+    () => rows.filter((r) => isUtvRental(r.name)).length,
     [rows],
   );
-  const fuelTotal = utvUnits * (Number(fuelPerUnit) || 0);
+  const fuelActive = utvLineCount > 0 && !fuelRemoved;
+  const fuelTotal = fuelActive ? utvLineCount * (Number(fuelPerUnit) || 0) : 0;
 
   // Line items in MXN (services + auto fuel) used for every total.
   const calcItems = useMemo(() => {
@@ -193,12 +195,12 @@ export default function NewBooking({
       price: priceMXN(r),
       guest_total: calcGuestTotal(r.type, priceMXN(r), r.qty),
     }));
-    if (utvUnits > 0 && fuelTotal > 0) {
+    if (fuelActive && fuelTotal > 0) {
       items.push({ name: FUEL_NAME, type: "fuel", qty: 1, price: fuelTotal, guest_total: fuelTotal });
     }
     return items;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rows, fx, utvUnits, fuelTotal]);
+  }, [rows, fx, fuelActive, fuelTotal]);
 
   // Credit-card staff tip — a pre-set tip the guest pays on their card (MXN).
   const tip = useMemo(
