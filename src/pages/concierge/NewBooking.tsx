@@ -429,7 +429,7 @@ export default function NewBooking({
             background: COLORS.dark,
             color: "#F7F4EE",
             borderRadius: 4,
-            padding: 22,
+            padding: isMobile ? 16 : 22,
             marginTop: 18,
           }}
         >
