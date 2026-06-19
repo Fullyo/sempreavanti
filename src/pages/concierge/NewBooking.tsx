@@ -696,7 +696,7 @@ export default function NewBooking({
           background: "#fff",
           border: `1px solid ${COLORS.border}`,
           borderRadius: 4,
-          padding: 22,
+          padding: isMobile ? 16 : 22,
           marginTop: 18,
         }}
       >
