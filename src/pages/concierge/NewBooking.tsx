@@ -122,6 +122,7 @@ export default function NewBooking({
   const [guest, setGuest] = useState(initialBooking?.guest ?? "");
   const [checkin, setCheckin] = useState(initialBooking?.checkin ?? "");
   const [checkout, setCheckout] = useState(initialBooking?.checkout ?? "");
+  const [notes, setNotes] = useState(initialBooking?.notes ?? "");
   const [rows, setRows] = useState<Row[]>(initialBooking ? bookingToRows(initialBooking) : []);
   const [services, setServices] = useState<Service[]>([]);
   const [tipValue, setTipValue] = useState(initialBooking?.tip_value ?? 0);
@@ -140,14 +141,20 @@ export default function NewBooking({
   const [accommodationCurrency, setAccommodationCurrency] = useState<"MXN" | "USD">(
     initialBooking?.accommodation_currency === "USD" ? "USD" : "MXN",
   );
-  // Editable fuel rate per UTV unit (auto-added when a UTV/Polaris is booked).
+  // Editable fuel rate per UTV rental (one tank, auto-added when a UTV is booked).
   const [fuelPerUnit, setFuelPerUnit] = useState<number>(() => {
     const f = (initialBooking?.items ?? []).find((i) => i.type === "fuel");
-    const utvUnits = (initialBooking?.items ?? [])
-      .filter((i) => isUtvRental(i.name))
-      .reduce((s, i) => s + (Number(i.qty) || 0), 0);
-    if (f && utvUnits > 0) return Math.round((f.guest_total || 0) / utvUnits);
+    const utvLines = (initialBooking?.items ?? []).filter((i) => isUtvRental(i.name)).length;
+    if (f && (f.guest_total || 0) > 0 && utvLines > 0) return Math.round((f.guest_total || 0) / utvLines);
     return UTV_GAS_PER_RENTAL;
+  });
+  // The auto fuel line can be removed by the concierge. When editing, a stored
+  // fuel line with a zero total marks a previously-removed fuel charge.
+  const [fuelRemoved, setFuelRemoved] = useState<boolean>(() => {
+    const items = initialBooking?.items ?? [];
+    const hasUtv = items.some((i) => isUtvRental(i.name));
+    const fuel = items.find((i) => i.type === "fuel");
+    return hasUtv && !!fuel && (fuel.guest_total || 0) === 0;
   });
   const [saving, setSaving] = useState(false);
   const [savedToken, setSavedToken] = useState<string | null>(null);
