@@ -890,7 +890,7 @@ export default function NewBooking({
           Experiences
         </div>
 
-        {rows.length === 0 && utvUnits === 0 && (
+        {rows.length === 0 && !fuelActive && (
           <div style={{ color: "rgba(247,244,238,0.5)", fontStyle: "italic", fontSize: 13, paddingBottom: 6 }}>
             No services added yet.
           </div>
@@ -923,7 +923,7 @@ export default function NewBooking({
           );
         })}
 
-        {utvUnits > 0 && fuelTotal > 0 && (
+        {fuelActive && fuelTotal > 0 && (
           <div
             style={{
               display: "flex",
@@ -934,7 +934,7 @@ export default function NewBooking({
             }}
           >
             <div>
-              UTV Fuel — Gas <span style={{ color: "rgba(247,244,238,0.5)" }}>(auto · {utvUnits}×)</span>
+              UTV Fuel — Gas <span style={{ color: "rgba(247,244,238,0.5)" }}>(auto · one tank/rental)</span>
             </div>
             <div>{formatMXN(fuelTotal)}</div>
           </div>
