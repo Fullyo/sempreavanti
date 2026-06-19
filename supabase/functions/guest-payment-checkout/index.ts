@@ -21,6 +21,7 @@ Deno.serve(async (req) => {
     const token = String(body?.token ?? "").trim();
     const tipMode = body?.tipMode === "percent" ? "percent" : "amount";
     const tipValue = Math.max(0, Number(body?.tipValue) || 0);
+    const tipCurrency = body?.tipCurrency === "USD" ? "USD" : "MXN";
     const origin = String(body?.origin ?? req.headers.get("origin") ?? "https://villassempreavanti.com");
 
     if (!token || !/^[0-9a-f-]{36}$/i.test(token)) {
@@ -37,7 +38,7 @@ Deno.serve(async (req) => {
 
     const { data: booking, error } = await supabase
       .from("bookings")
-      .select("id, guest, items, accommodation_fare, accommodation_currency, exchange_rate, payment_status")
+      .select("id, guest, items, accommodation_fare, accommodation_currency, exchange_rate, payment_status, guest_tip, tip, gratuity_waived")
       .eq("pay_token", token)
       .maybeSingle();
 
@@ -74,9 +75,17 @@ Deno.serve(async (req) => {
         ? Number(booking.accommodation_fare) * fx
         : Number(booking.accommodation_fare);
 
+    const gratuityWaived = booking.gratuity_waived === true;
     const gratuityBase = accommodationMXN + upsellsSubtotal + utvGas;
-    const gratuity = Math.round(gratuityBase * GRATUITY_RATE);
-    const tip = tipMode === "percent" ? Math.round(gratuityBase * (tipValue / 100)) : Math.round(tipValue);
+    const gratuity = gratuityWaived ? 0 : Math.round(gratuityBase * GRATUITY_RATE);
+    // Agreed card tip set by the concierge — this is the floor; the guest may
+    // increase it but never go below it.
+    const agreedTip = Math.round(Number(booking.guest_tip ?? booking.tip) || 0);
+    const requestedTip =
+      tipMode === "percent"
+        ? Math.round(gratuityBase * (tipValue / 100))
+        : Math.round(tipCurrency === "USD" ? tipValue * fx : tipValue);
+    const tip = Math.max(agreedTip, requestedTip);
     const chargeable = upsellsSubtotal + utvGas + gratuity + tip;
     // Card fee applies ONLY to the charged lines (upsells + fuel + gratuity +
     // tip). It does NOT apply to the accommodation fare — paid via Guesty.
@@ -106,17 +115,18 @@ Deno.serve(async (req) => {
         price_data: { currency: "mxn", product_data: { name: "UTV Gas" }, unit_amount: cents(utvGas) },
         quantity: 1,
       });
-    line_items.push({
-      price_data: {
-        currency: "mxn",
-        product_data: { name: "Staff gratuity (5% included)" },
-        unit_amount: cents(gratuity),
-      },
-      quantity: 1,
-    });
+    if (gratuity > 0)
+      line_items.push({
+        price_data: {
+          currency: "mxn",
+          product_data: { name: "Staff gratuity (5% included)" },
+          unit_amount: cents(gratuity),
+        },
+        quantity: 1,
+      });
     if (tip > 0)
       line_items.push({
-        price_data: { currency: "mxn", product_data: { name: "Additional staff tip" }, unit_amount: cents(tip) },
+        price_data: { currency: "mxn", product_data: { name: "Staff tip" }, unit_amount: cents(tip) },
         quantity: 1,
       });
     line_items.push({

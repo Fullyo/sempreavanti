@@ -35,8 +35,12 @@ interface PayData {
   upsellsSubtotal: number;
   utvGas: number;
   gratuityRate: number;
+  gratuityWaived?: boolean;
   feeRate: number;
   presetTip?: number;
+  cashTipMXN?: number;
+  cashTipValue?: number;
+  cashTipCurrency?: string;
   paymentStatus: string;
   amountPaid: number | null;
   paidAt: string | null;
@@ -57,9 +61,12 @@ export default function GuestPayment() {
   const [data, setData] = useState<PayData | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
-  const [tipMode, setTipMode] = useState<"percent" | "amount" | "none">("none");
+  // tipChoice: "default" = use the concierge-agreed tip as-is; "percent" /
+  // "custom" = the guest is adding on top (never below the agreed floor).
+  const [tipChoice, setTipChoice] = useState<"default" | "percent" | "custom">("default");
   const [tipPct, setTipPct] = useState(0);
-  const [customTip, setCustomTip] = useState(0);
+  const [customAmount, setCustomAmount] = useState(0);
+  const [customCurrency, setCustomCurrency] = useState<"MXN" | "USD">("MXN");
   const [paying, setPaying] = useState(false);
 
   const status = params.get("status");
@@ -74,12 +81,6 @@ export default function GuestPayment() {
       return;
     }
     setData(res as PayData);
-    // Pre-fill the staff card tip set by the concierge (guest can increase it).
-    const preset = Math.round(Number((res as PayData)?.presetTip) || 0);
-    if (preset > 0) {
-      setTipMode("amount");
-      setCustomTip(preset);
-    }
   };
 
   useEffect(() => {
@@ -87,17 +88,32 @@ export default function GuestPayment() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
+  const fx = data?.fx || 16;
+  // The credit-card tip the concierge already agreed with the guest. This is
+  // the floor — the guest may add to it but never go below it.
+  const agreedTip = Math.round(Number(data?.presetTip) || 0);
+
   const gratuityBase = useMemo(() => {
     if (!data) return 0;
     return data.accommodationMXN + data.upsellsSubtotal + data.utvGas;
   }, [data]);
 
-  const gratuity = Math.round(gratuityBase * (data?.gratuityRate ?? GUEST_GRATUITY_RATE));
-  const tip = useMemo(() => {
-    if (tipMode === "percent") return Math.round(gratuityBase * (tipPct / 100));
-    if (tipMode === "amount") return Math.round(customTip || 0);
+  const gratuityWaived = data?.gratuityWaived === true;
+  const gratuity = gratuityWaived
+    ? 0
+    : Math.round(gratuityBase * (data?.gratuityRate ?? GUEST_GRATUITY_RATE));
+
+  // The amount the guest is requesting (before applying the agreed floor).
+  const requestedTip = useMemo(() => {
+    if (tipChoice === "percent") return Math.round(gratuityBase * (tipPct / 100));
+    if (tipChoice === "custom")
+      return Math.round(customCurrency === "USD" ? customAmount * fx : customAmount);
     return 0;
-  }, [tipMode, tipPct, customTip, gratuityBase]);
+  }, [tipChoice, tipPct, customAmount, customCurrency, gratuityBase, fx]);
+
+  // Final card tip never drops below what was agreed with the concierge.
+  const tip = Math.max(agreedTip, requestedTip);
+  const additionalTip = Math.max(0, tip - agreedTip);
 
   const chargeable = (data?.upsellsSubtotal ?? 0) + (data?.utvGas ?? 0) + gratuity + tip;
   // Card fee applies only to the charged lines (upsells + fuel + gratuity +
@@ -106,14 +122,17 @@ export default function GuestPayment() {
   const fee = Math.round(feeBase * (data?.feeRate ?? GUEST_CARD_FEE_RATE));
   const total = chargeable + fee;
 
+  const cashTipMXN = Math.round(Number(data?.cashTipMXN) || 0);
+
   const pay = async () => {
     if (!token) return;
     setPaying(true);
     const { data: res, error } = await supabase.functions.invoke("guest-payment-checkout", {
       body: {
         token,
-        tipMode: tipMode === "percent" ? "percent" : "amount",
-        tipValue: tipMode === "percent" ? tipPct : tipMode === "amount" ? customTip : 0,
+        tipMode: tipChoice === "percent" ? "percent" : "amount",
+        tipValue: tipChoice === "percent" ? tipPct : tipChoice === "custom" ? customAmount : 0,
+        tipCurrency: tipChoice === "custom" ? customCurrency : "MXN",
         origin: window.location.origin,
       },
     });
@@ -276,26 +295,48 @@ export default function GuestPayment() {
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, fontWeight: 300, marginBottom: 8 }}>
                 A note on gratuity
               </div>
-              <p style={{ color: C.mid, fontSize: 14, lineHeight: 1.6, margin: "0 0 14px" }}>
-                As part of a fully serviced villa, a base <strong>5% gratuity is included</strong>. Our staff appreciates
-                it deeply — it makes a real difference for the team caring for you.
-              </p>
-              <Row label="Included gratuity (5%)" value={mxn(gratuity)} bold />
+              {gratuityWaived ? (
+                <p style={{ color: C.mid, fontSize: 14, lineHeight: 1.6, margin: "0 0 14px" }}>
+                  No service gratuity is being requested for this stay.
+                </p>
+              ) : (
+                <>
+                  <p style={{ color: C.mid, fontSize: 14, lineHeight: 1.6, margin: "0 0 14px" }}>
+                    As part of a fully serviced villa, a base <strong>5% gratuity is included</strong>. Our staff
+                    appreciates it deeply — it makes a real difference for the team caring for you.
+                  </p>
+                  <Row label="Included gratuity (5%)" value={mxn(gratuity)} bold />
+                </>
+              )}
+
+              {/* Tip the concierge already agreed with the guest (the floor) */}
+              {agreedTip > 0 && (
+                <div style={{ marginTop: 14 }}>
+                  <Row label="Tip agreed with concierge" value={mxn(agreedTip)} bold />
+                </div>
+              )}
+
+              {/* Cash already left at the house — info only, not charged */}
+              {cashTipMXN > 0 && (
+                <div style={{ marginTop: 4 }}>
+                  <Row label="Already left in cash (not charged here)" value={mxn(cashTipMXN)} faded />
+                </div>
+              )}
 
               <div style={{ height: 1, background: C.border, margin: "18px 0 14px" }} />
               <p style={{ color: C.mid, fontSize: 14, lineHeight: 1.6, margin: "0 0 14px" }}>
                 If our concierge, chefs, housekeeping, property team, and valet made your stay special, you're warmly
-                welcome to add to their gratuity.
+                welcome to add{agreedTip > 0 ? " to" : ""} their gratuity.
               </p>
 
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 {TIP_PRESETS.map((p) => {
-                  const active = tipMode === "percent" && tipPct === p;
+                  const active = tipChoice === "percent" && tipPct === p;
                   return (
                     <button
                       key={p}
                       onClick={() => {
-                        setTipMode("percent");
+                        setTipChoice("percent");
                         setTipPct(p);
                       }}
                       style={tipBtn(active)}
@@ -305,25 +346,24 @@ export default function GuestPayment() {
                   );
                 })}
                 <button
-                  onClick={() => {
-                    setTipMode("amount");
-                  }}
-                  style={tipBtn(tipMode === "amount")}
+                  onClick={() => setTipChoice("custom")}
+                  style={tipBtn(tipChoice === "custom")}
                 >
                   Custom
                 </button>
               </div>
 
-              {tipMode === "amount" && (
-                <div style={{ marginTop: 12 }}>
+              {tipChoice === "custom" && (
+                <div style={{ marginTop: 12, display: "flex", gap: 8, alignItems: "stretch" }}>
                   <input
                     type="number"
                     min={0}
-                    value={customTip || ""}
-                    placeholder="Amount in MXN"
-                    onChange={(e) => setCustomTip(Number(e.target.value) || 0)}
+                    value={customAmount || ""}
+                    placeholder={`Amount in ${customCurrency}`}
+                    onChange={(e) => setCustomAmount(Number(e.target.value) || 0)}
                     style={{
-                      width: "100%",
+                      flex: 1,
+                      minWidth: 0,
                       padding: "12px 14px",
                       border: `1px solid ${C.border}`,
                       borderRadius: 4,
@@ -332,10 +372,39 @@ export default function GuestPayment() {
                       boxSizing: "border-box",
                     }}
                   />
+                  <div style={{ display: "flex", gap: 4 }}>
+                    {(["MXN", "USD"] as const).map((c) => (
+                      <button
+                        key={c}
+                        onClick={() => setCustomCurrency(c)}
+                        style={{
+                          padding: "0 14px",
+                          background: customCurrency === c ? C.jungle : "transparent",
+                          color: customCurrency === c ? "#fff" : C.mid,
+                          border: `1px solid ${customCurrency === c ? C.jungle : C.border}`,
+                          borderRadius: 4,
+                          fontSize: 13,
+                          fontFamily: "inherit",
+                          cursor: "pointer",
+                        }}
+                      >
+                        {c}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {tipChoice === "custom" && customCurrency === "USD" && customAmount > 0 && (
+                <div style={{ fontSize: 12, color: C.muted, marginTop: 6 }}>
+                  = {mxn(customAmount * fx)} at the booking rate
                 </div>
               )}
 
-              {tip > 0 && <div style={{ marginTop: 14 }}><Row label="Additional tip" value={mxn(tip)} bold /></div>}
+              {additionalTip > 0 && (
+                <div style={{ marginTop: 14 }}>
+                  <Row label="Additional tip" value={mxn(additionalTip)} bold />
+                </div>
+              )}
             </section>
 
             {/* Total */}
