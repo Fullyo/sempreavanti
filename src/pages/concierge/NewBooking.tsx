@@ -621,8 +621,8 @@ export default function NewBooking({
           />
         ))}
 
-        {/* Auto fuel line for UTV rentals */}
-        {utvUnits > 0 &&
+        {/* Auto fuel line for UTV rentals — one tank per rental, removable */}
+        {fuelActive &&
           (isMobile ? (
             <div
               style={{
@@ -633,11 +633,20 @@ export default function NewBooking({
                 marginBottom: 12,
               }}
             >
-              <div style={{ fontSize: 14, fontWeight: 500, color: COLORS.textDark }}>UTV Fuel — Gas</div>
-              <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2, marginBottom: 10 }}>
-                Auto-added · {utvUnits} unit{utvUnits > 1 ? "s" : ""}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div style={{ fontSize: 14, fontWeight: 500, color: COLORS.textDark }}>UTV Fuel — Gas</div>
+                <button
+                  onClick={() => setFuelRemoved(true)}
+                  style={{ background: "none", border: "none", color: COLORS.textMuted, cursor: "pointer", fontSize: 20, lineHeight: 1 }}
+                  aria-label="Remove fuel"
+                >
+                  ×
+                </button>
               </div>
-              <label style={fieldLabel}>Rate per unit (MXN)</label>
+              <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2, marginBottom: 10 }}>
+                Auto-added · one tank per rental · {utvLineCount} rental{utvLineCount > 1 ? "s" : ""}
+              </div>
+              <label style={fieldLabel}>Rate per rental — one tank (MXN)</label>
               <input
                 type="number"
                 min={0}
@@ -665,10 +674,10 @@ export default function NewBooking({
               <div>
                 <div style={{ fontSize: 13, fontWeight: 500, color: COLORS.textDark }}>UTV Fuel — Gas</div>
                 <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2 }}>
-                  Auto-added · {utvUnits} unit{utvUnits > 1 ? "s" : ""} — editable rate per unit
+                  Auto-added · one tank per rental — editable rate
                 </div>
               </div>
-              <div style={{ fontSize: 13, color: COLORS.textMid }}>×{utvUnits}</div>
+              <div style={{ fontSize: 13, color: COLORS.textMid }}>×{utvLineCount}</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                 <input
                   type="number"
@@ -677,14 +686,43 @@ export default function NewBooking({
                   value={fuelPerUnit || ""}
                   onChange={(e) => setFuelPerUnit(Number(e.target.value) || 0)}
                 />
-                <span style={{ fontSize: 10, color: COLORS.textMuted }}>MXN / unit</span>
+                <span style={{ fontSize: 10, color: COLORS.textMuted }}>MXN / rental</span>
               </div>
               <div style={{ fontSize: 13, color: COLORS.textMid }}>{formatMXN(fuelTotal)}</div>
               <div style={{ fontSize: 13, color: COLORS.textDark, fontWeight: 500 }}>{formatMXN(fuelTotal)}</div>
               <div style={{ fontSize: 13, color: COLORS.textMuted }}>—</div>
-              <div />
+              <div style={{ paddingTop: 4 }}>
+                <button
+                  onClick={() => setFuelRemoved(true)}
+                  style={{ background: "none", border: "none", color: COLORS.textMuted, cursor: "pointer", fontSize: 20 }}
+                  aria-label="Remove fuel"
+                >
+                  ×
+                </button>
+              </div>
             </div>
           ))}
+
+        {/* Restore the auto fuel if it was removed but a UTV rental still exists */}
+        {utvLineCount > 0 && fuelRemoved && (
+          <button
+            onClick={() => setFuelRemoved(false)}
+            style={{
+              marginTop: 4,
+              background: "none",
+              border: "none",
+              color: COLORS.gold,
+              cursor: "pointer",
+              fontFamily: "'Jost', sans-serif",
+              fontSize: 11,
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              padding: "6px 0",
+            }}
+          >
+            + Add UTV fuel back
+          </button>
+        )}
 
         <button
           onClick={addRow}
