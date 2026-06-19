@@ -278,7 +278,10 @@ export function computeGuestPayment(params: {
       ? Math.round(gratuityBase * ((Number(params.tipValue) || 0) / 100))
       : Math.round(Number(params.tipValue) || 0);
   const chargeable = upsellsSubtotal + utvGas + gratuity + tip;
-  const fee = Math.round(chargeable * GUEST_CARD_FEE_RATE);
+  // Card fee now applies to the accommodation amount too (in addition to the
+  // chargeable lines), per business rule — accommodation itself is not charged.
+  const feeBase = accommodationMXN + chargeable;
+  const fee = Math.round(feeBase * GUEST_CARD_FEE_RATE);
   const total = chargeable + fee;
-  return { upsellsSubtotal, utvGas, accommodationMXN, gratuityBase, gratuity, tip, fee, chargeable, total };
+  return { upsellsSubtotal, utvGas, accommodationMXN, gratuityBase, gratuity, tip, feeBase, fee, chargeable, total };
 }
