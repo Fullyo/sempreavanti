@@ -58,7 +58,7 @@ export function calcTip(tipMode: string, tipValue: number, servicesSubtotal: num
 }
 
 export function calcCCFee(ccFeeOn: boolean, servicesSubtotal: number, tip: number): number {
-  return ccFeeOn ? Math.round((servicesSubtotal + tip) * 0.03) : 0;
+  return ccFeeOn ? Math.round((servicesSubtotal + tip) * 0.05) : 0;
 }
 
 export function formatMXN(n: number | null | undefined): string {
