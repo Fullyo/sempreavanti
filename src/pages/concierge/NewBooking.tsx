@@ -700,8 +700,8 @@ export default function NewBooking({
           }}
         >
           <div>
-            3% Credit Card Fee{" "}
-            <span style={{ color: "rgba(247,244,238,0.5)" }}>(on total — services + tip)</span>
+            5% Credit Card Fee{" "}
+            <span style={{ color: "rgba(247,244,238,0.5)" }}>(on total — services + card tip)</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <span style={{ minWidth: 110, textAlign: "right" }}>{formatMXN(ccFee)}</span>
