@@ -241,7 +241,25 @@ export default function NewBooking({
 
   return (
     <div>
-      <h1 style={sectionTitle}>New Booking</h1>
+      <h1 style={sectionTitle}>{isEdit ? "Edit Reservation" : "New Booking"}</h1>
+
+      {isEdit && initialBooking?.payment_status === "paid" && (
+        <div
+          style={{
+            background: "rgba(180,60,40,0.12)",
+            border: `1px solid ${COLORS.red}`,
+            color: COLORS.red,
+            borderRadius: 4,
+            padding: "14px 18px",
+            marginTop: 18,
+            fontSize: 13,
+            lineHeight: 1.5,
+          }}
+        >
+          <strong>This reservation was already paid.</strong> Changing services or totals may cause a
+          mismatch with what the guest actually paid. Edit only if you know what you're doing.
+        </div>
+      )}
 
       {savedToken && (
         <div
@@ -254,11 +272,12 @@ export default function NewBooking({
           }}
         >
           <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, color: COLORS.gold, marginBottom: 6 }}>
-            Booking saved — share the payment link
+            {isEdit ? "Reservation updated — re-send the payment link" : "Booking saved — share the payment link"}
           </div>
           <div style={{ fontSize: 12, color: "rgba(247,244,238,0.6)", marginBottom: 14 }}>
-            Send this to the guest. They'll see their experiences, the included 5% gratuity, optional tipping, and can
-            pay by card.
+            {isEdit
+              ? "This is the same link as before — it now shows the updated invoice automatically, so just re-send it. Use “Generate new link” only if you want the old one to stop working."
+              : "Send this to the guest. They'll see their experiences, the included 5% gratuity, optional tipping, and can pay by card."}
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
             <input
@@ -279,15 +298,33 @@ export default function NewBooking({
             <button onClick={copyLink} style={btnPrimary}>
               {copied ? "Copied ✓" : "Copy link"}
             </button>
-            <button onClick={() => { setSavedToken(null); onSaved(); }} style={{ ...btnGhost, color: "#F7F4EE", borderColor: "rgba(247,244,238,0.3)" }}>
-              View all bookings
-            </button>
-            <button onClick={() => setSavedToken(null)} style={{ ...btnGhost, color: "#F7F4EE", borderColor: "rgba(247,244,238,0.3)" }}>
-              Start another
-            </button>
+            {isEdit && (
+              <button
+                onClick={regenerateLink}
+                disabled={regenerating}
+                style={{ ...btnGhost, color: "#F7F4EE", borderColor: "rgba(247,244,238,0.3)", opacity: regenerating ? 0.6 : 1 }}
+              >
+                {regenerating ? "Generating…" : "Generate new link"}
+              </button>
+            )}
+            {isEdit ? (
+              <button onClick={() => onCancel?.()} style={{ ...btnGhost, color: "#F7F4EE", borderColor: "rgba(247,244,238,0.3)" }}>
+                Done
+              </button>
+            ) : (
+              <>
+                <button onClick={() => { setSavedToken(null); onSaved(); }} style={{ ...btnGhost, color: "#F7F4EE", borderColor: "rgba(247,244,238,0.3)" }}>
+                  View all bookings
+                </button>
+                <button onClick={() => setSavedToken(null)} style={{ ...btnGhost, color: "#F7F4EE", borderColor: "rgba(247,244,238,0.3)" }}>
+                  Start another
+                </button>
+              </>
+            )}
           </div>
         </div>
       )}
+
 
 
       {/* Guest info */}
