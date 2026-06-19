@@ -1032,17 +1032,17 @@ export default function NewBooking({
       </div>
 
 
-      <div style={{ display: "flex", gap: 10, marginTop: 22, justifyContent: "flex-end" }}>
+      <div style={{ display: "flex", gap: 10, marginTop: 22, justifyContent: isMobile ? "stretch" : "flex-end", flexDirection: isMobile ? "column-reverse" : "row" }}>
         {isEdit ? (
-          <button onClick={() => onCancel?.()} style={btnGhost}>
+          <button onClick={() => onCancel?.()} style={{ ...btnGhost, padding: isMobile ? "14px 18px" : btnGhost.padding }}>
             Cancel
           </button>
         ) : (
-          <button onClick={clearAll} style={btnGhost}>
+          <button onClick={clearAll} style={{ ...btnGhost, padding: isMobile ? "14px 18px" : btnGhost.padding }}>
             Clear
           </button>
         )}
-        <button onClick={save} disabled={saving} style={{ ...btnPrimary, opacity: saving ? 0.6 : 1 }}>
+        <button onClick={save} disabled={saving} style={{ ...btnPrimary, opacity: saving ? 0.6 : 1, padding: isMobile ? "14px 18px" : btnPrimary.padding }}>
           {saving ? "Saving…" : isEdit ? "Save Changes" : "Save Booking"}
         </button>
       </div>
