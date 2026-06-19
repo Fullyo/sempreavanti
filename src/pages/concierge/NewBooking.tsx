@@ -118,6 +118,7 @@ export default function NewBooking({
   onCancel?: () => void;
 }) {
   const isEdit = !!initialBooking;
+  const isMobile = useIsMobile();
   const [guest, setGuest] = useState(initialBooking?.guest ?? "");
   const [checkin, setCheckin] = useState(initialBooking?.checkin ?? "");
   const [checkout, setCheckout] = useState(initialBooking?.checkout ?? "");
