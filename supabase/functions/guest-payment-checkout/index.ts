@@ -140,6 +140,10 @@ Deno.serve(async (req) => {
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
+      // Our account settles in pesos — never let Stripe present USD (or any
+      // other) currency to the guest at checkout.
+      adaptive_pricing: { enabled: false },
+      currency: "mxn",
       line_items,
       success_url: `${origin}/pay/${token}?status=success`,
       cancel_url: `${origin}/pay/${token}?status=cancel`,
