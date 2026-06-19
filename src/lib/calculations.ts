@@ -156,6 +156,10 @@ export interface Booking {
   tip_value: number;
   tip_method?: "cc" | "cash";
   tip: number;
+  tip_currency?: string;
+  tip_cash?: number;
+  tip_cash_value?: number;
+  tip_cash_currency?: string;
   cc_fee: number;
   total_guest: number;
   total_profit: number;
