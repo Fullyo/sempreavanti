@@ -41,6 +41,8 @@ export type Database = {
           tip: number
           tip_cash: number
           tip_cash_currency: string
+          tip_cash_mxn: number
+          tip_cash_usd: number
           tip_cash_value: number
           tip_currency: string
           tip_method: string
@@ -75,6 +77,8 @@ export type Database = {
           tip?: number
           tip_cash?: number
           tip_cash_currency?: string
+          tip_cash_mxn?: number
+          tip_cash_usd?: number
           tip_cash_value?: number
           tip_currency?: string
           tip_method?: string
@@ -109,6 +113,8 @@ export type Database = {
           tip?: number
           tip_cash?: number
           tip_cash_currency?: string
+          tip_cash_mxn?: number
+          tip_cash_usd?: number
           tip_cash_value?: number
           tip_currency?: string
           tip_method?: string
