@@ -141,9 +141,10 @@ export default function NewBooking({
     setCheckin("");
     setCheckout("");
     setRows([]);
-    setTipMode("amount");
     setTipValue(0);
-    setTipMethod("cc");
+    setTipCurrency("MXN");
+    setTipCashValue(0);
+    setTipCashCurrency("MXN");
     setCcFeeOn(false);
     setCashCollected(0);
     setAccommodationFare(0);
@@ -168,10 +169,15 @@ export default function NewBooking({
       checkout: checkout || null,
       items,
       cc_fee_on: ccFeeOn,
-      tip_mode: tipMode,
+      tip_mode: "amount",
       tip_value: tipValue,
-      tip_method: tipMethod,
+      tip_method: "cc" as const,
       tip,
+      tip_currency: tipCurrency,
+      tip_cash: tipCashMXN,
+      tip_cash_value: tipCashValue,
+      tip_cash_currency: tipCashCurrency,
+      exchange_rate: fx,
       cc_fee: ccFee,
       total_guest: totalGuest,
       total_profit: totalProfit,
