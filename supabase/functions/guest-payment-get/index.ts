@@ -80,6 +80,7 @@ Deno.serve(async (req) => {
         utvGas,
         gratuityRate: GRATUITY_RATE,
         feeRate: FEE_RATE,
+        presetTip: Math.round(Number(booking.guest_tip ?? booking.tip) || 0),
         paymentStatus: booking.payment_status,
         amountPaid: booking.amount_paid,
         paidAt: booking.paid_at,
