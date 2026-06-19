@@ -720,13 +720,112 @@ export default function NewBooking({
         </button>
       </div>
 
-      {/* Summary — mirrors the guest /pay invoice exactly */}
+      {/* ── Concierge inputs: tips & adjustments (no math required) ── */}
+      <div
+        style={{
+          background: "#fff",
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 4,
+          padding: 22,
+          marginTop: 18,
+        }}
+      >
+        <div
+          style={{
+            fontSize: 11,
+            textTransform: "uppercase",
+            letterSpacing: "0.14em",
+            color: COLORS.amber,
+            fontWeight: 500,
+            marginBottom: 4,
+          }}
+        >
+          Tips & Adjustments
+        </div>
+        <div style={{ fontSize: 12, color: COLORS.textMuted, marginBottom: 18 }}>
+          Enter raw amounts in either currency — every total below updates automatically.
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 18 }}>
+          {/* Staff tip — credit card */}
+          <div>
+            <label style={fieldLabel}>Staff Tip — Credit Card</label>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <input
+                type="number"
+                min={0}
+                value={tipValue || ""}
+                placeholder="0"
+                onChange={(e) => setTipValue(Number(e.target.value) || 0)}
+                style={{ ...input, flex: 1, minWidth: 0 }}
+              />
+              <CurrencyToggle value={tipCurrency} onChange={setTipCurrency} />
+            </div>
+            <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 5 }}>
+              Added to the guest's card charge{tipCurrency === "USD" ? ` · = ${formatMXN(tip)}` : ""}
+            </div>
+          </div>
+
+          {/* Staff tip — cash */}
+          <div>
+            <label style={fieldLabel}>Staff Tip — Cash</label>
+            <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+              <input
+                type="number"
+                min={0}
+                value={tipCashValue || ""}
+                placeholder="0"
+                onChange={(e) => setTipCashValue(Number(e.target.value) || 0)}
+                style={{ ...input, flex: 1, minWidth: 0 }}
+              />
+              <CurrencyToggle value={tipCashCurrency} onChange={setTipCashCurrency} />
+            </div>
+            <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 5 }}>
+              Paid in cash to staff — tracked separately{tipCashCurrency === "USD" ? ` · = ${formatMXN(tipCashMXN)}` : ""}
+            </div>
+          </div>
+
+          {/* Exchange rate */}
+          <div>
+            <label style={fieldLabel}>Exchange Rate (USD → MXN)</label>
+            <input
+              type="number"
+              min={0}
+              step="0.1"
+              value={exchangeRate || ""}
+              onChange={(e) => setExchangeRate(Number(e.target.value) || 0)}
+              style={input}
+            />
+            <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 5 }}>
+              Used to convert every USD amount {anyUSD ? "" : "(no USD values entered yet)"}
+            </div>
+          </div>
+
+          {/* Paid in cash */}
+          <div>
+            <label style={fieldLabel}>Paid in Cash (MXN)</label>
+            <input
+              type="number"
+              min={0}
+              value={cashCollected || ""}
+              placeholder="0"
+              onChange={(e) => setCashCollected(Number(e.target.value) || 0)}
+              style={input}
+            />
+            <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 5 }}>
+              Reconciliation only — doesn't affect profit
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Guest invoice: the exact charge the guest sees on /pay ── */}
       <div
         style={{
           background: COLORS.dark,
           color: "#F7F4EE",
           padding: 28,
-          marginTop: 24,
+          marginTop: 18,
           borderRadius: 4,
         }}
       >
@@ -734,16 +833,32 @@ export default function NewBooking({
           style={{
             fontFamily: "'Cormorant Garamond', serif",
             fontWeight: 300,
-            fontSize: 20,
+            fontSize: 22,
             color: COLORS.gold,
-            marginBottom: 16,
+            marginBottom: 4,
           }}
         >
-          Booking Summary
+          Guest Invoice
+        </div>
+        <div style={{ fontSize: 12, color: "rgba(247,244,238,0.5)", marginBottom: 18 }}>
+          Mirrors exactly what the guest is asked to pay.
         </div>
 
-        {rows.length === 0 && (
-          <div style={{ color: "rgba(247,244,238,0.5)", fontStyle: "italic", fontSize: 13 }}>
+        {/* Experiences */}
+        <div
+          style={{
+            fontSize: 10,
+            textTransform: "uppercase",
+            letterSpacing: "0.16em",
+            color: "rgba(247,244,238,0.45)",
+            marginBottom: 8,
+          }}
+        >
+          Experiences
+        </div>
+
+        {rows.length === 0 && utvUnits === 0 && (
+          <div style={{ color: "rgba(247,244,238,0.5)", fontStyle: "italic", fontSize: 13, paddingBottom: 6 }}>
             No services added yet.
           </div>
         )}
@@ -775,7 +890,6 @@ export default function NewBooking({
           );
         })}
 
-        {/* Auto fuel */}
         {utvUnits > 0 && fuelTotal > 0 && (
           <div
             style={{
@@ -787,71 +901,69 @@ export default function NewBooking({
             }}
           >
             <div>
-              UTV Fuel — Gas{" "}
-              <span style={{ color: "rgba(247,244,238,0.5)" }}>(auto · {utvUnits}×)</span>
+              UTV Fuel — Gas <span style={{ color: "rgba(247,244,238,0.5)" }}>(auto · {utvUnits}×)</span>
             </div>
             <div>{formatMXN(fuelTotal)}</div>
           </div>
         )}
 
-        {/* Accommodation context (gratuity base — not charged here) */}
+        <div style={{ ...summaryRow, paddingTop: 12 }}>
+          <div style={{ fontWeight: 500 }}>Experiences subtotal</div>
+          <div style={{ fontWeight: 500 }}>{formatMXN(breakdown.upsellsSubtotal + breakdown.utvGas)}</div>
+        </div>
+
+        {/* Accommodation context — not charged here */}
         {breakdown.accommodationMXN > 0 && (
-          <div style={{ ...summaryRow, color: "rgba(247,244,238,0.7)" }}>
+          <div style={{ ...summaryRow, color: "rgba(247,244,238,0.55)" }}>
             <div>
               Accommodation{" "}
-              <span style={{ color: "rgba(247,244,238,0.45)" }}>(gratuity base — paid via Guesty, not charged here)</span>
+              <span style={{ color: "rgba(247,244,238,0.4)" }}>(paid via Guesty — not charged here)</span>
             </div>
             <div>{formatMXN(breakdown.accommodationMXN)}</div>
           </div>
         )}
 
-        {/* Included gratuity 5% — mandatory, matches guest invoice */}
+        {/* Charges section */}
         <div
           style={{
-            ...summaryRow,
+            fontSize: 10,
+            textTransform: "uppercase",
+            letterSpacing: "0.16em",
+            color: "rgba(247,244,238,0.45)",
+            marginTop: 22,
             paddingTop: 16,
-            marginTop: 14,
             borderTop: "1px solid rgba(247,244,238,0.15)",
+            marginBottom: 4,
           }}
         >
+          Charged to guest's card
+        </div>
+
+        <div style={summaryRow}>
           <div>
             Included Gratuity (5%){" "}
-            <span style={{ color: "rgba(247,244,238,0.5)" }}>(on accommodation + experiences + fuel)</span>
+            <span style={{ color: "rgba(247,244,238,0.5)" }}>(accommodation + experiences + fuel)</span>
           </div>
           <div>{formatMXN(breakdown.gratuity)}</div>
         </div>
 
-        {/* Staff Tip — Credit Card (pre-set tip the guest pays on card) */}
-        <div style={summaryRow}>
-          <div>
-            Staff Tip — Credit Card{" "}
-            <span style={{ color: "rgba(247,244,238,0.5)" }}>(charged on card — part of total)</span>
+        {tip > 0 && (
+          <div style={summaryRow}>
+            <div>
+              Staff Tip — Credit Card{" "}
+              <span style={{ color: "rgba(247,244,238,0.5)" }}>(extra, on the card)</span>
+            </div>
+            <div>{formatMXN(tip)}</div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <input
-              type="number"
-              min={0}
-              value={tipValue || ""}
-              onChange={(e) => setTipValue(Number(e.target.value) || 0)}
-              style={tipInput}
-            />
-            <CurrencyToggle value={tipCurrency} onChange={setTipCurrency} />
-            {tipCurrency === "USD" && (
-              <span style={{ color: "rgba(247,244,238,0.6)", fontSize: 12, minWidth: 90 }}>
-                = {formatMXN(tip)}
-              </span>
-            )}
-          </div>
-        </div>
+        )}
 
-        {/* CC fee row — auto, but removable */}
         <div style={summaryRow}>
           <div>
             5% Credit Card Fee{" "}
-            <span style={{ color: "rgba(247,244,238,0.5)" }}>(auto — on experiences + fuel + gratuity + card tip)</span>
+            <span style={{ color: "rgba(247,244,238,0.5)" }}>(on accommodation + experiences + fuel + gratuity + card tip)</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <span style={{ minWidth: 110, textAlign: "right" }}>{formatMXN(ccFee)}</span>
+            <span style={{ minWidth: 100, textAlign: "right" }}>{formatMXN(ccFee)}</span>
             <button
               onClick={() => setCcFeeOn((v) => !v)}
               style={{
@@ -872,79 +984,7 @@ export default function NewBooking({
           </div>
         </div>
 
-        {/* Staff Tip — Cash (reconciliation only) */}
-        <div style={summaryRow}>
-          <div>
-            Staff Tip — Cash{" "}
-            <span style={{ color: "rgba(247,244,238,0.5)" }}>(cash to staff — not part of total)</span>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <input
-              type="number"
-              min={0}
-              value={tipCashValue || ""}
-              onChange={(e) => setTipCashValue(Number(e.target.value) || 0)}
-              style={tipInput}
-            />
-            <CurrencyToggle value={tipCashCurrency} onChange={setTipCashCurrency} />
-            {tipCashCurrency === "USD" && (
-              <span style={{ color: "rgba(247,244,238,0.6)", fontSize: 12, minWidth: 90 }}>
-                = {formatMXN(tipCashMXN)}
-              </span>
-            )}
-          </div>
-        </div>
-
-        {/* Exchange rate (relevant whenever any USD value is used) */}
-        {anyUSD && (
-          <div style={summaryRow}>
-            <div>
-              Exchange Rate{" "}
-              <span style={{ color: "rgba(247,244,238,0.5)" }}>(USD → MXN)</span>
-            </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <input
-                type="number"
-                min={0}
-                step="0.1"
-                value={exchangeRate || ""}
-                onChange={(e) => setExchangeRate(Number(e.target.value) || 0)}
-                style={tipInput}
-              />
-              <span style={{ color: "rgba(247,244,238,0.6)", fontSize: 12, minWidth: 40 }}>MXN</span>
-            </div>
-          </div>
-        )}
-
-        {/* Cash collected row */}
-        <div style={summaryRow}>
-          <div>
-            Paid in Cash{" "}
-            <span style={{ color: "rgba(247,244,238,0.5)" }}>(reconciliation only — doesn't affect profit)</span>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <input
-              type="number"
-              min={0}
-              value={cashCollected || ""}
-              onChange={(e) => setCashCollected(Number(e.target.value) || 0)}
-              style={{
-                width: 120,
-                padding: "6px 10px",
-                background: "rgba(255,255,255,0.08)",
-                border: "1px solid rgba(247,244,238,0.2)",
-                color: "#F7F4EE",
-                fontFamily: "'Jost', sans-serif",
-                fontSize: 13,
-                borderRadius: 2,
-                textAlign: "right",
-              }}
-            />
-            <span style={{ color: "rgba(247,244,238,0.6)", fontSize: 12, minWidth: 40 }}>MXN</span>
-          </div>
-        </div>
-
-        {/* Totals */}
+        {/* Total guest charge */}
         <div
           style={{
             marginTop: 22,
@@ -955,27 +995,22 @@ export default function NewBooking({
             alignItems: "baseline",
           }}
         >
-          <div
-            style={{
-              fontSize: 11,
-              textTransform: "uppercase",
-              letterSpacing: "0.16em",
-              color: COLORS.gold,
-            }}
-          >
+          <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.16em", color: COLORS.gold }}>
             Total Guest Charge
           </div>
           <div
             style={{
               fontFamily: "'Cormorant Garamond', serif",
               fontWeight: 400,
-              fontSize: 28,
+              fontSize: 30,
               color: COLORS.gold,
             }}
           >
             {formatMXN(totalGuest)}
           </div>
         </div>
+
+        {/* Reconciliation footnotes */}
         <div
           style={{
             marginTop: 4,
@@ -985,11 +1020,10 @@ export default function NewBooking({
             color: "#7DD89E",
           }}
         >
-          <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.16em" }}>
-            Your Total Profit
-          </div>
+          <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.16em" }}>Your Total Profit</div>
           <div style={{ fontSize: 16, fontWeight: 500 }}>{formatMXN(totalProfit)}</div>
         </div>
+
         {tipCashMXN > 0 && (
           <div
             style={{
@@ -1005,6 +1039,7 @@ export default function NewBooking({
             <div>{formatMXN(tipCashMXN)}</div>
           </div>
         )}
+
         {cashCollected > 0 && (
           <div
             style={{
@@ -1019,15 +1054,13 @@ export default function NewBooking({
             }}
           >
             <div>
-              Charged on Card{" "}
-              <span style={{ color: "rgba(247,244,238,0.45)" }}>
-                (= total − cash)
-              </span>
+              Charged on Card <span style={{ color: "rgba(247,244,238,0.45)" }}>(= total − cash)</span>
             </div>
             <div>{formatMXN(totalGuest - cashCollected)}</div>
           </div>
         )}
       </div>
+
 
       <div style={{ display: "flex", gap: 10, marginTop: 22, justifyContent: "flex-end" }}>
         {isEdit ? (
