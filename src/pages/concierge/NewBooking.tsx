@@ -960,7 +960,7 @@ export default function NewBooking({
         <div style={summaryRow}>
           <div>
             5% Credit Card Fee{" "}
-            <span style={{ color: "rgba(247,244,238,0.5)" }}>(on accommodation + experiences + fuel + gratuity + card tip)</span>
+            <span style={{ color: "rgba(247,244,238,0.5)" }}>(on experiences + fuel + gratuity + card tip — not accommodation)</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <span style={{ minWidth: 100, textAlign: "right" }}>{formatMXN(ccFee)}</span>
