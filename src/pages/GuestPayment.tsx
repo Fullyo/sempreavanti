@@ -410,8 +410,9 @@ export default function GuestPayment() {
             {/* Total */}
             <section style={{ background: C.dark, color: "#F5F1E8", borderRadius: 6, padding: 28, marginTop: 18 }}>
               <RowDark label="Experiences" value={mxn(data.upsellsSubtotal + data.utvGas)} />
-              <RowDark label="Included gratuity (5%)" value={mxn(gratuity)} />
-              {tip > 0 && <RowDark label="Additional tip" value={mxn(tip)} />}
+              {!gratuityWaived && <RowDark label="Included gratuity (5%)" value={mxn(gratuity)} />}
+              {agreedTip > 0 && <RowDark label="Tip agreed with concierge" value={mxn(agreedTip)} />}
+              {additionalTip > 0 && <RowDark label="Additional tip" value={mxn(additionalTip)} />}
               <RowDark label="Card processing fee (5%)" value={mxn(fee)} />
               <div style={{ fontSize: 11, color: "rgba(245,241,232,0.55)", marginTop: 6, lineHeight: 1.4 }}>
                 The 5% card fee does not apply to the accommodation fare — that is already paid via Guesty.
