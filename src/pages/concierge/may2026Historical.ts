@@ -75,10 +75,10 @@ export function openMay2026Historical() {
 
     <div class="cards">
       <div class="card"><div class="label">Guest Billed (Upsells)</div><div class="value">$15,425.32</div></div>
-      <div class="card accom"><div class="label">Accommodation Fare</div><div class="value">$31,830.05</div></div>
+      <div class="card accom"><div class="label">Accommodation Fare</div><div class="value">$30,451.20</div></div>
       <div class="card"><div class="label">Upsell Profit Pool</div><div class="value">$5,434.75</div></div>
       <div class="card owner"><div class="label">Owner's Share (Upsells 85%)</div><div class="value">$4,464.94</div></div>
-      <div class="card lux"><div class="label">LUX Total Cut</div><div class="value">$5,562.44</div></div>
+      <div class="card lux"><div class="label">LUX Total Cut</div><div class="value">$5,355.61</div></div>
       <div class="card cash"><div class="label">Cash Collected On Site</div><div class="value">$1,300.00</div></div>
     </div>
 
@@ -269,10 +269,10 @@ export function openMay2026Historical() {
       <div class="grand-grid">
         <div class="grand-cell"><div class="l">Bookings</div><div class="v">7</div></div>
         <div class="grand-cell"><div class="l">Guest Billed (Upsells)</div><div class="v">$15,228.82</div></div>
-        <div class="grand-cell"><div class="l">Accommodation Fare</div><div class="v">$31,830.05</div></div>
+        <div class="grand-cell"><div class="l">Accommodation Fare</div><div class="v">$30,451.20</div></div>
         <div class="grand-cell"><div class="l">Upsell Profit Pool</div><div class="v">$5,434.75</div></div>
         <div class="grand-cell"><div class="l" style="color:#7DD89E">Owner's Share (Upsells 85%)</div><div class="v" style="color:#7DD89E">$4,464.94</div></div>
-        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX Total Cut</div><div class="v" style="color:#D4A96A">$5,562.44</div></div>
+        <div class="grand-cell"><div class="l" style="color:#D4A96A">LUX Total Cut</div><div class="v" style="color:#D4A96A">$5,355.61</div></div>
       </div>
       <div style="margin-top:14px;padding:12px 14px;background:rgba(139,46,46,0.12);border-left:2px solid #C97A6D;font-size:11px;color:rgba(247,244,238,0.85)">
         <span style="color:#C97A6D;text-transform:uppercase;letter-spacing:0.1em;font-size:10px">Petty-cash cost adjustment (group unknown)</span><br/>
@@ -280,7 +280,7 @@ export function openMay2026Historical() {
       </div>
       <div style="margin-top:14px;padding:12px 14px;background:rgba(212,169,106,0.08);border-left:2px solid #D4A96A;font-size:11px;color:rgba(247,244,238,0.85)">
         <span style="color:#D4A96A;text-transform:uppercase;letter-spacing:0.1em;font-size:10px">LUX cut breakdown</span><br/>
-        $787.93 from upsells (15% of $5,252.87 net pool) + $4,774.51 from accommodation (15% of fare) = <strong style="color:#D4A96A">$5,562.44</strong>
+        $787.93 from upsells (15% of $5,252.87 net pool) + $4,567.68 from accommodation (15% of fare) = <strong style="color:#D4A96A">$5,355.61</strong>
       </div>
       <div style="margin-top:14px;padding:12px 14px;background:rgba(125,216,158,0.08);border-left:2px solid #7DD89E;font-size:11px;color:rgba(247,244,238,0.85)">
         <span style="color:#7DD89E;text-transform:uppercase;letter-spacing:0.1em;font-size:10px">Tips to send to staff (collected via credit card)</span><br/>

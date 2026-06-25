@@ -1,50 +1,55 @@
-# Fix tip currency bug + mixed-currency cash tips
+## Goal
 
-## Background
+Make the May 2026 accommodation fare total identical on both pages, equal to the verified sum of the seven per-booking room-only fares: **$30,451.20**.
 
-Two real problems surfaced on Julie Lobley's booking:
+## Verified source of truth
 
-1. **Phantom card tip / inflated total.** The agreed credit-card tip is stored twice: as a canonical pesos value (`tip` = 4,800) and as raw input (`tip_value` = 4,800 + `tip_currency` = USD). On reload the editor recomputes `tip_value × exchange_rate` (4,800 × 16 = $76,800), inflating the preview total to $99,707. The amount Julie actually paid ($24,107) was correct — only the on-screen recompute is wrong.
+Sum of the seven room-only accommodation fares (matches the line items printed in the report):
 
-2. **Cash tip can't hold two currencies.** Julie left 200 USD **and** 2,000 MXN in cash, but the form has a single amount + single currency, so only the 200 USD ($3,200) was recorded and the 2,000 pesos was lost.
+```text
+Maxim          12,493.00
+Izquierdo       3,245.00
+Teresa          1,600.00   (room-only, not the 2,223 folio-with-upsells)
+Jackson         8,743.00
+Dominguez       1,971.05
+Alatorre          973.05
+García          1,426.10
+              ──────────
+TOTAL          30,451.20
+```
 
-## What to build
+- LUX accommodation cut (15%): **$4,567.68**
+- Owner accommodation share (85%): **$25,883.52**
 
-### 1. Stop the double-conversion of the agreed card tip
+## Bug 1 — All Bookings overview (`src/pages/concierge/historicalData.ts`)
 
-In `src/pages/concierge/NewBooking.tsx`, the editable tip input must never be re-multiplied from a value that is already converted.
+- Teresa's `accommodationFare` is `2223.00` (her folio total including upsells). Change it to `1600.00` (room-only), matching the report's own line item and the previously agreed figure.
+- Update Teresa's `notes` to clarify `$1,600 room-only · folio $2,223 incl. upsells` so the basis is documented.
+- Result: the overview accommodation total recomputes from $31,074.20 to **$30,451.20**.
 
-- When loading an existing booking, initialize the editor from the canonical pesos value and treat it as MXN:
-  - `tipValue` ← `initialBooking.tip` (already-converted MXN), `tipCurrency` ← `"MXN"`.
-- Keep the live entry behavior unchanged: when a concierge types a fresh USD amount, it still converts once on save.
-- This guarantees the agreed card tip displays as $4,800, the 5% fee is computed on the real base, and the total is correct.
+## Bug 2 — Full May report header (`src/pages/concierge/may2026Historical.ts`)
 
-Apply the same canonical-MXN reload logic anywhere else that re-derives the tip from `tip_value`/`tip_currency` (verify `GuestInvoicePDF.tsx` and the guest `GuestPayment.tsx` / `guest-payment-get` path, which already read the canonical `tip`/`guest_tip`).
+The header and grand summary are hardcoded to $31,830.05, which matches neither the overview nor the report's own line items. Correct them to the verified totals:
 
-### 2. Mixed-currency cash tip
+- Top "Accommodation Fare" card: `$31,830.05` → `$30,451.20`
+- Grand Summary "Accommodation Fare": `$31,830.05` → `$30,451.20`
+- "LUX cut breakdown" line: accommodation portion `$4,774.51` → `$4,567.68`; recompute LUX total = `$787.93` (upsells) + `$4,567.68` = `**$5,355.61**`
+- Top "LUX Total Cut" card: `$5,562.44` → `$5,355.61`
+- Grand Summary "LUX Total Cut": `$5,562.44` → `$5,355.61`
 
-Allow the concierge to record cash left in **both** USD and MXN.
+The per-booking accommodation line items (the seven `accom-bar` blocks) are already correct and stay unchanged.
 
-- Add two cash inputs in the "Tips & Adjustments" section: "Cash — USD" and "Cash — MXN".
-- Total recorded cash (pesos) = `usdCash × fx + mxnCash`.
-- This total continues to flow into the existing `tip_cash` field (info-only, never charged, never part of profit), shown in the invoice as "Cash tip to staff (tracked separately)".
+## Out of scope / unchanged
 
-### 3. Data correction for Julie (booking id 3)
-
-After the code fix, normalize her record so the screen reads correctly:
-- `tip_value` = 4800, `tip_currency` = `MXN` (canonical; charged amount unchanged at $4,800).
-- Cash: 200 USD + 2,000 MXN → `tip_cash` = `200×16 + 2000 = 5,200` MXN, with the new component fields populated.
-- Leave `tip`, `guest_tip`, `amount_paid` ($24,107), and `payment_status = paid` untouched — the charge was correct.
-
-## Technical details
-
-- **Schema (migration):** add `tip_cash_usd numeric default 0` and `tip_cash_mxn numeric default 0` to `bookings` to store the two raw cash components; keep `tip_cash` as the derived MXN total for backward compatibility. (`tip_cash_value`/`tip_cash_currency` become legacy single-currency fields.)
-- **Data fix:** done via the data-update (insert) tool, not a schema migration.
-- **Files:** `src/pages/concierge/NewBooking.tsx` (load logic + cash inputs + save payload), `src/pages/concierge/GuestInvoicePDF.tsx` (verify it reads canonical `tip` and the new cash total), and a quick check of `supabase/functions/guest-payment-get/index.ts` (already canonical).
-- **No change** to `guest-payment-checkout` tip math — it already uses canonical `guest_tip`/`tip` plus guest-added extra.
+- Upsell profit pool ($5,434.75) and the petty-cash $181.88 deduction logic — already reconciled in prior work, not touched.
+- Live (MXN) booking calculations and other months.
 
 ## Verification
 
-- Reload Julie's booking: card tip shows $4,800, total guest charge ≈ $24,107, cash tip shows $5,200.
-- Create a new test booking entering card tip in USD, save, reload — value stays stable (no ×16 inflation).
-- Enter cash as 200 USD + 2,000 MXN — recorded total = $5,200.
+- Re-sum the seven accommodation line items in the report → must equal $30,451.20.
+- Open All Bookings overview for May and confirm the accommodation KPI reads $30,451.20.
+- Confirm the report header card, Grand Summary, and LUX breakdown all read the same derived figures.  
+  
+  
+i am approving but tell me if this is a drop in coommison revneu for LUX or again?
+- &nbsp;
