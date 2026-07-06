@@ -225,6 +225,19 @@ export const JUNE_2026_BOOKINGS: HistoricalBooking[] = [
     notes: "7 nights · 9 adults, 3 children · Ref GY-zz6WhXk3 · Groceries $1,129.05 (35% markup, $292.72) + Airport SUV $312.50 (1,000 MXN profit @16 = $62.50) · UTV $0 · CC fee $43.26 pass-through",
     monthKey: "2026-06",
   },
+  {
+    id: "hist-jun-castellanos",
+    guest: "Ulises Castellanos",
+    checkin: "2026-06-13",
+    checkout: "2026-06-17",
+    villa: "Villa Luisa",
+    accommodationFare: 2656.00,
+    upsellsBilled: 381.34,
+    upsellsProfit: 75.85,
+    currency: "USD",
+    notes: "4 nights · 2 adults, 2 children · Ref HMH8QH4MEK · Groceries $292.56 (35% markup, $75.85) · CC fee $8.78 & tip $80.00 pass-through",
+    monthKey: "2026-06",
+  },
 ];
 
 export const ALL_HISTORICAL: HistoricalBooking[] = [
