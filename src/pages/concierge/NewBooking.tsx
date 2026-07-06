@@ -365,7 +365,7 @@ export default function NewBooking({
       accommodation_fare: accommodationFare,
       accommodation_currency: accommodationCurrency,
       grocery_allocation: groceryAllocation,
-      grocery_allocation_currency: "USD",
+      grocery_allocation_currency: "MXN",
     };
   };
 
