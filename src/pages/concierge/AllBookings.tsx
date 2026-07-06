@@ -319,7 +319,8 @@ export default function AllBookings() {
         </div>
       </div>
 
-      {/* View toggle: All vs Upcoming */}
+      {/* View toggle: All vs Upcoming — hidden while viewing a single month */}
+      {!detailKey && (
       <div style={{ display: "flex", gap: 0, marginBottom: 18, borderBottom: `1px solid ${COLORS.border}` }}>
         {([
           { id: "all", label: "All Bookings" },
@@ -350,10 +351,13 @@ export default function AllBookings() {
           );
         })}
       </div>
+      )}
 
+      {!detailKey && (
       <div style={{ fontStyle: "italic", color: COLORS.textMuted, fontSize: 12, marginBottom: 18 }}>
         Current month is {currentMonthLabel}. Historical reports stay attached to their booking month.
       </div>
+      )}
 
       {loading && <div style={{ color: COLORS.textMuted }}>Loading…</div>}
       {!loading && displayMonthSections.length === 0 && (
@@ -362,7 +366,7 @@ export default function AllBookings() {
         </div>
       )}
 
-      {displayMonthSections.map(([key, group]) => {
+      {(detailKey ? displayMonthSections.filter(([k]) => k === detailKey) : displayMonthSections).map(([key, group]) => {
         const kpis = computeMonthKpis(group.live, group.hist);
         const label = monthLabel(key);
         const [yStr, mStr] = key.split("-");
