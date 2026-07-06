@@ -288,7 +288,7 @@ export default function NewBooking({
     setGratuityWaived(false);
     setCashCollected(0);
     setAccommodationFare(0);
-    setAccommodationCurrency("MXN");
+    setGroceryAllocation(0);
     setFuelPerUnit(UTV_GAS_PER_RENTAL);
     setFuelRemoved(false);
   };
