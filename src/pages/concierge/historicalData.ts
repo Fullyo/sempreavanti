@@ -185,7 +185,37 @@ export const APRIL_2026_BOOKINGS: HistoricalBooking[] = [
   },
 ];
 
+export const JUNE_2026_BOOKINGS: HistoricalBooking[] = [
+  {
+    id: "hist-jun-perez",
+    guest: "Eduardo Perez",
+    checkin: "2026-06-02",
+    checkout: "2026-06-05",
+    villa: "Villa Luisa",
+    accommodationFare: 1062.75,
+    upsellsBilled: 45.00,
+    upsellsProfit: 11.67,
+    currency: "USD",
+    notes: "3 nights · Ref HMSHR8R5NC · Groceries $45 (35% markup) · CC fee $32 & tip $106 pass-through",
+    monthKey: "2026-06",
+  },
+  {
+    id: "hist-jun-lau",
+    guest: "Edmond Lau",
+    checkin: "2026-06-01",
+    checkout: "2026-06-06",
+    villa: "Villa Pietro",
+    accommodationFare: 1615.25,
+    upsellsBilled: 672.19,
+    upsellsProfit: 184.92,
+    currency: "USD",
+    notes: "5 nights · 2 adults, 1 infant · Ref HMK839ZTST · Groceries $472.19 (35% markup, $122.42) + massage $200 (1,000 MXN profit @16 = $62.50) · CC fee $17.70 & tip $136 pass-through",
+    monthKey: "2026-06",
+  },
+];
+
 export const ALL_HISTORICAL: HistoricalBooking[] = [
+  ...JUNE_2026_BOOKINGS,
   ...MAY_2026_BOOKINGS,
   ...APRIL_2026_BOOKINGS,
 ];
