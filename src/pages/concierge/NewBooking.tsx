@@ -606,7 +606,7 @@ export default function NewBooking({
           <div>
             <label style={fieldLabel}>Currency</label>
             <div style={{ ...input, display: "flex", alignItems: "center", background: "rgba(0,0,0,0.04)", color: COLORS.textMid }}>
-              USD
+              MXN
             </div>
           </div>
           <div style={{ fontSize: 11, color: COLORS.textMuted, lineHeight: 1.5, paddingBottom: 8, gridColumn: isMobile ? "1 / -1" : undefined }}>
