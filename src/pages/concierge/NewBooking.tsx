@@ -151,7 +151,7 @@ export default function NewBooking({
   const [accommodationFare, setAccommodationFare] = useState(initialBooking?.accommodation_fare ?? 0);
   // Accommodation fare is always quoted in USD.
   const [accommodationCurrency] = useState<"MXN" | "USD">("USD");
-  // Money handed to the chef for grocery shopping (always USD).
+  // Money handed to the chef for grocery shopping (always MXN).
   const [groceryAllocation, setGroceryAllocation] = useState<number>(
     Number((initialBooking as any)?.grocery_allocation) || 0,
   );
@@ -365,7 +365,7 @@ export default function NewBooking({
       accommodation_fare: accommodationFare,
       accommodation_currency: accommodationCurrency,
       grocery_allocation: groceryAllocation,
-      grocery_allocation_currency: "USD",
+      grocery_allocation_currency: "MXN",
     };
   };
 
@@ -606,7 +606,7 @@ export default function NewBooking({
           <div>
             <label style={fieldLabel}>Currency</label>
             <div style={{ ...input, display: "flex", alignItems: "center", background: "rgba(0,0,0,0.04)", color: COLORS.textMid }}>
-              USD
+              MXN
             </div>
           </div>
           <div style={{ fontSize: 11, color: COLORS.textMuted, lineHeight: 1.5, paddingBottom: 8, gridColumn: isMobile ? "1 / -1" : undefined }}>
