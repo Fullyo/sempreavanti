@@ -151,7 +151,7 @@ export default function NewBooking({
   const [accommodationFare, setAccommodationFare] = useState(initialBooking?.accommodation_fare ?? 0);
   // Accommodation fare is always quoted in USD.
   const [accommodationCurrency] = useState<"MXN" | "USD">("USD");
-  // Money handed to the chef for grocery shopping (always USD).
+  // Money handed to the chef for grocery shopping (always MXN).
   const [groceryAllocation, setGroceryAllocation] = useState<number>(
     Number((initialBooking as any)?.grocery_allocation) || 0,
   );
