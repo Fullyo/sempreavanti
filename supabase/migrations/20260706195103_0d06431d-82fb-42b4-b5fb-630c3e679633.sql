@@ -1,0 +1,2 @@
+ALTER TABLE public.bookings ADD COLUMN IF NOT EXISTS grocery_allocation numeric NOT NULL DEFAULT 0;
+ALTER TABLE public.bookings ADD COLUMN IF NOT EXISTS grocery_allocation_currency text NOT NULL DEFAULT 'USD';
