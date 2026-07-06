@@ -177,8 +177,7 @@ export default function AllBookings() {
     return [current, ...withoutCurrent];
   }, [monthSections, currentMonthKey, shouldForceMayHistorical]);
 
-  // Default selection = most recent month that actually has bookings (so the
-  // latest reservations are visible on load), falling back to the current month.
+  // Default selection = most recent month that actually has bookings.
   const defaultOpenKey = useMemo(() => {
     const firstWithData = displayMonthSections.find(
       ([, g]) => g.live.length > 0 || g.hist.length > 0,
@@ -186,20 +185,6 @@ export default function AllBookings() {
     return firstWithData ? firstWithData[0] : currentMonthKey;
   }, [displayMonthSections, currentMonthKey]);
 
-  useEffect(() => {
-    setOpenMonthKey((prev) => {
-      if (prev && displayMonthSections.some(([k]) => k === prev)) return prev;
-      return defaultOpenKey;
-    });
-  }, [displayMonthSections, defaultOpenKey]);
-
-  const months = useMemo(() => {
-    const set = new Set([
-      ...bookings.map((b) => monthKey(b.checkin)),
-      ...ALL_HISTORICAL.map((h) => historicalMonthKey(h)),
-    ]);
-    return Array.from(set).sort((a, b) => b.localeCompare(a));
-  }, [bookings]);
 
   // Per-month KPI breakdown.
   function computeMonthKpis(live: Booking[], hist: HistoricalBooking[]): KpiBreakdown {
