@@ -66,7 +66,7 @@ export default function AllBookings() {
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<ViewTab>("all");
   const [monthFilter, setMonthFilter] = useState("all");
-  const [openMonthKey, setOpenMonthKey] = useState<string | null>(null);
+  const [detailKey, setDetailKey] = useState<string | null>(null);
   const [editId, setEditId] = useState<number | null>(null);
   // Petty cash float per booking ref ('live-<id>' or historical string id).
   const [petty, setPetty] = useState<Record<string, number>>({});
