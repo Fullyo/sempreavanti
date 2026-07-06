@@ -309,21 +309,11 @@ export default function AllBookings() {
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18, flexWrap: "wrap", gap: 10 }}>
-        <h1 style={sectionTitle}>Bookings</h1>
+        <h1 style={sectionTitle}>{detailKey ? monthLabel(detailKey) : "Bookings"}</h1>
         <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-          <label style={{ fontSize: 11, color: COLORS.textMuted, textTransform: "uppercase", letterSpacing: "0.12em" }}>
-            Month
-          </label>
-          <select
-            style={{ ...input, width: "auto", padding: "8px 10px" }}
-            value={monthFilter}
-            onChange={(e) => { setMonthFilter(e.target.value); setView("all"); }}
-          >
-            <option value="all">All months</option>
-            {months.map((m) => (
-              <option key={m} value={m}>{monthLabel(m)}</option>
-            ))}
-          </select>
+          {detailKey && (
+            <button onClick={() => setDetailKey(null)} style={btnGhost}>← Back to all months</button>
+          )}
           <button onClick={load} style={btnGhost}>↻ Refresh</button>
           <button onClick={downloadAllCSV} style={btnGhost}>Download All as CSV</button>
         </div>
