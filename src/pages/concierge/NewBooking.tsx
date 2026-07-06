@@ -149,8 +149,11 @@ export default function NewBooking({
   const [gratuityWaived, setGratuityWaived] = useState(initialBooking?.gratuity_waived ?? false);
   const [cashCollected, setCashCollected] = useState(initialBooking?.cash_collected ?? 0);
   const [accommodationFare, setAccommodationFare] = useState(initialBooking?.accommodation_fare ?? 0);
-  const [accommodationCurrency, setAccommodationCurrency] = useState<"MXN" | "USD">(
-    initialBooking?.accommodation_currency === "USD" ? "USD" : "MXN",
+  // Accommodation fare is always quoted in USD.
+  const [accommodationCurrency] = useState<"MXN" | "USD">("USD");
+  // Money handed to the chef for grocery shopping (always USD).
+  const [groceryAllocation, setGroceryAllocation] = useState<number>(
+    Number((initialBooking as any)?.grocery_allocation) || 0,
   );
   // Editable fuel rate per UTV rental (one tank, auto-added when a UTV is booked).
   const [fuelPerUnit, setFuelPerUnit] = useState<number>(() => {
@@ -285,7 +288,7 @@ export default function NewBooking({
     setGratuityWaived(false);
     setCashCollected(0);
     setAccommodationFare(0);
-    setAccommodationCurrency("MXN");
+    setGroceryAllocation(0);
     setFuelPerUnit(UTV_GAS_PER_RENTAL);
     setFuelRemoved(false);
   };
@@ -361,6 +364,8 @@ export default function NewBooking({
       cash_collected: cashCollected,
       accommodation_fare: accommodationFare,
       accommodation_currency: accommodationCurrency,
+      grocery_allocation: groceryAllocation,
+      grocery_allocation_currency: "USD",
     };
   };
 
@@ -570,27 +575,46 @@ export default function NewBooking({
           </div>
           <div>
             <label style={fieldLabel}>Currency</label>
-            <select
-              style={input}
-              value={accommodationCurrency}
-              onChange={(e) => setAccommodationCurrency(e.target.value as "MXN" | "USD")}
-            >
-              <option value="MXN">MXN</option>
-              <option value="USD">USD</option>
-            </select>
+            <div style={{ ...input, display: "flex", alignItems: "center", background: "rgba(0,0,0,0.04)", color: COLORS.textMid }}>
+              USD
+            </div>
           </div>
           <div style={{ fontSize: 11, color: COLORS.textMuted, lineHeight: 1.5, paddingBottom: 8, gridColumn: isMobile ? "1 / -1" : undefined }}>
             {accommodationFare > 0 ? (
               <>
-                LUX 15% commission: <strong style={{ color: COLORS.amber }}>{accommodationCurrency} {(accommodationFare * 0.15).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
-                {" · "}Owner 85%: <strong style={{ color: COLORS.green }}>{accommodationCurrency} {(accommodationFare * 0.85).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+                LUX 15% commission: <strong style={{ color: COLORS.amber }}>USD {(accommodationFare * 0.15).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+                {" · "}Owner 85%: <strong style={{ color: COLORS.green }}>USD {(accommodationFare * 0.85).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
               </>
             ) : (
-              <em>Room fare only (excludes cleaning, taxes, Guesty fees). LUX takes 15% management commission.</em>
+              <em>Room fare only, always in USD (excludes cleaning, taxes, Guesty fees). LUX takes 15% management commission.</em>
             )}
           </div>
         </div>
+        <div style={{ gridColumn: "1 / -1", borderTop: `1px dashed ${COLORS.border}`, paddingTop: 16, display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "2fr 1fr 2fr", gap: isMobile ? 12 : 18, alignItems: "end" }}>
+          <div style={isMobile ? { gridColumn: "1 / -1" } : undefined}>
+            <label style={fieldLabel}>Grocery Allocation (chef shopping)</label>
+            <input
+              style={input}
+              type="number"
+              min={0}
+              step="0.01"
+              value={groceryAllocation || ""}
+              placeholder="0.00"
+              onChange={(e) => setGroceryAllocation(Number(e.target.value) || 0)}
+            />
+          </div>
+          <div>
+            <label style={fieldLabel}>Currency</label>
+            <div style={{ ...input, display: "flex", alignItems: "center", background: "rgba(0,0,0,0.04)", color: COLORS.textMid }}>
+              USD
+            </div>
+          </div>
+          <div style={{ fontSize: 11, color: COLORS.textMuted, lineHeight: 1.5, paddingBottom: 8, gridColumn: isMobile ? "1 / -1" : undefined }}>
+            <em>Cash handed to the chef to go grocery shopping. Recorded for reconciliation only — doesn't affect the guest total or profit.</em>
+          </div>
+        </div>
       </div>
+
 
       {/* Services table */}
       <div
