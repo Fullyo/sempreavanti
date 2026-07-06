@@ -212,6 +212,19 @@ export const JUNE_2026_BOOKINGS: HistoricalBooking[] = [
     notes: "5 nights · 2 adults, 1 infant · Ref HMK839ZTST · Groceries $472.19 (35% markup, $122.42) + massage $200 (1,000 MXN profit @16 = $62.50) · CC fee $17.70 & tip $136 pass-through",
     monthKey: "2026-06",
   },
+  {
+    id: "hist-jun-couri",
+    guest: "Conni Couri",
+    checkin: "2026-06-06",
+    checkout: "2026-06-13",
+    villa: "Casa Sempre Avanti (Pietro + Luisa)",
+    accommodationFare: 7343.00,
+    upsellsBilled: 1441.55,
+    upsellsProfit: 355.22,
+    currency: "USD",
+    notes: "7 nights · 9 adults, 3 children · Ref GY-zz6WhXk3 · Groceries $1,129.05 (35% markup, $292.72) + Airport SUV $312.50 (1,000 MXN profit @16 = $62.50) · UTV $0 · CC fee $43.26 pass-through",
+    monthKey: "2026-06",
+  },
 ];
 
 export const ALL_HISTORICAL: HistoricalBooking[] = [
