@@ -380,12 +380,12 @@ export default function AllBookings() {
           : null;
 
         const isCurrent = key === currentMonthKey;
-        const isOpen = openMonthKey === key;
+        const isOpen = detailKey === key;
         const isEmpty = !hasHist && !hasLive;
         return (
           <div key={key} style={{ marginBottom: isOpen ? 40 : 10 }}>
             <div
-              onClick={() => setOpenMonthKey(isOpen ? null : key)}
+              onClick={() => { if (!isOpen) setDetailKey(key); }}
               style={{
                 display: "flex", justifyContent: "space-between", alignItems: "center",
                 marginBottom: isOpen ? 14 : 0,
