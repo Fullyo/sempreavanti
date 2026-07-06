@@ -1,0 +1,1 @@
+UPDATE public.bookings SET accommodation_fare = 8570.10 WHERE id = 6 AND guest = 'Eric Parrish';
