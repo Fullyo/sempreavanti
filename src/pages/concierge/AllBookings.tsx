@@ -66,7 +66,7 @@ export default function AllBookings() {
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState<ViewTab>("all");
   const [monthFilter, setMonthFilter] = useState("all");
-  const [openMonthKey, setOpenMonthKey] = useState<string | null>(null);
+  const [detailKey, setDetailKey] = useState<string | null>(null);
   const [editId, setEditId] = useState<number | null>(null);
   // Petty cash float per booking ref ('live-<id>' or historical string id).
   const [petty, setPetty] = useState<Record<string, number>>({});
@@ -177,8 +177,7 @@ export default function AllBookings() {
     return [current, ...withoutCurrent];
   }, [monthSections, currentMonthKey, shouldForceMayHistorical]);
 
-  // Default selection = most recent month that actually has bookings (so the
-  // latest reservations are visible on load), falling back to the current month.
+  // Default selection = most recent month that actually has bookings.
   const defaultOpenKey = useMemo(() => {
     const firstWithData = displayMonthSections.find(
       ([, g]) => g.live.length > 0 || g.hist.length > 0,
@@ -186,20 +185,6 @@ export default function AllBookings() {
     return firstWithData ? firstWithData[0] : currentMonthKey;
   }, [displayMonthSections, currentMonthKey]);
 
-  useEffect(() => {
-    setOpenMonthKey((prev) => {
-      if (prev && displayMonthSections.some(([k]) => k === prev)) return prev;
-      return defaultOpenKey;
-    });
-  }, [displayMonthSections, defaultOpenKey]);
-
-  const months = useMemo(() => {
-    const set = new Set([
-      ...bookings.map((b) => monthKey(b.checkin)),
-      ...ALL_HISTORICAL.map((h) => historicalMonthKey(h)),
-    ]);
-    return Array.from(set).sort((a, b) => b.localeCompare(a));
-  }, [bookings]);
 
   // Per-month KPI breakdown.
   function computeMonthKpis(live: Booking[], hist: HistoricalBooking[]): KpiBreakdown {
@@ -324,27 +309,18 @@ export default function AllBookings() {
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18, flexWrap: "wrap", gap: 10 }}>
-        <h1 style={sectionTitle}>Bookings</h1>
+        <h1 style={sectionTitle}>{detailKey ? monthLabel(detailKey) : "Bookings"}</h1>
         <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-          <label style={{ fontSize: 11, color: COLORS.textMuted, textTransform: "uppercase", letterSpacing: "0.12em" }}>
-            Month
-          </label>
-          <select
-            style={{ ...input, width: "auto", padding: "8px 10px" }}
-            value={monthFilter}
-            onChange={(e) => { setMonthFilter(e.target.value); setView("all"); }}
-          >
-            <option value="all">All months</option>
-            {months.map((m) => (
-              <option key={m} value={m}>{monthLabel(m)}</option>
-            ))}
-          </select>
+          {detailKey && (
+            <button onClick={() => setDetailKey(null)} style={btnGhost}>← Back to all months</button>
+          )}
           <button onClick={load} style={btnGhost}>↻ Refresh</button>
           <button onClick={downloadAllCSV} style={btnGhost}>Download All as CSV</button>
         </div>
       </div>
 
-      {/* View toggle: All vs Upcoming */}
+      {/* View toggle: All vs Upcoming — hidden while viewing a single month */}
+      {!detailKey && (
       <div style={{ display: "flex", gap: 0, marginBottom: 18, borderBottom: `1px solid ${COLORS.border}` }}>
         {([
           { id: "all", label: "All Bookings" },
@@ -375,10 +351,13 @@ export default function AllBookings() {
           );
         })}
       </div>
+      )}
 
+      {!detailKey && (
       <div style={{ fontStyle: "italic", color: COLORS.textMuted, fontSize: 12, marginBottom: 18 }}>
         Current month is {currentMonthLabel}. Historical reports stay attached to their booking month.
       </div>
+      )}
 
       {loading && <div style={{ color: COLORS.textMuted }}>Loading…</div>}
       {!loading && displayMonthSections.length === 0 && (
@@ -387,7 +366,7 @@ export default function AllBookings() {
         </div>
       )}
 
-      {displayMonthSections.map(([key, group]) => {
+      {(detailKey ? displayMonthSections.filter(([k]) => k === detailKey) : displayMonthSections).map(([key, group]) => {
         const kpis = computeMonthKpis(group.live, group.hist);
         const label = monthLabel(key);
         const [yStr, mStr] = key.split("-");
@@ -401,12 +380,12 @@ export default function AllBookings() {
           : null;
 
         const isCurrent = key === currentMonthKey;
-        const isOpen = openMonthKey === key;
+        const isOpen = detailKey === key;
         const isEmpty = !hasHist && !hasLive;
         return (
           <div key={key} style={{ marginBottom: isOpen ? 40 : 10 }}>
             <div
-              onClick={() => setOpenMonthKey(isOpen ? null : key)}
+              onClick={() => { if (!isOpen) setDetailKey(key); }}
               style={{
                 display: "flex", justifyContent: "space-between", alignItems: "center",
                 marginBottom: isOpen ? 14 : 0,
@@ -441,7 +420,7 @@ export default function AllBookings() {
                     ⬇ Owner Statement
                   </button>
                 )}
-                <button onClick={() => setOpenMonthKey(isOpen ? null : key)} style={btnGhost}>
+                <button onClick={() => setDetailKey(isOpen ? null : key)} style={btnGhost}>
                   {isOpen ? "Close" : "Open"}
                 </button>
               </div>
