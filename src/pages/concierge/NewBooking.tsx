@@ -149,8 +149,11 @@ export default function NewBooking({
   const [gratuityWaived, setGratuityWaived] = useState(initialBooking?.gratuity_waived ?? false);
   const [cashCollected, setCashCollected] = useState(initialBooking?.cash_collected ?? 0);
   const [accommodationFare, setAccommodationFare] = useState(initialBooking?.accommodation_fare ?? 0);
-  const [accommodationCurrency, setAccommodationCurrency] = useState<"MXN" | "USD">(
-    initialBooking?.accommodation_currency === "USD" ? "USD" : "MXN",
+  // Accommodation fare is always quoted in USD.
+  const [accommodationCurrency] = useState<"MXN" | "USD">("USD");
+  // Money handed to the chef for grocery shopping (always USD).
+  const [groceryAllocation, setGroceryAllocation] = useState<number>(
+    Number((initialBooking as any)?.grocery_allocation) || 0,
   );
   // Editable fuel rate per UTV rental (one tank, auto-added when a UTV is booked).
   const [fuelPerUnit, setFuelPerUnit] = useState<number>(() => {
