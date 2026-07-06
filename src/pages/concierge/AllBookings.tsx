@@ -420,7 +420,7 @@ export default function AllBookings() {
                     ⬇ Owner Statement
                   </button>
                 )}
-                <button onClick={() => setOpenMonthKey(isOpen ? null : key)} style={btnGhost}>
+                <button onClick={() => setDetailKey(isOpen ? null : key)} style={btnGhost}>
                   {isOpen ? "Close" : "Open"}
                 </button>
               </div>
