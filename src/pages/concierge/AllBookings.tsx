@@ -723,7 +723,7 @@ export default function AllBookings() {
   );
 }
 
-type KpiCell = { label: string; value: string; color?: string };
+type KpiCell = { label: string; value: string; color?: string; sub?: string };
 
 function KpiBlock({ title, tone, cells, note }: { title: string; tone: "accom" | "upsell" | "combined"; cells: KpiCell[]; note?: string }) {
   const toneStyles: Record<string, { bg: string; border: string; accent: string }> = {
