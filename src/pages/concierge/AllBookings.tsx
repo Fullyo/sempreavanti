@@ -476,6 +476,67 @@ export default function AllBookings() {
                   spent={Math.max(0, h.upsellsBilled - h.upsellsProfit)}
                   onSave={(amt) => saveFloat(h.id, amt, "USD")}
                 />
+                {h.items && h.items.length > 0 ? (
+                  <div style={{ background: "#fff", border: `1px solid ${COLORS.border}`, borderRadius: 4, padding: "18px 22px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10, gap: 12, flexWrap: "wrap" }}>
+                      <div style={{ flex: 1, minWidth: 220 }}>
+                        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 300 }}>
+                          {h.guest}
+                          <span style={{ fontSize: 9, background: "#7A5C1E1a", color: "#7A5C1E", padding: "2px 8px", borderRadius: 10, marginLeft: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>Historical · USD</span>
+                        </div>
+                        <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 4 }}>
+                          Check-in: {h.checkin}{h.checkout ? ` · Check-out: ${h.checkout}` : ""} · {h.villa}
+                        </div>
+                        {h.notes && <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 4, fontStyle: "italic" }}>{h.notes}</div>}
+                      </div>
+                      <div style={{ textAlign: "right" }}>
+                        <div style={{ fontSize: 18, fontWeight: 500 }}>{formatUSD(h.upsellsBilled)}</div>
+                        <div style={{ fontSize: 12, color: COLORS.green, marginTop: 2 }}>Profit: {formatUSD(h.upsellsProfit)}</div>
+                        <div
+                          style={{
+                            display: "inline-block", marginTop: 6, fontSize: 10,
+                            textTransform: "uppercase", letterSpacing: "0.1em",
+                            padding: "3px 8px", borderRadius: 2,
+                            background: "#E7F0E9", color: COLORS.green,
+                          }}
+                        >
+                          Paid · {formatUSD(h.upsellsBilled)}
+                        </div>
+                      </div>
+                    </div>
+
+                    <table style={{ width: "100%", borderCollapse: "collapse", marginTop: 8, fontSize: 13 }}>
+                      <thead>
+                        <tr style={{ color: COLORS.textMuted, fontSize: 10, textTransform: "uppercase", letterSpacing: "0.12em" }}>
+                          <th style={{ textAlign: "left", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Service</th>
+                          <th style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Total</th>
+                          <th style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Cost</th>
+                          <th style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Profit</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {h.items.map((i, idx) => (
+                          <tr key={idx}>
+                            <td style={{ padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>
+                              {i.name} <span style={{ color: COLORS.textMuted }}>×{i.qty}</span>
+                            </td>
+                            <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>{formatUSD(i.guest_total)}</td>
+                            <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}`, color: COLORS.textMid }}>{i.cost === null ? "—" : formatUSD(i.cost)}</td>
+                            <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}`, color: i.passThrough ? COLORS.blue : (i.profit === null ? COLORS.amber : COLORS.green), fontStyle: i.passThrough || i.profit === null ? "italic" : "normal", fontSize: i.passThrough ? 11 : 13 }}>
+                              {i.passThrough ? "pass-through" : i.profit === null ? "TBD" : formatUSD(i.profit)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginTop: 14 }}>
+                      <HistCell label="Accommodation Fare" value={formatUSD(h.accommodationFare)} sub={h.accommodationFare > 0 ? `Owner 85%: ${formatUSD(h.accommodationFare * 0.85)} · LUX 15%: ${formatUSD(h.accommodationFare * 0.15)}` : "Not captured for this booking"} />
+                      <HistCell label="Upsells Billed" value={formatUSD(h.upsellsBilled)} sub={`Profit pool: ${formatUSD(h.upsellsProfit)}`} />
+                      <HistCell label="LUX Cut (Total)" value={formatUSD(h.accommodationFare * 0.15 + h.upsellsProfit * 0.15)} sub={`Owner: ${formatUSD(h.accommodationFare * 0.85 + h.upsellsProfit * 0.85)}`} color={COLORS.amber} />
+                    </div>
+                  </div>
+                ) : (
                 <div style={{ background: "#FDF9F1", border: `1px solid #E5D8B5`, borderRadius: 4, padding: "16px 20px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
                     <div>
@@ -495,6 +556,7 @@ export default function AllBookings() {
                     <HistCell label="LUX Cut (Total)" value={formatUSD(h.accommodationFare * 0.15 + h.upsellsProfit * 0.15)} sub={`Owner: ${formatUSD(h.accommodationFare * 0.85 + h.upsellsProfit * 0.85)}`} color={COLORS.amber} />
                   </div>
                 </div>
+                )}
               </div>
             ))}
 
