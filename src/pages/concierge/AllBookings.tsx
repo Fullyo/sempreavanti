@@ -16,8 +16,6 @@ import {
   ALL_HISTORICAL,
   MAY_2026_BOOKINGS,
   HistoricalBooking,
-  KpiBreakdown,
-  computeHistoricalKpis,
   formatUSD,
   historicalMonthKey,
 } from "./historicalData";
@@ -26,6 +24,18 @@ function monthKey(d: string) {
   const dt = new Date(d);
   return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, "0")}`;
 }
+
+// Villa pricing is in pesos; guests are charged in USD converted at this rate.
+// Accommodation fares are paid in USD directly on Guesty and are never converted.
+const FX = 16;
+
+type MoneyPair = { mxn: number; usd: number };
+type MonthKpis = {
+  count: number;
+  accommodation: { fareUSD: number; ownerUSD: number; luxUSD: number };
+  upsells: { billed: MoneyPair; profit: MoneyPair; owner: MoneyPair; lux: MoneyPair };
+  combinedUSD: { ownerTotal: number; luxTotal: number };
+};
 
 const MONTH_NAMES = [
   "January",
@@ -187,35 +197,46 @@ export default function AllBookings() {
 
 
   // Per-month KPI breakdown.
-  function computeMonthKpis(live: Booking[], hist: HistoricalBooking[]): KpiBreakdown {
-    const histK = computeHistoricalKpis(hist);
-    const liveProfit = live.reduce((s, b) => s + Number(b.total_profit), 0);
-    // Upsell revenue = line-item guest totals only (matches the Owner Statement
-    // and historical figures). Gratuity, tips, and the card fee are NOT upsell
-    // revenue, so they must not inflate this KPI.
-    const liveBilled = live.reduce(
+  // Currency model:
+  //  - Accommodation fare is always USD (paid on Guesty), never converted.
+  //  - Upsells are priced in pesos (MXN) and charged to the guest in USD at FX (16).
+  function computeMonthKpis(live: Booking[], hist: HistoricalBooking[]): MonthKpis {
+    // --- Accommodation (USD only) ---
+    const histAccomUSD = hist.reduce((s, h) => s + h.accommodationFare, 0);
+    const liveAccomUSD = live.reduce((s, b) => {
+      const fare = Number(b.accommodation_fare ?? 0);
+      const rate = Number(b.exchange_rate) || FX;
+      return s + (b.accommodation_currency === "MXN" ? fare / rate : fare);
+    }, 0);
+    const fareUSD = histAccomUSD + liveAccomUSD;
+
+    // --- Upsells (native pesos; USD is the guest-billed conversion @ FX) ---
+    // Historical June upsells are stored in USD → peso = USD * FX.
+    const histBilledUSD = hist.reduce((s, h) => s + h.upsellsBilled, 0);
+    const histProfitUSD = hist.reduce((s, h) => s + h.upsellsProfit, 0);
+    // Live upsells are stored in MXN. Line-item guest totals only (tips / card fee excluded).
+    const liveBilledMXN = live.reduce(
       (s, b) => s + (b.items ?? []).reduce((sum, i) => sum + (Number(i.guest_total) || 0), 0),
       0,
     );
-    const liveAccomFare = live.reduce((s, b) => s + Number(b.accommodation_fare ?? 0), 0);
-    const liveAccomOwner = liveAccomFare * 0.85;
-    const liveAccomLux = liveAccomFare * 0.15;
+    const liveProfitMXN = live.reduce((s, b) => s + Number(b.total_profit), 0);
+
+    const billedMXN = histBilledUSD * FX + liveBilledMXN;
+    const profitMXN = histProfitUSD * FX + liveProfitMXN;
+    const pair = (mxn: number): MoneyPair => ({ mxn, usd: mxn / FX });
+
     return {
-      count: histK.count + live.length,
-      accommodation: {
-        fare: histK.accommodation.fare + liveAccomFare,
-        owner: histK.accommodation.owner + liveAccomOwner,
-        lux: histK.accommodation.lux + liveAccomLux,
-      },
+      count: hist.length + live.length,
+      accommodation: { fareUSD, ownerUSD: fareUSD * 0.85, luxUSD: fareUSD * 0.15 },
       upsells: {
-        billed: histK.upsells.billed + liveBilled,
-        profit: histK.upsells.profit + liveProfit,
-        owner: histK.upsells.owner + liveProfit * 0.85,
-        lux: histK.upsells.lux + liveProfit * 0.15,
+        billed: pair(billedMXN),
+        profit: pair(profitMXN),
+        owner: pair(profitMXN * 0.85),
+        lux: pair(profitMXN * 0.15),
       },
-      combined: {
-        ownerTotal: histK.combined.ownerTotal + liveAccomOwner + liveProfit * 0.85,
-        luxTotal: histK.combined.luxTotal + liveAccomLux + liveProfit * 0.15,
+      combinedUSD: {
+        ownerTotal: fareUSD * 0.85 + (profitMXN / FX) * 0.85,
+        luxTotal: fareUSD * 0.15 + (profitMXN / FX) * 0.15,
       },
     };
   }
@@ -431,39 +452,37 @@ export default function AllBookings() {
             {/* Per-month KPI summary */}
             <div style={{ marginBottom: 18 }}>
               <KpiBlock
-                title="Accommodation Fare"
+                title="Accommodation Fare (paid in USD)"
                 tone="accom"
                 cells={[
-                  { label: "Total Fare", value: hasHist ? formatUSD(kpis.accommodation.fare) : formatMXN(kpis.accommodation.fare) },
-                  { label: "Owner's Share 85%", value: hasHist ? formatUSD(kpis.accommodation.owner) : formatMXN(kpis.accommodation.owner), color: COLORS.green },
-                  { label: "LUX's Cut 15%", value: hasHist ? formatUSD(kpis.accommodation.lux) : formatMXN(kpis.accommodation.lux), color: COLORS.amber },
+                  { label: "Total Fare", value: formatUSD(kpis.accommodation.fareUSD) },
+                  { label: "Owner's Share 85%", value: formatUSD(kpis.accommodation.ownerUSD), color: COLORS.green },
+                  { label: "LUX's Cut 15%", value: formatUSD(kpis.accommodation.luxUSD), color: COLORS.amber },
                 ]}
-                note={kpis.accommodation.fare === 0 ? "No accommodation fare recorded for this month." : undefined}
+                note={kpis.accommodation.fareUSD === 0 ? "No accommodation fare recorded for this month." : undefined}
               />
               <KpiBlock
-                title="Upsells (Transport, UTV, Groceries, etc.)"
+                title="Upsells (priced in pesos · charged to guests in USD @16)"
                 tone="upsell"
                 cells={[
-                  { label: "Guest Billed", value: hasHist ? formatUSD(kpis.upsells.billed) : formatMXN(kpis.upsells.billed) },
-                  { label: "Profit Pool", value: hasHist ? formatUSD(kpis.upsells.profit) : formatMXN(kpis.upsells.profit) },
-                  { label: "Owner's Share 85%", value: hasHist ? formatUSD(kpis.upsells.owner) : formatMXN(kpis.upsells.owner), color: COLORS.green },
-                  { label: "LUX's Cut 15%", value: hasHist ? formatUSD(kpis.upsells.lux) : formatMXN(kpis.upsells.lux), color: COLORS.amber },
+                  { label: "Guest Billed", value: formatMXN(kpis.upsells.billed.mxn), sub: `≈ ${formatUSD(kpis.upsells.billed.usd)} USD` },
+                  { label: "Profit Pool", value: formatMXN(kpis.upsells.profit.mxn), sub: `≈ ${formatUSD(kpis.upsells.profit.usd)} USD` },
+                  { label: "Owner's Share 85%", value: formatMXN(kpis.upsells.owner.mxn), sub: `≈ ${formatUSD(kpis.upsells.owner.usd)} USD`, color: COLORS.green },
+                  { label: "LUX's Cut 15%", value: formatMXN(kpis.upsells.lux.mxn), sub: `≈ ${formatUSD(kpis.upsells.lux.usd)} USD`, color: COLORS.amber },
                 ]}
               />
               <KpiBlock
-                title="Combined Totals (Accommodation + Upsells)"
+                title="Combined Totals in USD (Accommodation + Upsells @16)"
                 tone="combined"
                 cells={[
                   { label: "Bookings", value: String(kpis.count) },
-                  { label: "Owner Total Earnings", value: hasHist ? formatUSD(kpis.combined.ownerTotal) : formatMXN(kpis.combined.ownerTotal), color: COLORS.green },
-                  { label: "LUX Total Cut", value: hasHist ? formatUSD(kpis.combined.luxTotal) : formatMXN(kpis.combined.luxTotal), color: COLORS.amber },
+                  { label: "Owner Total Earnings", value: formatUSD(kpis.combinedUSD.ownerTotal), color: COLORS.green },
+                  { label: "LUX Total Cut", value: formatUSD(kpis.combinedUSD.luxTotal), color: COLORS.amber },
                 ]}
               />
-              {hasHist && hasLive && (
-                <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 8 }}>
-                  Note · This month contains both historical (USD) and live (MXN) bookings. Totals above are not FX-converted — treat each currency block separately.
-                </div>
-              )}
+              <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 8 }}>
+                Accommodation is billed in USD on Guesty. Upsells are priced in pesos and charged to guests in USD at 16.
+              </div>
             </div>
 
             {/* Historical (USD) rows — read-only */}
@@ -490,8 +509,9 @@ export default function AllBookings() {
                         {h.notes && <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 4, fontStyle: "italic" }}>{h.notes}</div>}
                       </div>
                       <div style={{ textAlign: "right" }}>
-                        <div style={{ fontSize: 18, fontWeight: 500 }}>{formatUSD(h.upsellsBilled)}</div>
-                        <div style={{ fontSize: 12, color: COLORS.green, marginTop: 2 }}>Profit: {formatUSD(h.upsellsProfit)}</div>
+                        <div style={{ fontSize: 18, fontWeight: 500 }}>{formatMXN(h.upsellsBilled * FX)}</div>
+                        <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 1 }}>≈ {formatUSD(h.upsellsBilled)} USD @16</div>
+                        <div style={{ fontSize: 12, color: COLORS.green, marginTop: 2 }}>Profit: {formatMXN(h.upsellsProfit * FX)} <span style={{ color: COLORS.textMuted }}>(≈ {formatUSD(h.upsellsProfit)})</span></div>
                         <div
                           style={{
                             display: "inline-block", marginTop: 6, fontSize: 10,
@@ -500,7 +520,7 @@ export default function AllBookings() {
                             background: "#E7F0E9", color: COLORS.green,
                           }}
                         >
-                          Paid · {formatUSD(h.upsellsBilled)}
+                          Paid · {formatUSD(h.upsellsBilled)} USD
                         </div>
                       </div>
                     </div>
@@ -509,9 +529,9 @@ export default function AllBookings() {
                       <thead>
                         <tr style={{ color: COLORS.textMuted, fontSize: 10, textTransform: "uppercase", letterSpacing: "0.12em" }}>
                           <th style={{ textAlign: "left", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Service</th>
-                          <th style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Total</th>
-                          <th style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Cost</th>
-                          <th style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Profit</th>
+                          <th style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Total (USD)</th>
+                          <th style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Cost (USD)</th>
+                          <th style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>Profit (USD)</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -532,7 +552,7 @@ export default function AllBookings() {
 
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginTop: 14 }}>
                       <HistCell label="Accommodation Fare" value={formatUSD(h.accommodationFare)} sub={h.accommodationFare > 0 ? `Owner 85%: ${formatUSD(h.accommodationFare * 0.85)} · LUX 15%: ${formatUSD(h.accommodationFare * 0.15)}` : "Not captured for this booking"} />
-                      <HistCell label="Upsells Billed" value={formatUSD(h.upsellsBilled)} sub={`Profit pool: ${formatUSD(h.upsellsProfit)}`} />
+                      <HistCell label="Upsells Billed (pesos)" value={formatMXN(h.upsellsBilled * FX)} sub={`≈ ${formatUSD(h.upsellsBilled)} USD · Profit ${formatMXN(h.upsellsProfit * FX)}`} />
                       <HistCell label="LUX Cut (Total)" value={formatUSD(h.accommodationFare * 0.15 + h.upsellsProfit * 0.15)} sub={`Owner: ${formatUSD(h.accommodationFare * 0.85 + h.upsellsProfit * 0.85)}`} color={COLORS.amber} />
                     </div>
                   </div>
@@ -552,7 +572,7 @@ export default function AllBookings() {
                   </div>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginTop: 12 }}>
                     <HistCell label="Accommodation Fare" value={formatUSD(h.accommodationFare)} sub={h.accommodationFare > 0 ? `Owner 85%: ${formatUSD(h.accommodationFare * 0.85)} · LUX 15%: ${formatUSD(h.accommodationFare * 0.15)}` : "Not captured for this booking"} />
-                    <HistCell label="Upsells Billed" value={formatUSD(h.upsellsBilled)} sub={`Profit pool: ${formatUSD(h.upsellsProfit)}`} />
+                    <HistCell label="Upsells Billed (pesos)" value={formatMXN(h.upsellsBilled * FX)} sub={`≈ ${formatUSD(h.upsellsBilled)} USD · Profit ${formatMXN(h.upsellsProfit * FX)}`} />
                     <HistCell label="LUX Cut (Total)" value={formatUSD(h.accommodationFare * 0.15 + h.upsellsProfit * 0.15)} sub={`Owner: ${formatUSD(h.accommodationFare * 0.85 + h.upsellsProfit * 0.85)}`} color={COLORS.amber} />
                   </div>
                 </div>
@@ -600,7 +620,8 @@ export default function AllBookings() {
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <div style={{ fontSize: 18, fontWeight: 500 }}>{formatMXN(v.total_guest)}</div>
-                      <div style={{ fontSize: 12, color: COLORS.green, marginTop: 2 }}>Profit: {formatMXN(v.total_profit)}</div>
+                      <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 1 }}>≈ {formatUSD(v.total_guest / (Number(v.exchange_rate) || FX))} USD @{Number(v.exchange_rate) || FX}</div>
+                      <div style={{ fontSize: 12, color: COLORS.green, marginTop: 2 }}>Profit: {formatMXN(v.total_profit)} <span style={{ color: COLORS.textMuted }}>(≈ {formatUSD(v.total_profit / (Number(v.exchange_rate) || FX))})</span></div>
                       <div
                         style={{
                           display: "inline-block",
@@ -702,7 +723,7 @@ export default function AllBookings() {
   );
 }
 
-type KpiCell = { label: string; value: string; color?: string };
+type KpiCell = { label: string; value: string; color?: string; sub?: string };
 
 function KpiBlock({ title, tone, cells, note }: { title: string; tone: "accom" | "upsell" | "combined"; cells: KpiCell[]; note?: string }) {
   const toneStyles: Record<string, { bg: string; border: string; accent: string }> = {
@@ -720,6 +741,7 @@ function KpiBlock({ title, tone, cells, note }: { title: string; tone: "accom" |
           <div key={c.label}>
             <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: dark ? "rgba(247,244,238,0.5)" : COLORS.textMuted }}>{c.label}</div>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, marginTop: 4, color: c.color ?? (dark ? "#F7F4EE" : COLORS.textMid) }}>{c.value}</div>
+            {c.sub && <div style={{ fontSize: 10, color: dark ? "rgba(247,244,238,0.55)" : COLORS.textMuted, marginTop: 2 }}>{c.sub}</div>}
           </div>
         ))}
       </div>
