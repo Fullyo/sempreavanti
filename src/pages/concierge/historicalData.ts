@@ -2,6 +2,15 @@
 // and Current Month view since these months pre-date the live MXN bookings table.
 // The rich printable reports still live in april2026Historical.ts / may2026Historical.ts.
 
+export type HistoricalItem = {
+  name: string;
+  qty: number;
+  guest_total: number;      // USD, what the guest paid on this line
+  cost: number | null;      // USD, our cost (null = not applicable)
+  profit: number | null;    // USD, profit on this line (null = pass-through / TBD)
+  passThrough?: boolean;    // tip / CC fee lines are pass-through, not profit
+};
+
 export type HistoricalBooking = {
   id: string;
   guest: string;
@@ -14,6 +23,10 @@ export type HistoricalBooking = {
   currency: "USD";
   notes?: string;
   monthKey?: string; // "YYYY-MM" — forces the folder this booking appears in (overrides check-in date)
+  // Optional per-line breakdown so the booking can render with the same full
+  // detail table as live bookings. When present, the detailed view is used.
+  items?: HistoricalItem[];
+  paymentStatus?: "paid" | "unpaid";
 };
 
 export const MAY_2026_BOOKINGS: HistoricalBooking[] = [
