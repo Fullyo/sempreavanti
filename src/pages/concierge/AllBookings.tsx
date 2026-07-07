@@ -741,6 +741,7 @@ function KpiBlock({ title, tone, cells, note }: { title: string; tone: "accom" |
           <div key={c.label}>
             <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: dark ? "rgba(247,244,238,0.5)" : COLORS.textMuted }}>{c.label}</div>
             <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, marginTop: 4, color: c.color ?? (dark ? "#F7F4EE" : COLORS.textMid) }}>{c.value}</div>
+            {c.sub && <div style={{ fontSize: 10, color: dark ? "rgba(247,244,238,0.55)" : COLORS.textMuted, marginTop: 2 }}>{c.sub}</div>}
           </div>
         ))}
       </div>
