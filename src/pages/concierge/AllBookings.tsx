@@ -622,7 +622,8 @@ export default function AllBookings() {
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <div style={{ fontSize: 18, fontWeight: 500 }}>{formatMXN(v.total_guest)}</div>
-                      <div style={{ fontSize: 12, color: COLORS.green, marginTop: 2 }}>Profit: {formatMXN(v.total_profit)}</div>
+                      <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 1 }}>≈ {formatUSD(v.total_guest / (Number(v.exchange_rate) || FX))} USD @{Number(v.exchange_rate) || FX}</div>
+                      <div style={{ fontSize: 12, color: COLORS.green, marginTop: 2 }}>Profit: {formatMXN(v.total_profit)} <span style={{ color: COLORS.textMuted }}>(≈ {formatUSD(v.total_profit / (Number(v.exchange_rate) || FX))})</span></div>
                       <div
                         style={{
                           display: "inline-block",
