@@ -211,6 +211,12 @@ export const JUNE_2026_BOOKINGS: HistoricalBooking[] = [
     currency: "USD",
     notes: "3 nights · Ref HMSHR8R5NC · Groceries $45 (35% markup) · CC fee $32 & tip $106 pass-through",
     monthKey: "2026-06",
+    paymentStatus: "paid",
+    items: [
+      { name: "Groceries & Shopping", qty: 1, guest_total: 45.00, cost: 33.33, profit: 11.67 },
+      { name: "Staff Tip", qty: 1, guest_total: 106.00, cost: null, profit: null, passThrough: true },
+      { name: "5% Credit Card Fee", qty: 1, guest_total: 32.00, cost: null, profit: null, passThrough: true },
+    ],
   },
   {
     id: "hist-jun-lau",
@@ -224,6 +230,13 @@ export const JUNE_2026_BOOKINGS: HistoricalBooking[] = [
     currency: "USD",
     notes: "5 nights · 2 adults, 1 infant · Ref HMK839ZTST · Groceries $472.19 (35% markup, $122.42) + massage $200 (1,000 MXN profit @16 = $62.50) · CC fee $17.70 & tip $136 pass-through",
     monthKey: "2026-06",
+    paymentStatus: "paid",
+    items: [
+      { name: "Groceries & Shopping", qty: 1, guest_total: 472.19, cost: 349.77, profit: 122.42 },
+      { name: "In-Villa Massage", qty: 1, guest_total: 200.00, cost: 137.50, profit: 62.50 },
+      { name: "Staff Tip", qty: 1, guest_total: 136.00, cost: null, profit: null, passThrough: true },
+      { name: "5% Credit Card Fee", qty: 1, guest_total: 17.70, cost: null, profit: null, passThrough: true },
+    ],
   },
   {
     id: "hist-jun-couri",
@@ -237,6 +250,12 @@ export const JUNE_2026_BOOKINGS: HistoricalBooking[] = [
     currency: "USD",
     notes: "7 nights · 9 adults, 3 children · Ref GY-zz6WhXk3 · Groceries $1,129.05 (35% markup, $292.72) + Airport SUV $312.50 (1,000 MXN profit @16 = $62.50) · UTV $0 · CC fee $43.26 pass-through",
     monthKey: "2026-06",
+    paymentStatus: "paid",
+    items: [
+      { name: "Groceries & Shopping", qty: 1, guest_total: 1129.05, cost: 836.33, profit: 292.72 },
+      { name: "Airport SUV Transfer", qty: 1, guest_total: 312.50, cost: 250.00, profit: 62.50 },
+      { name: "5% Credit Card Fee", qty: 1, guest_total: 43.26, cost: null, profit: null, passThrough: true },
+    ],
   },
   {
     id: "hist-jun-castellanos",
@@ -250,6 +269,12 @@ export const JUNE_2026_BOOKINGS: HistoricalBooking[] = [
     currency: "USD",
     notes: "4 nights · 2 adults, 2 children · Ref HMH8QH4MEK · Groceries $292.56 (35% markup, $75.85) · CC fee $8.78 & tip $80.00 pass-through",
     monthKey: "2026-06",
+    paymentStatus: "paid",
+    items: [
+      { name: "Groceries & Shopping", qty: 1, guest_total: 292.56, cost: 216.71, profit: 75.85 },
+      { name: "Staff Tip", qty: 1, guest_total: 80.00, cost: null, profit: null, passThrough: true },
+      { name: "5% Credit Card Fee", qty: 1, guest_total: 8.78, cost: null, profit: null, passThrough: true },
+    ],
   },
 ];
 
