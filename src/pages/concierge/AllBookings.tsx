@@ -27,6 +27,18 @@ function monthKey(d: string) {
   return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, "0")}`;
 }
 
+// Villa pricing is in pesos; guests are charged in USD converted at this rate.
+// Accommodation fares are paid in USD directly on Guesty and are never converted.
+const FX = 16;
+
+type MoneyPair = { mxn: number; usd: number };
+type MonthKpis = {
+  count: number;
+  accommodation: { fareUSD: number; ownerUSD: number; luxUSD: number };
+  upsells: { billed: MoneyPair; profit: MoneyPair; owner: MoneyPair; lux: MoneyPair };
+  combinedUSD: { ownerTotal: number; luxTotal: number };
+};
+
 const MONTH_NAMES = [
   "January",
   "February",
