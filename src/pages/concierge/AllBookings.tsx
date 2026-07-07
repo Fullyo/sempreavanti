@@ -511,8 +511,9 @@ export default function AllBookings() {
                         {h.notes && <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 4, fontStyle: "italic" }}>{h.notes}</div>}
                       </div>
                       <div style={{ textAlign: "right" }}>
-                        <div style={{ fontSize: 18, fontWeight: 500 }}>{formatUSD(h.upsellsBilled)}</div>
-                        <div style={{ fontSize: 12, color: COLORS.green, marginTop: 2 }}>Profit: {formatUSD(h.upsellsProfit)}</div>
+                        <div style={{ fontSize: 18, fontWeight: 500 }}>{formatMXN(h.upsellsBilled * FX)}</div>
+                        <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 1 }}>≈ {formatUSD(h.upsellsBilled)} USD @16</div>
+                        <div style={{ fontSize: 12, color: COLORS.green, marginTop: 2 }}>Profit: {formatMXN(h.upsellsProfit * FX)} <span style={{ color: COLORS.textMuted }}>(≈ {formatUSD(h.upsellsProfit)})</span></div>
                         <div
                           style={{
                             display: "inline-block", marginTop: 6, fontSize: 10,
@@ -521,7 +522,7 @@ export default function AllBookings() {
                             background: "#E7F0E9", color: COLORS.green,
                           }}
                         >
-                          Paid · {formatUSD(h.upsellsBilled)}
+                          Paid · {formatUSD(h.upsellsBilled)} USD
                         </div>
                       </div>
                     </div>
