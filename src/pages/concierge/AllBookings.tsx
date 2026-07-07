@@ -199,35 +199,46 @@ export default function AllBookings() {
 
 
   // Per-month KPI breakdown.
-  function computeMonthKpis(live: Booking[], hist: HistoricalBooking[]): KpiBreakdown {
-    const histK = computeHistoricalKpis(hist);
-    const liveProfit = live.reduce((s, b) => s + Number(b.total_profit), 0);
-    // Upsell revenue = line-item guest totals only (matches the Owner Statement
-    // and historical figures). Gratuity, tips, and the card fee are NOT upsell
-    // revenue, so they must not inflate this KPI.
-    const liveBilled = live.reduce(
+  // Currency model:
+  //  - Accommodation fare is always USD (paid on Guesty), never converted.
+  //  - Upsells are priced in pesos (MXN) and charged to the guest in USD at FX (16).
+  function computeMonthKpis(live: Booking[], hist: HistoricalBooking[]): MonthKpis {
+    // --- Accommodation (USD only) ---
+    const histAccomUSD = hist.reduce((s, h) => s + h.accommodationFare, 0);
+    const liveAccomUSD = live.reduce((s, b) => {
+      const fare = Number(b.accommodation_fare ?? 0);
+      const rate = Number(b.exchange_rate) || FX;
+      return s + (b.accommodation_currency === "MXN" ? fare / rate : fare);
+    }, 0);
+    const fareUSD = histAccomUSD + liveAccomUSD;
+
+    // --- Upsells (native pesos; USD is the guest-billed conversion @ FX) ---
+    // Historical June upsells are stored in USD → peso = USD * FX.
+    const histBilledUSD = hist.reduce((s, h) => s + h.upsellsBilled, 0);
+    const histProfitUSD = hist.reduce((s, h) => s + h.upsellsProfit, 0);
+    // Live upsells are stored in MXN. Line-item guest totals only (tips / card fee excluded).
+    const liveBilledMXN = live.reduce(
       (s, b) => s + (b.items ?? []).reduce((sum, i) => sum + (Number(i.guest_total) || 0), 0),
       0,
     );
-    const liveAccomFare = live.reduce((s, b) => s + Number(b.accommodation_fare ?? 0), 0);
-    const liveAccomOwner = liveAccomFare * 0.85;
-    const liveAccomLux = liveAccomFare * 0.15;
+    const liveProfitMXN = live.reduce((s, b) => s + Number(b.total_profit), 0);
+
+    const billedMXN = histBilledUSD * FX + liveBilledMXN;
+    const profitMXN = histProfitUSD * FX + liveProfitMXN;
+    const pair = (mxn: number): MoneyPair => ({ mxn, usd: mxn / FX });
+
     return {
-      count: histK.count + live.length,
-      accommodation: {
-        fare: histK.accommodation.fare + liveAccomFare,
-        owner: histK.accommodation.owner + liveAccomOwner,
-        lux: histK.accommodation.lux + liveAccomLux,
-      },
+      count: hist.length + live.length,
+      accommodation: { fareUSD, ownerUSD: fareUSD * 0.85, luxUSD: fareUSD * 0.15 },
       upsells: {
-        billed: histK.upsells.billed + liveBilled,
-        profit: histK.upsells.profit + liveProfit,
-        owner: histK.upsells.owner + liveProfit * 0.85,
-        lux: histK.upsells.lux + liveProfit * 0.15,
+        billed: pair(billedMXN),
+        profit: pair(profitMXN),
+        owner: pair(profitMXN * 0.85),
+        lux: pair(profitMXN * 0.15),
       },
-      combined: {
-        ownerTotal: histK.combined.ownerTotal + liveAccomOwner + liveProfit * 0.85,
-        luxTotal: histK.combined.luxTotal + liveAccomLux + liveProfit * 0.15,
+      combinedUSD: {
+        ownerTotal: fareUSD * 0.85 + (profitMXN / FX) * 0.85,
+        luxTotal: fareUSD * 0.15 + (profitMXN / FX) * 0.15,
       },
     };
   }
