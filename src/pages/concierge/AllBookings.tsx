@@ -454,39 +454,37 @@ export default function AllBookings() {
             {/* Per-month KPI summary */}
             <div style={{ marginBottom: 18 }}>
               <KpiBlock
-                title="Accommodation Fare"
+                title="Accommodation Fare (paid in USD)"
                 tone="accom"
                 cells={[
-                  { label: "Total Fare", value: hasHist ? formatUSD(kpis.accommodation.fare) : formatMXN(kpis.accommodation.fare) },
-                  { label: "Owner's Share 85%", value: hasHist ? formatUSD(kpis.accommodation.owner) : formatMXN(kpis.accommodation.owner), color: COLORS.green },
-                  { label: "LUX's Cut 15%", value: hasHist ? formatUSD(kpis.accommodation.lux) : formatMXN(kpis.accommodation.lux), color: COLORS.amber },
+                  { label: "Total Fare", value: formatUSD(kpis.accommodation.fareUSD) },
+                  { label: "Owner's Share 85%", value: formatUSD(kpis.accommodation.ownerUSD), color: COLORS.green },
+                  { label: "LUX's Cut 15%", value: formatUSD(kpis.accommodation.luxUSD), color: COLORS.amber },
                 ]}
-                note={kpis.accommodation.fare === 0 ? "No accommodation fare recorded for this month." : undefined}
+                note={kpis.accommodation.fareUSD === 0 ? "No accommodation fare recorded for this month." : undefined}
               />
               <KpiBlock
-                title="Upsells (Transport, UTV, Groceries, etc.)"
+                title="Upsells (priced in pesos · charged to guests in USD @16)"
                 tone="upsell"
                 cells={[
-                  { label: "Guest Billed", value: hasHist ? formatUSD(kpis.upsells.billed) : formatMXN(kpis.upsells.billed) },
-                  { label: "Profit Pool", value: hasHist ? formatUSD(kpis.upsells.profit) : formatMXN(kpis.upsells.profit) },
-                  { label: "Owner's Share 85%", value: hasHist ? formatUSD(kpis.upsells.owner) : formatMXN(kpis.upsells.owner), color: COLORS.green },
-                  { label: "LUX's Cut 15%", value: hasHist ? formatUSD(kpis.upsells.lux) : formatMXN(kpis.upsells.lux), color: COLORS.amber },
+                  { label: "Guest Billed", value: formatMXN(kpis.upsells.billed.mxn), sub: `≈ ${formatUSD(kpis.upsells.billed.usd)} USD` },
+                  { label: "Profit Pool", value: formatMXN(kpis.upsells.profit.mxn), sub: `≈ ${formatUSD(kpis.upsells.profit.usd)} USD` },
+                  { label: "Owner's Share 85%", value: formatMXN(kpis.upsells.owner.mxn), sub: `≈ ${formatUSD(kpis.upsells.owner.usd)} USD`, color: COLORS.green },
+                  { label: "LUX's Cut 15%", value: formatMXN(kpis.upsells.lux.mxn), sub: `≈ ${formatUSD(kpis.upsells.lux.usd)} USD`, color: COLORS.amber },
                 ]}
               />
               <KpiBlock
-                title="Combined Totals (Accommodation + Upsells)"
+                title="Combined Totals in USD (Accommodation + Upsells @16)"
                 tone="combined"
                 cells={[
                   { label: "Bookings", value: String(kpis.count) },
-                  { label: "Owner Total Earnings", value: hasHist ? formatUSD(kpis.combined.ownerTotal) : formatMXN(kpis.combined.ownerTotal), color: COLORS.green },
-                  { label: "LUX Total Cut", value: hasHist ? formatUSD(kpis.combined.luxTotal) : formatMXN(kpis.combined.luxTotal), color: COLORS.amber },
+                  { label: "Owner Total Earnings", value: formatUSD(kpis.combinedUSD.ownerTotal), color: COLORS.green },
+                  { label: "LUX Total Cut", value: formatUSD(kpis.combinedUSD.luxTotal), color: COLORS.amber },
                 ]}
               />
-              {hasHist && hasLive && (
-                <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 8 }}>
-                  Note · This month contains both historical (USD) and live (MXN) bookings. Totals above are not FX-converted — treat each currency block separately.
-                </div>
-              )}
+              <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 8 }}>
+                Accommodation is billed in USD on Guesty. Upsells are priced in pesos and charged to guests in USD at 16.
+              </div>
             </div>
 
             {/* Historical (USD) rows — read-only */}
