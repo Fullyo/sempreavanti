@@ -16,8 +16,6 @@ import {
   ALL_HISTORICAL,
   MAY_2026_BOOKINGS,
   HistoricalBooking,
-  KpiBreakdown,
-  computeHistoricalKpis,
   formatUSD,
   historicalMonthKey,
 } from "./historicalData";
