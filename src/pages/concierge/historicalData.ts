@@ -9,6 +9,7 @@ export type HistoricalItem = {
   cost: number | null;      // USD, our cost (null = not applicable)
   profit: number | null;    // USD, profit on this line (null = pass-through / TBD)
   passThrough?: boolean;    // tip / CC fee lines are pass-through, not profit
+  type?: string;            // service type (e.g. "utv") when known
 };
 
 export type HistoricalBooking = {
