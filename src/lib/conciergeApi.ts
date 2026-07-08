@@ -48,4 +48,7 @@ export const conciergeDb = {
 
   pettyCashList: () => call<{ data: any[] }>("petty_cash_list").then((r) => r.data ?? []),
   pettyCashUpsert: (row: Record<string, unknown>) => call("petty_cash_upsert", { row }),
+
+  reservationsList: () => call<{ data: any[] }>("reservations_list").then((r) => r.data ?? []),
+  reservationsSync: () => call<{ synced?: number }>("reservations_sync"),
 };
