@@ -1290,7 +1290,7 @@ function ServiceLine({
     </button>
   );
 
-  const costText = cost === null ? "—" : formatMXN(cost);
+  const costText = cost === null || r.type === "utv" ? "—" : formatMXN(cost);
   const profitText = profit === null ? "cost TBD" : formatMXN(profit);
   const profitColor = profit === null ? COLORS.amber : COLORS.green;
 
