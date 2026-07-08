@@ -121,7 +121,7 @@ export const TYPE_LABEL: Record<string, string> = {
   tour: "Tour 20%",
   tour10: "Tour 10%",
   mgmt: "Mgmt 15%",
-  utv: "UTV 85/15",
+  utv: "UTV profit",
   margin: "Margin",
   fixedprofit: "Fixed",
   grocery: "35% markup",
