@@ -207,7 +207,7 @@ export default function AllBookings() {
   // Currency model:
   //  - Accommodation fare is always USD (paid on Guesty), never converted.
   //  - Upsells are priced in pesos (MXN) and charged to the guest in USD at FX (16).
-  function computeMonthKpis(live: Booking[], hist: HistoricalBooking[]): MonthKpis {
+  function computeMonthKpis(live: Booking[], hist: HistoricalBooking[], key = ""): MonthKpis {
     // --- Accommodation (USD only) ---
     const histAccomUSD = hist.reduce((s, h) => s + h.accommodationFare, 0);
     const liveAccomUSD = live.reduce((s, b) => {
