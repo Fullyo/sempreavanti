@@ -15,6 +15,14 @@ const json = (body: unknown, status = 200) =>
 
 const OPEN_API = "https://open-api.guesty.com";
 
+// Only the three Villas Sempre Avanti listings (Pietro, Luisa, and the whole
+// property "Sempre Avanti"). Other listings on the account are ignored.
+const ALLOWED_LISTINGS = new Set([
+  "697bcfb8c91d8d0015ca285a", // Villa Pietro
+  "697bcfe3a874360012e8aa31", // Villa Luisa
+  "697bcfcf3f5e990014fbc4dd", // Sempre Avanti (whole property)
+]);
+
 async function getOpenApiToken(supabase: ReturnType<typeof createClient>): Promise<string> {
   // Reuse a cached token when still valid.
   const { data: cached } = await supabase
