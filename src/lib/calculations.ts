@@ -29,9 +29,10 @@ export function calcProfit(
   if (type === "beer") return Math.round((480 - price - 140) * qty);
   if (type === "fixedprofit") return (unitCost ?? 500) * qty;
   if (type === "mgmt") return Math.round(price * qty * 0.15);
-  // Owner-owned UTV: 15% of the fare is reserved for maintenance/insurance
-  // (the "cost"), the remaining 85% is profit that then splits 85% owner / 15% LUX.
-  if (type === "utv") return Math.round(price * qty * 0.85);
+  // Owner-owned UTV: the full fare is profit that splits 85% owner / 15% LUX.
+  // Maintenance/insurance is handled as a flat $100/month LUX contribution at the
+  // month level (see AllBookings), NOT a per-booking carve-out.
+  if (type === "utv") return Math.round(price * qty);
   if (type === "margin") return (price - (unitCost ?? 0)) * qty;
   if (type === "flat") return 1000 * qty;
   if (type === "grocery") return Math.round(price * qty * 0.35);
@@ -54,7 +55,7 @@ export function calcCost(
   if (type === "tour") return Math.round(price * qty * 0.8);
   if (type === "tour10") return Math.round(price * qty * 0.9);
   if (type === "mgmt") return Math.round(price * qty * 0.85);
-  if (type === "utv") return Math.round(price * qty * 0.15); // maintenance/insurance reserve
+  if (type === "utv") return 0; // no per-booking cost — maintenance is a flat $100/month line
   if (type === "fuel") return price * qty; // fuel cost = what we pay for gas
   return null;
 }
@@ -120,7 +121,7 @@ export const TYPE_LABEL: Record<string, string> = {
   tour: "Tour 20%",
   tour10: "Tour 10%",
   mgmt: "Mgmt 15%",
-  utv: "UTV 85/15",
+  utv: "UTV profit",
   margin: "Margin",
   fixedprofit: "Fixed",
   grocery: "35% markup",
@@ -198,7 +199,7 @@ export function commissionRule(type: string, price: number, unit_cost: number | 
     case "mgmt":
       return `15% = ${formatMXN(price * 0.15)}`;
     case "utv":
-      return `85% profit · 15% upkeep = ${formatMXN(price * 0.85)}`;
+      return `100% profit · 85% owner / 15% LUX = ${formatMXN(price)}`;
     case "margin":
       return `${formatMXN(price - (unit_cost ?? 0))} profit`;
     case "fixedprofit":

@@ -34,8 +34,15 @@ type MonthKpis = {
   count: number;
   accommodation: { fareUSD: number; ownerUSD: number; luxUSD: number };
   upsells: { billed: MoneyPair; profit: MoneyPair; owner: MoneyPair; lux: MoneyPair };
+  utvMaintenanceUSD: number; // flat LUX → owner UTV maintenance contribution
   combinedUSD: { ownerTotal: number; luxTotal: number };
 };
+
+// Flat UTV maintenance/insurance contribution LUX pays the owner each month.
+// $100/month = $1,200/year, agreed as LUX's 15% share of the ~$8,000/yr UTV upkeep.
+// Applies from June 2026 forward (the first month of the new upsell system).
+const UTV_MAINTENANCE_USD = 100;
+const UTV_MAINTENANCE_START = "2026-06";
 
 const MONTH_NAMES = [
   "January",
@@ -200,7 +207,7 @@ export default function AllBookings() {
   // Currency model:
   //  - Accommodation fare is always USD (paid on Guesty), never converted.
   //  - Upsells are priced in pesos (MXN) and charged to the guest in USD at FX (16).
-  function computeMonthKpis(live: Booking[], hist: HistoricalBooking[]): MonthKpis {
+  function computeMonthKpis(live: Booking[], hist: HistoricalBooking[], key = ""): MonthKpis {
     // --- Accommodation (USD only) ---
     const histAccomUSD = hist.reduce((s, h) => s + h.accommodationFare, 0);
     const liveAccomUSD = live.reduce((s, b) => {
@@ -225,6 +232,8 @@ export default function AllBookings() {
     const profitMXN = histProfitUSD * FX + liveProfitMXN;
     const pair = (mxn: number): MoneyPair => ({ mxn, usd: mxn / FX });
 
+    const utvMaintenanceUSD = key >= UTV_MAINTENANCE_START ? UTV_MAINTENANCE_USD : 0;
+
     return {
       count: hist.length + live.length,
       accommodation: { fareUSD, ownerUSD: fareUSD * 0.85, luxUSD: fareUSD * 0.15 },
@@ -234,9 +243,12 @@ export default function AllBookings() {
         owner: pair(profitMXN * 0.85),
         lux: pair(profitMXN * 0.15),
       },
+      utvMaintenanceUSD,
       combinedUSD: {
-        ownerTotal: fareUSD * 0.85 + (profitMXN / FX) * 0.85,
-        luxTotal: fareUSD * 0.15 + (profitMXN / FX) * 0.15,
+        // LUX pays the owner a flat $100/month UTV maintenance contribution:
+        // owner gains it, LUX's cut is reduced by it.
+        ownerTotal: fareUSD * 0.85 + (profitMXN / FX) * 0.85 + utvMaintenanceUSD,
+        luxTotal: fareUSD * 0.15 + (profitMXN / FX) * 0.15 - utvMaintenanceUSD,
       },
     };
   }
@@ -388,7 +400,7 @@ export default function AllBookings() {
       )}
 
       {(detailKey ? displayMonthSections.filter(([k]) => k === detailKey) : displayMonthSections).map(([key, group]) => {
-        const kpis = computeMonthKpis(group.live, group.hist);
+        const kpis = computeMonthKpis(group.live, group.hist, key);
         const label = monthLabel(key);
         const [yStr, mStr] = key.split("-");
         const monthName = monthNameFromKey(key);
@@ -480,8 +492,19 @@ export default function AllBookings() {
                   { label: "LUX Total Cut", value: formatUSD(kpis.combinedUSD.luxTotal), color: COLORS.amber },
                 ]}
               />
+              {kpis.utvMaintenanceUSD > 0 && (
+                <KpiBlock
+                  title="UTV Maintenance Contribution (LUX → Owner)"
+                  tone="accom"
+                  cells={[
+                    { label: "Flat Monthly Contribution", value: formatUSD(kpis.utvMaintenanceUSD), color: COLORS.green },
+                  ]}
+                  note="LUX contributes a flat $100/month ($1,200/year) toward UTV maintenance & insurance. It is added to the owner's total and deducted from LUX's cut above."
+                />
+              )}
               <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 8 }}>
                 Accommodation is billed in USD on Guesty. Upsells are priced in pesos and charged to guests in USD at 16.
+                {kpis.utvMaintenanceUSD > 0 && " UTV rentals are 100% profit (split 85% owner / 15% LUX); UTV upkeep is covered by the flat $100/month contribution, not per booking."}
               </div>
             </div>
 
