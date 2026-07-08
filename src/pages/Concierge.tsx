@@ -3,6 +3,7 @@ import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import NewBooking from "./concierge/NewBooking";
 import AllBookings from "./concierge/AllBookings";
+import Reservations from "./concierge/Reservations";
 import PriceList from "./concierge/PriceList";
 import ExportTab from "./concierge/Export";
 import SettingsTab from "./concierge/Settings";
