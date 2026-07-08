@@ -557,7 +557,7 @@ export default function AllBookings() {
                     />
                   </div>
 
-                  <div style={{ borderTop: `1px solid ${COLORS.border}`, paddingTop: 12, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12 }}>
+                  <div style={{ borderTop: `1px solid ${COLORS.border}`, paddingTop: 12, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 12 }}>
                     <div>
                       <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>Owner owes LUX (A + B)</div>
                       <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, fontWeight: 400, color: COLORS.amber, marginTop: 4 }}>{formatUSD(ownerOwesLuxUSD)}</div>
@@ -566,9 +566,15 @@ export default function AllBookings() {
                       <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>LUX owes Owner (C)</div>
                       <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, fontWeight: 400, color: COLORS.green, marginTop: 4 }}>{formatMXN(ownerNewUpsellMXN)}</div>
                     </div>
+                    <div>
+                      <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>LUX owes Owner · UTV upkeep (D)</div>
+                      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, fontWeight: 400, color: COLORS.green, marginTop: 4 }}>{formatUSD(UTV_MAINTENANCE_USD)}</div>
+                    </div>
                   </div>
                   <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 10 }}>
-                    Two currencies kept separate — no netting. Accommodation & old-system upsells settle in USD; new-system upsells settle in pesos.
+                    UTV rentals now settle as 100% profit (85% owner / 15% LUX, included in C). LUX covers UTV maintenance/insurance via a flat $100/month contribution (D) — $1,200/year — instead of a per-booking carve-out.
+                    <br />
+                    Currencies kept separate — no netting. Accommodation & old-system upsells settle in USD; new-system upsells settle in pesos.
                   </div>
                 </div>
               );
