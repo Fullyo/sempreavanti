@@ -485,6 +485,72 @@ export default function AllBookings() {
               </div>
             </div>
 
+            {key === "2026-06" && (() => {
+              // June ran two systems. Old system = owner collected upsells (historical
+              // June bookings); New system = LUX collects all upsells (live bookings).
+              const oldNames = group.hist.map((h) => h.guest);
+              const newNames = Array.from(new Set(group.live.map((b) => b.guest)));
+              const accomFareUSD = kpis.accommodation.fareUSD;
+              const luxAccomUSD = accomFareUSD * 0.15;
+              const oldUpsellProfitUSD = group.hist.reduce((s, h) => s + (h.upsellsProfit || 0), 0);
+              const luxOldUpsellUSD = oldUpsellProfitUSD * 0.15;
+              const newUpsellProfitMXN = group.live.reduce((s, b) => s + (Number(b.total_profit) || 0), 0);
+              const ownerNewUpsellMXN = newUpsellProfitMXN * 0.85;
+              const ownerOwesLuxUSD = luxAccomUSD + luxOldUpsellUSD;
+              return (
+                <div style={{ background: "#fff", border: `1px solid ${COLORS.gold}`, borderRadius: 4, padding: "18px 20px", marginBottom: 18 }}>
+                  <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.16em", color: COLORS.gold, fontWeight: 500, marginBottom: 4 }}>
+                    Special Reconciliation · June 2026
+                  </div>
+                  <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, fontWeight: 300, marginBottom: 10 }}>
+                    Owner ⇄ LUX Settlement
+                  </div>
+                  <div style={{ fontSize: 12, color: COLORS.textMid, lineHeight: 1.6, marginBottom: 14 }}>
+                    June is a transition month running two systems.
+                    <br />
+                    <strong>Old system</strong> (owner collected the upsells): {oldNames.length ? oldNames.join(", ") : "—"}.
+                    <br />
+                    <strong>New system</strong> (LUX collects all upsells): {newNames.length ? newNames.join(", ") : "—"}.
+                  </div>
+
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10, marginBottom: 14 }}>
+                    <HistCell
+                      label="A · LUX 15% on ALL accom (USD)"
+                      value={formatUSD(luxAccomUSD)}
+                      sub={`15% × ${formatUSD(accomFareUSD)} total accom · Owner → LUX`}
+                      color={COLORS.amber}
+                    />
+                    <HistCell
+                      label="B · LUX 15% of OLD upsell profit (USD)"
+                      value={formatUSD(luxOldUpsellUSD)}
+                      sub={`15% × ${formatUSD(oldUpsellProfitUSD)} old profit · Owner → LUX`}
+                      color={COLORS.amber}
+                    />
+                    <HistCell
+                      label="C · Owner 85% of NEW upsell profit (pesos)"
+                      value={formatMXN(ownerNewUpsellMXN)}
+                      sub={`85% × ${formatMXN(newUpsellProfitMXN)} new profit · LUX → Owner`}
+                      color={COLORS.green}
+                    />
+                  </div>
+
+                  <div style={{ borderTop: `1px solid ${COLORS.border}`, paddingTop: 12, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 12 }}>
+                    <div>
+                      <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>Owner owes LUX (A + B)</div>
+                      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, fontWeight: 400, color: COLORS.amber, marginTop: 4 }}>{formatUSD(ownerOwesLuxUSD)}</div>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>LUX owes Owner (C)</div>
+                      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, fontWeight: 400, color: COLORS.green, marginTop: 4 }}>{formatMXN(ownerNewUpsellMXN)}</div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 10 }}>
+                    Two currencies kept separate — no netting. Accommodation & old-system upsells settle in USD; new-system upsells settle in pesos.
+                  </div>
+                </div>
+              );
+            })()}
+
             {/* Historical (USD) rows — read-only */}
             {group.hist.map((h) => (
               <div key={h.id} style={{ marginBottom: 12 }}>
