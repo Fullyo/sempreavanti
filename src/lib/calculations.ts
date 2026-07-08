@@ -29,9 +29,10 @@ export function calcProfit(
   if (type === "beer") return Math.round((480 - price - 140) * qty);
   if (type === "fixedprofit") return (unitCost ?? 500) * qty;
   if (type === "mgmt") return Math.round(price * qty * 0.15);
-  // Owner-owned UTV: 15% of the fare is reserved for maintenance/insurance
-  // (the "cost"), the remaining 85% is profit that then splits 85% owner / 15% LUX.
-  if (type === "utv") return Math.round(price * qty * 0.85);
+  // Owner-owned UTV: the full fare is profit that splits 85% owner / 15% LUX.
+  // Maintenance/insurance is handled as a flat $100/month LUX contribution at the
+  // month level (see AllBookings), NOT a per-booking carve-out.
+  if (type === "utv") return Math.round(price * qty);
   if (type === "margin") return (price - (unitCost ?? 0)) * qty;
   if (type === "flat") return 1000 * qty;
   if (type === "grocery") return Math.round(price * qty * 0.35);
