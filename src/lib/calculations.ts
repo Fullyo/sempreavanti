@@ -3,6 +3,7 @@
 export type ServiceType =
   | "tour"
   | "mgmt"
+  | "utv"
   | "margin"
   | "fixedprofit"
   | "grocery"
@@ -28,6 +29,9 @@ export function calcProfit(
   if (type === "beer") return Math.round((480 - price - 140) * qty);
   if (type === "fixedprofit") return (unitCost ?? 500) * qty;
   if (type === "mgmt") return Math.round(price * qty * 0.15);
+  // Owner-owned UTV: 15% of the fare is reserved for maintenance/insurance
+  // (the "cost"), the remaining 85% is profit that then splits 85% owner / 15% LUX.
+  if (type === "utv") return Math.round(price * qty * 0.85);
   if (type === "margin") return (price - (unitCost ?? 0)) * qty;
   if (type === "flat") return 1000 * qty;
   if (type === "grocery") return Math.round(price * qty * 0.35);
@@ -50,6 +54,7 @@ export function calcCost(
   if (type === "tour") return Math.round(price * qty * 0.8);
   if (type === "tour10") return Math.round(price * qty * 0.9);
   if (type === "mgmt") return Math.round(price * qty * 0.85);
+  if (type === "utv") return Math.round(price * qty * 0.15); // maintenance/insurance reserve
   if (type === "fuel") return price * qty; // fuel cost = what we pay for gas
   return null;
 }
@@ -101,6 +106,7 @@ export const TYPE_COLOR: Record<string, string> = {
   tour: "#2D6A45",
   tour10: "#2D6A45",
   mgmt: "#7A5C1E",
+  utv: "#7A5C1E",
   margin: "#7A5C1E",
   fixedprofit: "#7A5C1E",
   grocery: "#8B2E2E",
@@ -114,6 +120,7 @@ export const TYPE_LABEL: Record<string, string> = {
   tour: "Tour 20%",
   tour10: "Tour 10%",
   mgmt: "Mgmt 15%",
+  utv: "UTV 85/15",
   margin: "Margin",
   fixedprofit: "Fixed",
   grocery: "35% markup",
@@ -190,6 +197,8 @@ export function commissionRule(type: string, price: number, unit_cost: number | 
       return `10% = ${formatMXN(price * 0.1)}`;
     case "mgmt":
       return `15% = ${formatMXN(price * 0.15)}`;
+    case "utv":
+      return `85% profit · 15% upkeep = ${formatMXN(price * 0.85)}`;
     case "margin":
       return `${formatMXN(price - (unit_cost ?? 0))} profit`;
     case "fixedprofit":

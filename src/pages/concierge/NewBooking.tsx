@@ -80,7 +80,7 @@ function uid() {
   return Math.random().toString(36).slice(2);
 }
 
-const MANUAL_TYPES = ["tour", "tour10", "mgmt", "margin", "fixedprofit", "grocery", "minibar", "beer", "flat", "villa"];
+const MANUAL_TYPES = ["tour", "tour10", "mgmt", "utv", "margin", "fixedprofit", "grocery", "minibar", "beer", "flat", "villa"];
 
 // Types where quantity is meaningless (priced as a single/total amount).
 const QTY_LESS_TYPES = ["grocery", "minibar", "flat", "fixedprofit"];
