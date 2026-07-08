@@ -34,8 +34,15 @@ type MonthKpis = {
   count: number;
   accommodation: { fareUSD: number; ownerUSD: number; luxUSD: number };
   upsells: { billed: MoneyPair; profit: MoneyPair; owner: MoneyPair; lux: MoneyPair };
+  utvMaintenanceUSD: number; // flat LUX → owner UTV maintenance contribution
   combinedUSD: { ownerTotal: number; luxTotal: number };
 };
+
+// Flat UTV maintenance/insurance contribution LUX pays the owner each month.
+// $100/month = $1,200/year, agreed as LUX's 15% share of the ~$8,000/yr UTV upkeep.
+// Applies from June 2026 forward (the first month of the new upsell system).
+const UTV_MAINTENANCE_USD = 100;
+const UTV_MAINTENANCE_START = "2026-06";
 
 const MONTH_NAMES = [
   "January",
