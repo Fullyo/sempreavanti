@@ -27,6 +27,7 @@ import Unsubscribe from "./pages/Unsubscribe";
 import UtvContracts from "./pages/UtvContracts";
 import Concierge from "./pages/Concierge";
 import GuestPayment from "./pages/GuestPayment";
+import MealPlanner from "./pages/MealPlanner";
 
 
 const queryClient = new QueryClient();
