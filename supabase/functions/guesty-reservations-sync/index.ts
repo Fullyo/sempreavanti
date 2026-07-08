@@ -115,6 +115,8 @@ Deno.serve(async (req) => {
       const results: any[] = data.results || data.data || [];
       total = Number(data.count ?? results.length + skip);
       for (const r of results) {
+        const listingId = r.listingId ?? r.listing?._id ?? null;
+        if (!listingId || !ALLOWED_LISTINGS.has(String(listingId))) continue;
         const checkin = r.checkIn ? String(r.checkIn).slice(0, 10) : null;
         const checkout = r.checkOut ? String(r.checkOut).slice(0, 10) : null;
         rows.push({
