@@ -199,7 +199,7 @@ export function commissionRule(type: string, price: number, unit_cost: number | 
     case "mgmt":
       return `15% = ${formatMXN(price * 0.15)}`;
     case "utv":
-      return `85% profit · 15% upkeep = ${formatMXN(price * 0.85)}`;
+      return `100% profit · 85% owner / 15% LUX = ${formatMXN(price)}`;
     case "margin":
       return `${formatMXN(price - (unit_cost ?? 0))} profit`;
     case "fixedprofit":
