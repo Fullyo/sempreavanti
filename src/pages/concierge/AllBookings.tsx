@@ -400,7 +400,7 @@ export default function AllBookings() {
       )}
 
       {(detailKey ? displayMonthSections.filter(([k]) => k === detailKey) : displayMonthSections).map(([key, group]) => {
-        const kpis = computeMonthKpis(group.live, group.hist);
+        const kpis = computeMonthKpis(group.live, group.hist, key);
         const label = monthLabel(key);
         const [yStr, mStr] = key.split("-");
         const monthName = monthNameFromKey(key);
