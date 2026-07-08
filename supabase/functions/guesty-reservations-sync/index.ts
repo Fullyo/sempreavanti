@@ -125,7 +125,7 @@ Deno.serve(async (req) => {
           checkin,
           checkout,
           nights: r.nightsCount ?? nightsBetween(checkin, checkout),
-          listing_id: r.listingId ?? r.listing?._id ?? null,
+          listing_id: listingId,
           listing_name: r.listing?.nickname ?? r.listing?.title ?? null,
           status: r.status ?? null,
           raw: r,
