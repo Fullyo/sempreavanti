@@ -492,8 +492,19 @@ export default function AllBookings() {
                   { label: "LUX Total Cut", value: formatUSD(kpis.combinedUSD.luxTotal), color: COLORS.amber },
                 ]}
               />
+              {kpis.utvMaintenanceUSD > 0 && (
+                <KpiBlock
+                  title="UTV Maintenance Contribution (LUX → Owner)"
+                  tone="accom"
+                  cells={[
+                    { label: "Flat Monthly Contribution", value: formatUSD(kpis.utvMaintenanceUSD), color: COLORS.green },
+                  ]}
+                  note="LUX contributes a flat $100/month ($1,200/year) toward UTV maintenance & insurance. It is added to the owner's total and deducted from LUX's cut above."
+                />
+              )}
               <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 8 }}>
                 Accommodation is billed in USD on Guesty. Upsells are priced in pesos and charged to guests in USD at 16.
+                {kpis.utvMaintenanceUSD > 0 && " UTV rentals are 100% profit (split 85% owner / 15% LUX); UTV upkeep is covered by the flat $100/month contribution, not per booking."}
               </div>
             </div>
 
