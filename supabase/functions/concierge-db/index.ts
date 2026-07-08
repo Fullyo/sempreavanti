@@ -125,6 +125,29 @@ Deno.serve(async (req) => {
         return json({ ok: true });
       }
 
+      // ---- reservations (Guesty sync) ----
+      case "reservations_list": {
+        const { data, error } = await supabase
+          .from("reservations")
+          .select("id, guesty_id, guest, checkin, checkout, nights, listing_name, status, meal_token")
+          .gte("checkout", new Date().toISOString().slice(0, 10))
+          .order("checkin", { ascending: true });
+        if (error) throw error;
+        return json({ data });
+      }
+      case "reservations_sync": {
+        const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+        const url = `${Deno.env.get("SUPABASE_URL")}/functions/v1/guesty-reservations-sync`;
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceKey}` },
+          body: JSON.stringify({}),
+        });
+        const out = await res.json().catch(() => ({}));
+        if (!res.ok) return json({ error: out?.error || "Sync failed" }, 502);
+        return json(out);
+      }
+
       default:
         return json({ error: "Unknown op" }, 400);
     }

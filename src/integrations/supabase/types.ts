@@ -284,6 +284,140 @@ export type Database = {
         }
         Relationships: []
       }
+      meal_plans: {
+        Row: {
+          breakfast_time: string | null
+          checkin: string | null
+          checkout: string | null
+          created_at: string
+          guest: string | null
+          id: string
+          lunch_time: string | null
+          meal_token: string
+          reservation_id: string | null
+          special_requests: string | null
+          updated_at: string
+        }
+        Insert: {
+          breakfast_time?: string | null
+          checkin?: string | null
+          checkout?: string | null
+          created_at?: string
+          guest?: string | null
+          id?: string
+          lunch_time?: string | null
+          meal_token: string
+          reservation_id?: string | null
+          special_requests?: string | null
+          updated_at?: string
+        }
+        Update: {
+          breakfast_time?: string | null
+          checkin?: string | null
+          checkout?: string | null
+          created_at?: string
+          guest?: string | null
+          id?: string
+          lunch_time?: string | null
+          meal_token?: string
+          reservation_id?: string | null
+          special_requests?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_plans_reservation_id_fkey"
+            columns: ["reservation_id"]
+            isOneToOne: false
+            referencedRelation: "reservations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meal_selections: {
+        Row: {
+          course: string
+          created_at: string
+          day: string
+          dish_id: string | null
+          free_text: string | null
+          id: string
+          meal_plan_id: string
+          skip: boolean
+          updated_at: string
+        }
+        Insert: {
+          course: string
+          created_at?: string
+          day: string
+          dish_id?: string | null
+          free_text?: string | null
+          id?: string
+          meal_plan_id: string
+          skip?: boolean
+          updated_at?: string
+        }
+        Update: {
+          course?: string
+          created_at?: string
+          day?: string
+          dish_id?: string | null
+          free_text?: string | null
+          id?: string
+          meal_plan_id?: string
+          skip?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meal_selections_dish_id_fkey"
+            columns: ["dish_id"]
+            isOneToOne: false
+            referencedRelation: "menu_dishes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meal_selections_meal_plan_id_fkey"
+            columns: ["meal_plan_id"]
+            isOneToOne: false
+            referencedRelation: "meal_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      menu_dishes: {
+        Row: {
+          course: string
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          course: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          course?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       petty_cash: {
         Row: {
           booking_ref: string
@@ -304,6 +438,54 @@ export type Database = {
           currency?: string
           float_amount?: number
           notes?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reservations: {
+        Row: {
+          checkin: string | null
+          checkout: string | null
+          created_at: string
+          guest: string | null
+          guesty_id: string
+          id: string
+          listing_id: string | null
+          listing_name: string | null
+          meal_token: string
+          nights: number | null
+          raw: Json | null
+          status: string | null
+          updated_at: string
+        }
+        Insert: {
+          checkin?: string | null
+          checkout?: string | null
+          created_at?: string
+          guest?: string | null
+          guesty_id: string
+          id?: string
+          listing_id?: string | null
+          listing_name?: string | null
+          meal_token?: string
+          nights?: number | null
+          raw?: Json | null
+          status?: string | null
+          updated_at?: string
+        }
+        Update: {
+          checkin?: string | null
+          checkout?: string | null
+          created_at?: string
+          guest?: string | null
+          guesty_id?: string
+          id?: string
+          listing_id?: string | null
+          listing_name?: string | null
+          meal_token?: string
+          nights?: number | null
+          raw?: Json | null
+          status?: string | null
           updated_at?: string
         }
         Relationships: []
