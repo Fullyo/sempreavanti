@@ -232,6 +232,8 @@ export default function AllBookings() {
     const profitMXN = histProfitUSD * FX + liveProfitMXN;
     const pair = (mxn: number): MoneyPair => ({ mxn, usd: mxn / FX });
 
+    const utvMaintenanceUSD = key >= UTV_MAINTENANCE_START ? UTV_MAINTENANCE_USD : 0;
+
     return {
       count: hist.length + live.length,
       accommodation: { fareUSD, ownerUSD: fareUSD * 0.85, luxUSD: fareUSD * 0.15 },
@@ -241,9 +243,12 @@ export default function AllBookings() {
         owner: pair(profitMXN * 0.85),
         lux: pair(profitMXN * 0.15),
       },
+      utvMaintenanceUSD,
       combinedUSD: {
-        ownerTotal: fareUSD * 0.85 + (profitMXN / FX) * 0.85,
-        luxTotal: fareUSD * 0.15 + (profitMXN / FX) * 0.15,
+        // LUX pays the owner a flat $100/month UTV maintenance contribution:
+        // owner gains it, LUX's cut is reduced by it.
+        ownerTotal: fareUSD * 0.85 + (profitMXN / FX) * 0.85 + utvMaintenanceUSD,
+        luxTotal: fareUSD * 0.15 + (profitMXN / FX) * 0.15 - utvMaintenanceUSD,
       },
     };
   }
