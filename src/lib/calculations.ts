@@ -55,7 +55,7 @@ export function calcCost(
   if (type === "tour") return Math.round(price * qty * 0.8);
   if (type === "tour10") return Math.round(price * qty * 0.9);
   if (type === "mgmt") return Math.round(price * qty * 0.85);
-  if (type === "utv") return Math.round(price * qty * 0.15); // maintenance/insurance reserve
+  if (type === "utv") return 0; // no per-booking cost — maintenance is a flat $100/month line
   if (type === "fuel") return price * qty; // fuel cost = what we pay for gas
   return null;
 }
