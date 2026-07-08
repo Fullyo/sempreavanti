@@ -82,8 +82,7 @@ Deno.serve(async (req) => {
     const authHeader = req.headers.get("Authorization") || "";
     const isCron = authHeader === `Bearer ${serviceKey}`;
     const isConcierge = signingKey ? await verifyConciergeToken(token, signingKey) : false;
-    const isDiag = body?.__diag === "check-open-api-scope-1"; // TEMP diagnostic — remove after verify
-    if (!isCron && !isConcierge && !isDiag) return json({ error: "Unauthorized" }, 401);
+    if (!isCron && !isConcierge) return json({ error: "Unauthorized" }, 401);
 
     const supabase = createClient(Deno.env.get("SUPABASE_URL")!, serviceKey);
 
