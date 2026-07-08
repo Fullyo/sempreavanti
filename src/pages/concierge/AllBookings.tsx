@@ -627,7 +627,7 @@ export default function AllBookings() {
                               {i.name} <span style={{ color: COLORS.textMuted }}>×{i.qty}</span>
                             </td>
                             <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>{formatUSD(i.guest_total)}</td>
-                            <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}`, color: COLORS.textMid }}>{i.cost === null ? "—" : formatUSD(i.cost)}</td>
+                            <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}`, color: COLORS.textMid }}>{i.cost === null || i.type === "utv" ? "—" : formatUSD(i.cost)}</td>
                             <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}`, color: i.passThrough ? COLORS.blue : (i.profit === null ? COLORS.amber : COLORS.green), fontStyle: i.passThrough || i.profit === null ? "italic" : "normal", fontSize: i.passThrough ? 11 : 13 }}>
                               {i.passThrough ? "pass-through" : i.profit === null ? "TBD" : formatUSD(i.profit)}
                             </td>
