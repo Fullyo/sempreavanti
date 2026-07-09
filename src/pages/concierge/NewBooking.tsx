@@ -567,8 +567,6 @@ export default function NewBooking({
         </div>
         <div style={{ gridColumn: "1 / -1", borderTop: `1px dashed ${COLORS.border}`, paddingTop: 16, display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "2fr 1fr 2fr", gap: isMobile ? 12 : 18, alignItems: "end" }}>
           <div style={isMobile ? { gridColumn: "1 / -1" } : undefined}>
-            <label style={fieldLabel}>Accommodation Fare (room only)</label>
-          <div style={isMobile ? { gridColumn: "1 / -1" } : undefined}>
             <label style={{ ...fieldLabel, display: "flex", alignItems: "center", gap: 8 }}>
               <span>Accommodation Fare (room only)</span>
               {fareEdited && (
