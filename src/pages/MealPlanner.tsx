@@ -251,13 +251,17 @@ export default function MealPlanner() {
               </div>
             );
           }
+          const isArrival = i === 0 && data.days.length > 1;
+          const isCheckout = i === data.days.length - 1 && data.days.length > 1;
+          const tag = isArrival ? "Arrival day · dinner only" : isCheckout ? "Departure day · breakfast only" : null;
           return (
             <div key={d.date} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 6, padding: "20px 22px", marginBottom: 16 }}>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, color: C.text, marginBottom: 14 }}>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, color: C.text, marginBottom: tag ? 4 : 14 }}>
                 Day {i + 1} — {fmtDay(d.date)}
               </div>
+              {tag && <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: C.gold, fontWeight: 600, marginBottom: 14 }}>{tag}</div>}
               <div style={{ display: "grid", gap: 14 }}>
-                {SLOTS.map((s) => {
+                {slotsForDay(i, data.days.length).map((s) => {
                   const key = `${d.date}|${s.course}`;
                   const opts = dishesByCourse[s.from] ?? [];
                   return (
