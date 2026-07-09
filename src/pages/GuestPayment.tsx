@@ -59,10 +59,11 @@ export default function GuestPayment() {
   const [data, setData] = useState<PayData | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
-  // tipChoice: "default" = use the concierge-agreed tip as-is; "percent" /
-  // "custom" = the guest is adding on top (never below the agreed floor).
-  const [tipChoice, setTipChoice] = useState<"default" | "percent" | "custom">("default");
-  const [tipPct, setTipPct] = useState(0);
+  // Tipping is fully guest-controlled. The link opens with 5% pre-selected;
+  // the guest can switch presets, remove the tip entirely, or enter a custom
+  // cash amount in USD or MXN.
+  const [tipChoice, setTipChoice] = useState<"percent" | "custom">("percent");
+  const [tipPct, setTipPct] = useState(5);
   const [customAmount, setCustomAmount] = useState(0);
   const [customCurrency, setCustomCurrency] = useState<"MXN" | "USD">("MXN");
   const [paying, setPaying] = useState(false);
