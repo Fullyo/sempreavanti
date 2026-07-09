@@ -32,6 +32,7 @@ export type Database = {
           guest: string
           guest_gratuity: number | null
           guest_tip: number | null
+          guesty_fare: number | null
           guesty_id: string | null
           id: number
           items: Json
@@ -76,6 +77,7 @@ export type Database = {
           guest: string
           guest_gratuity?: number | null
           guest_tip?: number | null
+          guesty_fare?: number | null
           guesty_id?: string | null
           id?: number
           items?: Json
@@ -120,6 +122,7 @@ export type Database = {
           guest?: string
           guest_gratuity?: number | null
           guest_tip?: number | null
+          guesty_fare?: number | null
           guesty_id?: string | null
           id?: number
           items?: Json
