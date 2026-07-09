@@ -109,15 +109,6 @@ Deno.serve(async (req) => {
         price_data: { currency: "mxn", product_data: { name: "UTV Gas" }, unit_amount: cents(utvGas) },
         quantity: 1,
       });
-    if (gratuity > 0)
-      line_items.push({
-        price_data: {
-          currency: "mxn",
-          product_data: { name: "Staff gratuity (5% included)" },
-          unit_amount: cents(gratuity),
-        },
-        quantity: 1,
-      });
     if (tip > 0)
       line_items.push({
         price_data: { currency: "mxn", product_data: { name: "Staff tip" }, unit_amount: cents(tip) },
