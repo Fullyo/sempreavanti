@@ -346,7 +346,6 @@ export default function NewBooking({
       notes: notes || null,
       items,
       cc_fee_on: ccFeeOn,
-      gratuity_waived: gratuityWaived,
       tip_mode: "amount",
       tip_value: tipValue,
       tip_method: "cc" as const,
