@@ -128,13 +128,14 @@ export default function MealPlanner() {
     if (!token || !data) return;
     setSaving(true);
     const selections = data.days
-      .filter((d) => !d.sunday)
       .flatMap((d, i) =>
-        slotsForDay(i, data.days.length).map((s) => {
-          const v = sel[`${d.date}|${s.course}`] ?? "";
-          if (!v) return null;
-          return { day: d.date, course: s.course, dish_id: v === SKIP ? null : v, skip: v === SKIP };
-        }).filter(Boolean),
+        d.sunday
+          ? []
+          : slotsForDay(i, data.days.length).map((s) => {
+              const v = sel[`${d.date}|${s.course}`] ?? "";
+              if (!v) return null;
+              return { day: d.date, course: s.course, dish_id: v === SKIP ? null : v, skip: v === SKIP };
+            }).filter(Boolean),
       );
     const { data: res, error } = await supabase.functions.invoke("meal-plan", {
       body: {
