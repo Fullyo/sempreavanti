@@ -1077,17 +1077,7 @@ export default function NewBooking({
           Charged to guest's card
         </div>
 
-        <div style={summaryRow}>
-          <div>
-            Included Gratuity (5%){" "}
-            <span style={{ color: gratuityWaived ? "#E0A0A0" : "rgba(247,244,238,0.5)" }}>
-              {gratuityWaived ? "(waived for this booking)" : "(accommodation + experiences + fuel)"}
-            </span>
-          </div>
-          <div style={{ textDecoration: gratuityWaived ? "line-through" : "none", opacity: gratuityWaived ? 0.5 : 1 }}>
-            {formatMXN(breakdown.gratuity)}
-          </div>
-        </div>
+
 
         {tip > 0 && (
           <div style={summaryRow}>
