@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
 
     // Fetch reservations that end today or later (upcoming + in-house).
     const today = new Date().toISOString().slice(0, 10);
-    const fields = "guest.fullName checkIn checkOut listingId status nightsCount listing.nickname listing.title";
+    const fields = "guest.fullName checkIn checkOut listingId status nightsCount listing.nickname listing.title money.fareAccommodation money.currency";
     let skip = 0;
     const limit = 100;
     let total = Infinity;
