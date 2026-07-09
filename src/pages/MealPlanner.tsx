@@ -73,6 +73,10 @@ function fmtDay(d: string) {
   return new Date(d + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
 }
 
+function fmtRange(d: string) {
+  return new Date(d + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+}
+
 export default function MealPlanner() {
   const { token } = useParams<{ token: string }>();
   const [data, setData] = useState<PlanData | null>(null);
