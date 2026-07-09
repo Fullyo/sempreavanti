@@ -285,7 +285,7 @@ export default function Concierge() {
 
       <main style={{ maxWidth: 1000, margin: "0 auto", padding: 32 }}>
         {tab === "new" && <NewBooking onSaved={() => setTab("all")} />}
-        {tab === "reservations" && <Reservations />}
+
         {tab === "all" && <AllBookings />}
         {tab === "pricelist" && <PriceList />}
         {tab === "export" && <ExportTab />}
