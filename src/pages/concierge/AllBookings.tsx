@@ -982,3 +982,30 @@ function PettyCashSummary({ group, petty }: {
   );
 }
 
+
+function MealLinkButton({ token }: { token: string }) {
+  const [copied, setCopied] = useState(false);
+  const url = `${typeof window !== "undefined" ? window.location.origin : ""}/meals/${token}`;
+  return (
+    <button
+      onClick={async () => {
+        try {
+          await navigator.clipboard.writeText(url);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1600);
+        } catch {
+          window.prompt("Copy this link:", url);
+        }
+      }}
+      style={{
+        ...btnGhost,
+        padding: "6px 11px",
+        fontSize: 10,
+        color: copied ? COLORS.green : COLORS.textMid,
+        borderColor: copied ? COLORS.green : COLORS.border,
+      }}
+    >
+      {copied ? "Copied ✓" : "Copy meal link"}
+    </button>
+  );
+}
