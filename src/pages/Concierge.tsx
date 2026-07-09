@@ -12,7 +12,7 @@ const TOKEN_KEY = "concierge_token";
 
 const TABS = [
   { id: "new", label: "New Booking" },
-  { id: "reservations", label: "Reservations" },
+  
   { id: "all", label: "All Bookings" },
   { id: "pricelist", label: "Price List" },
   { id: "export", label: "Export" },
