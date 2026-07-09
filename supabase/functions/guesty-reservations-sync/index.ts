@@ -153,15 +153,18 @@ Deno.serve(async (req) => {
       const guestyIds = rows.map((r) => r.guesty_id as string);
       const { data: existing, error: exErr } = await supabase
         .from("bookings")
-        .select("guesty_id")
+        .select("guesty_id, accommodation_fare, guesty_fare")
         .in("guesty_id", guestyIds);
       if (exErr) throw exErr;
-      const existingSet = new Set((existing ?? []).map((b: any) => b.guesty_id));
+      const existingMap = new Map(
+        (existing ?? []).map((b: any) => [b.guesty_id, b]),
+      );
 
       const toInsert: Record<string, unknown>[] = [];
       for (const r of rows) {
         const gid = r.guesty_id as string;
-        const stayFields = {
+        const guestyFare = r.fare_accommodation ?? 0;
+        const stayFields: Record<string, unknown> = {
           guest: r.guest ?? "Guest",
           checkin: r.checkin,
           checkout: r.checkout ?? r.checkin,
@@ -169,7 +172,20 @@ Deno.serve(async (req) => {
           listing_name: r.listing_name,
           res_status: r.status,
         };
-        if (existingSet.has(gid)) {
+        const prev = existingMap.get(gid);
+        if (prev) {
+          // Always refresh the reference Guesty fare.
+          stayFields.guesty_fare = guestyFare;
+          // Only overwrite the effective fare when the concierge hasn't edited it.
+          // "Not edited" = current fare still matches the last Guesty fare (or was
+          // never populated, e.g. backfilled rows with fare 0 / null guesty_fare).
+          const curFare = Number(prev.accommodation_fare) || 0;
+          const prevGuesty = prev.guesty_fare;
+          const untouched = prevGuesty == null || curFare === (Number(prevGuesty) || 0);
+          if (untouched) {
+            stayFields.accommodation_fare = guestyFare;
+            stayFields.accommodation_currency = "usd";
+          }
           const { error } = await supabase.from("bookings").update(stayFields).eq("guesty_id", gid);
           if (error) throw error;
         } else {
@@ -177,7 +193,8 @@ Deno.serve(async (req) => {
             ...stayFields,
             guesty_id: gid,
             source: "guesty",
-            accommodation_fare: r.fare_accommodation ?? 0,
+            accommodation_fare: guestyFare,
+            guesty_fare: guestyFare,
             accommodation_currency: "usd",
           });
         }
