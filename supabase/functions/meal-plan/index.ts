@@ -44,9 +44,9 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!,
     );
 
-    // Resolve the reservation from the meal token.
+    // Resolve the stay from the meal token (bookings is the source of truth).
     const { data: reservation, error: rErr } = await supabase
-      .from("reservations")
+      .from("bookings")
       .select("id, guest, checkin, checkout, listing_name, meal_token")
       .eq("meal_token", token)
       .maybeSingle();
