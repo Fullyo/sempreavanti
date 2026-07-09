@@ -160,7 +160,7 @@ export default function MealPlanner() {
     }
     const t = setTimeout(() => save(), 1000);
     return () => clearTimeout(t);
-  }, [sel, breakfastTime, lunchTime, special, loading, data, save]);
+  }, [sel, special, loading, data, save]);
 
   if (loading) {
     return (
