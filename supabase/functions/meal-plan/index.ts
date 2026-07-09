@@ -64,7 +64,6 @@ Deno.serve(async (req) => {
         .from("meal_plans")
         .insert({
           meal_token: token,
-          reservation_id: reservation.id,
           guest: reservation.guest,
           checkin: reservation.checkin,
           checkout: reservation.checkout,
