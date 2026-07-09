@@ -151,6 +151,11 @@ export default function NewBooking({
   const [accommodationFare, setAccommodationFare] = useState(initialBooking?.accommodation_fare ?? 0);
   // Accommodation fare is always quoted in USD.
   const [accommodationCurrency] = useState<"MXN" | "USD">("USD");
+  // The fare last pulled from Guesty (room-only, USD). When the effective fare
+  // differs from this, the concierge has manually edited it.
+  const guestyFare = (initialBooking as any)?.guesty_fare;
+  const fareEdited =
+    guestyFare != null && Number(accommodationFare) !== (Number(guestyFare) || 0);
   // Money handed to the chef for grocery shopping (always MXN).
   const [groceryAllocation, setGroceryAllocation] = useState<number>(
     Number((initialBooking as any)?.grocery_allocation) || 0,
@@ -562,7 +567,25 @@ export default function NewBooking({
         </div>
         <div style={{ gridColumn: "1 / -1", borderTop: `1px dashed ${COLORS.border}`, paddingTop: 16, display: "grid", gridTemplateColumns: isMobile ? "1fr 1fr" : "2fr 1fr 2fr", gap: isMobile ? 12 : 18, alignItems: "end" }}>
           <div style={isMobile ? { gridColumn: "1 / -1" } : undefined}>
-            <label style={fieldLabel}>Accommodation Fare (room only)</label>
+            <label style={{ ...fieldLabel, display: "flex", alignItems: "center", gap: 8 }}>
+              <span>Accommodation Fare (room only)</span>
+              {fareEdited && (
+                <span
+                  style={{
+                    fontSize: 9,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    color: COLORS.amber,
+                    border: `1px solid ${COLORS.amber}`,
+                    borderRadius: 2,
+                    padding: "1px 6px",
+                  }}
+                  title={`Guesty fare: USD ${(Number(guestyFare) || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+                >
+                  Edited
+                </span>
+              )}
+            </label>
             <input
               style={input}
               type="number"
@@ -572,6 +595,20 @@ export default function NewBooking({
               placeholder="0.00"
               onChange={(e) => setAccommodationFare(Number(e.target.value) || 0)}
             />
+            {fareEdited && (
+              <div style={{ fontSize: 10, color: COLORS.textMuted, marginTop: 4, display: "flex", alignItems: "center", gap: 8 }}>
+                <span>
+                  Guesty: USD {(Number(guestyFare) || 0).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setAccommodationFare(Number(guestyFare) || 0)}
+                  style={{ background: "none", border: "none", color: COLORS.gold, cursor: "pointer", fontSize: 10, textDecoration: "underline", padding: 0 }}
+                >
+                  revert
+                </button>
+              </div>
+            )}
           </div>
           <div>
             <label style={fieldLabel}>Currency</label>
