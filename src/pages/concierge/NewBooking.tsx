@@ -240,9 +240,8 @@ export default function NewBooking({
         fx,
         tipMode: "amount",
         tipValue: tip,
-        gratuityWaived,
       }),
-    [calcItems, accommodationFare, accommodationCurrency, fx, tip, gratuityWaived],
+    [calcItems, accommodationFare, accommodationCurrency, fx, tip],
   );
 
   const ccFee = ccFeeOn ? breakdown.fee : 0;
