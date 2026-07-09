@@ -126,6 +126,19 @@ export default function AllBookings() {
     }
   };
 
+  const syncGuesty = async () => {
+    setSyncing(true);
+    try {
+      const res = await conciergeDb.reservationsSync();
+      toast.success(`Synced ${res?.synced ?? 0} reservations from Guesty`);
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   useEffect(() => {
     load();
     loadPetty();
