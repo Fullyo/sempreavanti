@@ -148,7 +148,7 @@ export default function MealPlanner() {
       return;
     }
     setSavedAt(res.plan?.updated_at ?? new Date().toISOString());
-  }, [token, data, sel, breakfastTime, lunchTime, special]);
+  }, [token, data, sel, special]);
 
   // Debounced autosave whenever selections/fields change (after initial load).
   const firstRun = useRef(true);
