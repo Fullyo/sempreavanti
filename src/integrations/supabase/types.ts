@@ -32,13 +32,19 @@ export type Database = {
           guest: string
           guest_gratuity: number | null
           guest_tip: number | null
+          guesty_id: string | null
           id: number
           items: Json
+          listing_name: string | null
+          meal_token: string
+          nights: number | null
           notes: string | null
           paid_at: string | null
           pay_token: string
           payment_status: string
+          res_status: string | null
           saved_at: string
+          source: string
           stripe_session_id: string | null
           tip: number
           tip_cash: number
@@ -70,13 +76,19 @@ export type Database = {
           guest: string
           guest_gratuity?: number | null
           guest_tip?: number | null
+          guesty_id?: string | null
           id?: number
           items?: Json
+          listing_name?: string | null
+          meal_token?: string
+          nights?: number | null
           notes?: string | null
           paid_at?: string | null
           pay_token?: string
           payment_status?: string
+          res_status?: string | null
           saved_at?: string
+          source?: string
           stripe_session_id?: string | null
           tip?: number
           tip_cash?: number
@@ -108,13 +120,19 @@ export type Database = {
           guest?: string
           guest_gratuity?: number | null
           guest_tip?: number | null
+          guesty_id?: string | null
           id?: number
           items?: Json
+          listing_name?: string | null
+          meal_token?: string
+          nights?: number | null
           notes?: string | null
           paid_at?: string | null
           pay_token?: string
           payment_status?: string
+          res_status?: string | null
           saved_at?: string
+          source?: string
           stripe_session_id?: string | null
           tip?: number
           tip_cash?: number
