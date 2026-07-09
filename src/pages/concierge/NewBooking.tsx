@@ -358,7 +358,7 @@ export default function NewBooking({
       tip_cash_currency: "USD" as const,
       exchange_rate: fx,
       cc_fee: ccFee,
-      guest_gratuity: breakdown.gratuity,
+      guest_gratuity: 0,
       guest_tip: tip,
       total_guest: totalGuest,
       total_profit: totalProfit,
