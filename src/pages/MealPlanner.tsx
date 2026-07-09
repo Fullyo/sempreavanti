@@ -105,8 +105,6 @@ export default function MealPlanner() {
       m[`${s.day}|${s.course}`] = s.skip ? SKIP : s.dish_id ?? "";
     }
     setSel(m);
-    setBreakfastTime(res.plan?.breakfast_time ?? "");
-    setLunchTime(res.plan?.lunch_time ?? "");
     setSpecial(res.plan?.special_requests ?? "");
     setSavedAt(res.plan?.updated_at ?? null);
   }, [token]);
