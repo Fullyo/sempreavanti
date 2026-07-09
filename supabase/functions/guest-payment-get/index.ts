@@ -1,7 +1,9 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
-const GRATUITY_RATE = 0.05;
+// Tip is no longer mandatory. On the guest link it defaults to 5% but the
+// guest can change or remove it entirely.
+const DEFAULT_TIP_RATE = 0.05;
 const FEE_RATE = 0.05;
 const UTV_GAS_PER_RENTAL = 1000;
 const DEFAULT_FX = 16;
