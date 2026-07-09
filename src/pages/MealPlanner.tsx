@@ -138,8 +138,6 @@ export default function MealPlanner() {
       body: {
         token,
         op: "save",
-        breakfast_time: breakfastTime,
-        lunch_time: lunchTime,
         special_requests: special,
         selections,
       },
