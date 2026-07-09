@@ -34,10 +34,8 @@ interface PayData {
   lineItems: LineItem[];
   upsellsSubtotal: number;
   utvGas: number;
-  gratuityRate: number;
-  gratuityWaived?: boolean;
+  defaultTipRate: number;
   feeRate: number;
-  presetTip?: number;
   cashTipMXN?: number;
   cashTipValue?: number;
   cashTipCurrency?: string;
