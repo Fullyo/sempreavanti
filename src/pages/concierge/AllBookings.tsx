@@ -87,6 +87,7 @@ export default function AllBookings() {
   const [editId, setEditId] = useState<number | null>(null);
   // Petty cash float per booking ref ('live-<id>' or historical string id).
   const [petty, setPetty] = useState<Record<string, number>>({});
+  const [syncing, setSyncing] = useState(false);
 
   const load = async () => {
     setLoading(true);
