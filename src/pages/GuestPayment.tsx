@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
-import { GUEST_CARD_FEE_RATE, GUEST_GRATUITY_RATE, TIP_PRESETS } from "@/lib/calculations";
+import { GUEST_CARD_FEE_RATE, TIP_PRESETS } from "@/lib/calculations";
 
 const C = {
   bg: "#F5F1E8",
