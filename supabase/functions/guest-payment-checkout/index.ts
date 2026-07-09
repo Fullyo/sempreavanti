@@ -2,7 +2,6 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import Stripe from "npm:stripe@17.7.0";
 
-const GRATUITY_RATE = 0.05;
 const FEE_RATE = 0.05;
 const UTV_GAS_PER_RENTAL = 1000;
 const DEFAULT_FX = 16;
