@@ -88,34 +88,24 @@ export default function GuestPayment() {
   }, [token]);
 
   const fx = data?.fx || 16;
-  // The credit-card tip the concierge already agreed with the guest. This is
-  // the floor — the guest may add to it but never go below it.
-  const agreedTip = Math.round(Number(data?.presetTip) || 0);
-
-  const gratuityBase = useMemo(() => {
+  // Tip base = accommodation + upsells + fuel. The percentage presets apply
+  // to this base.
+  const tipBase = useMemo(() => {
     if (!data) return 0;
     return data.accommodationMXN + data.upsellsSubtotal + data.utvGas;
   }, [data]);
 
-  const gratuityWaived = data?.gratuityWaived === true;
-  const gratuity = gratuityWaived
-    ? 0
-    : Math.round(gratuityBase * (data?.gratuityRate ?? GUEST_GRATUITY_RATE));
-
-  // The extra tip the guest is adding — purely on top of the agreed tip.
-  const additionalTip = useMemo(() => {
-    if (tipChoice === "percent") return Math.round(gratuityBase * (tipPct / 100));
+  // The tip the guest chose (0 if they opted out).
+  const tip = useMemo(() => {
+    if (tipChoice === "percent") return Math.round(tipBase * (tipPct / 100));
     if (tipChoice === "custom")
       return Math.round(customCurrency === "USD" ? customAmount * fx : customAmount);
     return 0;
-  }, [tipChoice, tipPct, customAmount, customCurrency, gratuityBase, fx]);
+  }, [tipChoice, tipPct, customAmount, customCurrency, tipBase, fx]);
 
-  // Total card tip = what the concierge agreed + whatever the guest adds.
-  const tip = agreedTip + additionalTip;
-
-  const chargeable = (data?.upsellsSubtotal ?? 0) + (data?.utvGas ?? 0) + gratuity + tip;
-  // Card fee applies only to the charged lines (upsells + fuel + gratuity +
-  // tip). It does NOT apply to the accommodation fare — that's paid via Guesty.
+  const chargeable = (data?.upsellsSubtotal ?? 0) + (data?.utvGas ?? 0) + tip;
+  // Card fee applies only to the charged lines (upsells + fuel + tip). It does
+  // NOT apply to the accommodation fare — that's paid via Guesty.
   const feeBase = chargeable;
   const fee = Math.round(feeBase * (data?.feeRate ?? GUEST_CARD_FEE_RATE));
   const total = chargeable + fee;
