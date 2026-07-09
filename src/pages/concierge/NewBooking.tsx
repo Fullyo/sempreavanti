@@ -146,7 +146,6 @@ export default function NewBooking({
   // Card fee is on by default — the concierge never has to remember it.
   const [ccFeeOn, setCcFeeOn] = useState(initialBooking ? (initialBooking.cc_fee_on ?? true) : true);
   const [cashCollected, setCashCollected] = useState(initialBooking?.cash_collected ?? 0);
-  const [cashCollected, setCashCollected] = useState(initialBooking?.cash_collected ?? 0);
   const [accommodationFare, setAccommodationFare] = useState(initialBooking?.accommodation_fare ?? 0);
   // Accommodation fare is always quoted in USD.
   const [accommodationCurrency] = useState<"MXN" | "USD">("USD");
