@@ -129,8 +129,8 @@ export default function MealPlanner() {
     setSaving(true);
     const selections = data.days
       .filter((d) => !d.sunday)
-      .flatMap((d) =>
-        SLOTS.map((s) => {
+      .flatMap((d, i) =>
+        slotsForDay(i, data.days.length).map((s) => {
           const v = sel[`${d.date}|${s.course}`] ?? "";
           if (!v) return null;
           return { day: d.date, course: s.course, dish_id: v === SKIP ? null : v, skip: v === SKIP };
