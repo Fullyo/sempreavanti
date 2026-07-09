@@ -19,12 +19,15 @@ function isSunday(dateStr: string): boolean {
   return new Date(dateStr + "T00:00:00").getUTCDay() === 0;
 }
 
-// Build the list of stay days (check-in through the night before check-out).
+// Build the list of stay days, INCLUDING the checkout day.
+// Check-in is at 4pm (guests dine that evening) and checkout is at 11am
+// (guests still have breakfast that morning), so the checkout date is a valid
+// meal day. Per-day meal availability is enforced client-side.
 function stayDays(checkin: string, checkout: string): string[] {
   const out: string[] = [];
   const start = new Date(checkin + "T00:00:00");
   const end = new Date(checkout + "T00:00:00");
-  for (let d = new Date(start); d < end; d.setUTCDate(d.getUTCDate() + 1)) {
+  for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
     out.push(d.toISOString().slice(0, 10));
   }
   return out;
