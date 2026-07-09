@@ -203,6 +203,20 @@ export default function MealPlanner() {
             in advance so it is ready for your arrival. Choose one main per meal (served family-style). The chefs handle
             all grocery shopping; food costs are additional, based on market pricing.
           </p>
+          <div style={{ marginTop: 16, display: "inline-flex", alignItems: "center", gap: 14, background: "rgba(184,146,74,0.14)", border: `1px solid ${C.gold}`, borderRadius: 4, padding: "10px 16px" }}>
+            <div>
+              <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: C.gold, fontWeight: 600 }}>Arrival</div>
+              <div style={{ fontSize: 14, color: "#F5F1E8", marginTop: 2 }}>{fmtRange(data.checkin)}</div>
+            </div>
+            <div style={{ color: C.gold, fontSize: 18 }}>→</div>
+            <div>
+              <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: C.gold, fontWeight: 600 }}>Departure</div>
+              <div style={{ fontSize: 14, color: "#F5F1E8", marginTop: 2 }}>{fmtRange(data.checkout)}</div>
+            </div>
+          </div>
+          <p style={{ color: "rgba(245,241,232,0.6)", fontSize: 12.5, marginTop: 10, lineHeight: 1.55 }}>
+            Check-in is at 4:00 PM, so your arrival day includes dinner. Checkout is at 11:00 AM, so your final day includes breakfast.
+          </p>
           <a href="/menu" target="_blank" rel="noreferrer" style={{ display: "inline-block", marginTop: 10, color: C.gold, fontSize: 13, letterSpacing: "0.04em" }}>
             View the full menu →
           </a>
