@@ -69,7 +69,6 @@ Deno.serve(async (req) => {
       booking.accommodation_currency === "USD"
         ? Number(booking.accommodation_fare) * fx
         : Number(booking.accommodation_fare);
-    const gratuityWaived = booking.gratuity_waived === true;
     // Cash tip already left at the house (info only — never charged on the card).
     const tipCashMXN = Math.round(Number(booking.tip_cash) || 0);
 
