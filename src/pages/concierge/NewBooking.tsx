@@ -955,35 +955,7 @@ export default function NewBooking({
             </div>
           </div>
 
-          {/* Waive mandatory 5% gratuity — only for exceptional bad-stay cases */}
-          <div style={{ gridColumn: "1 / -1" }}>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                cursor: "pointer",
-                padding: "10px 12px",
-                background: gratuityWaived ? "rgba(139,46,46,0.08)" : "rgba(0,0,0,0.03)",
-                border: `1px solid ${gratuityWaived ? "#8B2E2E" : COLORS.border}`,
-                borderRadius: 3,
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={gratuityWaived}
-                onChange={(e) => setGratuityWaived(e.target.checked)}
-                style={{ width: 16, height: 16, accentColor: "#8B2E2E", cursor: "pointer" }}
-              />
-              <span style={{ fontSize: 13, color: gratuityWaived ? "#8B2E2E" : COLORS.textDark, fontWeight: 500 }}>
-                Waive mandatory 5% gratuity
-              </span>
-            </label>
-            <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 5 }}>
-              Only use this when service went badly and we are not requesting the 5% gratuity. It removes the
-              gratuity from the guest's payment link.
-            </div>
-          </div>
+
         </div>
       </div>
       <div
