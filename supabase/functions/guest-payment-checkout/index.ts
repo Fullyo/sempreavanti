@@ -135,7 +135,7 @@ Deno.serve(async (req) => {
       metadata: {
         booking_id: String(booking.id),
         pay_token: token,
-        gratuity: String(gratuity),
+        gratuity: "0",
         tip: String(tip),
         fee: String(fee),
         total: String(total),
