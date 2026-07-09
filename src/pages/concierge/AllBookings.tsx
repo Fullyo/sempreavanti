@@ -789,6 +789,16 @@ export default function AllBookings() {
                           </tr>
                         );
                       })}
+                      {Number(v.guest_gratuity) > 0 && (
+                        <tr>
+                          <td style={{ padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>
+                            5% Gratuity
+                          </td>
+                          <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>{formatMXN(v.guest_gratuity)}</td>
+                          <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}`, color: COLORS.textMuted }}>—</td>
+                          <td style={{ textAlign: "right", padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}`, color: COLORS.blue, fontStyle: "italic", fontSize: 11 }}>pass-through</td>
+                        </tr>
+                      )}
                       {Number(v.tip) > 0 && (
                         <tr>
                           <td style={{ padding: "8px 6px", borderBottom: `1px solid ${COLORS.border}` }}>
