@@ -361,6 +361,9 @@ export default function AllBookings() {
           {detailKey && (
             <button onClick={() => setDetailKey(null)} style={btnGhost}>← Back to all months</button>
           )}
+          <button onClick={syncGuesty} disabled={syncing} style={{ ...btnPrimary, opacity: syncing ? 0.6 : 1 }}>
+            {syncing ? "Syncing…" : "Refresh from Guesty"}
+          </button>
           <button onClick={load} style={btnGhost}>↻ Refresh</button>
           <button onClick={downloadAllCSV} style={btnGhost}>Download All as CSV</button>
         </div>
