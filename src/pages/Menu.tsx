@@ -387,9 +387,15 @@ export default function Menu() {
           <p className="font-serif text-2xl md:text-4xl lg:text-5xl font-light mb-4">
             Have dietary preferences or special requests?
           </p>
-          <p className="text-sm md:text-base font-sans font-light leading-relaxed opacity-80">
+          <p className="text-sm md:text-base font-sans font-light leading-relaxed opacity-80 mb-6">
             Simply reply to your booking confirmation and let us know — our chefs will take care of the rest.
           </p>
+          <Link
+            to="/chef"
+            className="inline-block px-8 py-3 bg-accent text-accent-foreground font-sans text-xs uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full"
+          >
+            Meet Your Chefs
+          </Link>
         </div>
       </section>
     </Layout>
