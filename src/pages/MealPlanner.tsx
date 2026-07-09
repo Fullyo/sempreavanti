@@ -87,9 +87,8 @@ export default function MealPlanner() {
 
   // key: `${day}|${course}` -> dish id or SKIP or "" (unset)
   const [sel, setSel] = useState<Record<string, string>>({});
-  const [breakfastTime, setBreakfastTime] = useState("");
-  const [lunchTime, setLunchTime] = useState("");
   const [special, setSpecial] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
 
   const load = useCallback(async () => {
     if (!token) return;
@@ -106,8 +105,6 @@ export default function MealPlanner() {
       m[`${s.day}|${s.course}`] = s.skip ? SKIP : s.dish_id ?? "";
     }
     setSel(m);
-    setBreakfastTime(res.plan?.breakfast_time ?? "");
-    setLunchTime(res.plan?.lunch_time ?? "");
     setSpecial(res.plan?.special_requests ?? "");
     setSavedAt(res.plan?.updated_at ?? null);
   }, [token]);
@@ -141,8 +138,6 @@ export default function MealPlanner() {
       body: {
         token,
         op: "save",
-        breakfast_time: breakfastTime,
-        lunch_time: lunchTime,
         special_requests: special,
         selections,
       },
@@ -153,7 +148,7 @@ export default function MealPlanner() {
       return;
     }
     setSavedAt(res.plan?.updated_at ?? new Date().toISOString());
-  }, [token, data, sel, breakfastTime, lunchTime, special]);
+  }, [token, data, sel, special]);
 
   // Debounced autosave whenever selections/fields change (after initial load).
   const firstRun = useRef(true);
@@ -165,7 +160,7 @@ export default function MealPlanner() {
     }
     const t = setTimeout(() => save(), 1000);
     return () => clearTimeout(t);
-  }, [sel, breakfastTime, lunchTime, special, loading, data, save]);
+  }, [sel, special, loading, data, save]);
 
   if (loading) {
     return (
@@ -224,21 +219,83 @@ export default function MealPlanner() {
       </div>
 
       <div style={{ maxWidth: 780, margin: "0 auto", padding: "28px 20px 80px" }}>
-        {/* Times */}
+        {/* How dining works — fine print */}
+        <div style={{ background: "rgba(184,146,74,0.08)", border: `1px solid ${C.gold}`, borderRadius: 6, padding: "20px 22px", marginBottom: 22 }}>
+          <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.16em", color: C.sun, fontWeight: 600, marginBottom: 8 }}>How dining works</div>
+          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, color: C.text, marginBottom: 8, lineHeight: 1.15 }}>
+            Dining at cost — with everything taken care of
+          </div>
+          <p style={{ fontSize: 13.5, color: C.mid, lineHeight: 1.6, marginBottom: 8 }}>
+            Your groceries are purchased fresh from local markets and passed on to you <strong>at cost</strong>. A modest
+            handling fee is added on top so you can simply relax while everything is done for you — the daily{" "}
+            <strong>shopping, prepping, cooking, and cleaning</strong> — along with the pantry staples, oils, spices, and
+            sauces that season every dish.
+          </p>
+          <p style={{ fontSize: 13.5, color: C.mid, lineHeight: 1.6, margin: 0 }}>
+            This keeps chef-prepared, in-villa dining far more affordable than eating out, while fairly covering the basic
+            operating costs of a fully staffed kitchen. Final food charges are based on market pricing for what you select.
+          </p>
+        </div>
+
+        {/* Set meal times */}
         <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 6, padding: "20px 22px", marginBottom: 22 }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-            <div>
-              <label style={label}>Preferred breakfast time</label>
-              <input value={breakfastTime} onChange={(e) => setBreakfastTime(e.target.value)} placeholder="e.g. 9:00 AM" style={selectStyle} />
-            </div>
-            <div>
-              <label style={label}>Preferred lunch time</label>
-              <input value={lunchTime} onChange={(e) => setLunchTime(e.target.value)} placeholder="e.g. 1:30 PM" style={selectStyle} />
-            </div>
+          <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.16em", color: C.muted, fontWeight: 600, marginBottom: 12 }}>Daily service times</div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12, marginBottom: 12 }}>
+            {[
+              { meal: "Breakfast", time: "8:30 AM" },
+              { meal: "Lunch", time: "12:30 PM" },
+              { meal: "Dinner", time: "Ready 5:30 PM" },
+            ].map((m) => (
+              <div key={m.meal} style={{ border: `1px solid ${C.border}`, borderRadius: 4, padding: "12px 10px", textAlign: "center" }}>
+                <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 19, color: C.text }}>{m.meal}</div>
+                <div style={{ fontSize: 13, color: C.gold, marginTop: 2 }}>{m.time}</div>
+              </div>
+            ))}
           </div>
-          <div style={{ marginTop: 12, fontSize: 13, color: C.mid }}>
-            Dinner is served at <strong>5:00 PM</strong>.
-          </div>
+          <p style={{ fontSize: 12.5, color: C.mid, lineHeight: 1.55, marginBottom: 6 }}>
+            Dinner is left warm in the oven — enjoy it whenever you wish. These are our standard service times; special
+            requests can be made and we'll do our best to accommodate.
+          </p>
+          <p style={{ fontSize: 12.5, color: C.muted, fontStyle: "italic", margin: 0 }}>
+            A private plated chef dinner can be arranged at an additional cost.
+          </p>
+        </div>
+
+        {/* Collapsible full menu overview */}
+        <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 6, marginBottom: 22, overflow: "hidden" }}>
+          <button
+            onClick={() => setShowMenu((v) => !v)}
+            style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", padding: "16px 22px", cursor: "pointer", fontFamily: "'Jost', sans-serif" }}
+          >
+            <span style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.16em", color: C.text, fontWeight: 600 }}>View full menu</span>
+            <span style={{ color: C.gold, fontSize: 18, transform: showMenu ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>⌄</span>
+          </button>
+          {showMenu && (
+            <div style={{ padding: "0 22px 22px", display: "grid", gridTemplateColumns: "1fr", gap: 20 }}>
+              {[
+                { key: "breakfast", label: "Breakfast" },
+                { key: "appetizer", label: "Appetizers" },
+                { key: "main", label: "Lunch & Dinner" },
+                { key: "dessert", label: "Desserts" },
+              ].map((cat) => {
+                const items = dishesByCourse[cat.key] ?? [];
+                if (!items.length) return null;
+                return (
+                  <div key={cat.key}>
+                    <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, color: C.text, borderBottom: `1px solid ${C.border}`, paddingBottom: 6, marginBottom: 10 }}>{cat.label}</div>
+                    <div style={{ display: "grid", gap: 8 }}>
+                      {items.map((d) => (
+                        <div key={d.id}>
+                          <div style={{ fontSize: 14, color: C.text, fontWeight: 600 }}>{d.name}</div>
+                          {d.description && <div style={{ fontSize: 12.5, color: C.mid, lineHeight: 1.5 }}>{d.description}</div>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Day cards */}

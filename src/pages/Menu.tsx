@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import SEO from "@/components/SEO";
 import { motion } from "framer-motion";
@@ -193,6 +194,72 @@ export default function Menu() {
         </div>
       </section>
 
+      {/* How dining works + set meal times */}
+      <section className="py-14 md:py-20">
+        <div className="container max-w-5xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+            {/* Pricing fine print */}
+            <motion.div
+              {...fadeUp}
+              className="border border-accent/30 bg-accent/5 rounded-2xl p-6 md:p-8"
+            >
+              <p className="text-[10px] font-sans uppercase tracking-[0.3em] text-accent mb-3">
+                How Dining Works
+              </p>
+              <h2 className="font-serif text-2xl md:text-3xl font-light text-foreground mb-4">
+                Dining at cost — with everything taken care of
+              </h2>
+              <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-3">
+                Your groceries are purchased fresh from local markets and passed on to you{" "}
+                <span className="text-foreground font-medium">at cost</span>. A modest handling
+                fee is added on top so you can simply relax while everything is done for you — the
+                daily <span className="text-foreground font-medium">shopping, prepping, cooking,
+                and cleaning</span> — along with the pantry staples, oils, spices, and sauces that
+                season every dish.
+              </p>
+              <p className="text-sm font-sans text-muted-foreground leading-relaxed">
+                This keeps chef-prepared, in-villa dining far more affordable than eating out, while
+                fairly covering the basic operating costs of a fully staffed kitchen. Final food
+                charges are based on market pricing for what you select.
+              </p>
+            </motion.div>
+
+            {/* Set meal times */}
+            <motion.div
+              {...fadeUp}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="border border-accent/25 bg-cream/50 rounded-2xl p-6 md:p-8"
+            >
+              <p className="text-[10px] font-sans uppercase tracking-[0.3em] text-accent mb-3">
+                Daily Service Times
+              </p>
+              <h2 className="font-serif text-2xl md:text-3xl font-light text-foreground mb-5">
+                When meals are served
+              </h2>
+              <ul className="space-y-3 mb-5">
+                {[
+                  { meal: "Breakfast", time: "8:30 AM" },
+                  { meal: "Lunch", time: "12:30 PM" },
+                  { meal: "Dinner", time: "Ready at 5:30 PM" },
+                ].map((m) => (
+                  <li key={m.meal} className="flex items-baseline justify-between gap-4 border-b border-accent/15 pb-2">
+                    <span className="font-serif text-lg text-foreground">{m.meal}</span>
+                    <span className="text-sm font-sans text-muted-foreground">{m.time}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-xs font-sans text-muted-foreground leading-relaxed mb-2">
+                Dinner is left warm in the oven — enjoy it whenever you wish. These are our standard
+                service times; special requests can be made and we'll do our best to accommodate.
+              </p>
+              <p className="text-xs font-sans italic text-muted-foreground">
+                A private plated chef dinner can be arranged at an additional cost.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
       {/* Menu Card Container */}
       <section className="py-12 md:py-20">
         <div className="container max-w-6xl">
@@ -320,9 +387,15 @@ export default function Menu() {
           <p className="font-serif text-2xl md:text-4xl lg:text-5xl font-light mb-4">
             Have dietary preferences or special requests?
           </p>
-          <p className="text-sm md:text-base font-sans font-light leading-relaxed opacity-80">
+          <p className="text-sm md:text-base font-sans font-light leading-relaxed opacity-80 mb-6">
             Simply reply to your booking confirmation and let us know — our chefs will take care of the rest.
           </p>
+          <Link
+            to="/chef"
+            className="inline-block px-8 py-3 bg-accent text-accent-foreground font-sans text-xs uppercase tracking-widest hover:bg-accent/90 transition-colors rounded-full"
+          >
+            Meet Your Chefs
+          </Link>
         </div>
       </section>
     </Layout>

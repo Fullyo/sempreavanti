@@ -1,64 +1,50 @@
-# One Workspace: Reservations become Bookings
+# Menu page public + dining fine print + set meal times
 
-## Goal
+## 1. Make the Menu page public in navigation
+- Add **Menu** to the "The Estate" dropdown in `Navbar.tsx` (desktop + mobile), placed right after "In-Villa Chef" as `{ label: "Menu", path: "/menu" }`.
+- Keep it also reachable from the Chef page (see #2). This satisfies "both".
+- The `/menu` route already exists in `App.tsx` and is indexable via SEO — no route change needed.
 
-Kill the separate **Reservations** tab. Every Guesty stay lands directly in **All Bookings** as a booking that is *already created* — guest name, villa, dates, accommodation fare (room-only, USD), and the meal-planner link all pre-attached. The concierge never starts from a blank form; she opens the guest that's already there and edits/adds the upsells. All 12 months of 2026 live on one page; 2027 starts fresh next year.
+## 2. Cross-link the Chef page and Menu page
+- Chef page (`/chef`) already has a "View Full Menu" → `/menu` button; keep it and make it clearly primary.
+- On the Menu page, add a link/button back to the **In-Villa Chef** page so browsing flows both ways.
 
-## How it works for the concierge
+## 3. Add the dining pricing fine print (the important part)
+Add a clearly styled "How dining works" / "About our dining" block. It will appear in **two** places, worded the same:
+- On the **public Menu page** (`Menu.tsx`), as a highlighted panel near the top.
+- On the **guest meal planner** (`MealPlanner.tsx`), so guests see it right where they select — this replaces the current one-line "food costs are additional" note with the fuller, clearer version.
 
-- **All Bookings** shows the 2026 months, current month first, exactly like today.
-- Opening a month shows every guest for that month — auto-populated from Guesty — each as a booking card.
-- Each card already has: guest, villa, check-in → check-out, nights, the **accommodation fare** (draft, room-only USD, editable), and the **meal-planner link** (Copy / Open).
-- She clicks a booking to **edit** it: add/adjust upsells, tips, grocery allocation, etc. She never re-types the guest name or the fare.
-- A guest not in Guesty (off-platform / whole-property) can still be **added manually** with the existing New Booking form.
-- **Refresh from Guesty** button moves onto the All Bookings page.
-- April / May / June stay exactly as they are — frozen historical reports, untouched.
+Proposed copy (no percentage named, per your preference):
 
-## The accommodation fare
+> **Dining at cost — with everything taken care of**
+> Your groceries are purchased fresh from local markets and passed on to you **at cost**. A modest handling fee is added on top so you can simply relax while everything is done for you — the daily **shopping, prepping, cooking, and cleaning** — along with the pantry staples, oils, spices, and sauces that season every dish.
+> This keeps chef-prepared, in-villa dining far more affordable than eating out, while fairly covering the basic operating costs of a fully staffed kitchen. Final food charges are based on market pricing for what you select.
 
-Guesty exposes a room-only figure (`money.fareAccommodation`) that is separate from the folio total. The sync pulls **only that** field (never the folio total), stores it as a draft USD fare on the booking. The concierge can still correct it. This directly avoids the folio-vs-room-only mistake we hit for May.
+I'll refine wording during build; the substance (at cost + modest handling fee covering shopping/prep/cooking/cleaning + basic operating costs, cheaper than restaurants) stays as above.
 
-## Data model
+## 4. Set fixed meal times (locked)
+Replace the current editable breakfast/lunch time inputs on the meal planner with **locked, displayed** set times, plus a note that special requests can be made:
+- **Breakfast — 8:30 AM**
+- **Lunch — 12:30 PM**
+- **Dinner — ready at 5:30 PM** (left warm in the oven; enjoy whenever you wish)
+- Note: *"These are our standard service times — special requests can be made and we'll do our best to accommodate."*
+- Note: *"A private plated chef dinner can be arranged at an additional cost."*
 
-Make `bookings` the single source of truth and retire the separate `reservations` table from the UI.
+These same set times will also be listed on the public Menu page so browsers see them.
 
-Add to `public.bookings`:
-- `guesty_id` (text, unique when present) — links a booking to its Guesty stay; null for manual bookings.
-- `meal_token` (uuid, default gen_random_uuid()) — the guest meal-planner link.
-- `listing_name` (text), `nights` (int), `res_status` (text) — stay metadata.
-- `source` (text, default `'manual'`; `'guesty'` for synced) — origin.
-
-Migration also backfills: for each current `reservations` row, insert/merge a matching `bookings` row (carrying over its `meal_token` so existing meal-planner links keep working).
-
-## Sync behavior (guesty-reservations-sync)
-
-- Request the extra field `money.fareAccommodation` (+ its currency) from the Guesty API alongside the existing fields.
-- Upsert into `bookings` keyed on `guesty_id`:
-  - **On insert:** set guest, checkin, checkout, nights, listing_name, res_status, `accommodation_fare` (from `fareAccommodation`), `accommodation_currency='usd'`, `source='guesty'`, fresh `meal_token`.
-  - **On update:** refresh only Guesty-owned fields (dates, status, guest, nights, listing). Never overwrite concierge-entered upsells, tips, grocery, or a fare she has edited.
-- Cancelled Guesty stays flip `res_status` to `cancelled` (shown greyed, not deleted, so entered upsells aren't lost).
-
-## Meal planner
-
-The public `/meals/:token` planner and its `meal-plan` edge function get repointed to look up the token on `bookings.meal_token` (backfilled to match existing tokens), so no guest link breaks.
-
-## UI changes
-
-- `src/pages/Concierge.tsx` — remove the "Reservations" tab.
-- Delete `src/pages/concierge/Reservations.tsx`.
-- `src/pages/concierge/AllBookings.tsx`:
-  - Move the "Refresh from Guesty" action here.
-  - Render each month's Guesty bookings as editable cards with the Copy/Open meal-link buttons.
-  - Keep month navigation, historical months, KPIs, and currency display rules unchanged.
-- `src/pages/concierge/NewBooking.tsx` — reused as the edit form for a pre-created booking (guest + fare pre-filled, editable); still usable to add a manual booking.
-
-## Out of scope (unchanged)
-
-- April/May/June historical reports and their math.
-- Currency conventions (accommodation USD, upsells MXN @16), tip logic, UTV upkeep, grocery allocation, KPI formulas.
+## 5. Collapsible menu overview on the planner
+- Add a **"View full menu"** collapsible panel at the top of the planner (`MealPlanner.tsx`), **closed by default**, that expands in place to show the categorized dish list (breakfast / appetizers / mains / desserts) pulled from the same `dishes` data already loaded. Keeps the page uncluttered.
+- The existing "View the full menu →" link to `/menu` stays as a secondary option.
 
 ## Technical notes
+- Frontend/presentation only — no database or edge-function changes.
+- `MealPlanner.tsx` change: remove the free-text `breakfast_time` / `lunch_time` inputs from the UI and stop sending them on save (fields can remain in the backend, just unused); add the fixed-times display, the fine-print block, and the collapsible menu overview built from `dishesByCourse`.
+- `Menu.tsx`: add the dining fine-print panel, the set meal times, and a link to the Chef page.
+- `Navbar.tsx`: add the Menu item to "The Estate" (desktop + mobile lists).
+- No changes to meal-selection logic, Sunday handling, or arrival/departure day rules.
 
-- One migration for the `bookings` columns + backfill from `reservations`.
-- `concierge-db` already exposes bookings list/insert/update/upsert — extend its allowed field list for the new columns.
-- After the model is proven, the `reservations` table can be dropped in a later cleanup; this plan leaves it in place (dormant) to be safe.
+## Files to edit
+- `src/components/layout/Navbar.tsx`
+- `src/pages/Menu.tsx`
+- `src/pages/Chef.tsx` (minor link emphasis)
+- `src/pages/MealPlanner.tsx`

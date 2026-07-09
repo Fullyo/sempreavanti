@@ -28,6 +28,7 @@ const navItems: NavItem[] = [
     children: [
       { label: "The Villas", path: "/villas" },
       { label: "In-Villa Chef", path: "/chef" },
+      { label: "Menu", path: "/menu" },
       { label: "Wellness", path: "/wellness" },
       { label: "Your Team", path: "/staff" },
     ],
