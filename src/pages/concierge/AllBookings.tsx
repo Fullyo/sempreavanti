@@ -311,6 +311,7 @@ export default function AllBookings() {
       b.items.forEach((i) =>
         rows.push([m, b.guest, b.checkin, b.checkout ?? "", i.name, String(i.qty), String(Math.round(i.price)), String(Math.round(i.guest_total ?? 0)), i.cost === null ? "" : String(Math.round(i.cost)), i.profit === null ? "TBD" : String(Math.round(i.profit))]),
       );
+      if (Number(b.guest_gratuity) > 0) rows.push([m, b.guest, b.checkin, b.checkout ?? "", "5% Gratuity", "", "", String(Math.round(b.guest_gratuity)), "", "pass-through"]);
       if (Number(b.tip) > 0) rows.push([m, b.guest, b.checkin, b.checkout ?? "", b.tip_mode === "percent" ? `Staff Tip (${b.tip_value}%)` : "Staff Tip", "", "", String(Math.round(b.tip)), "", "pass-through"]);
       if (Number(b.cc_fee) > 0) rows.push([m, b.guest, b.checkin, b.checkout ?? "", "5% Credit Card Fee", "", "", String(Math.round(b.cc_fee)), "", ""]);
     });
