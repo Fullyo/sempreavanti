@@ -151,6 +151,11 @@ export default function NewBooking({
   const [accommodationFare, setAccommodationFare] = useState(initialBooking?.accommodation_fare ?? 0);
   // Accommodation fare is always quoted in USD.
   const [accommodationCurrency] = useState<"MXN" | "USD">("USD");
+  // The fare last pulled from Guesty (room-only, USD). When the effective fare
+  // differs from this, the concierge has manually edited it.
+  const guestyFare = (initialBooking as any)?.guesty_fare;
+  const fareEdited =
+    guestyFare != null && Number(accommodationFare) !== (Number(guestyFare) || 0);
   // Money handed to the chef for grocery shopping (always MXN).
   const [groceryAllocation, setGroceryAllocation] = useState<number>(
     Number((initialBooking as any)?.grocery_allocation) || 0,
