@@ -287,7 +287,7 @@ export default function NewBooking({
     setTipCashUsd(0);
     setTipCashMxn(0);
     setCcFeeOn(true);
-    setGratuityWaived(false);
+    
     setCashCollected(0);
     setAccommodationFare(0);
     setGroceryAllocation(0);
