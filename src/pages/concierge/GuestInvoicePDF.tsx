@@ -202,13 +202,9 @@ function InvoiceDoc({ booking }: { booking: Booking }) {
             <Text>Experiences subtotal</Text>
             <Text>{formatMXN(experiencesTotal)}</Text>
           </View>
-          <View style={styles.totalRow}>
-            <Text>Included gratuity (5%)</Text>
-            <Text>{formatMXN(bd.gratuity)}</Text>
-          </View>
           {bd.tip > 0 && (
             <View style={styles.totalRow}>
-              <Text>Additional tip</Text>
+              <Text>Tip</Text>
               <Text>{formatMXN(bd.tip)}</Text>
             </View>
           )}
