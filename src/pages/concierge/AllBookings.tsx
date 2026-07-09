@@ -714,12 +714,31 @@ export default function AllBookings() {
                     <div style={{ flex: 1 }}>
                       <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 300 }}>
                         {v.guest}
+                        {v.source === "guesty" && (
+                          <span style={{ fontSize: 9, background: "#B8924A1a", color: COLORS.gold, padding: "2px 8px", borderRadius: 10, marginLeft: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>Guesty</span>
+                        )}
+                        {(v.res_status === "canceled" || v.res_status === "cancelled") && (
+                          <span style={{ fontSize: 9, background: "#E08A8A1a", color: COLORS.red, padding: "2px 8px", borderRadius: 10, marginLeft: 8, textTransform: "uppercase", letterSpacing: "0.08em" }}>Cancelled</span>
+                        )}
                       </div>
                       <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 4, display: "flex", gap: 10, alignItems: "center" }}>
                         <span>
-                          Check-in: {v.checkin}{v.checkout ? ` · Check-out: ${v.checkout}` : ""}
+                          {v.listing_name ? `${v.listing_name} · ` : ""}Check-in: {v.checkin}{v.checkout ? ` · Check-out: ${v.checkout}` : ""}{v.nights ? ` · ${v.nights} night${v.nights === 1 ? "" : "s"}` : ""}
                         </span>
                       </div>
+                      {v.meal_token && (
+                        <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                          <MealLinkButton token={v.meal_token} />
+                          <a
+                            href={`${window.location.origin}/meals/${v.meal_token}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{ ...btnGhost, padding: "6px 11px", fontSize: 10, textDecoration: "none" }}
+                          >
+                            Open meal plan
+                          </a>
+                        </div>
+                      )}
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <div style={{ fontSize: 18, fontWeight: 500 }}>{formatMXN(v.total_guest)}</div>
