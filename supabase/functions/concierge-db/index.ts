@@ -21,6 +21,8 @@ const BOOKING_COLS = [
   "accommodation_currency", "pay_token", "payment_status", "exchange_rate", "guest_tip",
   "guest_gratuity", "amount_paid", "paid_at", "stripe_session_id", "created_at", "saved_at",
   "notes", "gratuity_waived", "grocery_allocation", "grocery_allocation_currency",
+  "guesty_id", "listing_name", "nights", "res_status", "source",
+
 ];
 const PETTY_COLS = ["booking_ref", "float_amount", "currency", "updated_at", "notes"];
 

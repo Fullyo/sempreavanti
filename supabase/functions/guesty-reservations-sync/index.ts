@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
 
     // Fetch reservations that end today or later (upcoming + in-house).
     const today = new Date().toISOString().slice(0, 10);
-    const fields = "guest.fullName checkIn checkOut listingId status nightsCount listing.nickname listing.title";
+    const fields = "guest.fullName checkIn checkOut listingId status nightsCount listing.nickname listing.title money.fareAccommodation money.currency";
     let skip = 0;
     const limit = 100;
     let total = Infinity;
@@ -119,6 +119,8 @@ Deno.serve(async (req) => {
         if (!listingId || !ALLOWED_LISTINGS.has(String(listingId))) continue;
         const checkin = r.checkIn ? String(r.checkIn).slice(0, 10) : null;
         const checkout = r.checkOut ? String(r.checkOut).slice(0, 10) : null;
+        // Room-only accommodation fare (never the folio total).
+        const fareAccom = Number(r.money?.fareAccommodation);
         rows.push({
           guesty_id: String(r._id || r.id),
           guest: r.guest?.fullName ?? null,
@@ -128,6 +130,7 @@ Deno.serve(async (req) => {
           listing_id: listingId,
           listing_name: r.listing?.nickname ?? r.listing?.title ?? null,
           status: r.status ?? null,
+          fare_accommodation: Number.isFinite(fareAccom) ? fareAccom : null,
           raw: r,
         });
       }
@@ -135,12 +138,54 @@ Deno.serve(async (req) => {
       if (results.length < limit) break;
     }
 
-    // Upsert on guesty_id. meal_token has a DB default, so only set it for new rows.
     if (rows.length) {
-      const { error } = await supabase
+      // Keep the raw reservations archive up to date (dormant, but harmless).
+      const { error: resErr } = await supabase
         .from("reservations")
-        .upsert(rows, { onConflict: "guesty_id", ignoreDuplicates: false });
-      if (error) throw error;
+        .upsert(
+          rows.map(({ fare_accommodation, ...rest }) => rest),
+          { onConflict: "guesty_id", ignoreDuplicates: false },
+        );
+      if (resErr) throw resErr;
+
+      // Bookings are the single source of truth. Only touch Guesty-owned fields
+      // so concierge-entered upsells / tips / fare corrections are never clobbered.
+      const guestyIds = rows.map((r) => r.guesty_id as string);
+      const { data: existing, error: exErr } = await supabase
+        .from("bookings")
+        .select("guesty_id")
+        .in("guesty_id", guestyIds);
+      if (exErr) throw exErr;
+      const existingSet = new Set((existing ?? []).map((b: any) => b.guesty_id));
+
+      const toInsert: Record<string, unknown>[] = [];
+      for (const r of rows) {
+        const gid = r.guesty_id as string;
+        const stayFields = {
+          guest: r.guest ?? "Guest",
+          checkin: r.checkin,
+          checkout: r.checkout ?? r.checkin,
+          nights: r.nights,
+          listing_name: r.listing_name,
+          res_status: r.status,
+        };
+        if (existingSet.has(gid)) {
+          const { error } = await supabase.from("bookings").update(stayFields).eq("guesty_id", gid);
+          if (error) throw error;
+        } else {
+          toInsert.push({
+            ...stayFields,
+            guesty_id: gid,
+            source: "guesty",
+            accommodation_fare: r.fare_accommodation ?? 0,
+            accommodation_currency: "usd",
+          });
+        }
+      }
+      if (toInsert.length) {
+        const { error } = await supabase.from("bookings").insert(toInsert);
+        if (error) throw error;
+      }
       synced = rows.length;
     }
 

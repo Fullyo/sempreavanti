@@ -188,6 +188,12 @@ export interface Booking {
   stripe_session_id?: string | null;
   saved_at: string;
   created_at: string;
+  guesty_id?: string | null;
+  meal_token?: string | null;
+  listing_name?: string | null;
+  nights?: number | null;
+  res_status?: string | null;
+  source?: string | null;
 }
 
 export function commissionRule(type: string, price: number, unit_cost: number | null): string {

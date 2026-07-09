@@ -3,7 +3,7 @@ import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
 import NewBooking from "./concierge/NewBooking";
 import AllBookings from "./concierge/AllBookings";
-import Reservations from "./concierge/Reservations";
+
 import PriceList from "./concierge/PriceList";
 import ExportTab from "./concierge/Export";
 import SettingsTab from "./concierge/Settings";
@@ -12,7 +12,7 @@ const TOKEN_KEY = "concierge_token";
 
 const TABS = [
   { id: "new", label: "New Booking" },
-  { id: "reservations", label: "Reservations" },
+  
   { id: "all", label: "All Bookings" },
   { id: "pricelist", label: "Price List" },
   { id: "export", label: "Export" },
@@ -285,7 +285,7 @@ export default function Concierge() {
 
       <main style={{ maxWidth: 1000, margin: "0 auto", padding: 32 }}>
         {tab === "new" && <NewBooking onSaved={() => setTab("all")} />}
-        {tab === "reservations" && <Reservations />}
+
         {tab === "all" && <AllBookings />}
         {tab === "pricelist" && <PriceList />}
         {tab === "export" && <ExportTab />}

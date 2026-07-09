@@ -87,6 +87,7 @@ export default function AllBookings() {
   const [editId, setEditId] = useState<number | null>(null);
   // Petty cash float per booking ref ('live-<id>' or historical string id).
   const [petty, setPetty] = useState<Record<string, number>>({});
+  const [syncing, setSyncing] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -122,6 +123,19 @@ export default function AllBookings() {
       await conciergeDb.pettyCashUpsert({ booking_ref: ref, float_amount: amount, currency, updated_at: new Date().toISOString() });
     } catch (e) {
       toast.error((e as Error).message);
+    }
+  };
+
+  const syncGuesty = async () => {
+    setSyncing(true);
+    try {
+      const res = await conciergeDb.reservationsSync();
+      toast.success(`Synced ${res?.synced ?? 0} reservations from Guesty`);
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setSyncing(false);
     }
   };
 
@@ -347,6 +361,9 @@ export default function AllBookings() {
           {detailKey && (
             <button onClick={() => setDetailKey(null)} style={btnGhost}>← Back to all months</button>
           )}
+          <button onClick={syncGuesty} disabled={syncing} style={{ ...btnPrimary, opacity: syncing ? 0.6 : 1 }}>
+            {syncing ? "Syncing…" : "Refresh from Guesty"}
+          </button>
           <button onClick={load} style={btnGhost}>↻ Refresh</button>
           <button onClick={downloadAllCSV} style={btnGhost}>Download All as CSV</button>
         </div>
@@ -697,12 +714,31 @@ export default function AllBookings() {
                     <div style={{ flex: 1 }}>
                       <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 300 }}>
                         {v.guest}
+                        {v.source === "guesty" && (
+                          <span style={{ fontSize: 9, background: "#B8924A1a", color: COLORS.gold, padding: "2px 8px", borderRadius: 10, marginLeft: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>Guesty</span>
+                        )}
+                        {(v.res_status === "canceled" || v.res_status === "cancelled") && (
+                          <span style={{ fontSize: 9, background: "#E08A8A1a", color: COLORS.red, padding: "2px 8px", borderRadius: 10, marginLeft: 8, textTransform: "uppercase", letterSpacing: "0.08em" }}>Cancelled</span>
+                        )}
                       </div>
                       <div style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 4, display: "flex", gap: 10, alignItems: "center" }}>
                         <span>
-                          Check-in: {v.checkin}{v.checkout ? ` · Check-out: ${v.checkout}` : ""}
+                          {v.listing_name ? `${v.listing_name} · ` : ""}Check-in: {v.checkin}{v.checkout ? ` · Check-out: ${v.checkout}` : ""}{v.nights ? ` · ${v.nights} night${v.nights === 1 ? "" : "s"}` : ""}
                         </span>
                       </div>
+                      {v.meal_token && (
+                        <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+                          <MealLinkButton token={v.meal_token} />
+                          <a
+                            href={`${window.location.origin}/meals/${v.meal_token}`}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{ ...btnGhost, padding: "6px 11px", fontSize: 10, textDecoration: "none" }}
+                          >
+                            Open meal plan
+                          </a>
+                        </div>
+                      )}
                     </div>
                     <div style={{ textAlign: "right" }}>
                       <div style={{ fontSize: 18, fontWeight: 500 }}>{formatMXN(v.total_guest)}</div>
@@ -946,3 +982,30 @@ function PettyCashSummary({ group, petty }: {
   );
 }
 
+
+function MealLinkButton({ token }: { token: string }) {
+  const [copied, setCopied] = useState(false);
+  const url = `${typeof window !== "undefined" ? window.location.origin : ""}/meals/${token}`;
+  return (
+    <button
+      onClick={async () => {
+        try {
+          await navigator.clipboard.writeText(url);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1600);
+        } catch {
+          window.prompt("Copy this link:", url);
+        }
+      }}
+      style={{
+        ...btnGhost,
+        padding: "6px 11px",
+        fontSize: 10,
+        color: copied ? COLORS.green : COLORS.textMid,
+        borderColor: copied ? COLORS.green : COLORS.border,
+      }}
+    >
+      {copied ? "Copied ✓" : "Copy meal link"}
+    </button>
+  );
+}
