@@ -87,9 +87,8 @@ export default function MealPlanner() {
 
   // key: `${day}|${course}` -> dish id or SKIP or "" (unset)
   const [sel, setSel] = useState<Record<string, string>>({});
-  const [breakfastTime, setBreakfastTime] = useState("");
-  const [lunchTime, setLunchTime] = useState("");
   const [special, setSpecial] = useState("");
+  const [showMenu, setShowMenu] = useState(false);
 
   const load = useCallback(async () => {
     if (!token) return;
