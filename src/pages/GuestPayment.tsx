@@ -270,7 +270,7 @@ export default function GuestPayment() {
               <Row label="Experiences subtotal" value={mxn(data.upsellsSubtotal + data.utvGas)} bold />
             </section>
 
-            {/* Gratuity */}
+            {/* Tip */}
             <section
               style={{
                 background: C.card,
@@ -283,39 +283,18 @@ export default function GuestPayment() {
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, fontWeight: 300, marginBottom: 8 }}>
                 A note on gratuity
               </div>
-              {gratuityWaived ? (
-                <p style={{ color: C.mid, fontSize: 14, lineHeight: 1.6, margin: "0 0 14px" }}>
-                  No service gratuity is being requested for this stay.
-                </p>
-              ) : (
-                <>
-                  <p style={{ color: C.mid, fontSize: 14, lineHeight: 1.6, margin: "0 0 14px" }}>
-                    As part of a fully serviced villa, a base <strong>5% gratuity is included</strong>. Our staff
-                    appreciates it deeply — it makes a real difference for the team caring for you.
-                  </p>
-                  <Row label="Included gratuity (5%)" value={mxn(gratuity)} bold />
-                </>
-              )}
-
-              {/* Tip the concierge already agreed with the guest (the floor) */}
-              {agreedTip > 0 && (
-                <div style={{ marginTop: 14 }}>
-                  <Row label="Tip agreed with concierge" value={mxn(agreedTip)} bold />
-                </div>
-              )}
+              <p style={{ color: C.mid, fontSize: 14, lineHeight: 1.6, margin: "0 0 14px" }}>
+                If our concierge, chefs, housekeeping, property team, and valet made your stay special, you're warmly
+                welcome to leave a gratuity for the team. It's entirely your choice — tap a percentage to select it, or
+                tap it again to remove it.
+              </p>
 
               {/* Cash already left at the house — info only, not charged */}
               {cashTipMXN > 0 && (
-                <div style={{ marginTop: 4 }}>
+                <div style={{ marginBottom: 14 }}>
                   <Row label="Already left in cash (not charged here)" value={mxn(cashTipMXN)} faded />
                 </div>
               )}
-
-              <div style={{ height: 1, background: C.border, margin: "18px 0 14px" }} />
-              <p style={{ color: C.mid, fontSize: 14, lineHeight: 1.6, margin: "0 0 14px" }}>
-                If our concierge, chefs, housekeeping, property team, and valet made your stay special, you're warmly
-                welcome to add{agreedTip > 0 ? " to" : ""} their gratuity.
-              </p>
 
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 {TIP_PRESETS.map((p) => {
@@ -324,8 +303,13 @@ export default function GuestPayment() {
                     <button
                       key={p}
                       onClick={() => {
-                        setTipChoice("percent");
-                        setTipPct(p);
+                        if (active) {
+                          // Tapping the active preset removes the tip.
+                          setTipPct(0);
+                        } else {
+                          setTipChoice("percent");
+                          setTipPct(p);
+                        }
                       }}
                       style={tipBtn(active)}
                     >
@@ -342,9 +326,9 @@ export default function GuestPayment() {
               </div>
 
               <div style={{ fontSize: 12, color: C.muted, marginTop: 10, lineHeight: 1.5 }}>
-                Calculated on accommodation + experiences ({mxn(gratuityBase)}).
+                Calculated on accommodation + experiences ({mxn(tipBase)}).
                 {tipChoice === "percent" && tipPct > 0 && (
-                  <> {tipPct}% = {mxn(Math.round(gratuityBase * (tipPct / 100)))}.</>
+                  <> {tipPct}% = {mxn(Math.round(tipBase * (tipPct / 100)))}.</>
                 )}
               </div>
 
@@ -395,12 +379,13 @@ export default function GuestPayment() {
                 </div>
               )}
 
-              {additionalTip > 0 && (
+              {tip > 0 && (
                 <div style={{ marginTop: 14 }}>
-                  <Row label="Additional tip" value={mxn(additionalTip)} bold />
+                  <Row label="Tip" value={mxn(tip)} bold />
                 </div>
               )}
             </section>
+
 
             {/* Total */}
             <section style={{ background: C.dark, color: "#F5F1E8", borderRadius: 6, padding: 28, marginTop: 18 }}>
