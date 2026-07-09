@@ -145,8 +145,6 @@ export default function NewBooking({
   const [exchangeRate, setExchangeRate] = useState(initialBooking?.exchange_rate ?? 16);
   // Card fee is on by default — the concierge never has to remember it.
   const [ccFeeOn, setCcFeeOn] = useState(initialBooking ? (initialBooking.cc_fee_on ?? true) : true);
-  // Mandatory 5% gratuity is on by default; concierge can waive it for a bad stay.
-  const [gratuityWaived, setGratuityWaived] = useState(initialBooking?.gratuity_waived ?? false);
   const [cashCollected, setCashCollected] = useState(initialBooking?.cash_collected ?? 0);
   const [accommodationFare, setAccommodationFare] = useState(initialBooking?.accommodation_fare ?? 0);
   // Accommodation fare is always quoted in USD.
@@ -242,9 +240,8 @@ export default function NewBooking({
         fx,
         tipMode: "amount",
         tipValue: tip,
-        gratuityWaived,
       }),
-    [calcItems, accommodationFare, accommodationCurrency, fx, tip, gratuityWaived],
+    [calcItems, accommodationFare, accommodationCurrency, fx, tip],
   );
 
   const ccFee = ccFeeOn ? breakdown.fee : 0;
@@ -290,7 +287,7 @@ export default function NewBooking({
     setTipCashUsd(0);
     setTipCashMxn(0);
     setCcFeeOn(true);
-    setGratuityWaived(false);
+    
     setCashCollected(0);
     setAccommodationFare(0);
     setGroceryAllocation(0);
@@ -349,7 +346,6 @@ export default function NewBooking({
       notes: notes || null,
       items,
       cc_fee_on: ccFeeOn,
-      gratuity_waived: gratuityWaived,
       tip_mode: "amount",
       tip_value: tipValue,
       tip_method: "cc" as const,
@@ -362,7 +358,7 @@ export default function NewBooking({
       tip_cash_currency: "USD" as const,
       exchange_rate: fx,
       cc_fee: ccFee,
-      guest_gratuity: breakdown.gratuity,
+      guest_gratuity: 0,
       guest_tip: tip,
       total_guest: totalGuest,
       total_profit: totalProfit,
@@ -955,35 +951,7 @@ export default function NewBooking({
             </div>
           </div>
 
-          {/* Waive mandatory 5% gratuity — only for exceptional bad-stay cases */}
-          <div style={{ gridColumn: "1 / -1" }}>
-            <label
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                cursor: "pointer",
-                padding: "10px 12px",
-                background: gratuityWaived ? "rgba(139,46,46,0.08)" : "rgba(0,0,0,0.03)",
-                border: `1px solid ${gratuityWaived ? "#8B2E2E" : COLORS.border}`,
-                borderRadius: 3,
-              }}
-            >
-              <input
-                type="checkbox"
-                checked={gratuityWaived}
-                onChange={(e) => setGratuityWaived(e.target.checked)}
-                style={{ width: 16, height: 16, accentColor: "#8B2E2E", cursor: "pointer" }}
-              />
-              <span style={{ fontSize: 13, color: gratuityWaived ? "#8B2E2E" : COLORS.textDark, fontWeight: 500 }}>
-                Waive mandatory 5% gratuity
-              </span>
-            </label>
-            <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 5 }}>
-              Only use this when service went badly and we are not requesting the 5% gratuity. It removes the
-              gratuity from the guest's payment link.
-            </div>
-          </div>
+
         </div>
       </div>
       <div
@@ -1105,17 +1073,7 @@ export default function NewBooking({
           Charged to guest's card
         </div>
 
-        <div style={summaryRow}>
-          <div>
-            Included Gratuity (5%){" "}
-            <span style={{ color: gratuityWaived ? "#E0A0A0" : "rgba(247,244,238,0.5)" }}>
-              {gratuityWaived ? "(waived for this booking)" : "(accommodation + experiences + fuel)"}
-            </span>
-          </div>
-          <div style={{ textDecoration: gratuityWaived ? "line-through" : "none", opacity: gratuityWaived ? 0.5 : 1 }}>
-            {formatMXN(breakdown.gratuity)}
-          </div>
-        </div>
+
 
         {tip > 0 && (
           <div style={summaryRow}>

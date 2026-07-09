@@ -1,7 +1,9 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 
-const GRATUITY_RATE = 0.05;
+// Tip is no longer mandatory. On the guest link it defaults to 5% but the
+// guest can change or remove it entirely.
+const DEFAULT_TIP_RATE = 0.05;
 const FEE_RATE = 0.05;
 const UTV_GAS_PER_RENTAL = 1000;
 const DEFAULT_FX = 16;
@@ -67,7 +69,6 @@ Deno.serve(async (req) => {
       booking.accommodation_currency === "USD"
         ? Number(booking.accommodation_fare) * fx
         : Number(booking.accommodation_fare);
-    const gratuityWaived = booking.gratuity_waived === true;
     // Cash tip already left at the house (info only — never charged on the card).
     const tipCashMXN = Math.round(Number(booking.tip_cash) || 0);
 
@@ -83,10 +84,8 @@ Deno.serve(async (req) => {
         lineItems,
         upsellsSubtotal,
         utvGas,
-        gratuityRate: GRATUITY_RATE,
-        gratuityWaived,
+        defaultTipRate: DEFAULT_TIP_RATE,
         feeRate: FEE_RATE,
-        presetTip: Math.round(Number(booking.guest_tip ?? booking.tip) || 0),
         cashTipMXN: tipCashMXN,
         cashTipValue: Math.round(Number(booking.tip_cash_value) || 0),
         cashTipCurrency: booking.tip_cash_currency === "USD" ? "USD" : "MXN",

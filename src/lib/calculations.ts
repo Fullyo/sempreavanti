@@ -228,14 +228,17 @@ export function commissionRule(type: string, price: number, unit_cost: number | 
 // ─── Guest payment (Stripe) ──────────────────────────────────────────────
 // Everything below is charged to the guest in MXN. Accommodation is NOT
 // charged (paid via Guesty) — it is shown for context and is part of the
-// gratuity base. USD accommodation converts to MXN at the booking's FX rate.
+// tip base. USD accommodation converts to MXN at the booking's FX rate.
 
-export const GUEST_GRATUITY_RATE = 0.05; // mandatory included gratuity
+// The tip is no longer mandatory. On the guest link it defaults to 5% (the
+// guest can change it or remove it entirely). This is the default preset.
+export const GUEST_DEFAULT_TIP_RATE = 0.05;
+export const GUEST_GRATUITY_RATE = GUEST_DEFAULT_TIP_RATE; // legacy alias
 export const GUEST_CARD_FEE_RATE = 0.05; // card processing fee, guest pays
 export const UTV_GAS_PER_RENTAL = 1000; // MXN gas auto-added per UTV rental
 export const DEFAULT_FX = 16;
 
-export const TIP_PRESETS = [10, 15, 20];
+export const TIP_PRESETS = [5, 10, 15, 20];
 
 // A UTV rental line (Can-Am / Polaris / generic UTV) — but not a gas line.
 export function isUtvRental(name: string): boolean {
@@ -264,13 +267,13 @@ export function computeUtvGas(items: GuestPayItem[]): number {
 export interface GuestPaymentBreakdown {
   upsellsSubtotal: number; // upsell line items only (MXN)
   utvGas: number; // auto gas (MXN)
-  accommodationMXN: number; // context + gratuity base (MXN)
-  gratuityBase: number; // accommodation + upsells + gas
-  gratuity: number; // mandatory 5%
-  tip: number; // optional extra tip
-  feeBase: number; // accommodation + upsells + gas + gratuity + tip
+  accommodationMXN: number; // context + tip base (MXN)
+  tipBase: number; // accommodation + upsells + gas
+  gratuityBase: number; // legacy alias of tipBase
+  tip: number; // guest-selected tip (0 if opted out)
+  feeBase: number; // upsells + gas + tip
   fee: number; // 5% card fee on feeBase
-  chargeable: number; // upsells + gas + gratuity + tip (pre-fee, accommodation excluded)
+  chargeable: number; // upsells + gas + tip (pre-fee, accommodation excluded)
   total: number; // grand total charged in MXN
 }
 
@@ -281,7 +284,6 @@ export function computeGuestPayment(params: {
   fx?: number;
   tipMode: "percent" | "amount";
   tipValue: number;
-  gratuityWaived?: boolean;
 }): GuestPaymentBreakdown {
   const fx = params.fx || DEFAULT_FX;
   const upsellsSubtotal = params.items.reduce(
@@ -291,18 +293,29 @@ export function computeGuestPayment(params: {
   const utvGas = computeUtvGas(params.items);
   const accommodationMXN =
     params.accommodationCurrency === "USD" ? params.accommodationFare * fx : params.accommodationFare;
-  const gratuityBase = accommodationMXN + upsellsSubtotal + utvGas;
-  const gratuity = params.gratuityWaived ? 0 : Math.round(gratuityBase * GUEST_GRATUITY_RATE);
+  const tipBase = accommodationMXN + upsellsSubtotal + utvGas;
+  // Tip is entirely the guest's choice — no mandatory floor.
   const tip =
     params.tipMode === "percent"
-      ? Math.round(gratuityBase * ((Number(params.tipValue) || 0) / 100))
+      ? Math.round(tipBase * ((Number(params.tipValue) || 0) / 100))
       : Math.round(Number(params.tipValue) || 0);
-  const chargeable = upsellsSubtotal + utvGas + gratuity + tip;
+  const chargeable = upsellsSubtotal + utvGas + tip;
   // Card fee applies ONLY to what's charged on the card (upsells + fuel +
-  // gratuity + tip). It does NOT apply to the accommodation fare — that is
-  // paid out via Guesty, not on the card.
+  // tip). It does NOT apply to the accommodation fare — that is paid out
+  // via Guesty, not on the card.
   const feeBase = chargeable;
   const fee = Math.round(feeBase * GUEST_CARD_FEE_RATE);
   const total = chargeable + fee;
-  return { upsellsSubtotal, utvGas, accommodationMXN, gratuityBase, gratuity, tip, feeBase, fee, chargeable, total };
+  return {
+    upsellsSubtotal,
+    utvGas,
+    accommodationMXN,
+    tipBase,
+    gratuityBase: tipBase,
+    tip,
+    feeBase,
+    fee,
+    chargeable,
+    total,
+  };
 }

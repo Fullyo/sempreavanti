@@ -1,50 +1,54 @@
-# Menu page public + dining fine print + set meal times
+# Make gratuity optional & guest-controlled
 
-## 1. Make the Menu page public in navigation
-- Add **Menu** to the "The Estate" dropdown in `Navbar.tsx` (desktop + mobile), placed right after "In-Villa Chef" as `{ label: "Menu", path: "/menu" }`.
-- Keep it also reachable from the Chef page (see #2). This satisfies "both".
-- The `/menu` route already exists in `App.tsx` and is indexable via SEO — no route change needed.
+## Goal
+The 5% is no longer a mandatory gratuity. On the guest payment link it becomes a **pre-selected tip default** the guest can change or fully remove. Presets are **5% / 10% / 15% / 20%**, with 5% selected by default. Clicking the currently-selected preset **deselects it → no tip**. Guests can also enter a straight cash amount in **USD or MXN**. The percentage is always calculated on **accommodation fare + all upsells** (matching today's base).
 
-## 2. Cross-link the Chef page and Menu page
-- Chef page (`/chef`) already has a "View Full Menu" → `/menu` button; keep it and make it clearly primary.
-- On the Menu page, add a link/button back to the **In-Villa Chef** page so browsing flows both ways.
+## Behavior on the guest payment link (`/pay/:token`)
+- On load, **5% is selected** and reflected in the running total.
+- Preset row: `5%` `10%` `15%` `20%` `Custom`.
+  - Tapping a non-selected percent selects it.
+  - Tapping the already-selected percent **turns it off** (tip = 0).
+  - `Custom` reveals the amount field with an MXN / USD toggle (already exists).
+- No separate "Included gratuity (5%)" line anymore — there is a single **Tip** line that reflects the guest's current choice (0 if they opted out).
+- Copy on the gratuity card changes from "a base 5% gratuity is included" to an invitation to tip, noting the default is 5% and can be removed.
+- Card processing fee (5%) still applies to the charged lines (upsells + fuel + tip), never to accommodation. Unchanged.
 
-## 3. Add the dining pricing fine print (the important part)
-Add a clearly styled "How dining works" / "About our dining" block. It will appear in **two** places, worded the same:
-- On the **public Menu page** (`Menu.tsx`), as a highlighted panel near the top.
-- On the **guest meal planner** (`MealPlanner.tsx`), so guests see it right where they select — this replaces the current one-line "food costs are additional" note with the fuller, clearer version.
+## Concierge side
+- **Remove the "waive 5% gratuity" toggle** from the booking form.
+- **Remove the concierge-agreed tip floor**: the guest link no longer treats a pre-set tip as a minimum. The tip on the link is entirely the guest's choice.
+- The invoice card / CSV export stop showing a separate "5% Gratuity" pass-through line; they show the actual tip the guest ended up paying (from the payment record) instead.
 
-Proposed copy (no percentage named, per your preference):
+## Technical details
 
-> **Dining at cost — with everything taken care of**
-> Your groceries are purchased fresh from local markets and passed on to you **at cost**. A modest handling fee is added on top so you can simply relax while everything is done for you — the daily **shopping, prepping, cooking, and cleaning** — along with the pantry staples, oils, spices, and sauces that season every dish.
-> This keeps chef-prepared, in-villa dining far more affordable than eating out, while fairly covering the basic operating costs of a fully staffed kitchen. Final food charges are based on market pricing for what you select.
+**`src/lib/calculations.ts`**
+- `TIP_PRESETS` → `[5, 10, 15, 20]`.
+- In `computeGuestPayment`: drop the mandatory `gratuity` term. Tip becomes the single guest-selected value (percent of `gratuityBase` = accommodation + upsells + gas, or a custom MXN/USD amount). `chargeable = upsellsSubtotal + utvGas + tip`; fee on that; keep accommodation out of the charge. Keep `GUEST_GRATUITY_RATE = 0.05` only as the default-selected preset value (rename usage to a default-tip constant for clarity).
 
-I'll refine wording during build; the substance (at cost + modest handling fee covering shopping/prep/cooking/cleaning + basic operating costs, cheaper than restaurants) stays as above.
+**`supabase/functions/guest-payment-get/index.ts`**
+- Stop returning a computed mandatory `gratuity`/`gratuityWaived`. Return the base (`accommodationMXN`, `upsellsSubtotal`, `utvGas`), `defaultTipRate = 0.05`, and the fee rate. Drop `presetTip`/agreed-tip floor.
 
-## 4. Set fixed meal times (locked)
-Replace the current editable breakfast/lunch time inputs on the meal planner with **locked, displayed** set times, plus a note that special requests can be made:
-- **Breakfast — 8:30 AM**
-- **Lunch — 12:30 PM**
-- **Dinner — ready at 5:30 PM** (left warm in the oven; enjoy whenever you wish)
-- Note: *"These are our standard service times — special requests can be made and we'll do our best to accommodate."*
-- Note: *"A private plated chef dinner can be arranged at an additional cost."*
+**`supabase/functions/guest-payment-checkout/index.ts`**
+- Server recompute: no mandatory gratuity, no agreed-tip floor. `tip` = guest selection only (percent of base, or custom MXN/USD converted at FX). `chargeable = upsells + gas + tip`; `fee = 5%` of that; `total = chargeable + fee`. Guard `total <= 0` still allowed to proceed only if there is something to charge (upsells/gas); a tip-only-zero booking with upsells still charges the upsells. Stripe line items: replace the "Staff gratuity (5% included)" line with a single "Staff tip" line shown only when tip > 0. Keep `adaptive_pricing: { enabled:false }` and `currency:"mxn"`.
 
-These same set times will also be listed on the public Menu page so browsers see them.
+**`src/pages/GuestPayment.tsx`**
+- Default state: `tipChoice = "percent"`, `tipPct = 5`.
+- Preset buttons `[5,10,15,20]`; clicking the active percent resets to no tip (`tipPct = 0`, choice cleared). `Custom` unchanged (MXN/USD toggle).
+- Remove the mandatory-gratuity rows in both the gratuity card and the dark totals card; render a single **Tip** line reflecting the current selection.
+- Update helper text: "Calculated on accommodation + experiences (…)."
 
-## 5. Collapsible menu overview on the planner
-- Add a **"View full menu"** collapsible panel at the top of the planner (`MealPlanner.tsx`), **closed by default**, that expands in place to show the categorized dish list (breakfast / appetizers / mains / desserts) pulled from the same `dishes` data already loaded. Keeps the page uncluttered.
-- The existing "View the full menu →" link to `/menu` stays as a secondary option.
+**`src/pages/concierge/NewBooking.tsx`**
+- Remove `gratuityWaived` state, its toggle UI, and `gratuity_waived` from the saved payload. Remove agreed-tip-floor plumbing that fed `guest_tip` as a link floor (keep normal cash-tip / CC-tip recording used for internal accounting as-is).
 
-## Technical notes
-- Frontend/presentation only — no database or edge-function changes.
-- `MealPlanner.tsx` change: remove the free-text `breakfast_time` / `lunch_time` inputs from the UI and stop sending them on save (fields can remain in the backend, just unused); add the fixed-times display, the fine-print block, and the collapsible menu overview built from `dishesByCourse`.
-- `Menu.tsx`: add the dining fine-print panel, the set meal times, and a link to the Chef page.
-- `Navbar.tsx`: add the Menu item to "The Estate" (desktop + mobile lists).
-- No changes to meal-selection logic, Sunday handling, or arrival/departure day rules.
+**`src/pages/concierge/AllBookings.tsx`**
+- Remove the "5% Gratuity" pass-through line from the invoice card (line ~793) and CSV export (line ~314). Show the actual tip paid by the guest from the payment data instead.
 
-## Files to edit
-- `src/components/layout/Navbar.tsx`
-- `src/pages/Menu.tsx`
-- `src/pages/Chef.tsx` (minor link emphasis)
-- `src/pages/MealPlanner.tsx`
+## Out of scope
+- Cash tips left at the house (internal accounting) stay as-is.
+- Card processing fee logic stays as-is.
+
+## Verification
+- Load a `/pay/:token` link: 5% pre-selected, total includes it.
+- Click 5% again → tip drops to 0, total updates.
+- Pick 10/15/20 → total updates; Custom USD → converts at FX.
+- Stripe checkout stays in MXN; charged total matches the on-page total.
+- Concierge form no longer shows the waive-gratuity toggle; saving works.

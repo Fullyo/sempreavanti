@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
-import { GUEST_CARD_FEE_RATE, GUEST_GRATUITY_RATE, TIP_PRESETS } from "@/lib/calculations";
+import { GUEST_CARD_FEE_RATE, TIP_PRESETS } from "@/lib/calculations";
 
 const C = {
   bg: "#F5F1E8",
@@ -34,10 +34,8 @@ interface PayData {
   lineItems: LineItem[];
   upsellsSubtotal: number;
   utvGas: number;
-  gratuityRate: number;
-  gratuityWaived?: boolean;
+  defaultTipRate: number;
   feeRate: number;
-  presetTip?: number;
   cashTipMXN?: number;
   cashTipValue?: number;
   cashTipCurrency?: string;
@@ -61,10 +59,11 @@ export default function GuestPayment() {
   const [data, setData] = useState<PayData | null>(null);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
-  // tipChoice: "default" = use the concierge-agreed tip as-is; "percent" /
-  // "custom" = the guest is adding on top (never below the agreed floor).
-  const [tipChoice, setTipChoice] = useState<"default" | "percent" | "custom">("default");
-  const [tipPct, setTipPct] = useState(0);
+  // Tipping is fully guest-controlled. The link opens with 5% pre-selected;
+  // the guest can switch presets, remove the tip entirely, or enter a custom
+  // cash amount in USD or MXN.
+  const [tipChoice, setTipChoice] = useState<"percent" | "custom">("percent");
+  const [tipPct, setTipPct] = useState(5);
   const [customAmount, setCustomAmount] = useState(0);
   const [customCurrency, setCustomCurrency] = useState<"MXN" | "USD">("MXN");
   const [paying, setPaying] = useState(false);
@@ -89,34 +88,24 @@ export default function GuestPayment() {
   }, [token]);
 
   const fx = data?.fx || 16;
-  // The credit-card tip the concierge already agreed with the guest. This is
-  // the floor — the guest may add to it but never go below it.
-  const agreedTip = Math.round(Number(data?.presetTip) || 0);
-
-  const gratuityBase = useMemo(() => {
+  // Tip base = accommodation + upsells + fuel. The percentage presets apply
+  // to this base.
+  const tipBase = useMemo(() => {
     if (!data) return 0;
     return data.accommodationMXN + data.upsellsSubtotal + data.utvGas;
   }, [data]);
 
-  const gratuityWaived = data?.gratuityWaived === true;
-  const gratuity = gratuityWaived
-    ? 0
-    : Math.round(gratuityBase * (data?.gratuityRate ?? GUEST_GRATUITY_RATE));
-
-  // The extra tip the guest is adding — purely on top of the agreed tip.
-  const additionalTip = useMemo(() => {
-    if (tipChoice === "percent") return Math.round(gratuityBase * (tipPct / 100));
+  // The tip the guest chose (0 if they opted out).
+  const tip = useMemo(() => {
+    if (tipChoice === "percent") return Math.round(tipBase * (tipPct / 100));
     if (tipChoice === "custom")
       return Math.round(customCurrency === "USD" ? customAmount * fx : customAmount);
     return 0;
-  }, [tipChoice, tipPct, customAmount, customCurrency, gratuityBase, fx]);
+  }, [tipChoice, tipPct, customAmount, customCurrency, tipBase, fx]);
 
-  // Total card tip = what the concierge agreed + whatever the guest adds.
-  const tip = agreedTip + additionalTip;
-
-  const chargeable = (data?.upsellsSubtotal ?? 0) + (data?.utvGas ?? 0) + gratuity + tip;
-  // Card fee applies only to the charged lines (upsells + fuel + gratuity +
-  // tip). It does NOT apply to the accommodation fare — that's paid via Guesty.
+  const chargeable = (data?.upsellsSubtotal ?? 0) + (data?.utvGas ?? 0) + tip;
+  // Card fee applies only to the charged lines (upsells + fuel + tip). It does
+  // NOT apply to the accommodation fare — that's paid via Guesty.
   const feeBase = chargeable;
   const fee = Math.round(feeBase * (data?.feeRate ?? GUEST_CARD_FEE_RATE));
   const total = chargeable + fee;
@@ -281,7 +270,7 @@ export default function GuestPayment() {
               <Row label="Experiences subtotal" value={mxn(data.upsellsSubtotal + data.utvGas)} bold />
             </section>
 
-            {/* Gratuity */}
+            {/* Tip */}
             <section
               style={{
                 background: C.card,
@@ -294,39 +283,18 @@ export default function GuestPayment() {
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, fontWeight: 300, marginBottom: 8 }}>
                 A note on gratuity
               </div>
-              {gratuityWaived ? (
-                <p style={{ color: C.mid, fontSize: 14, lineHeight: 1.6, margin: "0 0 14px" }}>
-                  No service gratuity is being requested for this stay.
-                </p>
-              ) : (
-                <>
-                  <p style={{ color: C.mid, fontSize: 14, lineHeight: 1.6, margin: "0 0 14px" }}>
-                    As part of a fully serviced villa, a base <strong>5% gratuity is included</strong>. Our staff
-                    appreciates it deeply — it makes a real difference for the team caring for you.
-                  </p>
-                  <Row label="Included gratuity (5%)" value={mxn(gratuity)} bold />
-                </>
-              )}
-
-              {/* Tip the concierge already agreed with the guest (the floor) */}
-              {agreedTip > 0 && (
-                <div style={{ marginTop: 14 }}>
-                  <Row label="Tip agreed with concierge" value={mxn(agreedTip)} bold />
-                </div>
-              )}
+              <p style={{ color: C.mid, fontSize: 14, lineHeight: 1.6, margin: "0 0 14px" }}>
+                If our concierge, chefs, housekeeping, property team, and valet made your stay special, you're warmly
+                welcome to leave a gratuity for the team. It's entirely your choice — tap a percentage to select it, or
+                tap it again to remove it.
+              </p>
 
               {/* Cash already left at the house — info only, not charged */}
               {cashTipMXN > 0 && (
-                <div style={{ marginTop: 4 }}>
+                <div style={{ marginBottom: 14 }}>
                   <Row label="Already left in cash (not charged here)" value={mxn(cashTipMXN)} faded />
                 </div>
               )}
-
-              <div style={{ height: 1, background: C.border, margin: "18px 0 14px" }} />
-              <p style={{ color: C.mid, fontSize: 14, lineHeight: 1.6, margin: "0 0 14px" }}>
-                If our concierge, chefs, housekeeping, property team, and valet made your stay special, you're warmly
-                welcome to add{agreedTip > 0 ? " to" : ""} their gratuity.
-              </p>
 
               <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                 {TIP_PRESETS.map((p) => {
@@ -335,8 +303,13 @@ export default function GuestPayment() {
                     <button
                       key={p}
                       onClick={() => {
-                        setTipChoice("percent");
-                        setTipPct(p);
+                        if (active) {
+                          // Tapping the active preset removes the tip.
+                          setTipPct(0);
+                        } else {
+                          setTipChoice("percent");
+                          setTipPct(p);
+                        }
                       }}
                       style={tipBtn(active)}
                     >
@@ -353,9 +326,9 @@ export default function GuestPayment() {
               </div>
 
               <div style={{ fontSize: 12, color: C.muted, marginTop: 10, lineHeight: 1.5 }}>
-                Calculated on accommodation + experiences ({mxn(gratuityBase)}).
+                Calculated on accommodation + experiences ({mxn(tipBase)}).
                 {tipChoice === "percent" && tipPct > 0 && (
-                  <> {tipPct}% = {mxn(Math.round(gratuityBase * (tipPct / 100)))}.</>
+                  <> {tipPct}% = {mxn(Math.round(tipBase * (tipPct / 100)))}.</>
                 )}
               </div>
 
@@ -406,19 +379,18 @@ export default function GuestPayment() {
                 </div>
               )}
 
-              {additionalTip > 0 && (
+              {tip > 0 && (
                 <div style={{ marginTop: 14 }}>
-                  <Row label="Additional tip" value={mxn(additionalTip)} bold />
+                  <Row label="Tip" value={mxn(tip)} bold />
                 </div>
               )}
             </section>
 
+
             {/* Total */}
             <section style={{ background: C.dark, color: "#F5F1E8", borderRadius: 6, padding: 28, marginTop: 18 }}>
               <RowDark label="Experiences" value={mxn(data.upsellsSubtotal + data.utvGas)} />
-              {!gratuityWaived && <RowDark label="Included gratuity (5%)" value={mxn(gratuity)} />}
-              {agreedTip > 0 && <RowDark label="Tip agreed with concierge" value={mxn(agreedTip)} />}
-              {additionalTip > 0 && <RowDark label="Additional tip" value={mxn(additionalTip)} />}
+              {tip > 0 && <RowDark label="Tip" value={mxn(tip)} />}
               <RowDark label="Card processing fee (5%)" value={mxn(fee)} />
               <div style={{ fontSize: 11, color: "rgba(245,241,232,0.55)", marginTop: 6, lineHeight: 1.4 }}>
                 The 5% card fee does not apply to the accommodation fare — that is already paid via Guesty.
