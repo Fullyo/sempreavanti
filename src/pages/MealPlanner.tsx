@@ -56,8 +56,25 @@ const SLOTS: { course: string; label: string; from: string; optional?: boolean }
 
 const SKIP = "__skip__";
 
+// Which meal slots are available on a given day of the stay.
+// Arrival day: check-in is at 4:00 PM, so only dinner service is offered.
+// Checkout day: checkout is at 11:00 AM, so only breakfast is offered.
+// All other days get the full slate.
+function slotsForDay(index: number, total: number) {
+  const isArrival = index === 0;
+  const isCheckout = index === total - 1;
+  if (total === 1) return SLOTS; // single-day stay: offer everything
+  if (isArrival) return SLOTS.filter((s) => s.course === "dinner_appetizer" || s.course === "dinner" || s.course === "dessert");
+  if (isCheckout) return SLOTS.filter((s) => s.course === "breakfast");
+  return SLOTS;
+}
+
 function fmtDay(d: string) {
   return new Date(d + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+}
+
+function fmtRange(d: string) {
+  return new Date(d + "T00:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" });
 }
 
 export default function MealPlanner() {
@@ -111,13 +128,14 @@ export default function MealPlanner() {
     if (!token || !data) return;
     setSaving(true);
     const selections = data.days
-      .filter((d) => !d.sunday)
-      .flatMap((d) =>
-        SLOTS.map((s) => {
-          const v = sel[`${d.date}|${s.course}`] ?? "";
-          if (!v) return null;
-          return { day: d.date, course: s.course, dish_id: v === SKIP ? null : v, skip: v === SKIP };
-        }).filter(Boolean),
+      .flatMap((d, i) =>
+        d.sunday
+          ? []
+          : slotsForDay(i, data.days.length).map((s) => {
+              const v = sel[`${d.date}|${s.course}`] ?? "";
+              if (!v) return null;
+              return { day: d.date, course: s.course, dish_id: v === SKIP ? null : v, skip: v === SKIP };
+            }).filter(Boolean),
       );
     const { data: res, error } = await supabase.functions.invoke("meal-plan", {
       body: {
@@ -185,6 +203,20 @@ export default function MealPlanner() {
             in advance so it is ready for your arrival. Choose one main per meal (served family-style). The chefs handle
             all grocery shopping; food costs are additional, based on market pricing.
           </p>
+          <div style={{ marginTop: 16, display: "inline-flex", alignItems: "center", gap: 14, background: "rgba(184,146,74,0.14)", border: `1px solid ${C.gold}`, borderRadius: 4, padding: "10px 16px" }}>
+            <div>
+              <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: C.gold, fontWeight: 600 }}>Arrival</div>
+              <div style={{ fontSize: 14, color: "#F5F1E8", marginTop: 2 }}>{fmtRange(data.checkin)}</div>
+            </div>
+            <div style={{ color: C.gold, fontSize: 18 }}>→</div>
+            <div>
+              <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: C.gold, fontWeight: 600 }}>Departure</div>
+              <div style={{ fontSize: 14, color: "#F5F1E8", marginTop: 2 }}>{fmtRange(data.checkout)}</div>
+            </div>
+          </div>
+          <p style={{ color: "rgba(245,241,232,0.6)", fontSize: 12.5, marginTop: 10, lineHeight: 1.55 }}>
+            Check-in is at 4:00 PM, so your arrival day includes dinner. Checkout is at 11:00 AM, so your final day includes breakfast.
+          </p>
           <a href="/menu" target="_blank" rel="noreferrer" style={{ display: "inline-block", marginTop: 10, color: C.gold, fontSize: 13, letterSpacing: "0.04em" }}>
             View the full menu →
           </a>
@@ -219,13 +251,17 @@ export default function MealPlanner() {
               </div>
             );
           }
+          const isArrival = i === 0 && data.days.length > 1;
+          const isCheckout = i === data.days.length - 1 && data.days.length > 1;
+          const tag = isArrival ? "Arrival day · dinner only" : isCheckout ? "Departure day · breakfast only" : null;
           return (
             <div key={d.date} style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 6, padding: "20px 22px", marginBottom: 16 }}>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, color: C.text, marginBottom: 14 }}>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 24, color: C.text, marginBottom: tag ? 4 : 14 }}>
                 Day {i + 1} — {fmtDay(d.date)}
               </div>
+              {tag && <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: C.gold, fontWeight: 600, marginBottom: 14 }}>{tag}</div>}
               <div style={{ display: "grid", gap: 14 }}>
-                {SLOTS.map((s) => {
+                {slotsForDay(i, data.days.length).map((s) => {
                   const key = `${d.date}|${s.course}`;
                   const opts = dishesByCourse[s.from] ?? [];
                   return (
