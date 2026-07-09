@@ -56,6 +56,19 @@ const SLOTS: { course: string; label: string; from: string; optional?: boolean }
 
 const SKIP = "__skip__";
 
+// Which meal slots are available on a given day of the stay.
+// Arrival day: check-in is at 4:00 PM, so only dinner service is offered.
+// Checkout day: checkout is at 11:00 AM, so only breakfast is offered.
+// All other days get the full slate.
+function slotsForDay(index: number, total: number) {
+  const isArrival = index === 0;
+  const isCheckout = index === total - 1;
+  if (total === 1) return SLOTS; // single-day stay: offer everything
+  if (isArrival) return SLOTS.filter((s) => s.course === "dinner_appetizer" || s.course === "dinner" || s.course === "dessert");
+  if (isCheckout) return SLOTS.filter((s) => s.course === "breakfast");
+  return SLOTS;
+}
+
 function fmtDay(d: string) {
   return new Date(d + "T00:00:00").toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
 }
