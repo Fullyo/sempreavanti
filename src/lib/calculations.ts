@@ -267,13 +267,13 @@ export function computeUtvGas(items: GuestPayItem[]): number {
 export interface GuestPaymentBreakdown {
   upsellsSubtotal: number; // upsell line items only (MXN)
   utvGas: number; // auto gas (MXN)
-  accommodationMXN: number; // context + gratuity base (MXN)
-  gratuityBase: number; // accommodation + upsells + gas
-  gratuity: number; // mandatory 5%
-  tip: number; // optional extra tip
-  feeBase: number; // accommodation + upsells + gas + gratuity + tip
+  accommodationMXN: number; // context + tip base (MXN)
+  tipBase: number; // accommodation + upsells + gas
+  gratuityBase: number; // legacy alias of tipBase
+  tip: number; // guest-selected tip (0 if opted out)
+  feeBase: number; // upsells + gas + tip
   fee: number; // 5% card fee on feeBase
-  chargeable: number; // upsells + gas + gratuity + tip (pre-fee, accommodation excluded)
+  chargeable: number; // upsells + gas + tip (pre-fee, accommodation excluded)
   total: number; // grand total charged in MXN
 }
 
@@ -284,7 +284,6 @@ export function computeGuestPayment(params: {
   fx?: number;
   tipMode: "percent" | "amount";
   tipValue: number;
-  gratuityWaived?: boolean;
 }): GuestPaymentBreakdown {
   const fx = params.fx || DEFAULT_FX;
   const upsellsSubtotal = params.items.reduce(
@@ -294,18 +293,29 @@ export function computeGuestPayment(params: {
   const utvGas = computeUtvGas(params.items);
   const accommodationMXN =
     params.accommodationCurrency === "USD" ? params.accommodationFare * fx : params.accommodationFare;
-  const gratuityBase = accommodationMXN + upsellsSubtotal + utvGas;
-  const gratuity = params.gratuityWaived ? 0 : Math.round(gratuityBase * GUEST_GRATUITY_RATE);
+  const tipBase = accommodationMXN + upsellsSubtotal + utvGas;
+  // Tip is entirely the guest's choice — no mandatory floor.
   const tip =
     params.tipMode === "percent"
-      ? Math.round(gratuityBase * ((Number(params.tipValue) || 0) / 100))
+      ? Math.round(tipBase * ((Number(params.tipValue) || 0) / 100))
       : Math.round(Number(params.tipValue) || 0);
-  const chargeable = upsellsSubtotal + utvGas + gratuity + tip;
+  const chargeable = upsellsSubtotal + utvGas + tip;
   // Card fee applies ONLY to what's charged on the card (upsells + fuel +
-  // gratuity + tip). It does NOT apply to the accommodation fare — that is
-  // paid out via Guesty, not on the card.
+  // tip). It does NOT apply to the accommodation fare — that is paid out
+  // via Guesty, not on the card.
   const feeBase = chargeable;
   const fee = Math.round(feeBase * GUEST_CARD_FEE_RATE);
   const total = chargeable + fee;
-  return { upsellsSubtotal, utvGas, accommodationMXN, gratuityBase, gratuity, tip, feeBase, fee, chargeable, total };
+  return {
+    upsellsSubtotal,
+    utvGas,
+    accommodationMXN,
+    tipBase,
+    gratuityBase: tipBase,
+    tip,
+    feeBase,
+    fee,
+    chargeable,
+    total,
+  };
 }
