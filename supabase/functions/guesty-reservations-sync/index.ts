@@ -101,7 +101,16 @@ Deno.serve(async (req) => {
       const url = new URL(`${OPEN_API}/v1/reservations`);
       url.searchParams.set("limit", String(limit));
       url.searchParams.set("skip", String(skip));
-      url.searchParams.set("checkOutDateFrom", today);
+      // IMPORTANT: The Open API /v1/reservations list endpoint IGNORES loose
+      // date query params like `checkOutDateFrom` and falls back to a default
+      // view that only returns UPCOMING arrivals — silently dropping any stay
+      // that is currently in-house (checked in but not yet checked out). The
+      // documented `filters` JSON array is the only reliable way to date-scope
+      // the list, and it correctly returns in-house + future reservations.
+      url.searchParams.set(
+        "filters",
+        JSON.stringify([{ field: "checkOut", operator: "$gte", value: today }]),
+      );
       url.searchParams.set("sort", "checkIn");
       url.searchParams.set("fields", fields);
       const res = await fetch(url.toString(), {
