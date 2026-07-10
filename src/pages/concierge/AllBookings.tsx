@@ -358,34 +358,30 @@ export default function AllBookings() {
         </div>
       </div>
 
-      {/* View toggle: All vs Upcoming — hidden while viewing a single month */}
+      {/* Year tabs — hidden while viewing a single month */}
       {!detailKey && (
       <div style={{ display: "flex", gap: 0, marginBottom: 18, borderBottom: `1px solid ${COLORS.border}` }}>
-        {([
-          { id: "all", label: "All Bookings" },
-          { id: "upcoming", label: "Upcoming (60 days)" },
-        ] as { id: ViewTab; label: string }[]).map((t) => {
-          const active = view === t.id;
+        {YEAR_TABS.map((y) => {
+          const active = year === y;
           return (
             <button
-              key={t.id}
-              onClick={() => { setView(t.id); if (t.id === "upcoming") setMonthFilter("all"); }}
+              key={y}
+              onClick={() => setYear(y)}
               style={{
                 background: "transparent",
                 border: "none",
-                padding: "10px 18px",
+                padding: "12px 26px",
                 fontFamily: "inherit",
-                fontSize: 12,
-                textTransform: "uppercase",
-                letterSpacing: "0.12em",
+                fontSize: 13,
+                letterSpacing: "0.16em",
                 cursor: "pointer",
                 color: active ? COLORS.gold : COLORS.textMuted,
                 borderBottom: active ? `2px solid ${COLORS.gold}` : "2px solid transparent",
                 marginBottom: -1,
-                fontWeight: active ? 500 : 400,
+                fontWeight: active ? 600 : 400,
               }}
             >
-              {t.label}
+              {y}
             </button>
           );
         })}
@@ -394,16 +390,19 @@ export default function AllBookings() {
 
       {!detailKey && (
       <div style={{ fontStyle: "italic", color: COLORS.textMuted, fontSize: 12, marginBottom: 18 }}>
-        Current month is {currentMonthLabel}. Historical reports stay attached to their booking month.
+        {year === currentYear
+          ? `Viewing ${year} · current month is ${currentMonthLabel}.`
+          : `Viewing ${year}.`} Historical reports stay attached to their booking month.
       </div>
       )}
 
       {loading && <div style={{ color: COLORS.textMuted }}>Loading…</div>}
       {!loading && displayMonthSections.length === 0 && (
         <div style={{ background: "#fff", border: `1px dashed ${COLORS.border}`, borderRadius: 4, padding: "32px 22px", textAlign: "center", color: COLORS.textMuted }}>
-          {view === "upcoming" ? "No upcoming check-ins in the next 60 days." : "No bookings match this filter."}
+          No bookings recorded for {year} yet.
         </div>
       )}
+
 
       {(detailKey ? displayMonthSections.filter(([k]) => k === detailKey) : displayMonthSections).map(([key, group], idx, arr) => {
         const kpis = computeMonthKpis(group.live, group.hist, key);
