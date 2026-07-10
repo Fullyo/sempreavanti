@@ -420,23 +420,10 @@ export default function AllBookings() {
         const isCurrent = key === currentMonthKey;
         const isOpen = detailKey === key;
         const isEmpty = !hasHist && !hasLive;
-        // Show a year heading before the first month of each year (only in the
-        // full list view, not when a single month is opened as a detail page).
-        const prevYear = idx > 0 ? arr[idx - 1][0].split("-")[0] : null;
-        const showYearHeading = !detailKey && yStr !== prevYear;
         return (
           <div key={key} style={{ marginBottom: isOpen ? 40 : 10 }}>
-            {showYearHeading && (
-              <div style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontSize: 20, fontWeight: 400, color: COLORS.gold,
-                letterSpacing: "0.16em", textTransform: "uppercase",
-                margin: idx === 0 ? "0 0 14px" : "34px 0 14px",
-                paddingBottom: 8, borderBottom: `1px solid ${COLORS.border}`,
-              }}>
-                {yStr}
-              </div>
-            )}
+
+
 
             <div
               onClick={() => { if (!isOpen) setDetailKey(key); }}
