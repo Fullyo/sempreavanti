@@ -727,6 +727,15 @@ export default function AllBookings() {
                           {v.listing_name ? `${v.listing_name} · ` : ""}Check-in: {v.checkin}{v.checkout ? ` · Check-out: ${v.checkout}` : ""}{v.nights ? ` · ${v.nights} night${v.nights === 1 ? "" : "s"}` : ""}
                         </span>
                       </div>
+                      <div style={{ fontSize: 13, color: COLORS.textMid, marginTop: 6, display: "flex", gap: 8, alignItems: "center" }}>
+                        <span style={{ color: COLORS.textMuted }}>Accommodation:</span>
+                        <span style={{ fontWeight: 500 }}>
+                          {v.accommodation_fare != null && Number(v.accommodation_fare) > 0 ? formatUSD(Number(v.accommodation_fare)) : "—"} USD
+                        </span>
+                        {v.accommodation_fare != null && v.guesty_fare != null && Number(v.accommodation_fare) !== Number(v.guesty_fare) && (
+                          <span style={{ fontSize: 9, background: `${COLORS.amber}1a`, color: COLORS.amber, padding: "2px 8px", borderRadius: 10, textTransform: "uppercase", letterSpacing: "0.08em" }}>Edited</span>
+                        )}
+                      </div>
                       {v.meal_token && (
                         <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
                           <MealLinkButton token={v.meal_token} />
