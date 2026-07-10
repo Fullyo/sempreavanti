@@ -69,7 +69,6 @@ function monthNameFromKey(key: string) {
   return MONTH_NAMES[m - 1];
 }
 
-type ViewTab = "upcoming" | "all";
 type MonthGroup = { live: Booking[]; hist: HistoricalBooking[] };
 
 function getCurrentMonthKey(date = new Date()) {
@@ -81,8 +80,9 @@ function getCurrentMonthKey(date = new Date()) {
 export default function AllBookings() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState<ViewTab>("all");
-  const [monthFilter, setMonthFilter] = useState("all");
+  const currentYear = new Date().getFullYear();
+  const YEAR_TABS = [currentYear, currentYear + 1];
+  const [year, setYear] = useState<number>(currentYear);
   const [detailKey, setDetailKey] = useState<string | null>(null);
   const [editId, setEditId] = useState<number | null>(null);
   // Petty cash float per booking ref ('live-<id>' or historical string id).
@@ -144,30 +144,17 @@ export default function AllBookings() {
     loadPetty();
   }, []);
 
-  const now = new Date();
-  const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-  const sixtyDaysOut = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  // Live bookings for the selected year tab.
+  const viewFiltered = useMemo(
+    () => bookings.filter((b) => Number(monthKey(b.checkin).split("-")[0]) === year),
+    [bookings, year],
+  );
 
-  const viewFiltered = useMemo(() => {
-    if (view === "upcoming") {
-      return bookings.filter((b) => b.checkin >= todayISO && b.checkin <= sixtyDaysOut);
-    }
-    if (monthFilter !== "all") {
-      return bookings.filter((b) => monthKey(b.checkin) === monthFilter);
-    }
-    return bookings;
-  }, [bookings, view, monthFilter, todayISO, sixtyDaysOut]);
-
-  // Historical (pre-tool, USD) rows visible in the current view scope.
-  const historicalInView = useMemo<HistoricalBooking[]>(() => {
-    if (view === "upcoming") {
-      return ALL_HISTORICAL.filter((h) => h.checkin >= todayISO && h.checkin <= sixtyDaysOut);
-    }
-    if (monthFilter !== "all") {
-      return ALL_HISTORICAL.filter((h) => historicalMonthKey(h) === monthFilter);
-    }
-    return ALL_HISTORICAL;
-  }, [view, monthFilter, todayISO, sixtyDaysOut]);
+  // Historical (pre-tool, USD) rows for the selected year tab.
+  const historicalInView = useMemo<HistoricalBooking[]>(
+    () => ALL_HISTORICAL.filter((h) => Number(historicalMonthKey(h).split("-")[0]) === year),
+    [year],
+  );
 
   // Group live and historical by month, latest month first.
   const monthSections = useMemo(() => {
@@ -189,10 +176,9 @@ export default function AllBookings() {
 
   const currentMonthKey = getCurrentMonthKey();
   const currentMonthLabel = monthLabel(currentMonthKey);
-  const shouldForceMayHistorical = view === "all" && (monthFilter === "all" || monthFilter === "2026-05");
+  const shouldForceMayHistorical = year === 2026;
 
-  // Organize strictly by month (newest month first), grouped under their year.
-  // The current month is NOT pulled to the top — it stays in chronological order.
+  // Organize strictly by month (newest month first) within the selected year.
   // May 2026 is a hard historical month: if the card renders, it must contain
   // the May imported rows and can never fall through to an empty placeholder.
   const displayMonthSections = useMemo(() => {
@@ -201,12 +187,13 @@ export default function AllBookings() {
       const mayGroup = byKey.get("2026-05") ?? { live: [], hist: [] };
       byKey.set("2026-05", { ...mayGroup, hist: [...MAY_2026_BOOKINGS] });
     }
-    // Ensure the current month always has a (possibly empty) folder.
-    if (view === "all" && monthFilter === "all" && !byKey.has(currentMonthKey)) {
+    // Ensure the current month always has a (possibly empty) folder in its year.
+    if (year === currentYear && !byKey.has(currentMonthKey)) {
       byKey.set(currentMonthKey, { live: [], hist: [] });
     }
     return Array.from(byKey.entries()).sort(([a], [b]) => b.localeCompare(a)); // newest month first
-  }, [monthSections, currentMonthKey, shouldForceMayHistorical, view, monthFilter]);
+  }, [monthSections, currentMonthKey, shouldForceMayHistorical, year, currentYear]);
+
 
 
   // Default selection = most recent month that actually has bookings.
@@ -371,34 +358,30 @@ export default function AllBookings() {
         </div>
       </div>
 
-      {/* View toggle: All vs Upcoming — hidden while viewing a single month */}
+      {/* Year tabs — hidden while viewing a single month */}
       {!detailKey && (
       <div style={{ display: "flex", gap: 0, marginBottom: 18, borderBottom: `1px solid ${COLORS.border}` }}>
-        {([
-          { id: "all", label: "All Bookings" },
-          { id: "upcoming", label: "Upcoming (60 days)" },
-        ] as { id: ViewTab; label: string }[]).map((t) => {
-          const active = view === t.id;
+        {YEAR_TABS.map((y) => {
+          const active = year === y;
           return (
             <button
-              key={t.id}
-              onClick={() => { setView(t.id); if (t.id === "upcoming") setMonthFilter("all"); }}
+              key={y}
+              onClick={() => setYear(y)}
               style={{
                 background: "transparent",
                 border: "none",
-                padding: "10px 18px",
+                padding: "12px 26px",
                 fontFamily: "inherit",
-                fontSize: 12,
-                textTransform: "uppercase",
-                letterSpacing: "0.12em",
+                fontSize: 13,
+                letterSpacing: "0.16em",
                 cursor: "pointer",
                 color: active ? COLORS.gold : COLORS.textMuted,
                 borderBottom: active ? `2px solid ${COLORS.gold}` : "2px solid transparent",
                 marginBottom: -1,
-                fontWeight: active ? 500 : 400,
+                fontWeight: active ? 600 : 400,
               }}
             >
-              {t.label}
+              {y}
             </button>
           );
         })}
@@ -407,16 +390,19 @@ export default function AllBookings() {
 
       {!detailKey && (
       <div style={{ fontStyle: "italic", color: COLORS.textMuted, fontSize: 12, marginBottom: 18 }}>
-        Current month is {currentMonthLabel}. Historical reports stay attached to their booking month.
+        {year === currentYear
+          ? `Viewing ${year} · current month is ${currentMonthLabel}.`
+          : `Viewing ${year}.`} Historical reports stay attached to their booking month.
       </div>
       )}
 
       {loading && <div style={{ color: COLORS.textMuted }}>Loading…</div>}
       {!loading && displayMonthSections.length === 0 && (
         <div style={{ background: "#fff", border: `1px dashed ${COLORS.border}`, borderRadius: 4, padding: "32px 22px", textAlign: "center", color: COLORS.textMuted }}>
-          {view === "upcoming" ? "No upcoming check-ins in the next 60 days." : "No bookings match this filter."}
+          No bookings recorded for {year} yet.
         </div>
       )}
+
 
       {(detailKey ? displayMonthSections.filter(([k]) => k === detailKey) : displayMonthSections).map(([key, group], idx, arr) => {
         const kpis = computeMonthKpis(group.live, group.hist, key);
@@ -434,23 +420,10 @@ export default function AllBookings() {
         const isCurrent = key === currentMonthKey;
         const isOpen = detailKey === key;
         const isEmpty = !hasHist && !hasLive;
-        // Show a year heading before the first month of each year (only in the
-        // full list view, not when a single month is opened as a detail page).
-        const prevYear = idx > 0 ? arr[idx - 1][0].split("-")[0] : null;
-        const showYearHeading = !detailKey && yStr !== prevYear;
         return (
           <div key={key} style={{ marginBottom: isOpen ? 40 : 10 }}>
-            {showYearHeading && (
-              <div style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontSize: 20, fontWeight: 400, color: COLORS.gold,
-                letterSpacing: "0.16em", textTransform: "uppercase",
-                margin: idx === 0 ? "0 0 14px" : "34px 0 14px",
-                paddingBottom: 8, borderBottom: `1px solid ${COLORS.border}`,
-              }}>
-                {yStr}
-              </div>
-            )}
+
+
 
             <div
               onClick={() => { if (!isOpen) setDetailKey(key); }}
