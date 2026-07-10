@@ -80,8 +80,9 @@ function getCurrentMonthKey(date = new Date()) {
 export default function AllBookings() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState<ViewTab>("all");
-  const [monthFilter, setMonthFilter] = useState("all");
+  const currentYear = new Date().getFullYear();
+  const YEAR_TABS = [currentYear, currentYear + 1];
+  const [year, setYear] = useState<number>(currentYear);
   const [detailKey, setDetailKey] = useState<string | null>(null);
   const [editId, setEditId] = useState<number | null>(null);
   // Petty cash float per booking ref ('live-<id>' or historical string id).
