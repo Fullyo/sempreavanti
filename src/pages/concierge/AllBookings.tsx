@@ -144,30 +144,17 @@ export default function AllBookings() {
     loadPetty();
   }, []);
 
-  const now = new Date();
-  const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-  const sixtyDaysOut = new Date(now.getTime() + 60 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  // Live bookings for the selected year tab.
+  const viewFiltered = useMemo(
+    () => bookings.filter((b) => Number(monthKey(b.checkin).split("-")[0]) === year),
+    [bookings, year],
+  );
 
-  const viewFiltered = useMemo(() => {
-    if (view === "upcoming") {
-      return bookings.filter((b) => b.checkin >= todayISO && b.checkin <= sixtyDaysOut);
-    }
-    if (monthFilter !== "all") {
-      return bookings.filter((b) => monthKey(b.checkin) === monthFilter);
-    }
-    return bookings;
-  }, [bookings, view, monthFilter, todayISO, sixtyDaysOut]);
-
-  // Historical (pre-tool, USD) rows visible in the current view scope.
-  const historicalInView = useMemo<HistoricalBooking[]>(() => {
-    if (view === "upcoming") {
-      return ALL_HISTORICAL.filter((h) => h.checkin >= todayISO && h.checkin <= sixtyDaysOut);
-    }
-    if (monthFilter !== "all") {
-      return ALL_HISTORICAL.filter((h) => historicalMonthKey(h) === monthFilter);
-    }
-    return ALL_HISTORICAL;
-  }, [view, monthFilter, todayISO, sixtyDaysOut]);
+  // Historical (pre-tool, USD) rows for the selected year tab.
+  const historicalInView = useMemo<HistoricalBooking[]>(
+    () => ALL_HISTORICAL.filter((h) => Number(historicalMonthKey(h).split("-")[0]) === year),
+    [year],
+  );
 
   // Group live and historical by month, latest month first.
   const monthSections = useMemo(() => {
@@ -189,10 +176,9 @@ export default function AllBookings() {
 
   const currentMonthKey = getCurrentMonthKey();
   const currentMonthLabel = monthLabel(currentMonthKey);
-  const shouldForceMayHistorical = view === "all" && (monthFilter === "all" || monthFilter === "2026-05");
+  const shouldForceMayHistorical = year === 2026;
 
-  // Organize strictly by month (newest month first), grouped under their year.
-  // The current month is NOT pulled to the top — it stays in chronological order.
+  // Organize strictly by month (newest month first) within the selected year.
   // May 2026 is a hard historical month: if the card renders, it must contain
   // the May imported rows and can never fall through to an empty placeholder.
   const displayMonthSections = useMemo(() => {
@@ -201,12 +187,13 @@ export default function AllBookings() {
       const mayGroup = byKey.get("2026-05") ?? { live: [], hist: [] };
       byKey.set("2026-05", { ...mayGroup, hist: [...MAY_2026_BOOKINGS] });
     }
-    // Ensure the current month always has a (possibly empty) folder.
-    if (view === "all" && monthFilter === "all" && !byKey.has(currentMonthKey)) {
+    // Ensure the current month always has a (possibly empty) folder in its year.
+    if (year === currentYear && !byKey.has(currentMonthKey)) {
       byKey.set(currentMonthKey, { live: [], hist: [] });
     }
     return Array.from(byKey.entries()).sort(([a], [b]) => b.localeCompare(a)); // newest month first
-  }, [monthSections, currentMonthKey, shouldForceMayHistorical, view, monthFilter]);
+  }, [monthSections, currentMonthKey, shouldForceMayHistorical, year, currentYear]);
+
 
 
   // Default selection = most recent month that actually has bookings.
