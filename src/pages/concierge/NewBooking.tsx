@@ -1286,8 +1286,8 @@ function ServiceLine({
   );
 
   const costText = cost === null || r.type === "utv" ? "—" : formatMXN(cost);
-  const profitText = profit === null ? "cost TBD" : formatMXN(profit);
-  const profitColor = profit === null ? COLORS.amber : COLORS.green;
+  const profitText = r.type === "utv" ? "—" : profit === null ? "cost TBD" : formatMXN(profit);
+  const profitColor = r.type === "utv" ? COLORS.textMid : profit === null ? COLORS.amber : COLORS.green;
 
   if (isMobile) {
     return (
