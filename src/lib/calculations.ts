@@ -194,6 +194,7 @@ export interface Booking {
   nights?: number | null;
   res_status?: string | null;
   source?: string | null;
+  guesty_fare?: number | null;
 }
 
 export function commissionRule(type: string, price: number, unit_cost: number | null): string {
