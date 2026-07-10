@@ -107,9 +107,16 @@ Deno.serve(async (req) => {
       // that is currently in-house (checked in but not yet checked out). The
       // documented `filters` JSON array is the only reliable way to date-scope
       // the list, and it correctly returns in-house + future reservations.
+      //
+      // We also constrain to status=confirmed. Without it, the filtered list
+      // returns every inquiry / declined / canceled thread too (40+ Airbnb &
+      // VRBO inquiries), which would pollute All Bookings with fake stays.
       url.searchParams.set(
         "filters",
-        JSON.stringify([{ field: "checkOut", operator: "$gte", value: today }]),
+        JSON.stringify([
+          { field: "checkOut", operator: "$gte", value: today },
+          { field: "status", operator: "$eq", value: "confirmed" },
+        ]),
       );
       url.searchParams.set("sort", "checkIn");
       url.searchParams.set("fields", fields);
