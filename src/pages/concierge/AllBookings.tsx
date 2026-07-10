@@ -191,7 +191,8 @@ export default function AllBookings() {
   const currentMonthLabel = monthLabel(currentMonthKey);
   const shouldForceMayHistorical = view === "all" && (monthFilter === "all" || monthFilter === "2026-05");
 
-  // Reorder: current month first if present, otherwise add one empty current folder.
+  // Organize strictly by month (newest month first), grouped under their year.
+  // The current month is NOT pulled to the top — it stays in chronological order.
   // May 2026 is a hard historical month: if the card renders, it must contain
   // the May imported rows and can never fall through to an empty placeholder.
   const displayMonthSections = useMemo(() => {
@@ -200,13 +201,13 @@ export default function AllBookings() {
       const mayGroup = byKey.get("2026-05") ?? { live: [], hist: [] };
       byKey.set("2026-05", { ...mayGroup, hist: [...MAY_2026_BOOKINGS] });
     }
+    // Ensure the current month always has a (possibly empty) folder.
+    if (view === "all" && monthFilter === "all" && !byKey.has(currentMonthKey)) {
+      byKey.set(currentMonthKey, { live: [], hist: [] });
+    }
+    return Array.from(byKey.entries()).sort(([a], [b]) => b.localeCompare(a)); // newest month first
+  }, [monthSections, currentMonthKey, shouldForceMayHistorical, view, monthFilter]);
 
-    const ordered = Array.from(byKey.entries()).sort(([a], [b]) => b.localeCompare(a));
-    const current = ordered.find(([k]) => k === currentMonthKey);
-    const withoutCurrent = ordered.filter(([k]) => k !== currentMonthKey);
-    if (!current) return [[currentMonthKey, { live: [], hist: [] }] as [string, MonthGroup], ...withoutCurrent];
-    return [current, ...withoutCurrent];
-  }, [monthSections, currentMonthKey, shouldForceMayHistorical]);
 
   // Default selection = most recent month that actually has bookings.
   const defaultOpenKey = useMemo(() => {
@@ -417,7 +418,7 @@ export default function AllBookings() {
         </div>
       )}
 
-      {(detailKey ? displayMonthSections.filter(([k]) => k === detailKey) : displayMonthSections).map(([key, group]) => {
+      {(detailKey ? displayMonthSections.filter(([k]) => k === detailKey) : displayMonthSections).map(([key, group], idx, arr) => {
         const kpis = computeMonthKpis(group.live, group.hist, key);
         const label = monthLabel(key);
         const [yStr, mStr] = key.split("-");
@@ -433,8 +434,24 @@ export default function AllBookings() {
         const isCurrent = key === currentMonthKey;
         const isOpen = detailKey === key;
         const isEmpty = !hasHist && !hasLive;
+        // Show a year heading before the first month of each year (only in the
+        // full list view, not when a single month is opened as a detail page).
+        const prevYear = idx > 0 ? arr[idx - 1][0].split("-")[0] : null;
+        const showYearHeading = !detailKey && yStr !== prevYear;
         return (
           <div key={key} style={{ marginBottom: isOpen ? 40 : 10 }}>
+            {showYearHeading && (
+              <div style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontSize: 20, fontWeight: 400, color: COLORS.gold,
+                letterSpacing: "0.16em", textTransform: "uppercase",
+                margin: idx === 0 ? "0 0 14px" : "34px 0 14px",
+                paddingBottom: 8, borderBottom: `1px solid ${COLORS.border}`,
+              }}>
+                {yStr}
+              </div>
+            )}
+
             <div
               onClick={() => { if (!isOpen) setDetailKey(key); }}
               style={{
