@@ -69,7 +69,6 @@ function monthNameFromKey(key: string) {
   return MONTH_NAMES[m - 1];
 }
 
-type ViewTab = "upcoming" | "all";
 type MonthGroup = { live: Booking[]; hist: HistoricalBooking[] };
 
 function getCurrentMonthKey(date = new Date()) {
