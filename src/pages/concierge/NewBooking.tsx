@@ -76,6 +76,13 @@ interface Row {
   sub_text?: string | null;
 }
 
+interface CommissionRow {
+  uid: string;
+  vendor: string;
+  amount: number;
+  currency: "MXN" | "USD";
+}
+
 function uid() {
   return Math.random().toString(36).slice(2);
 }
