@@ -936,10 +936,12 @@ function PettyCashBox({ guest, currency, float, spent, onSave }: {
   );
 }
 
-function PettyCashSummary({ group, petty }: {
+function MonthSummary({ kpis, group, petty }: {
+  kpis: MonthKpis;
   group: { live: Booking[]; hist: HistoricalBooking[] };
   petty: Record<string, number>;
 }) {
+  // Petty cash roll-up (per currency).
   const usd = { float: 0, spent: 0 };
   const mxn = { float: 0, spent: 0 };
   group.hist.forEach((h) => {
@@ -950,37 +952,99 @@ function PettyCashSummary({ group, petty }: {
     mxn.float += petty[`live-${b.id}`] ?? 0;
     mxn.spent += bookingUpsellCost(b.items);
   });
-  const blocks: { currency: string; float: number; spent: number }[] = [];
-  if (group.hist.length) blocks.push({ currency: "USD", ...usd });
-  if (group.live.length) blocks.push({ currency: "MXN", ...mxn });
-  if (!blocks.length) return null;
-  return (
-    <div style={{ background: "#FAF7F2", border: `1px solid ${COLORS.gold}`, borderRadius: 4, padding: "16px 18px", marginTop: 6, marginBottom: 12 }}>
-      <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: COLORS.gold, marginBottom: 12, fontWeight: 500 }}>
-        Petty Cash Summary — Month
+  const pettyBlocks: { currency: string; float: number; spent: number }[] = [];
+  if (group.hist.length) pettyBlocks.push({ currency: "USD", ...usd });
+  if (group.live.length) pettyBlocks.push({ currency: "MXN", ...mxn });
+
+  // Dark palette (cohesive black block).
+  const CREAM = "#F7F4EE";
+  const GOLD = "#B8924A";
+  const MUTED = "rgba(247,244,238,0.5)";
+  const GREEN = "#7FC9A0";
+  const AMBER = "#D9B25A";
+  const BLUE = "#8FB4D9";
+  const RED = "#E08A8A";
+  const DIV = "1px solid rgba(247,244,238,0.12)";
+
+  const secTitle: CSSProperties = {
+    fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em",
+    color: GOLD, fontWeight: 500, marginBottom: 12,
+  };
+  const cellLabel: CSSProperties = {
+    fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: MUTED,
+  };
+  const cellVal = (color = CREAM): CSSProperties => ({
+    fontFamily: "'Cormorant Garamond', serif", fontSize: 22, fontWeight: 400, marginTop: 4, color,
+  });
+  const cellSub: CSSProperties = { fontSize: 10, color: MUTED, marginTop: 2 };
+
+  const Section = ({ title, cols, children }: { title: string; cols: number; children: React.ReactNode }) => (
+    <div style={{ padding: "18px 0", borderTop: DIV }}>
+      <div style={secTitle}>{title}</div>
+      <div style={{ display: "grid", gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 14 }}>
+        {children}
       </div>
-      {blocks.map((bl) => {
+    </div>
+  );
+  const Cell = ({ label, value, sub, color }: { label: string; value: string; sub?: string; color?: string }) => (
+    <div>
+      <div style={cellLabel}>{label}</div>
+      <div style={cellVal(color)}>{value}</div>
+      {sub && <div style={cellSub}>{sub}</div>}
+    </div>
+  );
+
+  return (
+    <div style={{ background: "#1C1914", border: "1px solid #1C1914", borderRadius: 4, padding: "8px 22px 20px", marginTop: 18, marginBottom: 12, color: CREAM }}>
+      <div style={{ padding: "16px 0 0" }}>
+        <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.18em", color: GOLD, fontWeight: 500 }}>
+          Month Summary
+        </div>
+      </div>
+
+      <Section title="Accommodation Fare (paid in USD)" cols={3}>
+        <Cell label="Total Fare" value={formatUSD(kpis.accommodation.fareUSD)} />
+        <Cell label="Owner's Share 85%" value={formatUSD(kpis.accommodation.ownerUSD)} color={GREEN} />
+        <Cell label="LUX's Cut 15%" value={formatUSD(kpis.accommodation.luxUSD)} color={AMBER} />
+      </Section>
+
+      <Section title="Upsells (priced in pesos · charged to guests in USD @16)" cols={4}>
+        <Cell label="Guest Billed" value={formatMXN(kpis.upsells.billed.mxn)} sub={`≈ ${formatUSD(kpis.upsells.billed.usd)} USD`} />
+        <Cell label="Profit Pool" value={formatMXN(kpis.upsells.profit.mxn)} sub={`≈ ${formatUSD(kpis.upsells.profit.usd)} USD`} />
+        <Cell label="Owner's Share 85%" value={formatMXN(kpis.upsells.owner.mxn)} sub={`≈ ${formatUSD(kpis.upsells.owner.usd)} USD`} color={GREEN} />
+        <Cell label="LUX's Cut 15%" value={formatMXN(kpis.upsells.lux.mxn)} sub={`≈ ${formatUSD(kpis.upsells.lux.usd)} USD`} color={AMBER} />
+      </Section>
+
+      <Section title="Combined Totals in USD (Accommodation + Upsells @16)" cols={3}>
+        <Cell label="Bookings" value={String(kpis.count)} />
+        <Cell label="Owner Total Earnings" value={formatUSD(kpis.combinedUSD.ownerTotal)} color={GREEN} />
+        <Cell label="LUX Total Cut" value={formatUSD(kpis.combinedUSD.luxTotal)} color={AMBER} />
+      </Section>
+
+      {kpis.commissionsOwed.mxn > 0 && (
+        <Section title="Commissions Owed to Us (vendors the guest paid directly)" cols={1}>
+          <Cell label="Total Owed" value={formatMXN(kpis.commissionsOwed.mxn)} sub={`≈ ${formatUSD(kpis.commissionsOwed.usd)} USD`} color={BLUE} />
+        </Section>
+      )}
+
+      {pettyBlocks.map((bl) => {
         const balance = bl.float - bl.spent;
         return (
-          <div key={bl.currency} style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 6 }}>
-            <div>
-              <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>Total Given by Owner ({bl.currency})</div>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, marginTop: 4, color: COLORS.textMid }}>{pcMoney(bl.float, bl.currency)}</div>
-            </div>
-            <div>
-              <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>Total Spent on Guests</div>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, marginTop: 4, color: COLORS.textMid }}>{pcMoney(bl.spent, bl.currency)}</div>
-            </div>
-            <div>
-              <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>Petty Cash Remaining</div>
-              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 20, fontWeight: 400, marginTop: 4, color: balance < 0 ? COLORS.red : COLORS.green }}>{pcMoney(balance, bl.currency)}</div>
-            </div>
-          </div>
+          <Section key={bl.currency} title={`Petty Cash — ${bl.currency}`} cols={3}>
+            <Cell label={`Total Given by Owner (${bl.currency})`} value={pcMoney(bl.float, bl.currency)} />
+            <Cell label="Total Spent on Guests" value={pcMoney(bl.spent, bl.currency)} />
+            <Cell label="Petty Cash Remaining" value={pcMoney(balance, bl.currency)} color={balance < 0 ? RED : GREEN} />
+          </Section>
         );
       })}
+
+      <div style={{ fontSize: 11, color: MUTED, fontStyle: "italic", marginTop: 16, paddingTop: 16, borderTop: DIV }}>
+        Accommodation is billed in USD on Guesty. Upsells are priced in pesos and charged to guests in USD at 16.
+      </div>
     </div>
   );
 }
+
 
 
 function MealLinkButton({ token }: { token: string }) {
