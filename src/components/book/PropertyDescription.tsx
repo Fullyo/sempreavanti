@@ -81,11 +81,11 @@ export default function PropertyDescription() {
               <ul className="list-disc list-inside space-y-1">
                 <li>Housekeeping services</li>
                 <li>On-site caretaker</li>
-                <li>Private chef service (food not included)</li>
+                <li>Private chefs included — food at cost</li>
               </ul>
               <p><strong>Dining & chef service details:</strong></p>
               <p>
-                Ricardo and Crethell prepare Mexican breakfast, lunch, and dinner upon request. Meals must be ordered in advance so preparations can be made prior to arrival. A menu will be provided. One main course is prepared per meal (no individual plating). Please request preferred meal times in advance. Staff service concludes at 5:00 PM. Meals are for registered guests only. Dietary restrictions and allergies must be shared ahead of time.
+                Chefs and service are included. Ricardo and Crethell handle the cooking, prepping, serving, and cleaning — you simply cover the food at cost, along with the daily market runs and a fully stocked pantry. Ricardo and Crethell prepare Mexican breakfast, lunch, and dinner upon request. Meals must be ordered in advance so preparations can be made prior to arrival. A menu will be provided. One main course is prepared per meal (no individual plating). Please request preferred meal times in advance. Staff service concludes at 5:00 PM. Meals are for registered guests only. Dietary restrictions and allergies must be shared ahead of time.
               </p>
             </AccordionContent>
           </AccordionItem>
