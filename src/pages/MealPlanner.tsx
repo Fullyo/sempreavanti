@@ -195,8 +195,8 @@ export default function MealPlanner() {
           </h1>
           <p style={{ color: "rgba(245,241,232,0.72)", fontSize: 14, marginTop: 12, lineHeight: 1.6 }}>
             Your stay includes two professional on-site chefs. Because everything is made from scratch, we plan selections
-            in advance so it is ready for your arrival. Choose one main per meal (served family-style). The chefs handle
-            all grocery shopping; food costs are additional, based on market pricing.
+            in advance so it's ready for your arrival. Choose one main per meal (served family-style). The chefs handle
+            the cooking, prepping, serving, and cleaning — guests simply cover the food.
           </p>
           <div style={{ marginTop: 16, display: "inline-flex", alignItems: "center", gap: 14, background: "rgba(184,146,74,0.14)", border: `1px solid ${C.gold}`, borderRadius: 4, padding: "10px 16px" }}>
             <div>
