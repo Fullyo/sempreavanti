@@ -9,6 +9,7 @@ import {
   CATEGORY_ORDER,
   computeGuestPayment,
   formatMXN,
+  formatUSD,
   isUtvRental,
   Service,
   TYPE_COLOR,
