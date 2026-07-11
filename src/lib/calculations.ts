@@ -293,7 +293,9 @@ export function computeGuestPayment(params: {
   );
   const utvGas = computeUtvGas(params.items);
   const accommodationMXN =
-    params.accommodationCurrency === "USD" ? params.accommodationFare * fx : params.accommodationFare;
+    String(params.accommodationCurrency).toUpperCase() === "USD"
+      ? params.accommodationFare * fx
+      : params.accommodationFare;
   const tipBase = accommodationMXN + upsellsSubtotal + utvGas;
   // Tip is entirely the guest's choice — no mandatory floor.
   const tip =

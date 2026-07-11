@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
     const utvGas = utvUnits * UTV_GAS_PER_RENTAL;
 
     const accommodationMXN =
-      booking.accommodation_currency === "USD"
+      String(booking.accommodation_currency).toUpperCase() === "USD"
         ? Number(booking.accommodation_fare) * fx
         : Number(booking.accommodation_fare);
 
