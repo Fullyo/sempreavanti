@@ -1,0 +1,1 @@
+delete from meal_selections ms using meal_plans mp where ms.meal_plan_id=mp.id and mp.meal_token='fa0fd27c-167a-4b4c-86cf-47f9559d5146'; update meal_plans set special_requests=null, breakfast_time=null where meal_token='fa0fd27c-167a-4b4c-86cf-47f9559d5146';
