@@ -85,7 +85,7 @@ export default function PropertyDescription() {
               </ul>
               <p><strong>Dining & chef service details:</strong></p>
               <p>
-                Chefs and service are included. Ricardo and Crethell handle the cooking, prepping, serving, and cleaning — you simply cover the food at cost, along with the daily market runs and a fully stocked pantry. Ricardo and Crethell prepare Mexican breakfast, lunch, and dinner upon request. Meals must be ordered in advance so preparations can be made prior to arrival. A menu will be provided. One main course is prepared per meal (no individual plating). Please request preferred meal times in advance. Staff service concludes at 5:00 PM. Meals are for registered guests only. Dietary restrictions and allergies must be shared ahead of time.
+                Chefs and service are included. Ricardo and Crethell handle the cooking, prepping, serving, and cleaning — you simply cover the food at cost, along with the daily market runs and a fully stocked pantry. They prepare Mexican breakfast, lunch, and dinner, ordered in advance so everything is ready for your arrival. A menu will be provided, and one main course is prepared per meal, served family-style. Meals follow set times: breakfast at 8:30 AM, lunch at 12:30 PM, and dinner ready at 5:30 PM. There is no chef service on Sundays. Meals are for registered guests only, and dietary restrictions and allergies must be shared ahead of time.
               </p>
             </AccordionContent>
           </AccordionItem>
