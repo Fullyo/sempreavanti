@@ -1063,7 +1063,7 @@ export default function NewBooking({
               </button>
               {commissions.length > 0 && (
                 <div style={{ fontSize: 12, color: COLORS.textMuted }}>
-                  Total owed: <strong style={{ color: COLORS.text }}>{formatMXN(commissionsMXN)}</strong>{" "}
+                  Total owed: <strong style={{ color: COLORS.textDark }}>{formatMXN(commissionsMXN)}</strong>{" "}
                   (≈ {formatUSD(commissionsMXN / fx)})
                 </div>
               )}
