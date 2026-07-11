@@ -281,7 +281,6 @@ export default function Concierge() {
       </nav>
 
       <main style={{ maxWidth: 1000, margin: "0 auto", padding: 32 }}>
-        {tab === "new" && <NewBooking onSaved={() => setTab("all")} />}
 
         {tab === "all" && <AllBookings />}
         {tab === "pricelist" && <PriceList />}
