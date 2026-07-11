@@ -328,6 +328,7 @@ export default function NewBooking({
     setCashCollected(0);
     setAccommodationFare(0);
     setGroceryAllocation(0);
+    setCommissions([]);
     setFuelPerUnit(UTV_GAS_PER_RENTAL);
     setFuelRemoved(false);
   };
