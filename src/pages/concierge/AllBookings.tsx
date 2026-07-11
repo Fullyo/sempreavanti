@@ -258,6 +258,7 @@ export default function AllBookings() {
         lux: pair(profitMXN * 0.15),
       },
       utvMaintenanceUSD,
+      commissionsOwed: pair(commissionsMXN),
       combinedUSD: {
         // LUX pays the owner a flat $100/month UTV maintenance contribution:
         // owner gains it, LUX's cut is reduced by it.
