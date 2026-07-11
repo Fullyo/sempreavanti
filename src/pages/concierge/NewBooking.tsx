@@ -992,6 +992,83 @@ export default function NewBooking({
             </div>
           </div>
 
+          {/* Commissions owed to us by vendors the guest paid directly — internal only */}
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label style={fieldLabel}>Commissions Owed to Us</label>
+            <div style={{ fontSize: 11, color: COLORS.textMuted, marginBottom: 8 }}>
+              When a guest pays a vendor directly (e.g. a surf instructor), record who owes us the
+              commission and how much. Internal only — tallied into the monthly summary.
+            </div>
+            {commissions.map((c) => (
+              <div
+                key={c.uid}
+                style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8, flexWrap: "wrap" }}
+              >
+                <input
+                  value={c.vendor}
+                  placeholder="Who owes us (e.g. Surf with Victor)"
+                  onChange={(e) => updateCommission(c.uid, { vendor: e.target.value })}
+                  style={{ ...input, flex: "1 1 200px", minWidth: 140 }}
+                />
+                <input
+                  type="number"
+                  value={c.amount || ""}
+                  placeholder="Amount"
+                  onChange={(e) => updateCommission(c.uid, { amount: Number(e.target.value) || 0 })}
+                  style={{ ...input, width: 120 }}
+                />
+                <select
+                  value={c.currency}
+                  onChange={(e) => updateCommission(c.uid, { currency: e.target.value as "MXN" | "USD" })}
+                  style={{ ...input, width: 84 }}
+                >
+                  <option value="MXN">MXN</option>
+                  <option value="USD">USD</option>
+                </select>
+                <button
+                  type="button"
+                  onClick={() => removeCommission(c.uid)}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: COLORS.textMuted,
+                    cursor: "pointer",
+                    fontSize: 18,
+                    lineHeight: 1,
+                    padding: "0 6px",
+                  }}
+                  aria-label="Remove commission"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+            <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 4 }}>
+              <button
+                type="button"
+                onClick={addCommission}
+                style={{
+                  background: "none",
+                  border: `1px dashed ${COLORS.border}`,
+                  color: COLORS.gold,
+                  cursor: "pointer",
+                  fontFamily: "'Jost', sans-serif",
+                  fontSize: 12,
+                  padding: "8px 14px",
+                  borderRadius: 3,
+                }}
+              >
+                + Add commission
+              </button>
+              {commissions.length > 0 && (
+                <div style={{ fontSize: 12, color: COLORS.textMuted }}>
+                  Total owed: <strong style={{ color: COLORS.text }}>{formatMXN(commissionsMXN)}</strong>{" "}
+                  (≈ {formatUSD(commissionsMXN / fx)})
+                </div>
+              )}
+            </div>
+          </div>
+
 
         </div>
       </div>
