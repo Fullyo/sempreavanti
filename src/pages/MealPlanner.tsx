@@ -226,14 +226,16 @@ export default function MealPlanner() {
             Dining at cost — with everything taken care of
           </div>
           <p style={{ fontSize: 13.5, color: C.mid, lineHeight: 1.6, marginBottom: 8 }}>
-            Your groceries are purchased fresh from local markets and passed on to you <strong>at cost</strong>. A modest
-            handling fee is added on top so you can simply relax while everything is done for you — the daily{" "}
-            <strong>shopping, prepping, cooking, and cleaning</strong> — along with the pantry staples, oils, spices, and
-            sauces that season every dish.
+            Dining in the villa is offered <strong>at cost</strong>. You pay the true price of the ingredients —
+            bought fresh each morning at local markets and passed on exactly as we buy them — plus the operational
+            expenses of the service that surrounds every meal: a private chef <strong>shopping, prepping, cooking,
+            and cleaning</strong> for you, along with the pantry we keep fully stocked with oils, spices, condiments,
+            and sauces.
           </p>
           <p style={{ fontSize: 13.5, color: C.mid, lineHeight: 1.6, margin: 0 }}>
-            This keeps chef-prepared, in-villa dining far more affordable than eating out, while fairly covering the basic
-            operating costs of a fully staffed kitchen. Final food charges are based on market pricing for what you select.
+            It's simply <strong>food cost plus operational expenses</strong> — never a profit line. This is what it
+            genuinely takes to run a fully staffed kitchen, which is why chef-prepared, in-villa dining stays far more
+            affordable, and far more relaxed, than eating out.
           </p>
         </div>
 
