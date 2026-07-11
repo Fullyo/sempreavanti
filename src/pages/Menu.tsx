@@ -207,23 +207,22 @@ export default function Menu() {
                 How Dining Works
               </p>
               <h2 className="font-serif text-2xl md:text-3xl font-light text-foreground mb-4">
-                Your chefs are included — dining is simply at cost
+                Chefs and service included. Food, at cost.
               </h2>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-3">
-                Two professional chefs are already part of your stay — their time, care, and craft come
-                with the villa at <span className="text-foreground font-medium">no extra charge</span>.
-                What you pay for dining is the food itself, brought to your table complete: fresh
-                ingredients bought each morning at local markets, together with everything it takes to
-                turn them into a meal — the daily <span className="text-foreground font-medium">market
-                runs, prepping, cooking, and cleaning</span>, and the pantry we keep fully stocked with
-                oils, spices, condiments, and sauces.
+                Your chefs handle it all — <span className="text-foreground font-medium">cooking,
+                prepping, serving, cleaning</span> — as part of your stay.
+              </p>
+              <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-3">
+                Guests cover the food and getting it to the table: the daily market runs, the
+                condiments and extras each meal needs, and a fully stocked pantry.
               </p>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed">
-                It's <span className="text-foreground font-medium">never a profit line</span> — only
-                what it genuinely takes to feed a full villa from a working kitchen. That's why
-                chef-prepared, in-villa dining stays far more relaxed, and far more affordable, than
-                eating out.
+                No shopping, no cooking, no cleanup to think about — just fresh, made-from-scratch
+                meals on your own time, so you can spend more of your time enjoying your stay and your
+                vacation.
               </p>
+
 
             </motion.div>
 
