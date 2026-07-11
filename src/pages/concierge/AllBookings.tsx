@@ -488,63 +488,20 @@ export default function AllBookings() {
 
 
             {isOpen && (<>
-            {/* Per-month KPI summary */}
+            {/* Add a new booking directly inside this month */}
             <div style={{ marginBottom: 18 }}>
-              <KpiBlock
-                title="Accommodation Fare (paid in USD)"
-                tone="accom"
-                cells={[
-                  { label: "Total Fare", value: formatUSD(kpis.accommodation.fareUSD) },
-                  { label: "Owner's Share 85%", value: formatUSD(kpis.accommodation.ownerUSD), color: COLORS.green },
-                  { label: "LUX's Cut 15%", value: formatUSD(kpis.accommodation.luxUSD), color: COLORS.amber },
-                ]}
-                note={kpis.accommodation.fareUSD === 0 ? "No accommodation fare recorded for this month." : undefined}
-              />
-              <KpiBlock
-                title="Upsells (priced in pesos · charged to guests in USD @16)"
-                tone="upsell"
-                cells={[
-                  { label: "Guest Billed", value: formatMXN(kpis.upsells.billed.mxn), sub: `≈ ${formatUSD(kpis.upsells.billed.usd)} USD` },
-                  { label: "Profit Pool", value: formatMXN(kpis.upsells.profit.mxn), sub: `≈ ${formatUSD(kpis.upsells.profit.usd)} USD` },
-                  { label: "Owner's Share 85%", value: formatMXN(kpis.upsells.owner.mxn), sub: `≈ ${formatUSD(kpis.upsells.owner.usd)} USD`, color: COLORS.green },
-                  { label: "LUX's Cut 15%", value: formatMXN(kpis.upsells.lux.mxn), sub: `≈ ${formatUSD(kpis.upsells.lux.usd)} USD`, color: COLORS.amber },
-                ]}
-              />
-              <KpiBlock
-                title="Combined Totals in USD (Accommodation + Upsells @16)"
-                tone="combined"
-                cells={[
-                  { label: "Bookings", value: String(kpis.count) },
-                  {
-                    label: "Owner Total Earnings",
-                    value: formatUSD(kpis.combinedUSD.ownerTotal),
-                    color: COLORS.green,
-                  },
-                  {
-                    label: "LUX Total Cut",
-                    value: formatUSD(kpis.combinedUSD.luxTotal),
-                    color: COLORS.amber,
-                  },
-                ]}
-              />
-              {kpis.commissionsOwed.mxn > 0 && (
-                <KpiBlock
-                  title="Commissions Owed to Us (vendors the guest paid directly)"
-                  tone="upsell"
-                  cells={[
-                    {
-                      label: "Total Owed",
-                      value: formatMXN(kpis.commissionsOwed.mxn),
-                      sub: `≈ ${formatUSD(kpis.commissionsOwed.usd)} USD`,
-                      color: COLORS.blue,
-                    },
-                  ]}
-                />
+              {adding ? (
+                <div style={{ border: `1px solid ${COLORS.gold}`, borderRadius: 4, padding: "18px 22px", background: "#fff" }}>
+                  <NewBooking
+                    onSaved={() => { setAdding(false); load(); }}
+                    onCancel={() => setAdding(false)}
+                  />
+                </div>
+              ) : (
+                <button onClick={() => setAdding(true)} style={btnPrimary}>+ Add New Booking</button>
               )}
-              <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 8 }}>
-                Accommodation is billed in USD on Guesty. Upsells are priced in pesos and charged to guests in USD at 16.
-              </div>
             </div>
+
 
             {key === "2026-06" && (() => {
               // June ran two systems. Old system = owner collected upsells (historical
