@@ -242,15 +242,11 @@ export default function GuestPayment() {
                 </div>
               )}
 
-              {/* Accommodation context */}
+              {/* Accommodation context — shown in pesos only (what we bill in) */}
               {data.accommodationMXN > 0 && (
                 <Row
                   label="Accommodation (already paid)"
-                  sub={
-                    data.accommodationCurrency === "USD"
-                      ? `$${data.accommodationFare.toLocaleString("en-US")} USD @ ${data.fx}`
-                      : "Shown for transparency"
-                  }
+                  sub="Shown for transparency"
                   value={mxn(data.accommodationMXN)}
                   faded
                 />
