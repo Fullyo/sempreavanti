@@ -158,6 +158,19 @@ export default function NewBooking({
   const [groceryAllocation, setGroceryAllocation] = useState<number>(
     Number((initialBooking as any)?.grocery_allocation) || 0,
   );
+  // Commissions owed to us by vendors the guest paid directly (internal only).
+  const [commissions, setCommissions] = useState<CommissionRow[]>(() => {
+    const raw = (initialBooking as any)?.commissions_owed;
+    if (Array.isArray(raw)) {
+      return raw.map((c: any) => ({
+        uid: uid(),
+        vendor: String(c?.vendor ?? ""),
+        amount: Number(c?.amount) || 0,
+        currency: c?.currency === "USD" ? "USD" : "MXN",
+      }));
+    }
+    return [];
+  });
   // Editable fuel rate per UTV rental (one tank, auto-added when a UTV is booked).
   const [fuelPerUnit, setFuelPerUnit] = useState<number>(() => {
     const f = (initialBooking?.items ?? []).find((i) => i.type === "fuel");
