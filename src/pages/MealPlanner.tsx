@@ -343,7 +343,7 @@ export default function MealPlanner() {
                   const opts = dishesByCourse[s.from] ?? [];
                   const current = sel[key] ?? "";
                   const noneLabel = s.optional ? "No dessert" : "Skip this meal";
-                  const pick = (v: string) => setSel((p) => ({ ...p, [key]: current === v ? "" : v }));
+                  
                   return (
                     <div key={s.course}>
                       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 10 }}>
