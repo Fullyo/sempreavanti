@@ -405,6 +405,9 @@ export default function NewBooking({
       accommodation_currency: accommodationCurrency,
       grocery_allocation: groceryAllocation,
       grocery_allocation_currency: "MXN",
+      commissions_owed: commissions
+        .filter((c) => c.vendor.trim() || (Number(c.amount) || 0) > 0)
+        .map((c) => ({ vendor: c.vendor.trim(), amount: Number(c.amount) || 0, currency: c.currency })),
     };
   };
 
