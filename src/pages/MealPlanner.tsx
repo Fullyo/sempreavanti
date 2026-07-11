@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
+import menuHeroImg from "@/assets/menu-hero-beach.png";
+
 
 const C = {
   bg: "#F5F1E8",
@@ -186,36 +188,51 @@ export default function MealPlanner() {
     <div style={{ minHeight: "100dvh", background: C.bg, fontFamily: "'Jost', sans-serif", color: C.text }}>
       <SEO title="Meal Planner — Villas Sempre Avanti" description="Plan your in-villa dining" path="/meals" noindex />
 
-      {/* Header */}
-      <div style={{ background: C.dark, color: "#F5F1E8", padding: "40px 24px 34px" }}>
-        <div style={{ maxWidth: 780, margin: "0 auto" }}>
-          <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.22em", color: C.gold, marginBottom: 12 }}>Villas Sempre Avanti</div>
-          <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 40, margin: 0, lineHeight: 1.05 }}>
-            {data.guest ? `${data.guest}, plan your meals` : "Plan your meals"}
-          </h1>
-          <p style={{ color: "rgba(245,241,232,0.72)", fontSize: 14, marginTop: 12, lineHeight: 1.6 }}>
-            Your stay includes two professional on-site chefs. Because everything is made from scratch, we plan selections
-            in advance so it's ready for your arrival. Choose one main per meal (served family-style). The chefs handle
-            the cooking, prepping, serving, and cleaning — guests simply cover the food.
-          </p>
-          <div style={{ marginTop: 16, display: "inline-flex", alignItems: "center", gap: 14, background: "rgba(184,146,74,0.14)", border: `1px solid ${C.gold}`, borderRadius: 4, padding: "10px 16px" }}>
-            <div>
-              <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: C.gold, fontWeight: 600 }}>Arrival</div>
-              <div style={{ fontSize: 14, color: "#F5F1E8", marginTop: 2 }}>{fmtRange(data.checkin)}</div>
+      {/* Hero header — photographic, guest name kept prominent and legible */}
+      <div style={{ position: "relative", overflow: "hidden", background: C.dark }}>
+        <img
+          src={menuHeroImg}
+          alt="Fresh coastal Mexican cuisine at Villas Sempre Avanti"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(180deg, rgba(18,26,29,0.62) 0%, rgba(18,26,29,0.72) 55%, rgba(18,26,29,0.92) 100%)",
+          }}
+        />
+        <div style={{ position: "relative", padding: "56px 24px 44px", color: "#F5F1E8" }}>
+          <div style={{ maxWidth: 780, margin: "0 auto" }}>
+            <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.24em", color: C.gold, marginBottom: 14 }}>Villas Sempre Avanti</div>
+            <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: 46, margin: 0, lineHeight: 1.03, textShadow: "0 2px 24px rgba(0,0,0,0.45)" }}>
+              {data.guest ? `${data.guest}, plan your meals` : "Plan your meals"}
+            </h1>
+            <p style={{ color: "rgba(245,241,232,0.82)", fontSize: 14, marginTop: 14, lineHeight: 1.6, maxWidth: 620 }}>
+              Your stay includes two professional on-site chefs. Everything is made from scratch, so we plan your
+              selections in advance — ready the moment you arrive. Choose one main per meal, served family-style.
+            </p>
+            <div style={{ marginTop: 18, display: "inline-flex", alignItems: "center", gap: 16, background: "rgba(184,146,74,0.16)", border: `1px solid ${C.gold}`, borderRadius: 6, padding: "12px 18px", backdropFilter: "blur(4px)" }}>
+              <div>
+                <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: C.gold, fontWeight: 600 }}>Arrival</div>
+                <div style={{ fontSize: 14, color: "#F5F1E8", marginTop: 2 }}>{fmtRange(data.checkin)}</div>
+              </div>
+              <div style={{ color: C.gold, fontSize: 18 }}>→</div>
+              <div>
+                <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: C.gold, fontWeight: 600 }}>Departure</div>
+                <div style={{ fontSize: 14, color: "#F5F1E8", marginTop: 2 }}>{fmtRange(data.checkout)}</div>
+              </div>
             </div>
-            <div style={{ color: C.gold, fontSize: 18 }}>→</div>
-            <div>
-              <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.14em", color: C.gold, fontWeight: 600 }}>Departure</div>
-              <div style={{ fontSize: 14, color: "#F5F1E8", marginTop: 2 }}>{fmtRange(data.checkout)}</div>
-            </div>
+            <p style={{ color: "rgba(245,241,232,0.72)", fontSize: 12.5, marginTop: 12, lineHeight: 1.55 }}>
+              Check-in is at 4:00 PM, so your arrival day includes dinner. Checkout is at 11:00 AM, so your final day includes breakfast.
+            </p>
+            <a href="/menu" target="_blank" rel="noreferrer" style={{ display: "inline-block", marginTop: 12, color: C.gold, fontSize: 13, letterSpacing: "0.04em", fontWeight: 600 }}>
+              View the full menu →
+            </a>
           </div>
-          <p style={{ color: "rgba(245,241,232,0.6)", fontSize: 12.5, marginTop: 10, lineHeight: 1.55 }}>
-            Check-in is at 4:00 PM, so your arrival day includes dinner. Checkout is at 11:00 AM, so your final day includes breakfast.
-          </p>
-          <a href="/menu" target="_blank" rel="noreferrer" style={{ display: "inline-block", marginTop: 10, color: C.gold, fontSize: 13, letterSpacing: "0.04em" }}>
-            View the full menu →
-          </a>
         </div>
+
       </div>
 
       <div style={{ maxWidth: 780, margin: "0 auto", padding: "28px 20px 80px" }}>
@@ -320,29 +337,97 @@ export default function MealPlanner() {
                 Day {i + 1} — {fmtDay(d.date)}
               </div>
               {tag && <div style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.12em", color: C.gold, fontWeight: 600, marginBottom: 14 }}>{tag}</div>}
-              <div style={{ display: "grid", gap: 14 }}>
+              <div style={{ display: "grid", gap: 22 }}>
                 {slotsForDay(i, data.days.length).map((s) => {
                   const key = `${d.date}|${s.course}`;
                   const opts = dishesByCourse[s.from] ?? [];
+                  const current = sel[key] ?? "";
+                  const noneLabel = s.optional ? "No dessert" : "Skip this meal";
+                  const pick = (v: string) => setSel((p) => ({ ...p, [key]: current === v ? "" : v }));
                   return (
                     <div key={s.course}>
-                      <label style={label}>{s.label}</label>
-                      <select
-                        value={sel[key] ?? ""}
-                        onChange={(e) => setSel((p) => ({ ...p, [key]: e.target.value }))}
-                        style={selectStyle}
-                      >
-                        <option value="">{s.optional ? "— None —" : "— Select —"}</option>
-                        <option value={SKIP}>No meal this day</option>
-                        {opts.map((o) => (
-                          <option key={o.id} value={o.id}>{o.name}</option>
-                        ))}
-                      </select>
+                      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 10 }}>
+                        <span style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.14em", color: C.sun, fontWeight: 700 }}>{s.label}</span>
+                        {current && current !== SKIP && (
+                          <span style={{ fontSize: 11, color: C.jungle, fontWeight: 600 }}>✓ Selected</span>
+                        )}
+                      </div>
+                      <div style={{ display: "grid", gap: 8 }}>
+                        {opts.map((o) => {
+                          const active = current === o.id;
+                          return (
+                            <button
+                              key={o.id}
+                              type="button"
+                              onClick={() => pick(o.id)}
+                              style={{
+                                textAlign: "left",
+                                cursor: "pointer",
+                                fontFamily: "'Jost', sans-serif",
+                                display: "flex",
+                                alignItems: "flex-start",
+                                gap: 12,
+                                padding: "12px 14px",
+                                borderRadius: 8,
+                                border: `1px solid ${active ? C.gold : C.border}`,
+                                background: active ? "rgba(184,146,74,0.10)" : "#fff",
+                                boxShadow: active ? "0 2px 12px rgba(184,146,74,0.18)" : "none",
+                                transition: "all 0.15s",
+                              }}
+                            >
+                              <span
+                                style={{
+                                  flexShrink: 0,
+                                  marginTop: 2,
+                                  width: 18,
+                                  height: 18,
+                                  borderRadius: "50%",
+                                  border: `2px solid ${active ? C.gold : C.border}`,
+                                  background: active ? C.gold : "transparent",
+                                  color: "#fff",
+                                  fontSize: 11,
+                                  lineHeight: "14px",
+                                  textAlign: "center",
+                                  display: "grid",
+                                  placeItems: "center",
+                                }}
+                              >
+                                {active ? "✓" : ""}
+                              </span>
+                              <span>
+                                <span style={{ display: "block", fontSize: 14.5, fontWeight: 600, color: C.text, lineHeight: 1.3 }}>{o.name}</span>
+                                {o.description && (
+                                  <span style={{ display: "block", fontSize: 12.5, color: C.mid, lineHeight: 1.45, marginTop: 3 }}>{o.description}</span>
+                                )}
+                              </span>
+                            </button>
+                          );
+                        })}
+                        {/* Skip / none option */}
+                        <button
+                          type="button"
+                          onClick={() => pick(SKIP)}
+                          style={{
+                            textAlign: "left",
+                            cursor: "pointer",
+                            fontFamily: "'Jost', sans-serif",
+                            fontSize: 12.5,
+                            color: current === SKIP ? C.text : C.muted,
+                            padding: "9px 14px",
+                            borderRadius: 8,
+                            border: `1px dashed ${current === SKIP ? C.sun : C.border}`,
+                            background: current === SKIP ? "rgba(138,109,59,0.08)" : "transparent",
+                          }}
+                        >
+                          {current === SKIP ? `✓ ${noneLabel}` : noneLabel}
+                        </button>
+                      </div>
                     </div>
                   );
                 })}
               </div>
             </div>
+
           );
         })}
 
