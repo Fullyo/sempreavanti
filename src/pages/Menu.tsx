@@ -210,17 +210,18 @@ export default function Menu() {
                 Dining at cost — with everything taken care of
               </h2>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-3">
-                Your groceries are purchased fresh from local markets and passed on to you{" "}
-                <span className="text-foreground font-medium">at cost</span>. A modest handling
-                fee is added on top so you can simply relax while everything is done for you — the
-                daily <span className="text-foreground font-medium">shopping, prepping, cooking,
-                and cleaning</span> — along with the pantry staples, oils, spices, and sauces that
-                season every dish.
+                Dining in the villa is offered <span className="text-foreground font-medium">at cost</span>.
+                You pay the true price of the ingredients — bought fresh each morning at local markets and
+                passed on exactly as we buy them — plus the operational expenses of the service that
+                surrounds every meal: a private chef <span className="text-foreground font-medium">shopping,
+                prepping, cooking, and cleaning</span> for you, along with the pantry we keep fully stocked
+                with oils, spices, condiments, and sauces.
               </p>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed">
-                This keeps chef-prepared, in-villa dining far more affordable than eating out, while
-                fairly covering the basic operating costs of a fully staffed kitchen. Final food
-                charges are based on market pricing for what you select.
+                It's simply <span className="text-foreground font-medium">food cost plus operational
+                expenses</span> — never a profit line. This is what it genuinely takes to run a fully
+                staffed kitchen, which is why chef-prepared, in-villa dining stays far more affordable,
+                and far more relaxed, than eating out.
               </p>
             </motion.div>
 
