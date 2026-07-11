@@ -207,22 +207,24 @@ export default function Menu() {
                 How Dining Works
               </p>
               <h2 className="font-serif text-2xl md:text-3xl font-light text-foreground mb-4">
-                Dining at cost — with everything taken care of
+                Your chefs are included — dining is simply at cost
               </h2>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed mb-3">
-                Dining in the villa is offered <span className="text-foreground font-medium">at cost</span>.
-                You pay the true price of the ingredients — bought fresh each morning at local markets and
-                passed on exactly as we buy them — plus the operational expenses of the service that
-                surrounds every meal: a private chef <span className="text-foreground font-medium">shopping,
-                prepping, cooking, and cleaning</span> for you, along with the pantry we keep fully stocked
-                with oils, spices, condiments, and sauces.
+                Two professional chefs are already part of your stay — their time, care, and craft come
+                with the villa at <span className="text-foreground font-medium">no extra charge</span>.
+                What you pay for dining is the food itself, brought to your table complete: fresh
+                ingredients bought each morning at local markets, together with everything it takes to
+                turn them into a meal — the daily <span className="text-foreground font-medium">market
+                runs, prepping, cooking, and cleaning</span>, and the pantry we keep fully stocked with
+                oils, spices, condiments, and sauces.
               </p>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed">
-                It's simply <span className="text-foreground font-medium">food cost plus operational
-                expenses</span> — never a profit line. This is what it genuinely takes to run a fully
-                staffed kitchen, which is why chef-prepared, in-villa dining stays far more affordable,
-                and far more relaxed, than eating out.
+                It's <span className="text-foreground font-medium">never a profit line</span> — only
+                what it genuinely takes to feed a full villa from a working kitchen. That's why
+                chef-prepared, in-villa dining stays far more relaxed, and far more affordable, than
+                eating out.
               </p>
+
             </motion.div>
 
             {/* Set meal times */}
