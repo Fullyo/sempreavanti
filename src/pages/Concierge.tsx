@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
-import NewBooking from "./concierge/NewBooking";
 import AllBookings from "./concierge/AllBookings";
 
 import PriceList from "./concierge/PriceList";
@@ -11,8 +10,6 @@ import SettingsTab from "./concierge/Settings";
 const TOKEN_KEY = "concierge_token";
 
 const TABS = [
-  { id: "new", label: "New Booking" },
-  
   { id: "all", label: "All Bookings" },
   { id: "pricelist", label: "Price List" },
   { id: "export", label: "Export" },
@@ -157,7 +154,7 @@ function Gate({ onPass }: { onPass: (token: string) => void }) {
 
 export default function Concierge() {
   const [authState, setAuthState] = useState<"checking" | "out" | "in">("checking");
-  const [tab, setTab] = useState<TabId>("new");
+  const [tab, setTab] = useState<TabId>("all");
 
   useEffect(() => {
     const token = sessionStorage.getItem(TOKEN_KEY);
@@ -284,7 +281,6 @@ export default function Concierge() {
       </nav>
 
       <main style={{ maxWidth: 1000, margin: "0 auto", padding: 32 }}>
-        {tab === "new" && <NewBooking onSaved={() => setTab("all")} />}
 
         {tab === "all" && <AllBookings />}
         {tab === "pricelist" && <PriceList />}
