@@ -85,6 +85,7 @@ export default function AllBookings() {
   const YEAR_TABS = [currentYear, currentYear + 1];
   const [year, setYear] = useState<number>(currentYear);
   const [detailKey, setDetailKey] = useState<string | null>(null);
+  const [adding, setAdding] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
   // Petty cash float per booking ref ('live-<id>' or historical string id).
   const [petty, setPetty] = useState<Record<string, number>>({});
