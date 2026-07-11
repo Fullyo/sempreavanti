@@ -822,7 +822,7 @@ export default function AllBookings() {
             })}
 
 
-            <PettyCashSummary group={group} petty={petty} />
+            <MonthSummary kpis={kpis} group={group} petty={petty} />
             </>)}
           </div>
         );
