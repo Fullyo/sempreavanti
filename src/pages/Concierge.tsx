@@ -154,7 +154,7 @@ function Gate({ onPass }: { onPass: (token: string) => void }) {
 
 export default function Concierge() {
   const [authState, setAuthState] = useState<"checking" | "out" | "in">("checking");
-  const [tab, setTab] = useState<TabId>("new");
+  const [tab, setTab] = useState<TabId>("all");
 
   useEffect(() => {
     const token = sessionStorage.getItem(TOKEN_KEY);
