@@ -35,6 +35,7 @@ type MonthKpis = {
   accommodation: { fareUSD: number; ownerUSD: number; luxUSD: number };
   upsells: { billed: MoneyPair; profit: MoneyPair; owner: MoneyPair; lux: MoneyPair };
   utvMaintenanceUSD: number; // flat LUX → owner UTV maintenance contribution
+  commissionsOwed: MoneyPair; // commissions vendors owe us (guest-direct-paid)
   combinedUSD: { ownerTotal: number; luxTotal: number };
 };
 
@@ -236,6 +237,17 @@ export default function AllBookings() {
 
     const utvMaintenanceUSD = key >= UTV_MAINTENANCE_START ? UTV_MAINTENANCE_USD : 0;
 
+    // Commissions owed to us by vendors the guest paid directly (live bookings only).
+    const commissionsMXN = live.reduce((s, b) => {
+      const rate = Number(b.exchange_rate) || FX;
+      const list = Array.isArray((b as any).commissions_owed) ? (b as any).commissions_owed : [];
+      return s + list.reduce(
+        (sum: number, c: any) =>
+          sum + (c?.currency === "USD" ? (Number(c?.amount) || 0) * rate : Number(c?.amount) || 0),
+        0,
+      );
+    }, 0);
+
     return {
       count: hist.length + live.length,
       accommodation: { fareUSD, ownerUSD: fareUSD * 0.85, luxUSD: fareUSD * 0.15 },
@@ -246,6 +258,7 @@ export default function AllBookings() {
         lux: pair(profitMXN * 0.15),
       },
       utvMaintenanceUSD,
+      commissionsOwed: pair(commissionsMXN),
       combinedUSD: {
         // LUX pays the owner a flat $100/month UTV maintenance contribution:
         // owner gains it, LUX's cut is reduced by it.
@@ -508,6 +521,20 @@ export default function AllBookings() {
                   },
                 ]}
               />
+              {kpis.commissionsOwed.mxn > 0 && (
+                <KpiBlock
+                  title="Commissions Owed to Us (vendors the guest paid directly)"
+                  tone="upsell"
+                  cells={[
+                    {
+                      label: "Total Owed",
+                      value: formatMXN(kpis.commissionsOwed.mxn),
+                      sub: `≈ ${formatUSD(kpis.commissionsOwed.usd)} USD`,
+                      color: COLORS.blue,
+                    },
+                  ]}
+                />
+              )}
               <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 8 }}>
                 Accommodation is billed in USD on Guesty. Upsells are priced in pesos and charged to guests in USD at 16.
               </div>

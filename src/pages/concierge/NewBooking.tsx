@@ -9,6 +9,7 @@ import {
   CATEGORY_ORDER,
   computeGuestPayment,
   formatMXN,
+  formatUSD,
   isUtvRental,
   Service,
   TYPE_COLOR,
@@ -74,6 +75,13 @@ interface Row {
   currency: "MXN" | "USD";
   unit_cost: number | null;
   sub_text?: string | null;
+}
+
+interface CommissionRow {
+  uid: string;
+  vendor: string;
+  amount: number;
+  currency: "MXN" | "USD";
 }
 
 function uid() {
@@ -158,6 +166,19 @@ export default function NewBooking({
   const [groceryAllocation, setGroceryAllocation] = useState<number>(
     Number((initialBooking as any)?.grocery_allocation) || 0,
   );
+  // Commissions owed to us by vendors the guest paid directly (internal only).
+  const [commissions, setCommissions] = useState<CommissionRow[]>(() => {
+    const raw = (initialBooking as any)?.commissions_owed;
+    if (Array.isArray(raw)) {
+      return raw.map((c: any) => ({
+        uid: uid(),
+        vendor: String(c?.vendor ?? ""),
+        amount: Number(c?.amount) || 0,
+        currency: c?.currency === "USD" ? "USD" : "MXN",
+      }));
+    }
+    return [];
+  });
   // Editable fuel rate per UTV rental (one tank, auto-added when a UTV is booked).
   const [fuelPerUnit, setFuelPerUnit] = useState<number>(() => {
     const f = (initialBooking?.items ?? []).find((i) => i.type === "fuel");
@@ -265,6 +286,23 @@ export default function NewBooking({
 
   const removeRow = (id: string) => setRows((r) => r.filter((x) => x.uid !== id));
 
+  // Commissions owed helpers.
+  const addCommission = () =>
+    setCommissions((c) => [...c, { uid: uid(), vendor: "", amount: 0, currency: "MXN" }]);
+  const updateCommission = (id: string, patch: Partial<CommissionRow>) =>
+    setCommissions((c) => c.map((x) => (x.uid === id ? { ...x, ...patch } : x)));
+  const removeCommission = (id: string) =>
+    setCommissions((c) => c.filter((x) => x.uid !== id));
+  // Booking subtotal of commissions owed, normalized to MXN at the booking FX.
+  const commissionsMXN = useMemo(
+    () =>
+      commissions.reduce(
+        (s, c) => s + (c.currency === "USD" ? (Number(c.amount) || 0) * fx : Number(c.amount) || 0),
+        0,
+      ),
+    [commissions, fx],
+  );
+
   const pickService = (id: string, s: Service) =>
     updateRow(id, {
       service_id: s.id,
@@ -291,6 +329,7 @@ export default function NewBooking({
     setCashCollected(0);
     setAccommodationFare(0);
     setGroceryAllocation(0);
+    setCommissions([]);
     setFuelPerUnit(UTV_GAS_PER_RENTAL);
     setFuelRemoved(false);
   };
@@ -367,6 +406,9 @@ export default function NewBooking({
       accommodation_currency: accommodationCurrency,
       grocery_allocation: groceryAllocation,
       grocery_allocation_currency: "MXN",
+      commissions_owed: commissions
+        .filter((c) => c.vendor.trim() || (Number(c.amount) || 0) > 0)
+        .map((c) => ({ vendor: c.vendor.trim(), amount: Number(c.amount) || 0, currency: c.currency })),
     };
   };
 
@@ -948,6 +990,83 @@ export default function NewBooking({
             />
             <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 5 }}>
               Internal only — never appears on the guest payment page or invoice
+            </div>
+          </div>
+
+          {/* Commissions owed to us by vendors the guest paid directly — internal only */}
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label style={fieldLabel}>Commissions Owed to Us</label>
+            <div style={{ fontSize: 11, color: COLORS.textMuted, marginBottom: 8 }}>
+              When a guest pays a vendor directly (e.g. a surf instructor), record who owes us the
+              commission and how much. Internal only — tallied into the monthly summary.
+            </div>
+            {commissions.map((c) => (
+              <div
+                key={c.uid}
+                style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 8, flexWrap: "wrap" }}
+              >
+                <input
+                  value={c.vendor}
+                  placeholder="Who owes us (e.g. Surf with Victor)"
+                  onChange={(e) => updateCommission(c.uid, { vendor: e.target.value })}
+                  style={{ ...input, flex: "1 1 200px", minWidth: 140 }}
+                />
+                <input
+                  type="number"
+                  value={c.amount || ""}
+                  placeholder="Amount"
+                  onChange={(e) => updateCommission(c.uid, { amount: Number(e.target.value) || 0 })}
+                  style={{ ...input, width: 120 }}
+                />
+                <select
+                  value={c.currency}
+                  onChange={(e) => updateCommission(c.uid, { currency: e.target.value as "MXN" | "USD" })}
+                  style={{ ...input, width: 84 }}
+                >
+                  <option value="MXN">MXN</option>
+                  <option value="USD">USD</option>
+                </select>
+                <button
+                  type="button"
+                  onClick={() => removeCommission(c.uid)}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: COLORS.textMuted,
+                    cursor: "pointer",
+                    fontSize: 18,
+                    lineHeight: 1,
+                    padding: "0 6px",
+                  }}
+                  aria-label="Remove commission"
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+            <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 4 }}>
+              <button
+                type="button"
+                onClick={addCommission}
+                style={{
+                  background: "none",
+                  border: `1px dashed ${COLORS.border}`,
+                  color: COLORS.gold,
+                  cursor: "pointer",
+                  fontFamily: "'Jost', sans-serif",
+                  fontSize: 12,
+                  padding: "8px 14px",
+                  borderRadius: 3,
+                }}
+              >
+                + Add commission
+              </button>
+              {commissions.length > 0 && (
+                <div style={{ fontSize: 12, color: COLORS.textMuted }}>
+                  Total owed: <strong style={{ color: COLORS.textDark }}>{formatMXN(commissionsMXN)}</strong>{" "}
+                  (≈ {formatUSD(commissionsMXN / fx)})
+                </div>
+              )}
             </div>
           </div>
 

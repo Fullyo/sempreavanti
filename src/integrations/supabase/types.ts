@@ -24,6 +24,7 @@ export type Database = {
           cc_fee_on: boolean
           checkin: string
           checkout: string | null
+          commissions_owed: Json
           created_at: string
           exchange_rate: number
           gratuity_waived: boolean
@@ -69,6 +70,7 @@ export type Database = {
           cc_fee_on?: boolean
           checkin: string
           checkout?: string | null
+          commissions_owed?: Json
           created_at?: string
           exchange_rate?: number
           gratuity_waived?: boolean
@@ -114,6 +116,7 @@ export type Database = {
           cc_fee_on?: boolean
           checkin?: string
           checkout?: string | null
+          commissions_owed?: Json
           created_at?: string
           exchange_rate?: number
           gratuity_waived?: boolean
