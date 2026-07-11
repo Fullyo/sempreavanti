@@ -35,6 +35,7 @@ type MonthKpis = {
   accommodation: { fareUSD: number; ownerUSD: number; luxUSD: number };
   upsells: { billed: MoneyPair; profit: MoneyPair; owner: MoneyPair; lux: MoneyPair };
   utvMaintenanceUSD: number; // flat LUX → owner UTV maintenance contribution
+  commissionsOwed: MoneyPair; // commissions vendors owe us (guest-direct-paid)
   combinedUSD: { ownerTotal: number; luxTotal: number };
 };
 
