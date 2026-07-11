@@ -223,20 +223,19 @@ export default function MealPlanner() {
         <div style={{ background: "rgba(184,146,74,0.08)", border: `1px solid ${C.gold}`, borderRadius: 6, padding: "20px 22px", marginBottom: 22 }}>
           <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: "0.16em", color: C.sun, fontWeight: 600, marginBottom: 8 }}>How dining works</div>
           <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, color: C.text, marginBottom: 8, lineHeight: 1.15 }}>
-            Your chefs are included — dining is simply at cost
+            Chefs and service included. Food, at cost.
           </div>
           <p style={{ fontSize: 13.5, color: C.mid, lineHeight: 1.6, marginBottom: 8 }}>
-            Two professional chefs are already part of your stay — their time, care, and craft come with
-            the villa at <strong>no extra charge</strong>. What you pay for dining is the food itself,
-            brought to your table complete: fresh ingredients bought each morning at local markets,
-            together with everything it takes to turn them into a meal — the daily <strong>market runs,
-            prepping, cooking, and cleaning</strong>, and the pantry we keep fully stocked with oils,
-            spices, condiments, and sauces.
+            Your chefs handle it all — <strong>cooking, prepping, serving, cleaning</strong> — as part
+            of your stay.
+          </p>
+          <p style={{ fontSize: 13.5, color: C.mid, lineHeight: 1.6, marginBottom: 8 }}>
+            Guests cover the food and getting it to the table: the daily market runs, the condiments
+            and extras each meal needs, and a fully stocked pantry.
           </p>
           <p style={{ fontSize: 13.5, color: C.mid, lineHeight: 1.6, margin: 0 }}>
-            It's <strong>never a profit line</strong> — only what it genuinely takes to feed a full villa
-            from a working kitchen. That's why chef-prepared, in-villa dining stays far more relaxed, and
-            far more affordable, than eating out.
+            No shopping, no cooking, no cleanup to think about — just fresh, made-from-scratch meals on
+            your own time, so you can spend more of your time enjoying your stay and your vacation.
           </p>
 
         </div>
