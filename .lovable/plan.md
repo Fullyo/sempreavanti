@@ -1,31 +1,51 @@
-# Vendor Commissions Owed — Plan
+# Concierge: In-Month Booking Creation + Unified Bottom Summary
 
 ## Goal
-When a guest pays a provider directly (e.g. the surf instructor), the concierge needs to record that the vendor owes us back a commission. Each booking gets a small repeatable section where the concierge enters **who owes us** and **how much**, with the ability to add more lines. Those amounts are then tallied automatically into the monthly summary.
+1. Remove the standalone **New Booking** tab from the top navigation. Booking creation moves inside the month view.
+2. When a month is opened, show an **Add New Booking** action at the top of that month; clicking it opens the booking form inline (check-in left blank for the concierge to enter).
+3. Redesign the per-month financial summary into one cohesive black block, shown only at the **bottom** of the opened month (never at the top).
 
-## What the concierge sees
-On the booking edit sheet (New Booking / edit an existing booking), a new section titled **"Commissions Owed to Us"** below the Internal Billing Notes area:
+## 1. Remove the top "New Booking" tab
+In `src/pages/concierge/Concierge.tsx`:
+- Remove the `{ id: "new", label: "New Booking" }` entry from `TABS`.
+- Change the default active tab from `"new"` to `"all"`.
+- Remove the `{tab === "new" && <NewBooking .../>}` render line (the `NewBooking` import there is no longer needed).
 
-- Each line has two fields on one row:
-  - **Vendor / who owes us** — free text (e.g. "Surf with Victor")
-  - **Commission owed** — a number, with a small MXN/USD toggle (defaults to MXN)
-- An **"+ Add commission"** button to add another line.
-- A small **remove (×)** on each line.
-- A running subtotal for that booking shown at the bottom of the section.
+The remaining tabs become: All Bookings · Price List · Export · Settings.
 
-Nothing here ever appears on the guest payment page or invoice — it is internal only, like the billing notes.
+## 2. Add-booking button at the top of an open month
+In `src/pages/concierge/AllBookings.tsx`, inside the `isOpen` section (currently opens with the KPI summary at the top around line 484):
+- Add local state `const [adding, setAdding] = useState(false)` (reset when the open month changes).
+- At the **top** of the open month body, render an **+ Add New Booking** button (`btnPrimary`).
+- When clicked, render the `NewBooking` form inline (same wrapper styling already used for editing, around line 711), with:
+  - `onSaved={() => { setAdding(false); load(); }}`
+  - `onCancel={() => setAdding(false)}`
+- Check-in is left blank; the concierge enters the full date. (`NewBooking` already defaults `checkin` to empty, so no prop change is needed.)
 
-## Monthly tally
-In **All Bookings → month view**, add a **"Commissions Owed"** figure to that month's summary. It sums every commission line across all bookings checking in that month, shown in MXN with a USD sub-line at the standard rate (matching how upsells are displayed). USD-entered commissions are converted at the booking's exchange rate so the total is consistent.
+This makes the flow: open August → click **Add New Booking** → fill in the form → save.
 
-This is tracked as its own number (money owed *to* us, not yet collected) and is not mixed into upsell profit or the owner/LUX split — it's a separate "receivables" line so you can see at a glance what vendors still owe.
+## 3. Move + redesign the month summary (single black block, bottom only)
+Currently the summary (`KpiBlock` ×3–4 + note) renders at the **top** of the open month (lines ~484–541), and `PettyCashSummary` renders at the bottom (line 862).
 
-## Technical details
-- **Database:** add a `commissions_owed` JSONB column to the `bookings` table (default empty array). Each entry: `{ vendor: string, amount: number, currency: "MXN" | "USD" }`.
-- **Edge function:** add `commissions_owed` to the `BOOKING_COLS` allow-list in `supabase/functions/concierge-db/index.ts` so it can be saved and read.
-- **NewBooking.tsx:** add `commissions` state (array), the repeatable UI section, include it in `buildPayload()`, and reset it in `clearAll()`.
-- **AllBookings.tsx:** extend `computeMonthKpis` to sum commission lines (converting USD at each booking's FX rate) and render a new "Commissions Owed" row in the month summary card.
-- Historical bookings (data files) simply have no commissions, so they contribute zero.
+Changes:
+- **Remove** the KPI summary group from the top of the open month.
+- **Create one unified dark summary component** (e.g. `MonthSummary`) rendered at the very bottom of the open month, after all booking rows (replacing/absorbing the current `PettyCashSummary` slot at line 862).
+- The block is a single cohesive panel on the dark background (`#1C1914`, gold `#B8924A` accents, cream `#F7F4EE` text — matching the existing dark `combined` KpiBlock and PettyCashBox styling), internally divided into labelled sub-sections separated by hairline dividers:
+  1. **Accommodation Fare (USD)** — Total Fare · Owner 85% · LUX 15%
+  2. **Upsells (pesos, billed USD @16)** — Guest Billed · Profit Pool · Owner 85% · LUX 15% (with USD sub-lines)
+  3. **Combined Totals (USD)** — Bookings · Owner Total Earnings · LUX Total Cut
+  4. **Commissions Owed** — only when `> 0`
+  5. **Petty Cash** — Total Given · Spent · Remaining (per currency), folding in the current `PettyCashSummary` logic
+- Keep the existing footnote ("Accommodation is billed in USD… charged in USD at 16") inside the block.
+- The June 2026 "Special Reconciliation" card and per-guest booking rows stay where they are (unchanged).
 
-## Out of scope (kept simple, per your note)
-- No "mark as paid / collected" workflow, no per-vendor rollups across months. Just capture + monthly tally. Easy to extend later if you want a receivables ledger.
+All figures come from the existing `computeMonthKpis` result and `petty` map — no calculation logic changes, only layout/placement.
+
+## Technical notes
+- Reuse existing color tokens from `./styles` (`COLORS`) and the dark palette already used by `PettyCashBox`/`combined` tone.
+- `computeMonthKpis`, FX handling, and owner/LUX split math are unchanged.
+- No database, edge function, or schema changes.
+
+## Files changed
+- `src/pages/concierge/Concierge.tsx` — remove New Booking tab + default to All Bookings.
+- `src/pages/concierge/AllBookings.tsx` — add-booking button inside month, move summary to bottom, new unified dark `MonthSummary` block (absorbing `PettyCashSummary`).
