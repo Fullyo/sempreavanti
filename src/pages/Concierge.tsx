@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import SEO from "@/components/SEO";
 import { supabase } from "@/integrations/supabase/client";
-import NewBooking from "./concierge/NewBooking";
 import AllBookings from "./concierge/AllBookings";
 
 import PriceList from "./concierge/PriceList";
@@ -11,8 +10,6 @@ import SettingsTab from "./concierge/Settings";
 const TOKEN_KEY = "concierge_token";
 
 const TABS = [
-  { id: "new", label: "New Booking" },
-  
   { id: "all", label: "All Bookings" },
   { id: "pricelist", label: "Price List" },
   { id: "export", label: "Export" },
