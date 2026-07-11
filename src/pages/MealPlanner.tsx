@@ -343,7 +343,7 @@ export default function MealPlanner() {
                   const opts = dishesByCourse[s.from] ?? [];
                   const current = sel[key] ?? "";
                   const noneLabel = s.optional ? "No dessert" : "Skip this meal";
-                  const pick = (v: string) => setSel((p) => ({ ...p, [key]: current === v ? "" : v }));
+                  
                   return (
                     <div key={s.course}>
                       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 10 }}>
@@ -352,76 +352,35 @@ export default function MealPlanner() {
                           <span style={{ fontSize: 11, color: C.jungle, fontWeight: 600 }}>✓ Selected</span>
                         )}
                       </div>
-                      <div style={{ display: "grid", gap: 8 }}>
-                        {opts.map((o) => {
-                          const active = current === o.id;
-                          return (
-                            <button
-                              key={o.id}
-                              type="button"
-                              onClick={() => pick(o.id)}
-                              style={{
-                                textAlign: "left",
-                                cursor: "pointer",
-                                fontFamily: "'Jost', sans-serif",
-                                display: "flex",
-                                alignItems: "flex-start",
-                                gap: 12,
-                                padding: "12px 14px",
-                                borderRadius: 8,
-                                border: `1px solid ${active ? C.gold : C.border}`,
-                                background: active ? "rgba(184,146,74,0.10)" : "#fff",
-                                boxShadow: active ? "0 2px 12px rgba(184,146,74,0.18)" : "none",
-                                transition: "all 0.15s",
-                              }}
-                            >
-                              <span
-                                style={{
-                                  flexShrink: 0,
-                                  marginTop: 2,
-                                  width: 18,
-                                  height: 18,
-                                  borderRadius: "50%",
-                                  border: `2px solid ${active ? C.gold : C.border}`,
-                                  background: active ? C.gold : "transparent",
-                                  color: "#fff",
-                                  fontSize: 11,
-                                  lineHeight: "14px",
-                                  textAlign: "center",
-                                  display: "grid",
-                                  placeItems: "center",
-                                }}
-                              >
-                                {active ? "✓" : ""}
-                              </span>
-                              <span>
-                                <span style={{ display: "block", fontSize: 14.5, fontWeight: 600, color: C.text, lineHeight: 1.3 }}>{o.name}</span>
-                                {o.description && (
-                                  <span style={{ display: "block", fontSize: 12.5, color: C.mid, lineHeight: 1.45, marginTop: 3 }}>{o.description}</span>
-                                )}
-                              </span>
-                            </button>
-                          );
-                        })}
-                        {/* Skip / none option */}
-                        <button
-                          type="button"
-                          onClick={() => pick(SKIP)}
-                          style={{
-                            textAlign: "left",
-                            cursor: "pointer",
-                            fontFamily: "'Jost', sans-serif",
-                            fontSize: 12.5,
-                            color: current === SKIP ? C.text : C.muted,
-                            padding: "9px 14px",
-                            borderRadius: 8,
-                            border: `1px dashed ${current === SKIP ? C.sun : C.border}`,
-                            background: current === SKIP ? "rgba(138,109,59,0.08)" : "transparent",
-                          }}
-                        >
-                          {current === SKIP ? `✓ ${noneLabel}` : noneLabel}
-                        </button>
-                      </div>
+                      <select
+                        value={current}
+                        onChange={(e) => setSel((p) => ({ ...p, [key]: e.target.value }))}
+                        style={{
+                          width: "100%",
+                          fontFamily: "'Jost', sans-serif",
+                          fontSize: 14.5,
+                          color: C.text,
+                          padding: "12px 14px",
+                          borderRadius: 8,
+                          border: `1px solid ${current && current !== SKIP ? C.gold : C.border}`,
+                          background: current && current !== SKIP ? "rgba(184,146,74,0.08)" : "#fff",
+                          cursor: "pointer",
+                          appearance: "auto",
+                        }}
+                      >
+                        <option value="">Select…</option>
+                        {opts.map((o) => (
+                          <option key={o.id} value={o.id}>
+                            {o.name}
+                          </option>
+                        ))}
+                        <option value={SKIP}>{noneLabel}</option>
+                      </select>
+                      {current && current !== SKIP && opts.find((o) => o.id === current)?.description && (
+                        <div style={{ fontSize: 12.5, color: C.mid, lineHeight: 1.45, marginTop: 6 }}>
+                          {opts.find((o) => o.id === current)?.description}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
