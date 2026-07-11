@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import SEO from "@/components/SEO";
+import menuHeroImg from "@/assets/menu-hero-beach.png";
+
 
 const C = {
   bg: "#F5F1E8",
