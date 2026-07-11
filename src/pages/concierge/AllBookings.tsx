@@ -146,6 +146,11 @@ export default function AllBookings() {
     loadPetty();
   }, []);
 
+  // Close the inline add form whenever the open month changes.
+  useEffect(() => {
+    setAdding(false);
+  }, [detailKey]);
+
   // Live bookings for the selected year tab.
   const viewFiltered = useMemo(
     () => bookings.filter((b) => Number(monthKey(b.checkin).split("-")[0]) === year),
