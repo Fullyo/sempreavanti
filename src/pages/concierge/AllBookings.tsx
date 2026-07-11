@@ -237,6 +237,17 @@ export default function AllBookings() {
 
     const utvMaintenanceUSD = key >= UTV_MAINTENANCE_START ? UTV_MAINTENANCE_USD : 0;
 
+    // Commissions owed to us by vendors the guest paid directly (live bookings only).
+    const commissionsMXN = live.reduce((s, b) => {
+      const rate = Number(b.exchange_rate) || FX;
+      const list = Array.isArray((b as any).commissions_owed) ? (b as any).commissions_owed : [];
+      return s + list.reduce(
+        (sum: number, c: any) =>
+          sum + (c?.currency === "USD" ? (Number(c?.amount) || 0) * rate : Number(c?.amount) || 0),
+        0,
+      );
+    }, 0);
+
     return {
       count: hist.length + live.length,
       accommodation: { fareUSD, ownerUSD: fareUSD * 0.85, luxUSD: fareUSD * 0.15 },
