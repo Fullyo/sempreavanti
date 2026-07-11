@@ -1,49 +1,31 @@
-# Make the meal planner feel like a menu, not a form
+# Vendor Commissions Owed — Plan
 
-The guest-facing planner (`src/pages/MealPlanner.tsx`, route `/meals/:token`) currently reads like an admin form: a dark text block, three info cards, then plain `<select>` dropdowns per day. Goal — make guests *excited to order* while keeping the exact same data model, save logic, and meal-time/Sunday/arrival rules untouched.
+## Goal
+When a guest pays a provider directly (e.g. the surf instructor), the concierge needs to record that the vendor owes us back a commission. Each booking gets a small repeatable section where the concierge enters **who owes us** and **how much**, with the ability to add more lines. Those amounts are then tallied automatically into the monthly summary.
 
-## What changes (visual only)
+## What the concierge sees
+On the booking edit sheet (New Booking / edit an existing booking), a new section titled **"Commissions Owed to Us"** below the Internal Billing Notes area:
 
-### 1. Photographic hero header (i dont know if you want the hero to be an image since that where we have the name of the guest ... thats important too) reconsider
+- Each line has two fields on one row:
+  - **Vendor / who owes us** — free text (e.g. "Surf with Victor")
+  - **Commission owed** — a number, with a small MXN/USD toggle (defaults to MXN)
+- An **"+ Add commission"** button to add another line.
+- A small **remove (×)** on each line.
+- A running subtotal for that booking shown at the bottom of the section.
 
-Replace the flat dark text header with a real image hero, reusing the "Our Kitchen" hero photo (`menu-hero-beach.png`, already in `src/assets`) behind a dark gradient — consistent with the public `/menu` page and the site's editorial luxury style.
+Nothing here ever appears on the guest payment page or invoice — it is internal only, like the billing notes.
 
-- Keep the personalized greeting ("{guest}, plan your meals"), the arrival→departure chip, and the "View the full menu →" link, but laid over the photo in white with the gold accent.
-- Keep the check-in/checkout explainer line.
+## Monthly tally
+In **All Bookings → month view**, add a **"Commissions Owed"** figure to that month's summary. It sums every commission line across all bookings checking in that month, shown in MXN with a USD sub-line at the standard rate (matching how upsells are displayed). USD-entered commissions are converted at the booking's exchange rate so the total is consistent.
 
-### 2. Keep the two info cards, tighten them
+This is tracked as its own number (money owed *to* us, not yet collected) and is not mixed into upsell profit or the owner/LUX split — it's a separate "receivables" line so you can see at a glance what vendors still owe.
 
-The "How dining works" and "Daily service times" cards stay (same approved copy), but restyled to sit on the warm cream background as lighter, more elegant cards so they don't compete with the ordering flow.
+## Technical details
+- **Database:** add a `commissions_owed` JSONB column to the `bookings` table (default empty array). Each entry: `{ vendor: string, amount: number, currency: "MXN" | "USD" }`.
+- **Edge function:** add `commissions_owed` to the `BOOKING_COLS` allow-list in `supabase/functions/concierge-db/index.ts` so it can be saved and read.
+- **NewBooking.tsx:** add `commissions` state (array), the repeatable UI section, include it in `buildPayload()`, and reset it in `clearAll()`.
+- **AllBookings.tsx:** extend `computeMonthKpis` to sum commission lines (converting USD at each booking's FX rate) and render a new "Commissions Owed" row in the month summary card.
+- Historical bookings (data files) simply have no commissions, so they contribute zero.
 
-### 3. Replace dropdowns with visual selection cards — the core change
-
-For each meal slot, instead of a `<select>`, show the dish options as **selectable cards/chips** the guest taps:
-
-- Each meal slot (Breakfast, Lunch appetizer, Lunch, Dinner appetizer, Dinner, Dessert) becomes a labeled section.
-- Dish options render as tappable pills/cards showing the dish **name + short description**; the selected one highlights with the gold accent and a check.
-- A subtle "No meal this day" / "None" option remains per slot (preserving the current `__skip__` and empty states).
-- Selection still writes to the same `sel` state keyed by `${day}|${course}` — autosave and the save button are unchanged.
-
-This turns each day into a browsable menu the guest actively picks from, rather than hunting through dropdowns.
-
-### 4. Day cards polished
-
-- Each day gets a cleaner header (Day N + date) with the arrival/departure/Sunday tags kept exactly as-is.
-- Optional: a small food photo accent per day header for warmth (using existing `chef-*`/`food*` assets), kept tasteful and light.
-
-### 5. Full-menu overview & special requests
-
-- Keep the collapsible "View full menu" section and the dietary/special-requests textarea; restyle for consistency.
-- Keep the autosave bar and "Save selections" button, restyled to match.
-
-## Explicitly unchanged
-
-- `meal-plan` edge function calls (get/save), selection payload shape, `slotsForDay` arrival/checkout logic, Sunday no-service handling, set meal times (8:30 / 12:30 / 5:30), and all agreed dining copy.
-- No database or backend changes.
-
-## Technical notes
-
-- All work stays inside `src/pages/MealPlanner.tsx` (it uses a local inline-style `C` palette; I'll extend that same palette rather than introduce hardcoded colors elsewhere).
-- Reuse existing assets (`menu-hero-beach.png`, chef/food images) — no new image generation needed unless you want fresh food photography.
-
-Want me to also add a small food photo to each day header, or keep it text-forward and clean? no
+## Out of scope (kept simple, per your note)
+- No "mark as paid / collected" workflow, no per-vendor rollups across months. Just capture + monthly tally. Easy to extend later if you want a receivables ledger.

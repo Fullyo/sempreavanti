@@ -1,0 +1,1 @@
+ALTER TABLE public.bookings ADD COLUMN IF NOT EXISTS commissions_owed jsonb NOT NULL DEFAULT '[]'::jsonb;
