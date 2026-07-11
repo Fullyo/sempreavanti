@@ -285,6 +285,23 @@ export default function NewBooking({
 
   const removeRow = (id: string) => setRows((r) => r.filter((x) => x.uid !== id));
 
+  // Commissions owed helpers.
+  const addCommission = () =>
+    setCommissions((c) => [...c, { uid: uid(), vendor: "", amount: 0, currency: "MXN" }]);
+  const updateCommission = (id: string, patch: Partial<CommissionRow>) =>
+    setCommissions((c) => c.map((x) => (x.uid === id ? { ...x, ...patch } : x)));
+  const removeCommission = (id: string) =>
+    setCommissions((c) => c.filter((x) => x.uid !== id));
+  // Booking subtotal of commissions owed, normalized to MXN at the booking FX.
+  const commissionsMXN = useMemo(
+    () =>
+      commissions.reduce(
+        (s, c) => s + (c.currency === "USD" ? (Number(c.amount) || 0) * fx : Number(c.amount) || 0),
+        0,
+      ),
+    [commissions, fx],
+  );
+
   const pickService = (id: string, s: Service) =>
     updateRow(id, {
       service_id: s.id,
