@@ -1,34 +1,49 @@
-# Fix reservation cards: show accommodation fare + remove duplicates
+# Make the meal planner feel like a menu, not a form
 
-## 1. Display accommodation fare on every reservation card
-In `src/pages/concierge/AllBookings.tsx`, each card currently shows guest, listing, check-in/out, upsell total, profit and the services table — but no accommodation fare.
+The guest-facing planner (`src/pages/MealPlanner.tsx`, route `/meals/:token`) currently reads like an admin form: a dark text block, three info cards, then plain `<select>` dropdowns per day. Goal — make guests *excited to order* while keeping the exact same data model, save logic, and meal-time/Sunday/arrival rules untouched.
 
-Add an accommodation fare line directly under the check-in/check-out row:
+## What changes (visual only)
 
-```text
-Villa Pietro · Check-in: 2026-07-07 · Check-out: 2026-07-11 · 4 nights
-Accommodation: $1,596 USD          [Edited]
-```
+### 1. Photographic hero header (i dont know if you want the hero to be an image since that where we have the name of the guest ... thats important too) reconsider
 
-Details:
-- Value comes from `accommodation_fare` (always USD — never converted to pesos).
-- Show an amber **"Edited"** badge when `accommodation_fare` differs from `guesty_fare` (manual override), matching the badge convention already used in `NewBooking.tsx`.
-- If no fare is present, show `Accommodation: — USD` so the field is always visible for an easy overview.
+Replace the flat dark text header with a real image hero, reusing the "Our Kitchen" hero photo (`menu-hero-beach.png`, already in `src/assets`) behind a dark gradient — consistent with the public `/menu` page and the site's editorial luxury style.
 
-This is a presentation-only change; no calculation logic is touched.
+- Keep the personalized greeting ("{guest}, plan your meals"), the arrival→departure chip, and the "View the full menu →" link, but laid over the photo in white with the gold accent.
+- Keep the check-in/checkout explainer line.
 
-## 2. Delete the two duplicate placeholder bookings
-Remove the old manually-seeded rows whose fabricated Guesty IDs no longer match the live Guesty reservations (so the sync created fresh rows and left these orphaned):
+### 2. Keep the two info cards, tighten them
 
-| Deleted (placeholder) | Kept (real Guesty) |
-|---|---|
-| Sara · Villa Pietro · Jul 7–11 · $1,996 (id 27) | Sara Ammar · Villa Pietro · Jul 7–11 · $1,596 (id 28) |
-| Alex · Villa Luisa · Jul 4–11 · $4,650 (id 25) | Alexis Munger · Villa Luisa · Jul 6–11 · $3,320 (id 26) |
+The "How dining works" and "Daily service times" cards stay (same approved copy), but restyled to sit on the warm cream background as lighter, more elegant cards so they don't compete with the ordering flow.
 
-Done via a data delete on the `bookings` table for ids 25 and 27.
+### 3. Replace dropdowns with visual selection cards — the core change
+
+For each meal slot, instead of a `<select>`, show the dish options as **selectable cards/chips** the guest taps:
+
+- Each meal slot (Breakfast, Lunch appetizer, Lunch, Dinner appetizer, Dinner, Dessert) becomes a labeled section.
+- Dish options render as tappable pills/cards showing the dish **name + short description**; the selected one highlights with the gold accent and a check.
+- A subtle "No meal this day" / "None" option remains per slot (preserving the current `__skip__` and empty states).
+- Selection still writes to the same `sel` state keyed by `${day}|${course}` — autosave and the save button are unchanged.
+
+This turns each day into a browsable menu the guest actively picks from, rather than hunting through dropdowns.
+
+### 4. Day cards polished
+
+- Each day gets a cleaner header (Day N + date) with the arrival/departure/Sunday tags kept exactly as-is.
+- Optional: a small food photo accent per day header for warmth (using existing `chef-*`/`food*` assets), kept tasteful and light.
+
+### 5. Full-menu overview & special requests
+
+- Keep the collapsible "View full menu" section and the dietary/special-requests textarea; restyle for consistency.
+- Keep the autosave bar and "Save selections" button, restyled to match.
+
+## Explicitly unchanged
+
+- `meal-plan` edge function calls (get/save), selection payload shape, `slotsForDay` arrival/checkout logic, Sunday no-service handling, set meal times (8:30 / 12:30 / 5:30), and all agreed dining copy.
+- No database or backend changes.
 
 ## Technical notes
-- Card fare line added inside the guest/date block in `AllBookings.tsx` (around the check-in/out span).
-- "Edited" badge condition: `accommodation_fare != null && guesty_fare != null && Number(accommodation_fare) !== Number(guesty_fare)`.
-- Deletion uses the data tool (`DELETE FROM bookings WHERE id IN (25, 27)`), not a schema migration.
-- Future duplicates from the same cause are already prevented because the sync upserts on the real `guesty_id`; these two were pre-existing orphans only removable manually.
+
+- All work stays inside `src/pages/MealPlanner.tsx` (it uses a local inline-style `C` palette; I'll extend that same palette rather than introduce hardcoded colors elsewhere).
+- Reuse existing assets (`menu-hero-beach.png`, chef/food images) — no new image generation needed unless you want fresh food photography.
+
+Want me to also add a small food photo to each day header, or keep it text-forward and clean? no
