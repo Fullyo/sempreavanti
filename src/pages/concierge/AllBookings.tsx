@@ -521,6 +521,20 @@ export default function AllBookings() {
                   },
                 ]}
               />
+              {kpis.commissionsOwed.mxn > 0 && (
+                <KpiBlock
+                  title="Commissions Owed to Us (vendors the guest paid directly)"
+                  tone="upsell"
+                  cells={[
+                    {
+                      label: "Total Owed",
+                      value: formatMXN(kpis.commissionsOwed.mxn),
+                      sub: `≈ ${formatUSD(kpis.commissionsOwed.usd)} USD`,
+                      color: COLORS.blue,
+                    },
+                  ]}
+                />
+              )}
               <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 8 }}>
                 Accommodation is billed in USD on Guesty. Upsells are priced in pesos and charged to guests in USD at 16.
               </div>
