@@ -1,0 +1,1 @@
+DELETE FROM public.bookings WHERE id IN (29, 31) AND res_status = 'inquiry';
