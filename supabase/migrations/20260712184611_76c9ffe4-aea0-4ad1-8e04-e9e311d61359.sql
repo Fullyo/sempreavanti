@@ -1,0 +1,1 @@
+DELETE FROM public.bookings WHERE id = 30 AND res_status = 'inquiry';
