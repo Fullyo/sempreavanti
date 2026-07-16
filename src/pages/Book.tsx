@@ -423,7 +423,7 @@ export default function Book() {
                 </motion.div>
               )}
 
-              {quote && totalPrice !== null && (
+              {checkIn && checkOut && nights >= minNights && (
                 <div className="space-y-3">
                   <button
                     onClick={handleBookNow}
@@ -433,7 +433,7 @@ export default function Book() {
                   </button>
                   <InquiryDialog>
                     <button className="w-full py-3 border border-golden text-golden font-sans text-sm uppercase tracking-widest rounded-full hover:bg-golden/10 transition-colors">
-                      Ask a Question
+                      {quoteError ? "Request a Quote" : "Ask a Question"}
                     </button>
                   </InquiryDialog>
                 </div>
