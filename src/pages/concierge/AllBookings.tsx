@@ -573,7 +573,7 @@ export default function AllBookings() {
                     const netUSD = ownerOwesLuxUSD - cUSD; // + = owner pays LUX, − = LUX pays owner
                     const ownerPays = netUSD >= 0;
                     return (
-                      <div style={{ marginTop: 14, background: COLORS.dark, color: COLORS.cream, borderRadius: 4, padding: "16px 20px" }}>
+                      <div style={{ marginTop: 14, background: COLORS.dark, color: "#F7F4EE", borderRadius: 4, padding: "16px 20px" }}>
                         <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.16em", color: COLORS.gold, marginBottom: 6 }}>
                           Net Settlement · June 2026 (USD @ {FX})
                         </div>
