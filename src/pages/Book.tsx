@@ -461,6 +461,36 @@ export default function Book() {
           </InquiryDialog>
         </div>
       </section>
+
+      {/* Mobile sticky booking bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-card border-t border-border shadow-2xl px-4 py-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
+        {checkIn && checkOut && nights >= minNights ? (
+          <div className="flex items-center gap-2">
+            <div className="flex-1 min-w-0">
+              <div className="text-[10px] font-sans uppercase tracking-widest text-muted-foreground">
+                {format(checkIn, "MMM d")} – {format(checkOut, "MMM d")} · {guests} guest{guests !== 1 ? "s" : ""}
+              </div>
+              <div className="text-sm font-serif truncate">
+                {totalPrice !== null ? `$${totalPrice.toLocaleString()} ${currency}` : `${nights} night${nights !== 1 ? "s" : ""}`}
+              </div>
+            </div>
+            <button
+              onClick={handleBookNow}
+              className="shrink-0 px-5 py-3 bg-accent text-accent-foreground font-sans text-xs uppercase tracking-widest rounded-full"
+            >
+              Book Now
+            </button>
+          </div>
+        ) : (
+          <InquiryDialog>
+            <button className="block w-full text-center py-3 bg-accent text-accent-foreground font-sans text-xs uppercase tracking-widest rounded-full">
+              Inquire About Your Stay
+            </button>
+          </InquiryDialog>
+        )}
+      </div>
+      {/* Spacer so mobile sticky bar doesn't cover footer */}
+      <div className="lg:hidden h-24" aria-hidden />
     </Layout>
   );
 }
