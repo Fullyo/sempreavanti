@@ -34,16 +34,16 @@ type MonthKpis = {
   count: number;
   accommodation: { fareUSD: number; ownerUSD: number; luxUSD: number };
   upsells: { billed: MoneyPair; profit: MoneyPair; owner: MoneyPair; lux: MoneyPair };
-  utvMaintenanceUSD: number; // flat LUX → owner UTV maintenance contribution
+  utvShareMXN: number; // monthly UTV share deducted from upsell pool
   commissionsOwed: MoneyPair; // commissions vendors owe us (guest-direct-paid)
   combinedUSD: { ownerTotal: number; luxTotal: number };
 };
 
-// Flat UTV maintenance/insurance contribution LUX pays the owner each month.
-// $100/month = $1,200/year, agreed as LUX's 15% share of the ~$8,000/yr UTV upkeep.
-// Applies from June 2026 forward (the first month of the new upsell system).
-const UTV_MAINTENANCE_USD = 100;
-const UTV_MAINTENANCE_START = "2026-06";
+// Monthly UTV share deducted from the upsell profit pool before the 85/15 split.
+// Covers the owner's UTV maintenance/insurance carve-out. Applies from June 2026
+// forward (first month of the new upsell system).
+const UTV_SHARE_MXN = 1750;
+const UTV_SHARE_START = "2026-06";
 
 const MONTH_NAMES = [
   "January",
@@ -241,7 +241,9 @@ export default function AllBookings() {
     const profitMXN = histProfitUSD * FX + liveProfitMXN;
     const pair = (mxn: number): MoneyPair => ({ mxn, usd: mxn / FX });
 
-    const utvMaintenanceUSD = key >= UTV_MAINTENANCE_START ? UTV_MAINTENANCE_USD : 0;
+    const utvShareMXN = key >= UTV_SHARE_START ? UTV_SHARE_MXN : 0;
+    // UTV share is deducted from the upsell profit pool BEFORE the 85/15 split.
+    const netProfitMXN = profitMXN - utvShareMXN;
 
     // Commissions owed to us by vendors the guest paid directly (live bookings only).
     const commissionsMXN = live.reduce((s, b) => {
@@ -259,17 +261,15 @@ export default function AllBookings() {
       accommodation: { fareUSD, ownerUSD: fareUSD * 0.85, luxUSD: fareUSD * 0.15 },
       upsells: {
         billed: pair(billedMXN),
-        profit: pair(profitMXN),
-        owner: pair(profitMXN * 0.85),
-        lux: pair(profitMXN * 0.15),
+        profit: pair(netProfitMXN),
+        owner: pair(netProfitMXN * 0.85),
+        lux: pair(netProfitMXN * 0.15),
       },
-      utvMaintenanceUSD,
+      utvShareMXN,
       commissionsOwed: pair(commissionsMXN),
       combinedUSD: {
-        // LUX pays the owner a flat $100/month UTV maintenance contribution:
-        // owner gains it, LUX's cut is reduced by it.
-        ownerTotal: fareUSD * 0.85 + (profitMXN / FX) * 0.85 + utvMaintenanceUSD,
-        luxTotal: fareUSD * 0.15 + (profitMXN / FX) * 0.15 - utvMaintenanceUSD,
+        ownerTotal: fareUSD * 0.85 + (netProfitMXN / FX) * 0.85,
+        luxTotal: fareUSD * 0.15 + (netProfitMXN / FX) * 0.15,
       },
     };
   }
@@ -1010,10 +1010,16 @@ function MonthSummary({ kpis, group, petty }: {
 
       <Section title="Upsells (priced in pesos · charged to guests in USD @16)" cols={4}>
         <Cell label="Guest Billed" value={formatMXN(kpis.upsells.billed.mxn)} sub={`≈ ${formatUSD(kpis.upsells.billed.usd)} USD`} />
-        <Cell label="Profit Pool" value={formatMXN(kpis.upsells.profit.mxn)} sub={`≈ ${formatUSD(kpis.upsells.profit.usd)} USD`} />
+        <Cell label="Profit Pool (net of UTV share)" value={formatMXN(kpis.upsells.profit.mxn)} sub={kpis.utvShareMXN > 0 ? `After ${formatMXN(kpis.utvShareMXN)} UTV share deduction` : `≈ ${formatUSD(kpis.upsells.profit.usd)} USD`} />
         <Cell label="Owner's Share 85%" value={formatMXN(kpis.upsells.owner.mxn)} sub={`≈ ${formatUSD(kpis.upsells.owner.usd)} USD`} color={GREEN} />
         <Cell label="LUX's Cut 15%" value={formatMXN(kpis.upsells.lux.mxn)} sub={`≈ ${formatUSD(kpis.upsells.lux.usd)} USD`} color={AMBER} />
       </Section>
+
+      {kpis.utvShareMXN > 0 && (
+        <Section title="UTV Share (deducted from upsell pool)" cols={1}>
+          <Cell label="Monthly UTV Share to Owner" value={`− ${formatMXN(kpis.utvShareMXN)}`} sub="Deducted from upsell profit before the 85/15 split" color={AMBER} />
+        </Section>
+      )}
 
       <Section title="Combined Totals in USD (Accommodation + Upsells @16)" cols={3}>
         <Cell label="Bookings" value={String(kpis.count)} />
