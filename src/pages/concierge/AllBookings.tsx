@@ -563,12 +563,40 @@ export default function AllBookings() {
                     <div>
                       <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.12em", color: COLORS.textMuted }}>LUX owes Owner (C)</div>
                       <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 26, fontWeight: 400, color: COLORS.green, marginTop: 4 }}>{formatMXN(ownerNewUpsellMXN)}</div>
+                      <div style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2 }}>≈ {formatUSD(ownerNewUpsellMXN / FX)} @ {FX}</div>
                     </div>
                   </div>
+
+                  {/* Net settlement — combine old + new into a single number */}
+                  {(() => {
+                    const cUSD = ownerNewUpsellMXN / FX;
+                    const netUSD = ownerOwesLuxUSD - cUSD; // + = owner pays LUX, − = LUX pays owner
+                    const ownerPays = netUSD >= 0;
+                    return (
+                      <div style={{ marginTop: 14, background: COLORS.dark, color: COLORS.cream, borderRadius: 4, padding: "16px 20px" }}>
+                        <div style={{ fontSize: 9, textTransform: "uppercase", letterSpacing: "0.16em", color: COLORS.gold, marginBottom: 6 }}>
+                          Net Settlement · June 2026 (USD @ {FX})
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
+                          <div style={{ fontSize: 13, opacity: 0.85 }}>
+                            (A + B) {formatUSD(ownerOwesLuxUSD)} <span style={{ opacity: 0.6 }}>−</span> C {formatUSD(cUSD)}
+                          </div>
+                          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 30, fontWeight: 400, color: COLORS.gold }}>
+                            {ownerPays ? "Owner pays LUX" : "LUX pays Owner"} {formatUSD(Math.abs(netUSD))}
+                          </div>
+                        </div>
+                        <div style={{ fontSize: 11, opacity: 0.7, marginTop: 8, fontStyle: "italic" }}>
+                          Convenience total. The two sides can also settle separately in their native currencies (USD above / pesos above) — either approach reconciles the month.
+                        </div>
+                      </div>
+                    );
+                  })()}
+
                   <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 10 }}>
-                    Currencies kept separate — no netting. Accommodation & old-system upsells settle in USD; new-system upsells settle in pesos.
+                    Under the new system LUX collects the full guest upsell payment, pays the supplier, and splits the remaining profit 85% owner / 15% LUX. Example: 6,000 MXN airport shuttle → 5,000 MXN to driver → 1,000 MXN profit → 850 MXN owner + 150 MXN LUX.
                   </div>
                 </div>
+
               );
             })()}
 
