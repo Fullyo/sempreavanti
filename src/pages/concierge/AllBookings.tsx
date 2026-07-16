@@ -550,7 +550,7 @@ export default function AllBookings() {
                     <HistCell
                       label="C · Owner 85% of NEW upsell profit (pesos)"
                       value={formatMXN(ownerNewUpsellMXN)}
-                      sub={`85% × ${formatMXN(newUpsellProfitMXN)} new profit · LUX → Owner`}
+                      sub={`85% × ${formatMXN(netNewUpsellMXN)} (net of ${formatMXN(UTV_SHARE_MXN)} UTV share) · LUX → Owner`}
                       color={COLORS.green}
                     />
                   </div>
