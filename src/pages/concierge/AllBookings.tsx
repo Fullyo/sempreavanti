@@ -513,7 +513,10 @@ export default function AllBookings() {
               const oldUpsellProfitUSD = group.hist.reduce((s, h) => s + (h.upsellsProfit || 0), 0);
               const luxOldUpsellUSD = oldUpsellProfitUSD * 0.15;
               const newUpsellProfitMXN = group.live.reduce((s, b) => s + (Number(b.total_profit) || 0), 0);
-              const ownerNewUpsellMXN = newUpsellProfitMXN * 0.85;
+              // Deduct the monthly UTV share from the new-system upsell pool before the 85/15 split,
+              // mirroring the bottom MonthSummary so both views agree.
+              const netNewUpsellMXN = Math.max(0, newUpsellProfitMXN - UTV_SHARE_MXN);
+              const ownerNewUpsellMXN = netNewUpsellMXN * 0.85;
               const ownerOwesLuxUSD = luxAccomUSD + luxOldUpsellUSD;
               return (
                 <div style={{ background: "#fff", border: `1px solid ${COLORS.gold}`, borderRadius: 4, padding: "18px 20px", marginBottom: 18 }}>
@@ -547,7 +550,7 @@ export default function AllBookings() {
                     <HistCell
                       label="C · Owner 85% of NEW upsell profit (pesos)"
                       value={formatMXN(ownerNewUpsellMXN)}
-                      sub={`85% × ${formatMXN(newUpsellProfitMXN)} new profit · LUX → Owner`}
+                      sub={`85% × ${formatMXN(netNewUpsellMXN)} (net of ${formatMXN(UTV_SHARE_MXN)} UTV share) · LUX → Owner`}
                       color={COLORS.green}
                     />
                   </div>
