@@ -37,6 +37,16 @@ type MonthKpis = {
   utvShareMXN: number; // monthly UTV share deducted from upsell pool
   commissionsOwed: MoneyPair; // commissions vendors owe us (guest-direct-paid)
   combinedUSD: { ownerTotal: number; luxTotal: number };
+  // Staff tips tracker (transparency for what the staff actually earned).
+  // "card" = we charged it on the credit card and OWE it to staff.
+  // "cash" = guest tipped in cash directly (already in the staff's hands).
+  staffTips: {
+    cardMXN: number;     // total tips billed on card (staff tip + 5% gratuity), in MXN
+    cardUSD: number;     // same, in USD @FX
+    cashUSD: number;     // cash tips (USD) reported by concierge
+    cashMXN: number;     // cash tips (MXN) reported by concierge
+    totalUSD: number;    // combined card + cash, in USD
+  };
 };
 
 // Monthly UTV share deducted from the upsell profit pool before the 85/15 split.
@@ -258,6 +268,27 @@ export default function AllBookings() {
       );
     }, 0);
 
+    // Staff tips — what the staff actually earned this month.
+    // Live: `tip` (staff tip on card, MXN) + `guest_gratuity` (5% gratuity on card, MXN)
+    //       + `tip_cash_usd` / `tip_cash_mxn` (cash tips handed to staff).
+    // Historical: pass-through "Tip" line items are USD, paid on card.
+    const liveCardTipsMXN = live.reduce(
+      (s, b) => s + (Number(b.tip) || 0) + (Number((b as any).guest_gratuity) || 0),
+      0,
+    );
+    const liveCashUSD = live.reduce((s, b) => s + (Number((b as any).tip_cash_usd) || 0), 0);
+    const liveCashMXN = live.reduce((s, b) => s + (Number((b as any).tip_cash_mxn) || 0), 0);
+    const histCardTipsUSD = hist.reduce((s, h) => {
+      const items = h.items ?? [];
+      return s + items.reduce(
+        (sum, i) => sum + (i.passThrough && /tip|gratuity/i.test(i.name) ? Number(i.guest_total) || 0 : 0),
+        0,
+      );
+    }, 0);
+    const cardMXN = liveCardTipsMXN + histCardTipsUSD * FX;
+    const cardUSD = cardMXN / FX;
+    const cashTotalUSD = liveCashUSD + liveCashMXN / FX;
+
     return {
       count: hist.length + live.length,
       accommodation: { fareUSD, ownerUSD: fareUSD * 0.85, luxUSD: fareUSD * 0.15 },
@@ -272,6 +303,13 @@ export default function AllBookings() {
       combinedUSD: {
         ownerTotal: fareUSD * 0.85 + ownerUpsellMXN / FX,
         luxTotal: fareUSD * 0.15 + luxUpsellMXN / FX,
+      },
+      staffTips: {
+        cardMXN,
+        cardUSD,
+        cashUSD: liveCashUSD,
+        cashMXN: liveCashMXN,
+        totalUSD: cardUSD + cashTotalUSD,
       },
     };
   }
@@ -1059,6 +1097,35 @@ function MonthSummary({ kpis, group, petty }: {
         <Cell label="Owner Total Earnings" value={formatUSD(kpis.combinedUSD.ownerTotal)} color={GREEN} />
         <Cell label="LUX Total Cut" value={formatUSD(kpis.combinedUSD.luxTotal)} color={AMBER} />
       </Section>
+
+      {(kpis.staffTips.cardMXN > 0 || kpis.staffTips.cashUSD > 0 || kpis.staffTips.cashMXN > 0) && (
+        <Section title="Staff Tips (what the staff earned this month)" cols={3}>
+          <Cell
+            label="On Card — We Owe Staff"
+            value={formatMXN(kpis.staffTips.cardMXN)}
+            sub={`≈ ${formatUSD(kpis.staffTips.cardUSD)} USD · charged on guest cards, payable to staff`}
+            color={AMBER}
+          />
+          <Cell
+            label="Cash Received by Staff"
+            value={
+              kpis.staffTips.cashUSD > 0 && kpis.staffTips.cashMXN > 0
+                ? `${formatUSD(kpis.staffTips.cashUSD)} + ${formatMXN(kpis.staffTips.cashMXN)}`
+                : kpis.staffTips.cashUSD > 0
+                  ? formatUSD(kpis.staffTips.cashUSD)
+                  : formatMXN(kpis.staffTips.cashMXN)
+            }
+            sub={`≈ ${formatUSD(kpis.staffTips.cashUSD + kpis.staffTips.cashMXN / 16)} USD · handed directly to staff`}
+            color={GREEN}
+          />
+          <Cell
+            label="Total Staff Tips (USD)"
+            value={formatUSD(kpis.staffTips.totalUSD)}
+            sub="Card + cash combined"
+            color={CREAM}
+          />
+        </Section>
+      )}
 
       {kpis.commissionsOwed.mxn > 0 && (
         <Section title="Commissions Owed to Us (vendors the guest paid directly)" cols={1}>
