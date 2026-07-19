@@ -268,6 +268,27 @@ export default function AllBookings() {
       );
     }, 0);
 
+    // Staff tips — what the staff actually earned this month.
+    // Live: `tip` (staff tip on card, MXN) + `guest_gratuity` (5% gratuity on card, MXN)
+    //       + `tip_cash_usd` / `tip_cash_mxn` (cash tips handed to staff).
+    // Historical: pass-through "Tip" line items are USD, paid on card.
+    const liveCardTipsMXN = live.reduce(
+      (s, b) => s + (Number(b.tip) || 0) + (Number((b as any).guest_gratuity) || 0),
+      0,
+    );
+    const liveCashUSD = live.reduce((s, b) => s + (Number((b as any).tip_cash_usd) || 0), 0);
+    const liveCashMXN = live.reduce((s, b) => s + (Number((b as any).tip_cash_mxn) || 0), 0);
+    const histCardTipsUSD = hist.reduce((s, h) => {
+      const items = h.items ?? [];
+      return s + items.reduce(
+        (sum, i) => sum + (i.passThrough && /tip|gratuity/i.test(i.name) ? Number(i.guest_total) || 0 : 0),
+        0,
+      );
+    }, 0);
+    const cardMXN = liveCardTipsMXN + histCardTipsUSD * FX;
+    const cardUSD = cardMXN / FX;
+    const cashTotalUSD = liveCashUSD + liveCashMXN / FX;
+
     return {
       count: hist.length + live.length,
       accommodation: { fareUSD, ownerUSD: fareUSD * 0.85, luxUSD: fareUSD * 0.15 },
@@ -282,6 +303,13 @@ export default function AllBookings() {
       combinedUSD: {
         ownerTotal: fareUSD * 0.85 + ownerUpsellMXN / FX,
         luxTotal: fareUSD * 0.15 + luxUpsellMXN / FX,
+      },
+      staffTips: {
+        cardMXN,
+        cardUSD,
+        cashUSD: liveCashUSD,
+        cashMXN: liveCashMXN,
+        totalUSD: cardUSD + cashTotalUSD,
       },
     };
   }
