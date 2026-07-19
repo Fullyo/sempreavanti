@@ -1098,6 +1098,35 @@ function MonthSummary({ kpis, group, petty }: {
         <Cell label="LUX Total Cut" value={formatUSD(kpis.combinedUSD.luxTotal)} color={AMBER} />
       </Section>
 
+      {(kpis.staffTips.cardMXN > 0 || kpis.staffTips.cashUSD > 0 || kpis.staffTips.cashMXN > 0) && (
+        <Section title="Staff Tips (what the staff earned this month)" cols={3}>
+          <Cell
+            label="On Card — We Owe Staff"
+            value={formatMXN(kpis.staffTips.cardMXN)}
+            sub={`≈ ${formatUSD(kpis.staffTips.cardUSD)} USD · charged on guest cards, payable to staff`}
+            color={AMBER}
+          />
+          <Cell
+            label="Cash Received by Staff"
+            value={
+              kpis.staffTips.cashUSD > 0 && kpis.staffTips.cashMXN > 0
+                ? `${formatUSD(kpis.staffTips.cashUSD)} + ${formatMXN(kpis.staffTips.cashMXN)}`
+                : kpis.staffTips.cashUSD > 0
+                  ? formatUSD(kpis.staffTips.cashUSD)
+                  : formatMXN(kpis.staffTips.cashMXN)
+            }
+            sub={`≈ ${formatUSD(kpis.staffTips.cashUSD + kpis.staffTips.cashMXN / 16)} USD · handed directly to staff`}
+            color={GREEN}
+          />
+          <Cell
+            label="Total Staff Tips (USD)"
+            value={formatUSD(kpis.staffTips.totalUSD)}
+            sub="Card + cash combined"
+            color={CREAM}
+          />
+        </Section>
+      )}
+
       {kpis.commissionsOwed.mxn > 0 && (
         <Section title="Commissions Owed to Us (vendors the guest paid directly)" cols={1}>
           <Cell label="Total Owed" value={formatMXN(kpis.commissionsOwed.mxn)} sub={`≈ ${formatUSD(kpis.commissionsOwed.usd)} USD`} color={BLUE} />
