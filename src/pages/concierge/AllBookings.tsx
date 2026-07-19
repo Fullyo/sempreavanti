@@ -37,6 +37,16 @@ type MonthKpis = {
   utvShareMXN: number; // monthly UTV share deducted from upsell pool
   commissionsOwed: MoneyPair; // commissions vendors owe us (guest-direct-paid)
   combinedUSD: { ownerTotal: number; luxTotal: number };
+  // Staff tips tracker (transparency for what the staff actually earned).
+  // "card" = we charged it on the credit card and OWE it to staff.
+  // "cash" = guest tipped in cash directly (already in the staff's hands).
+  staffTips: {
+    cardMXN: number;     // total tips billed on card (staff tip + 5% gratuity), in MXN
+    cardUSD: number;     // same, in USD @FX
+    cashUSD: number;     // cash tips (USD) reported by concierge
+    cashMXN: number;     // cash tips (MXN) reported by concierge
+    totalUSD: number;    // combined card + cash, in USD
+  };
 };
 
 // Monthly UTV share deducted from the upsell profit pool before the 85/15 split.
