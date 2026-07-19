@@ -41,8 +41,16 @@ type MonthKpis = {
   // "card" = we charged it on the credit card and OWE it to staff.
   // "cash" = guest tipped in cash directly (already in the staff's hands).
   staffTips: {
-    cardMXN: number;     // total tips billed on card (staff tip + 5% gratuity), in MXN
-    cardUSD: number;     // same, in USD @FX
+    // OLD system (historical bookings, pre-new-upsell-system): tips were charged
+    // on the owner's card in USD. The OWNER owes the staff this amount.
+    oldOwnerCardUSD: number;
+    // NEW system (live bookings): tips charged on LUX's card in MXN. LUX owes
+    // the staff this amount (staff tip + 5% gratuity).
+    newLuxCardMXN: number;
+    newLuxCardUSD: number; // same, in USD @FX
+    // Combined (backwards-compat / summary rollups).
+    cardMXN: number;
+    cardUSD: number;
     cashUSD: number;     // cash tips (USD) reported by concierge
     cashMXN: number;     // cash tips (MXN) reported by concierge
     totalUSD: number;    // combined card + cash, in USD
