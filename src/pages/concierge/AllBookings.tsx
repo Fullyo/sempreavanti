@@ -1043,14 +1043,14 @@ function MonthSummary({ kpis, group, petty }: {
 
       <Section title="Upsells (priced in pesos · charged to guests in USD @16)" cols={4}>
         <Cell label="Guest Billed" value={formatMXN(kpis.upsells.billed.mxn)} sub={`≈ ${formatUSD(kpis.upsells.billed.usd)} USD`} />
-        <Cell label="Profit Pool (net of UTV share)" value={formatMXN(kpis.upsells.profit.mxn)} sub={kpis.utvShareMXN > 0 ? `After ${formatMXN(kpis.utvShareMXN)} UTV share deduction` : `≈ ${formatUSD(kpis.upsells.profit.usd)} USD`} />
-        <Cell label="Owner's Share 85%" value={formatMXN(kpis.upsells.owner.mxn)} sub={`≈ ${formatUSD(kpis.upsells.owner.usd)} USD`} color={GREEN} />
-        <Cell label="LUX's Cut 15%" value={formatMXN(kpis.upsells.lux.mxn)} sub={`≈ ${formatUSD(kpis.upsells.lux.usd)} USD`} color={AMBER} />
+        <Cell label="Gross Profit Pool" value={formatMXN(kpis.upsells.profit.mxn)} sub={`≈ ${formatUSD(kpis.upsells.profit.usd)} USD`} />
+        <Cell label="Owner's Share 85%" value={formatMXN(kpis.upsells.owner.mxn)} sub={`≈ ${formatUSD(kpis.upsells.owner.usd)} USD · 85% of gross`} color={GREEN} />
+        <Cell label="LUX's Cut 15% (net of UTV)" value={formatMXN(kpis.upsells.lux.mxn)} sub={kpis.utvShareMXN > 0 ? `15% of gross − ${formatMXN(kpis.utvShareMXN)} UTV upkeep · ≈ ${formatUSD(kpis.upsells.lux.usd)} USD` : `≈ ${formatUSD(kpis.upsells.lux.usd)} USD`} color={AMBER} />
       </Section>
 
       {kpis.utvShareMXN > 0 && (
-        <Section title="UTV Share (deducted from upsell pool)" cols={1}>
-          <Cell label="Monthly UTV Share to Owner" value={`− ${formatMXN(kpis.utvShareMXN)}`} sub="Deducted from upsell profit before the 85/15 split" color={AMBER} />
+        <Section title="UTV Upkeep (LUX absorbs from its 15%)" cols={1}>
+          <Cell label="Monthly UTV Upkeep" value={`− ${formatMXN(kpis.utvShareMXN)}`} sub="Fully absorbed by LUX out of its 15% share — does not reduce the owner's payout" color={AMBER} />
         </Section>
       )}
 
