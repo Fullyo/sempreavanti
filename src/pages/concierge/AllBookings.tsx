@@ -313,6 +313,9 @@ export default function AllBookings() {
         luxTotal: fareUSD * 0.15 + luxUpsellMXN / FX,
       },
       staffTips: {
+        oldOwnerCardUSD: histCardTipsUSD,
+        newLuxCardMXN: liveCardTipsMXN,
+        newLuxCardUSD: liveCardTipsMXN / FX,
         cardMXN,
         cardUSD,
         cashUSD: liveCashUSD,
