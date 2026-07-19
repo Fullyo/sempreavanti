@@ -242,8 +242,10 @@ export default function AllBookings() {
     const pair = (mxn: number): MoneyPair => ({ mxn, usd: mxn / FX });
 
     const utvShareMXN = key >= UTV_SHARE_START ? UTV_SHARE_MXN : 0;
-    // UTV share is deducted from the upsell profit pool BEFORE the 85/15 split.
-    const netProfitMXN = profitMXN - utvShareMXN;
+    // UTV upkeep is fully absorbed by LUX out of its 15% share — the owner's
+    // 85% is calculated on the GROSS upsell profit pool.
+    const ownerUpsellMXN = profitMXN * 0.85;
+    const luxUpsellMXN = profitMXN * 0.15 - utvShareMXN;
 
     // Commissions owed to us by vendors the guest paid directly (live bookings only).
     const commissionsMXN = live.reduce((s, b) => {
@@ -261,15 +263,15 @@ export default function AllBookings() {
       accommodation: { fareUSD, ownerUSD: fareUSD * 0.85, luxUSD: fareUSD * 0.15 },
       upsells: {
         billed: pair(billedMXN),
-        profit: pair(netProfitMXN),
-        owner: pair(netProfitMXN * 0.85),
-        lux: pair(netProfitMXN * 0.15),
+        profit: pair(profitMXN),
+        owner: pair(ownerUpsellMXN),
+        lux: pair(luxUpsellMXN),
       },
       utvShareMXN,
       commissionsOwed: pair(commissionsMXN),
       combinedUSD: {
-        ownerTotal: fareUSD * 0.85 + (netProfitMXN / FX) * 0.85,
-        luxTotal: fareUSD * 0.15 + (netProfitMXN / FX) * 0.15,
+        ownerTotal: fareUSD * 0.85 + ownerUpsellMXN / FX,
+        luxTotal: fareUSD * 0.15 + luxUpsellMXN / FX,
       },
     };
   }
@@ -513,10 +515,10 @@ export default function AllBookings() {
               const oldUpsellProfitUSD = group.hist.reduce((s, h) => s + (h.upsellsProfit || 0), 0);
               const luxOldUpsellUSD = oldUpsellProfitUSD * 0.15;
               const newUpsellProfitMXN = group.live.reduce((s, b) => s + (Number(b.total_profit) || 0), 0);
-              // Deduct the monthly UTV share from the new-system upsell pool before the 85/15 split,
-              // mirroring the bottom MonthSummary so both views agree.
-              const netNewUpsellMXN = Math.max(0, newUpsellProfitMXN - UTV_SHARE_MXN);
-              const ownerNewUpsellMXN = netNewUpsellMXN * 0.85;
+              // LUX absorbs the full monthly UTV upkeep out of its 15% share.
+              // The owner's 85% is calculated on the GROSS profit pool.
+              const ownerNewUpsellMXN = newUpsellProfitMXN * 0.85;
+              const luxNewUpsellMXN = newUpsellProfitMXN * 0.15 - UTV_SHARE_MXN;
               const ownerOwesLuxUSD = luxAccomUSD + luxOldUpsellUSD;
               return (
                 <div style={{ background: "#fff", border: `1px solid ${COLORS.gold}`, borderRadius: 4, padding: "18px 20px", marginBottom: 18 }}>
@@ -550,7 +552,7 @@ export default function AllBookings() {
                     <HistCell
                       label="C · Owner 85% of NEW upsell profit (pesos)"
                       value={formatMXN(ownerNewUpsellMXN)}
-                      sub={`85% × ${formatMXN(netNewUpsellMXN)} (net of ${formatMXN(UTV_SHARE_MXN)} UTV share) · LUX → Owner`}
+                      sub={`85% × ${formatMXN(newUpsellProfitMXN)} gross profit · LUX → Owner · LUX absorbs ${formatMXN(UTV_SHARE_MXN)} UTV upkeep from its own 15%`}
                       color={COLORS.green}
                     />
                   </div>
@@ -593,7 +595,7 @@ export default function AllBookings() {
                   })()}
 
                   <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 10 }}>
-                    Under the new system LUX collects the full guest upsell payment, pays the supplier, and splits the remaining profit 85% owner / 15% LUX. Example: 6,000 MXN airport shuttle → 5,000 MXN to driver → 1,000 MXN profit → 850 MXN owner + 150 MXN LUX.
+                    Under the new system LUX collects the full guest upsell payment, pays the supplier, and splits the remaining profit 85% owner / 15% LUX. LUX absorbs the full monthly UTV upkeep ({formatMXN(UTV_SHARE_MXN)}) out of its 15% share — it does not reduce the owner's payout.
                   </div>
                 </div>
 
@@ -1041,14 +1043,14 @@ function MonthSummary({ kpis, group, petty }: {
 
       <Section title="Upsells (priced in pesos · charged to guests in USD @16)" cols={4}>
         <Cell label="Guest Billed" value={formatMXN(kpis.upsells.billed.mxn)} sub={`≈ ${formatUSD(kpis.upsells.billed.usd)} USD`} />
-        <Cell label="Profit Pool (net of UTV share)" value={formatMXN(kpis.upsells.profit.mxn)} sub={kpis.utvShareMXN > 0 ? `After ${formatMXN(kpis.utvShareMXN)} UTV share deduction` : `≈ ${formatUSD(kpis.upsells.profit.usd)} USD`} />
-        <Cell label="Owner's Share 85%" value={formatMXN(kpis.upsells.owner.mxn)} sub={`≈ ${formatUSD(kpis.upsells.owner.usd)} USD`} color={GREEN} />
-        <Cell label="LUX's Cut 15%" value={formatMXN(kpis.upsells.lux.mxn)} sub={`≈ ${formatUSD(kpis.upsells.lux.usd)} USD`} color={AMBER} />
+        <Cell label="Gross Profit Pool" value={formatMXN(kpis.upsells.profit.mxn)} sub={`≈ ${formatUSD(kpis.upsells.profit.usd)} USD`} />
+        <Cell label="Owner's Share 85%" value={formatMXN(kpis.upsells.owner.mxn)} sub={`≈ ${formatUSD(kpis.upsells.owner.usd)} USD · 85% of gross`} color={GREEN} />
+        <Cell label="LUX's Cut 15% (net of UTV)" value={formatMXN(kpis.upsells.lux.mxn)} sub={kpis.utvShareMXN > 0 ? `15% of gross − ${formatMXN(kpis.utvShareMXN)} UTV upkeep · ≈ ${formatUSD(kpis.upsells.lux.usd)} USD` : `≈ ${formatUSD(kpis.upsells.lux.usd)} USD`} color={AMBER} />
       </Section>
 
       {kpis.utvShareMXN > 0 && (
-        <Section title="UTV Share (deducted from upsell pool)" cols={1}>
-          <Cell label="Monthly UTV Share to Owner" value={`− ${formatMXN(kpis.utvShareMXN)}`} sub="Deducted from upsell profit before the 85/15 split" color={AMBER} />
+        <Section title="UTV Upkeep (LUX absorbs from its 15%)" cols={1}>
+          <Cell label="Monthly UTV Upkeep" value={`− ${formatMXN(kpis.utvShareMXN)}`} sub="Fully absorbed by LUX out of its 15% share — does not reduce the owner's payout" color={AMBER} />
         </Section>
       )}
 
