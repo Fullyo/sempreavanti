@@ -212,6 +212,9 @@ Deno.serve(async (req) => {
             accommodation_fare: guestyFare,
             guesty_fare: guestyFare,
             accommodation_currency: "usd",
+            // 5% card processing fee is on by default for every new invoice —
+            // the concierge can still remove it per-booking if needed.
+            cc_fee_on: true,
           });
         }
       }
