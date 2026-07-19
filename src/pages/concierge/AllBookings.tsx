@@ -595,7 +595,7 @@ export default function AllBookings() {
                   })()}
 
                   <div style={{ fontSize: 11, color: COLORS.textMuted, fontStyle: "italic", marginTop: 10 }}>
-                    Under the new system LUX collects the full guest upsell payment, pays the supplier, and splits the remaining profit 85% owner / 15% LUX. Example: 6,000 MXN airport shuttle → 5,000 MXN to driver → 1,000 MXN profit → 850 MXN owner + 150 MXN LUX.
+                    Under the new system LUX collects the full guest upsell payment, pays the supplier, and splits the remaining profit 85% owner / 15% LUX. LUX absorbs the full monthly UTV upkeep ({formatMXN(UTV_SHARE_MXN)}) out of its 15% share — it does not reduce the owner's payout.
                   </div>
                 </div>
 
