@@ -41,8 +41,16 @@ type MonthKpis = {
   // "card" = we charged it on the credit card and OWE it to staff.
   // "cash" = guest tipped in cash directly (already in the staff's hands).
   staffTips: {
-    cardMXN: number;     // total tips billed on card (staff tip + 5% gratuity), in MXN
-    cardUSD: number;     // same, in USD @FX
+    // OLD system (historical bookings, pre-new-upsell-system): tips were charged
+    // on the owner's card in USD. The OWNER owes the staff this amount.
+    oldOwnerCardUSD: number;
+    // NEW system (live bookings): tips charged on LUX's card in MXN. LUX owes
+    // the staff this amount (staff tip + 5% gratuity).
+    newLuxCardMXN: number;
+    newLuxCardUSD: number; // same, in USD @FX
+    // Combined (backwards-compat / summary rollups).
+    cardMXN: number;
+    cardUSD: number;
     cashUSD: number;     // cash tips (USD) reported by concierge
     cashMXN: number;     // cash tips (MXN) reported by concierge
     totalUSD: number;    // combined card + cash, in USD
@@ -305,6 +313,9 @@ export default function AllBookings() {
         luxTotal: fareUSD * 0.15 + luxUpsellMXN / FX,
       },
       staffTips: {
+        oldOwnerCardUSD: histCardTipsUSD,
+        newLuxCardMXN: liveCardTipsMXN,
+        newLuxCardUSD: liveCardTipsMXN / FX,
         cardMXN,
         cardUSD,
         cashUSD: liveCashUSD,
@@ -1098,34 +1109,74 @@ function MonthSummary({ kpis, group, petty }: {
         <Cell label="LUX Total Cut" value={formatUSD(kpis.combinedUSD.luxTotal)} color={AMBER} />
       </Section>
 
-      {(kpis.staffTips.cardMXN > 0 || kpis.staffTips.cashUSD > 0 || kpis.staffTips.cashMXN > 0) && (
-        <Section title="Staff Tips (what the staff earned this month)" cols={3}>
+      {(kpis.staffTips.cardMXN > 0 || kpis.staffTips.cashUSD > 0 || kpis.staffTips.cashMXN > 0) && (() => {
+        const hasOld = kpis.staffTips.oldOwnerCardUSD > 0;
+        const hasNew = kpis.staffTips.newLuxCardMXN > 0;
+        const hasCash = kpis.staffTips.cashUSD > 0 || kpis.staffTips.cashMXN > 0;
+        // Split card tips only when BOTH old and new systems have activity this
+        // month (e.g. June 2026 transition). Otherwise show a single unified card cell.
+        const splitCard = hasOld && hasNew;
+        const cells: React.ReactNode[] = [];
+        if (splitCard) {
+          cells.push(
+            <Cell
+              key="old"
+              label="On Card — Owner Owes Staff (Old System)"
+              value={formatUSD(kpis.staffTips.oldOwnerCardUSD)}
+              sub="Tips charged on the owner's card, payable by owner to staff"
+              color={AMBER}
+            />,
+            <Cell
+              key="new"
+              label="On Card — LUX Owes Staff (New System)"
+              value={formatMXN(kpis.staffTips.newLuxCardMXN)}
+              sub={`≈ ${formatUSD(kpis.staffTips.newLuxCardUSD)} USD · charged on LUX's card, payable by LUX to staff`}
+              color={AMBER}
+            />,
+          );
+        } else if (hasOld || hasNew) {
+          cells.push(
+            <Cell
+              key="card"
+              label={hasOld ? "On Card — Owner Owes Staff" : "On Card — LUX Owes Staff"}
+              value={formatMXN(kpis.staffTips.cardMXN)}
+              sub={`≈ ${formatUSD(kpis.staffTips.cardUSD)} USD · charged on guest cards, payable to staff`}
+              color={AMBER}
+            />,
+          );
+        }
+        if (hasCash) {
+          cells.push(
+            <Cell
+              key="cash"
+              label="Cash Received by Staff"
+              value={
+                kpis.staffTips.cashUSD > 0 && kpis.staffTips.cashMXN > 0
+                  ? `${formatUSD(kpis.staffTips.cashUSD)} + ${formatMXN(kpis.staffTips.cashMXN)}`
+                  : kpis.staffTips.cashUSD > 0
+                    ? formatUSD(kpis.staffTips.cashUSD)
+                    : formatMXN(kpis.staffTips.cashMXN)
+              }
+              sub={`≈ ${formatUSD(kpis.staffTips.cashUSD + kpis.staffTips.cashMXN / 16)} USD · handed directly to staff`}
+              color={GREEN}
+            />,
+          );
+        }
+        cells.push(
           <Cell
-            label="On Card — We Owe Staff"
-            value={formatMXN(kpis.staffTips.cardMXN)}
-            sub={`≈ ${formatUSD(kpis.staffTips.cardUSD)} USD · charged on guest cards, payable to staff`}
-            color={AMBER}
-          />
-          <Cell
-            label="Cash Received by Staff"
-            value={
-              kpis.staffTips.cashUSD > 0 && kpis.staffTips.cashMXN > 0
-                ? `${formatUSD(kpis.staffTips.cashUSD)} + ${formatMXN(kpis.staffTips.cashMXN)}`
-                : kpis.staffTips.cashUSD > 0
-                  ? formatUSD(kpis.staffTips.cashUSD)
-                  : formatMXN(kpis.staffTips.cashMXN)
-            }
-            sub={`≈ ${formatUSD(kpis.staffTips.cashUSD + kpis.staffTips.cashMXN / 16)} USD · handed directly to staff`}
-            color={GREEN}
-          />
-          <Cell
+            key="total"
             label="Total Staff Tips (USD)"
             value={formatUSD(kpis.staffTips.totalUSD)}
             sub="Card + cash combined"
             color={CREAM}
-          />
-        </Section>
-      )}
+          />,
+        );
+        return (
+          <Section title="Staff Tips (what the staff earned this month)" cols={cells.length}>
+            {cells}
+          </Section>
+        );
+      })()}
 
       {kpis.commissionsOwed.mxn > 0 && (
         <Section title="Commissions Owed to Us (vendors the guest paid directly)" cols={1}>
