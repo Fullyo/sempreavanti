@@ -242,8 +242,10 @@ export default function AllBookings() {
     const pair = (mxn: number): MoneyPair => ({ mxn, usd: mxn / FX });
 
     const utvShareMXN = key >= UTV_SHARE_START ? UTV_SHARE_MXN : 0;
-    // UTV share is deducted from the upsell profit pool BEFORE the 85/15 split.
-    const netProfitMXN = profitMXN - utvShareMXN;
+    // UTV upkeep is fully absorbed by LUX out of its 15% share — the owner's
+    // 85% is calculated on the GROSS upsell profit pool.
+    const ownerUpsellMXN = profitMXN * 0.85;
+    const luxUpsellMXN = profitMXN * 0.15 - utvShareMXN;
 
     // Commissions owed to us by vendors the guest paid directly (live bookings only).
     const commissionsMXN = live.reduce((s, b) => {
@@ -261,15 +263,15 @@ export default function AllBookings() {
       accommodation: { fareUSD, ownerUSD: fareUSD * 0.85, luxUSD: fareUSD * 0.15 },
       upsells: {
         billed: pair(billedMXN),
-        profit: pair(netProfitMXN),
-        owner: pair(netProfitMXN * 0.85),
-        lux: pair(netProfitMXN * 0.15),
+        profit: pair(profitMXN),
+        owner: pair(ownerUpsellMXN),
+        lux: pair(luxUpsellMXN),
       },
       utvShareMXN,
       commissionsOwed: pair(commissionsMXN),
       combinedUSD: {
-        ownerTotal: fareUSD * 0.85 + (netProfitMXN / FX) * 0.85,
-        luxTotal: fareUSD * 0.15 + (netProfitMXN / FX) * 0.15,
+        ownerTotal: fareUSD * 0.85 + ownerUpsellMXN / FX,
+        luxTotal: fareUSD * 0.15 + luxUpsellMXN / FX,
       },
     };
   }
